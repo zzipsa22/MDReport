@@ -1,4 +1,4 @@
-local version="1.1.2"
+local version="1.1.1"
 local lastUpdate="20.07.07"
 local warning=1
 local searchingTip1=0
@@ -92,6 +92,8 @@ local callTypeTable={
     ["지금돌"]={"currentall", nil},
     ["현재돌"]={"currentall", nil},
     ["돌내놔"]={"currentall", nil},
+    
+    ["타락저항"]={"corruption", "현재"},
     
     ["주차"]={"parking", nil},
     
@@ -469,8 +471,8 @@ function filterCallType(callTypeT,channel,who,k2)
         return
     end  
     
-    --내가 아닌 사람이 !속성을 요청하는 경우 리턴
-    if who~=MY_NAME_IN_GAME and callType=="affix" then
+    --내가 아닌 사람이 !속성 !타락저항을 요청하는 경우 리턴
+    if who~=MY_NAME_IN_GAME and (callType=="affix" or callType=="corruption")then
         return        
     end   
     
@@ -568,7 +570,7 @@ function filterCallType(callTypeT,channel,who,k2)
         else return            
         end
         return
-    else        
+    else --단일 명령어면
         if callType=="currentmykey" or callType=="currentall" then
             findCharCurrent(channel,who,callType)
         elseif callType=="all" or callType=="mykey" or callType=="levelrange" then        
@@ -587,6 +589,8 @@ function filterCallType(callTypeT,channel,who,k2)
             doOnlyAffixReport(keyword,channel,who,callType)  
         elseif callType=="specificitem"then        
             findCharSpecificItem(nil,keyword,channel,who,callType)
+        elseif callType=="corruption"then                      
+            --dosomething
         elseif callType=="spec" and k2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip6<=howManyWarn then
