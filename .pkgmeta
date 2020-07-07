@@ -1,0 +1,7 @@
+package-as: MDReport
+
+ignore:
+    - README.md
+    
+move-folders:
+    MDReport/MDReport: MDReport
