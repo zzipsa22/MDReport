@@ -3,7 +3,7 @@
 ## Title-koKR:|cffffe00a[|r|cffff7d0a쐐기돌보고서|r|cffffe00a]|r by |cff69ccf0늘님|r
 ## DefaultState: enabled
 ## Author: Neul
-## Version: 1.1.2
+## Version: 1.1.3
 
 MDReport.lua
 functions.lua
