@@ -1,4 +1,4 @@
-local version="1.1.2"
+local version="1.1.3"
 local lastUpdate="20.07.07"
 local warning=1
 local searchingTip1=0
@@ -980,7 +980,7 @@ function findCharSpell(class,channel,who,callType)
         doFullReport(findChars,channel,who,callType)  
     else
         --나머지는 길드엔 숏, 나머진 풀 리포트
-        if channel=="GUILD"  then
+        if channel=="GUILD" or channel=="PARTY" then
             doShortReport(findChars,channel,who,callType)  
         else
             doFullReport(findChars,channel,who,callType)     
@@ -1250,7 +1250,3 @@ function reportMessageLines(messageLines,channel,who,callType)
         end 
     end 
 end
-
-
-
-
