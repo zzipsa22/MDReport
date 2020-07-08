@@ -67,17 +67,23 @@ function filterCallType(callTypeT,channel,who,k2)
     if not SavedInstancesDB then
         doWarningReport(channel,who,"warning") 
         return
-    end     
+    end         
+    
+    local callType=callTypeT[1]
+    local keyword=callTypeT[2] 
+    local extraKeyword=callTypeT[3]    
+    local callTypeT2=getCallTypeTable(k2)
+    
     local level
     if k2~=nil and tonumber(k2)==nil and k2[1]~=nil then
         level=k2 --레벨범위를 그대로 보냄
     else
         level=tonumber(k2)
-    end
-    local callType=callTypeT[1]
-    local keyword=callTypeT[2] 
-    local extraKeyword=callTypeT[3]    
-    local callTypeT2=getCallTypeTable(k2)
+    end    
+    
+    if callType=="levelrange" then
+        level={k2,tonumber(keyword)}
+    end    
     
     --범위지정인데 범위값이 없으면 리턴
     if callType=="levelrange" and k2==nil then
@@ -186,7 +192,7 @@ function filterCallType(callTypeT,channel,who,k2)
     else        
         if callType=="currentmykey" or callType=="currentall" then
             findCharCurrent(channel,who,callType)
-        elseif callType=="all" or callType=="mykey" or callType=="levelrange" then        
+        elseif callType=="all" or callType=="mykey" or callType=="levelrange" then 
             findCharAllKey(keyword,channel,who,callType,level)
         elseif callType=="parking" then        
             findCharNeedParking(channel,who,callType) 
@@ -250,11 +256,7 @@ function GetHaveKeyChar()
             num=num+1           
         end                
     end
-    --[[
-    chars[num]={}
-    chars[num][1]="드루알이휴지 - 윈드러너"
-    chars[num][2]="드루"    
-    ]]
+    
     return chars
 end
 
@@ -311,7 +313,8 @@ function findCharAllKey(keyword,channel,who,callType,level)
         table.sort(level)        
         level2=level[2] 
         level=level[1]   
-    end          
+    end    
+    
     --명령어가 !내돌 인데 내가 보낸게 아니면 리턴
     if (callType=="mykey") and who~=MY_NAME_IN_GAME and channel~="WHISPER_OUT" then 
         return 
@@ -335,34 +338,9 @@ function findCharAllKey(keyword,channel,who,callType,level)
         return
     end  
     
-    if level and level>0 then
-        local findChars={}
-        local num=1
-        for i=1,#chars do    
-            local p=chars[i][1]
-            local c=SavedInstancesDB.Toons[p]
-            local keyLevel=c.MythicKey.level 
-            
-            --레벨이 범위인경우
-            if level2~=nil then
-                if level<=keyLevel and level2>=keyLevel then
-                    findChars[num]=chars[i]
-                    num=num+1             
-                end                 
-            else
-                if level==keyLevel then
-                    findChars[num]=chars[i]
-                    num=num+1                  
-                end 
-            end        
-            
-        end
-        --모든돌의 레벨검색을 했는데 채널이 길드가 아니면 풀리포트
-        if channel~="GUILD"then
-            forceToShort=0
-        end        
-        chars=findChars 
-        
+    --레벨을 지정한 경우 레벨로 한번더 필터링
+    if level then          
+        chars=filterResultByLevel(chars,level,level2)        
     end    
     
     if forceToShort==1 then        
@@ -472,32 +450,37 @@ function findCharDungeon(keyword,channel,who,callType,level)
         end    
     end  
     
-    if level and level>0 then
-        local findChars2={}
-        local num=1
-        for i=1,#findChars do    
-            local p=findChars[i][1]
-            local c=SavedInstancesDB.Toons[p]
-            local keyLevel=c.MythicKey.level  
-            
-            --레벨이 범위인경우
-            if level2~=nil then
-                if level<=keyLevel and level2>=keyLevel then
-                    findChars2[num]=findChars[i]
-                    num=num+1                
-                end                 
-            else
-                if level==keyLevel then
-                    findChars2[num]=findChars[i]
-                    num=num+1                
-                end 
-            end            
-        end             
-        findChars=findChars2
+    --레벨을 지정한 경우 레벨로 한번더 필터링    
+    if level then        
+        findChars=filterResultByLevel(findChars,level,level2)
     end
     
     doFullReport(findChars,channel,who,callType)  
     
+end
+
+function filterResultByLevel(findChars,level,level2)
+    local findChars2={}
+    local num=1
+    for i=1,#findChars do    
+        local p=findChars[i][1]
+        local c=SavedInstancesDB.Toons[p]
+        local keyLevel=c.MythicKey.level  
+        
+        --레벨이 범위인경우
+        if level2~=nil then
+            if level<=keyLevel and level2>=keyLevel then
+                findChars2[num]=findChars[i]
+                num=num+1                
+            end                 
+        else
+            if level==keyLevel then
+                findChars2[num]=findChars[i]
+                num=num+1                
+            end 
+        end            
+    end             
+    return findChars2
 end
 
 --원하는 직업 돌 보고하기
