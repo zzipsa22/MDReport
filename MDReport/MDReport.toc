@@ -12,5 +12,4 @@ affix.lua
 calltype.lua
 frame.lua
 items.lua
-frame.lua
 report.lua
