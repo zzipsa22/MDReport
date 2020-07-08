@@ -70,7 +70,7 @@ function filterCallType(callTypeT,channel,who,k2)
     end     
     local level
     if k2~=nil and tonumber(k2)==nil and k2[1]~=nil then
-        level=k2
+        level=k2 --레벨범위를 그대로 보냄
     else
         level=tonumber(k2)
     end
@@ -342,47 +342,28 @@ function findCharAllKey(keyword,channel,who,callType,level)
             local p=chars[i][1]
             local c=SavedInstancesDB.Toons[p]
             local keyLevel=c.MythicKey.level 
-            --범위검색
-            if keyword=="이상"then
-                if level<=keyLevel then
+            
+            --레벨이 범위인경우
+            if level2~=nil then
+                if level<=keyLevel and level2>=keyLevel then
                     findChars[num]=chars[i]
-                    num=num+1                
-                end         
-            elseif keyword=="이하"then
-                if level>=keyLevel then
-                    findChars[num]=chars[i]
-                    num=num+1                
-                end        
-            elseif keyword=="초과"then
-                if level<keyLevel then
-                    findChars[num]=chars[i]
-                    num=num+1                
-                end             
-            elseif keyword=="미만"then
-                if level>keyLevel then
-                    findChars[num]=chars[i]
-                    num=num+1                
-                end 
-            elseif level2 and level2>0 then
-                if (level<=keyLevel) and (level2>=keyLevel) then
-                    findChars[num]=chars[i]
-                    num=num+1                
-                end      
+                    num=num+1             
+                end                 
             else
                 if level==keyLevel then
                     findChars[num]=chars[i]
-                    num=num+1                
-                end
-            end            
+                    num=num+1                  
+                end 
+            end        
+            
         end
         --모든돌의 레벨검색을 했는데 채널이 길드가 아니면 풀리포트
         if channel~="GUILD"then
             forceToShort=0
         end        
-        chars=findChars      
+        chars=findChars 
         
-    end
-    
+    end    
     
     if forceToShort==1 then        
         doShortReport(chars,channel,who,callType)  
@@ -461,7 +442,16 @@ end
 
 --원하는 던전 돌 보고하기
 function findCharDungeon(keyword,channel,who,callType,level)
-    local level=tonumber(level)
+    
+    --레벨이 범위인 경우
+    local level2=nil
+    if level~=nil and tonumber(level)==nil and level[1]~=nil then  
+        table.sort(level)        
+        level2=level[2] 
+        level=level[1]   
+    end      
+    
+    --local level=tonumber(level)
     local chars=GetHaveKeyChar() 
     
     local keyword=getFullDungeonName(keyword) 
@@ -488,10 +478,19 @@ function findCharDungeon(keyword,channel,who,callType,level)
         for i=1,#findChars do    
             local p=findChars[i][1]
             local c=SavedInstancesDB.Toons[p]
-            local keyLevel=c.MythicKey.level            
-            if level==keyLevel then
-                findChars2[num]=findChars[i]
-                num=num+1                
+            local keyLevel=c.MythicKey.level  
+            
+            --레벨이 범위인경우
+            if level2~=nil then
+                if level<=keyLevel and level2>=keyLevel then
+                    findChars2[num]=findChars[i]
+                    num=num+1                
+                end                 
+            else
+                if level==keyLevel then
+                    findChars2[num]=findChars[i]
+                    num=num+1                
+                end 
             end            
         end             
         findChars=findChars2

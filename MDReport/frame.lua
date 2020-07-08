@@ -31,10 +31,14 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         local keyword=strsub(msg,2) 
         
         --키워드 앞뒤로 붙은 숫자 추출
-        local lastTwoChar=tonumber(strsub(keyword,-2))        
-        local lastOneChar=tonumber(strsub(keyword,-1))      
-        local firstTwoChar=tonumber(strsub(keyword,1,2))        
-        local firstOneChar=tonumber(strsub(keyword,1,1))
+        local LTCT=strsub(keyword,-2)
+        local LOCT=strsub(keyword,-1)
+        local FTCT=strsub(keyword,1,2)
+        local FOCT=strsub(keyword,1,1)
+        local LTCN=tonumber(LTCT)        
+        local LOCN=tonumber(LOCT)      
+        local FTCN=tonumber(FTCT)        
+        local FOCN=tonumber(FOCT)
         
         local k1=keyword
         local k2=nil               
@@ -44,15 +48,10 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             k1=mysplit(keyword,"!")[1] 
             k2=mysplit(keyword,"!")[2]            
             
-            --중간에 -나 ~를 넣은 명령어면
+            --중간에 ~를 넣은 명령어면
         elseif strfind(keyword,"~")then
             
-            local space            
-            if strfind(keyword,"-") then
-                space="-"    
-            elseif strfind(keyword,"~") then
-                space="~"    
-            end 
+            local space="~"
             
             local num1=tonumber(mysplit(keyword,space)[1])
             local num2=tonumber(mysplit(keyword,space)[2])      
@@ -66,26 +65,48 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 k2=levelTable
             else return end  
             
+            --첫 두자가 숫자가 아니고 마지막 글자가 +면
+        elseif not FTCN and not FOCN and strfind(LOCT,"+")then
+            local firstSixChar=strsub(keyword,1,6)
+            
+            --첫두자에 한글이 섞여있으면
+            if tonumber(firstSixChar)==nil then                
+                local level=tonumber(strsub(keyword,7,-2))
+                k1=firstSixChar
+                k2={level,99}                   
+            end   
+            
+            --첫 두자가 숫자가 아니고 마지막 글자가 -면
+        elseif not FTCN and not FOCN and strfind(LOCT,"-")then
+            local firstSixChar=strsub(keyword,1,6)
+            
+            --첫두자에 한글이 섞여있으면
+            if tonumber(firstSixChar)==nil then                
+                local level=tonumber(strsub(keyword,7,-2))
+                k1=firstSixChar
+                k2={2,level}                   
+            end                     
+            
             --숫자만 입력한 경우
-        elseif (lastTwoChar~=nil and lastTwoChar==firstTwoChar) or  (lastOneChar~=nil and lastOneChar==firstOneChar)then
+        elseif (LTCN~=nil and LTCN==FTCN) or  (LOCN~=nil and LOCN==FOCN)then
             k1="아무"           
             k2=keyword
             --뒤 두자가 숫자인 경우
-        elseif lastTwoChar then
+        elseif LTCN then
             k1=strsub(keyword,1,-3)
-            k2=lastTwoChar
+            k2=LTCN
             --뒤 한자만 숫자인 경우
-        elseif lastOneChar then
+        elseif LOCN then
             k1=strsub(keyword,1,-2)
-            k2=lastOneChar
+            k2=LOCN
             --앞 두자가 숫자인 경우            
-        elseif firstTwoChar then
+        elseif FTCN then
             k1=strsub(keyword,3)
-            k2=firstTwoChar
+            k2=FTCN
             --앞 한자만 숫자인 경우
-        elseif firstOneChar then
+        elseif FOCN then
             k1=strsub(keyword,2)
-            k2=firstOneChar      
+            k2=FOCN      
         end        
         
         local callTypeT=getCallTypeTable(k1)
@@ -102,5 +123,5 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --print(callTypeT[1])
             
             --일치하는 명령어가 없으면 리턴
-        else return end  
+        else return end   
 end)

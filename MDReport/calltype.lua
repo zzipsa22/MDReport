@@ -18,12 +18,10 @@ local callTypeTable={
     
     ["주차"]={"parking", nil},
     
-    ["이상"]={"levelrange", "이상"},
-    ["+"]={"levelrange", "이상"},
-    ["이하"]={"levelrange", "이하"},
-    ["-"]={"levelrange", "이하"},
-    ["미만"]={"levelrange", "미만"},
-    ["초과"]={"levelrange", "초과"},  
+    ["이상"]={"levelrange", "99"},
+    ["+"]={"levelrange", "99"},
+    ["이하"]={"levelrange", "2"},
+    ["-"]={"levelrange", "2"},    
     
     ["힘"]={"stat", "힘"},  
     ["민"]={"stat", "민첩"},  
