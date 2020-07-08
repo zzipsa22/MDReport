@@ -1,0 +1,26 @@
+{
+  "name": "mdreport",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "finalhandler": "^1.1.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzipsa22/MDReport.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zzipsa22/MDReport/issues"
+  },
+  "homepage": "https://github.com/zzipsa22/MDReport#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "description": ""
+}
