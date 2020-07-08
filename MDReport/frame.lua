@@ -70,8 +70,9 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             local firstSixChar=strsub(keyword,1,6)
             
             --첫두자에 한글이 섞여있으면
-            if tonumber(firstSixChar)==nil then                
+            if tonumber(firstSixChar)==nil then 
                 local level=tonumber(strsub(keyword,7,-2))
+                if level==nil then return end
                 k1=firstSixChar
                 k2={level,99}                   
             end   
@@ -83,6 +84,8 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --첫두자에 한글이 섞여있으면
             if tonumber(firstSixChar)==nil then                
                 local level=tonumber(strsub(keyword,7,-2))
+                if level==nil then return end
+                
                 k1=firstSixChar
                 k2={2,level}                   
             end                     
@@ -123,5 +126,5 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --print(callTypeT[1])
             
             --일치하는 명령어가 없으면 리턴
-        else return end   
+        else return end  
 end)

@@ -86,12 +86,12 @@ function filterCallType(callTypeT,channel,who,k2)
     end    
     
     --범위지정인데 범위값이 없으면 리턴
-    if callType=="levelrange" and k2==nil then
+    if callType=="levelrange" and level==nil then
         return
     end  
     
-    --내가 아닌 사람이 !속성 !타락저항을 요청하는 경우 리턴
-    if who~=MY_NAME_IN_GAME and (callType=="affix" or callType=="corruption")then
+    --내가 아닌 사람이 !속성을 요청하는 경우 리턴
+    if who~=MY_NAME_IN_GAME and (callType=="affix")then
         return        
     end   
     
@@ -105,10 +105,15 @@ function filterCallType(callTypeT,channel,who,k2)
         return
     end      
     
+    --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
+    if (callType=="mykey" or callType=="currentmykey") and who~=MY_NAME_IN_GAME and channel~="WHISPER_OUT" then 
+        return 
+    end       
+    
     --내가 보낸 귓말이고, 나한테 보냈거나 !내돌/!지금내돌을 요청한게 아니면 리턴
     if (channel=="WHISPER_OUT") and ((who==MY_NAME_IN_GAME) or (callType~="mykey" and callType~="currentmykey"))  then
         return       
-    end    
+    end        
     
     --채널이 없으면 프린트로 변경
     if channel==nil then channel="print" end  
@@ -123,7 +128,7 @@ function filterCallType(callTypeT,channel,who,k2)
         channel="print"
     elseif callType=="forceversion" then
         channel="WHISPER"        
-    end     
+    end 
     
     if callTypeT2 then        
         local callType2=callTypeT2[1]
@@ -265,12 +270,7 @@ function findCharCurrent(channel,who,callType)
     
     --"currentmykey"
     --"currentall"
-    local chars=GetHaveKeyChar() 
-    
-    --명령어가 !지금내돌 인데 내가 보낸게 아니면 리턴
-    if (callType=="currentmykey") and who~=MY_NAME_IN_GAME and channel~="WHISPER_OUT" then 
-        return 
-    end    
+    local chars=GetHaveKeyChar()     
     
     local findChars={}   
     local num=1        
@@ -313,11 +313,6 @@ function findCharAllKey(keyword,channel,who,callType,level)
         table.sort(level)        
         level2=level[2] 
         level=level[1]   
-    end    
-    
-    --명령어가 !내돌 인데 내가 보낸게 아니면 리턴
-    if (callType=="mykey") and who~=MY_NAME_IN_GAME and channel~="WHISPER_OUT" then 
-        return 
     end       
     
     --!돌이나 !레벨범위를 길드로 요청한 경우 짧게 보고
@@ -416,7 +411,6 @@ function findCharNeedParking(channel,who,callType)
     end            
     
 end
-
 
 --원하는 던전 돌 보고하기
 function findCharDungeon(keyword,channel,who,callType,level)
