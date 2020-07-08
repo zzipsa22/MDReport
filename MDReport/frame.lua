@@ -29,6 +29,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         --느낌표 잘라냄
         local keyword=strsub(msg,2) 
+        local keyNum=tonumber(keyword)
         
         --키워드 앞뒤로 붙은 숫자 추출
         local LTCT=strsub(keyword,-2)
@@ -39,9 +40,11 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         local LOCN=tonumber(LOCT)      
         local FTCN=tonumber(FTCT)        
         local FOCN=tonumber(FOCT)
+        local firstSixChar=strsub(keyword,1,6)
         
         local k1=keyword
-        local k2=nil               
+        local k2,level1,level2,callTypeT1,callTypeT2
+        local VALUES={}
         
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
@@ -58,70 +61,97 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             
             --둘다 숫자일 경우에만 반응            
             if num1~=nil and num2~=nil then
-                local levelTable={}  
-                levelTable[1]=num1
-                levelTable[2]=num2
                 k1="아무"
-                k2=levelTable
+                level1=num1
+                level2=num2
             else return end  
             
-            --첫 두자가 숫자가 아니고 마지막 글자가 +면
-        elseif not FTCN and not FOCN and strfind(LOCT,"+")then
-            local firstSixChar=strsub(keyword,1,6)
+            --마지막이 +면
+        elseif strfind(LOCT,"+")then
             
-            --첫두자에 한글이 섞여있으면
-            if tonumber(firstSixChar)==nil then 
-                local level=tonumber(strsub(keyword,7,-2))
-                if level==nil then return end
+            if (FTCN or FOCN) then                
+                k1="아무"
+                level1=tonumber(strsub(keyword,1,-2))
+                level2=99
+            elseif tonumber(firstSixChar)==nil then                
                 k1=firstSixChar
-                k2={level,99}                   
-            end   
+                level1=tonumber(strsub(keyword,7,-2))
+                level2=99
+            else return end
             
-            --첫 두자가 숫자가 아니고 마지막 글자가 -면
-        elseif not FTCN and not FOCN and strfind(LOCT,"-")then
-            local firstSixChar=strsub(keyword,1,6)
+            --마지막이 -면
+        elseif strfind(LOCT,"-")then
             
+            if (FTCN or FOCN) then                
+                k1="아무"
+                level1=tonumber(strsub(keyword,1,-2))
+                level2=2
+            elseif tonumber(firstSixChar)==nil then                
+                k1=firstSixChar
+                level1=tonumber(strsub(keyword,7,-2))
+                level2=2
+            else return end
+            
+            --첫 혹은 둘쨰자리가 숫자면
+        elseif (FTCN or FOCN) and strfind(LOCT,"+")then                 
             --첫두자에 한글이 섞여있으면
             if tonumber(firstSixChar)==nil then                
-                local level=tonumber(strsub(keyword,7,-2))
-                if level==nil then return end
-                
-                k1=firstSixChar
-                k2={2,level}                   
-            end                     
+                k1="아무"
+                level1=tonumber(strsub(keyword,1,-2))
+                level2=99               
+            end                    
             
             --숫자만 입력한 경우
-        elseif (LTCN~=nil and LTCN==FTCN) or  (LOCN~=nil and LOCN==FOCN)then
+        elseif keyNum then
             k1="아무"           
-            k2=keyword
+            level1=keyNum
             --뒤 두자가 숫자인 경우
         elseif LTCN then
             k1=strsub(keyword,1,-3)
-            k2=LTCN
+            level1=LTCN
             --뒤 한자만 숫자인 경우
         elseif LOCN then
             k1=strsub(keyword,1,-2)
-            k2=LOCN
+            level1=LOCN
             --앞 두자가 숫자인 경우            
         elseif FTCN then
             k1=strsub(keyword,3)
-            k2=FTCN
+            level1=FTCN
             --앞 한자만 숫자인 경우
         elseif FOCN then
             k1=strsub(keyword,2)
-            k2=FOCN      
+            level1=FOCN      
         end        
         
-        local callTypeT=getCallTypeTable(k1)
+        callTypeT1=getCallTypeTable(k1)
+        callTypeT2=getCallTypeTable(k2) 
         
-        --명령어 조합인 경우 순서 바꾸기
-        if callTypeT~=nil and (callTypeT[1]=="item" or callTypeT[1]=="specificitem" or callTypeT[1]=="category") and k2~=nil then
-            callTypeT=getCallTypeTable(k2)
-            k2=k1
+        
+        --작은수가 먼저오게 조절절
+        if level1 and level2 then
+            if level2<level1 then
+                local level3=level1
+                level1=level2
+                level2=level3
+            end            
         end                
         
-        if callTypeT then
-            filterCallType(callTypeT,channel,who,k2)
+        --명령어 조합인 경우 순서 바꾸기
+        if callTypeT1~=nil and (callTypeT1[1]=="item" or callTypeT1[1]=="specificitem" or callTypeT1[1]=="category") and callTypeT2~=nil then
+            local callTypeT3=callTypeT1
+            callTypeT1=callTypeT2
+            callTypeT2=callTypeT3
+        end              
+        
+        if callTypeT1 then
+            VALUES["callTypeT"]=callTypeT1
+            VALUES["callTypeT2"]=callTypeT2 
+            VALUES["level"]=level1
+            VALUES["level2"]=level2     
+            VALUES["channel"]=channel            
+            VALUES["who"]=who             
+            
+            filterVALUES(VALUES)
             
             --print(callTypeT[1])
             

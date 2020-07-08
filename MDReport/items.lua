@@ -1,3 +1,8 @@
+
+local who,channel,level,level2,callTypeT,callType2,comb
+local callType,keyword,extraKeyword
+local callType2,keyword2,extraKeyword2
+
 local dungeonTable={
     ["자유"]={
         "자유지대",
@@ -417,7 +422,28 @@ function checkDungeonHasSpecificItem(dungeon,stat,item)
 end
 
 --통합 아이템 찾기
-function findCharAllItem(keyword,keyword2,comb,channel,who,callType)
+function findCharAllItem(VALUES)
+    
+    if VALUES~=nil then
+        who=VALUES["who"]
+        channel=VALUES["channel"]
+        callTypeT=VALUES["callTypeT"]
+        callTypeT2=VALUES["callTypeT2"]
+        level=VALUES["level"]
+        level2=VALUES["level2"]         
+        
+        callType=callTypeT[1]
+        keyword=callTypeT[2] 
+        extraKeyword=callTypeT[3] 
+        
+        if callTypeT2 then
+            callType2=callTypeT2[1]
+            keyword2=callTypeT2[2] 
+            extraKeyword2=callTypeT2[3]            
+        end          
+        comb=VALUES["comb"] 
+    end
+    
     local chars=GetHaveKeyChar() 
     -- 콜타입을 아이템으로 강제 조정정
     local callType="item"
