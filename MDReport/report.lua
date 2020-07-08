@@ -16,9 +16,6 @@ local skull={
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
 
-local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
-local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()    
-
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
