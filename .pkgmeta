@@ -2,6 +2,7 @@ package-as: MDReport
 
 ignore:
     - README.md
+    - package.json
 
 move-folders:
     MDReport/MDReport: MDReport
