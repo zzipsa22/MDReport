@@ -1,5 +1,5 @@
-local version="1.1.3"
-local lastUpdate="20.07.07"
+local version="@project-version@"
+local lastUpdate="@project-date-iso@"
 local warning=1
 local searchingTip1=0
 local searchingTip2=0
