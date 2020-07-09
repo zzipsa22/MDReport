@@ -16,7 +16,7 @@ local affixWeeks = {
 local affixNames = {
     [1] ="과잉",
     [2] ="변덕",
-    [3] =GetSpellLink(209862),--치명
+    [3] =GetSpellLink(209862),--화산
     [4] =GetSpellLink(209858),--괴저
     [5] ="무리",
     [6] =GetSpellLink(228318),--분노
@@ -56,7 +56,27 @@ function GetAffixFullText(AffixTable)
     return affixFullText
 end
 
-function GetAnyWeeksAffix(week)  
+function GetAnyWeeksAffix(week)
+    
+    local thisWeek=GetThisWeek()
+    local calledWeek=thisWeek
+    local howManyWeeks=#affixWeeks
+    if week~=nil then         
+        calledWeek=thisWeek+week
+        if calledWeek<1 then calledWeek=calledWeek+howManyWeeks 
+        elseif calledWeek>howManyWeeks then calledWeek=calledWeek-howManyWeeks
+        end        
+    end 
+    
+    local calledWeekAffix=affixWeeks[calledWeek]    
+    
+    local calledWeekFullText=GetAffixFullText(calledWeekAffix)
+    
+    return calledWeekFullText    
+    
+end
+
+function GetThisWeek()
     if not IsAddOnLoaded("Blizzard_ChallengesUI") then
         LoadAddOn("Blizzard_ChallengesUI")
     end
@@ -71,22 +91,16 @@ function GetAnyWeeksAffix(week)
         if affixes[1] == affixIds[2].id and affixes[2] == affixIds[3].id and affixes[3] == affixIds[1].id then
             thisWeek=week
         end
-    end   
-    
-    local calledWeek=thisWeek
-    local howManyWeeks=#affixWeeks
-    if week~=nil then         
-        calledWeek=thisWeek+week
-        if calledWeek<1 then calledWeek=calledWeek+howManyWeeks 
-        elseif calledWeek>howManyWeeks then calledWeek=calledWeek-howManyWeeks
+    end
+    return thisWeek
+end
+
+function isThisWeekHasSpecificAffix(affixNum)
+    local thisWeek=GetThisWeek()
+    local affixTable=affixWeeks[thisWeek]
+    for i=1,#affixTable do
+        if affixTable[i]==affixNum then
+            return true
         end        
-    end 
-    --print("요청한 주"..calledWeek)
-    
-    local calledWeekAffix=affixWeeks[calledWeek]    
-    
-    local calledWeekFullText=GetAffixFullText(calledWeekAffix)
-    
-    return calledWeekFullText    
-    
+    end    
 end
