@@ -30,17 +30,8 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         --느낌표와 띄어쓰기 잘라냄
         local keyword=gsub(strsub(msg,2)," ","")        
         local keyIsNumber=tonumber(keyword)
-        
-        --키워드 앞뒤로 붙은 숫자 추출
-        local LTCT=strsub(keyword,-2)
+        local ELC=strsub(keyword,1,-2)        
         local LOCT=strsub(keyword,-1)
-        local FTCT=strsub(keyword,1,2)
-        local FOCT=strsub(keyword,1,1)
-        local LTCN=tonumber(LTCT)        
-        local LOCN=tonumber(LOCT)      
-        local FTCN=tonumber(FTCT)        
-        local FOCN=tonumber(FOCT)
-        local firstSixChar=strsub(keyword,1,6)
         
         local k1=keyword
         local k2,level1,level2,callTypeT1,callTypeT2
@@ -68,71 +59,41 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 level2=num2
                 
             else --던전명을 같이 넣었으면 
-                local BLTCT=strsub(before,-2)
-                local BLOCT=strsub(before,-1)
-                local BLTCN=tonumber(BLTCT)
-                local BLOCN=tonumber(BLOCT)
-                if BLTCN then
-                    k1=strsub(before,1,-3)
-                    level1=BLTCN
-                elseif BLOCN then
-                    k1=strsub(before,1,-2)
-                    level1=BLOCN                    
-                end            
-                level2=num2
+                local _,string,LN=mysplitN(before)
+                k1=string
+                level2=LN
             end  
             
             --마지막이 +면
-        elseif strfind(LOCT,"+")then
-            
-            if (FTCN or FOCN) then                
-                k1="아무"
-                level1=tonumber(strsub(keyword,1,-2))
+        elseif strfind(LOCT,"+") or strfind(LOCT,"-") then
+            -- +,-랑 숫자만 입력했으면
+            if tonumber(ELC) then
+                k1="아무"                
+                level1=tonumber(ELC)                
+            else                
+                local _,string,LN=mysplitN(ELC)
+                k1=string or "아무"
+                level1=LN                
+            end
+            if LOCT=="+" then
                 level2=99
-            elseif tonumber(firstSixChar)==nil then
-                k1=firstSixChar
-                level1=tonumber(strsub(keyword,7,-2))
-                level2=99
-            else return end
-            
-            --마지막이 -면
-        elseif strfind(LOCT,"-")then
-            
-            if (FTCN or FOCN) then                
-                k1="아무"
-                level1=tonumber(strsub(keyword,1,-2))
+            else
                 level2=2
-            elseif tonumber(firstSixChar)==nil then                
-                k1=firstSixChar
-                level1=tonumber(strsub(keyword,7,-2))
-                level2=2
-            else return end            
+            end           
             
             --숫자만 입력한 경우
         elseif keyIsNumber then
             k1="아무"           
             level1=keyIsNumber
-            --뒤 두자가 숫자인 경우
-        elseif LTCN then
-            k1=strsub(keyword,1,-3)
-            level1=LTCN
-            --뒤 한자만 숫자인 경우
-        elseif LOCN then
-            k1=strsub(keyword,1,-2)
-            level1=LOCN
-            --앞 두자가 숫자인 경우            
-        elseif FTCN then
-            k1=strsub(keyword,3)
-            level1=FTCN
-            --앞 한자만 숫자인 경우
-        elseif FOCN then
-            k1=strsub(keyword,2)
-            level1=FOCN      
+            --숫자와 단어의 조합이면
+        else
+            local KFN,Kstring,KLN=mysplitN(keyword)
+            k1=Kstring
+            level1=KLN or KFN         
         end        
         
         callTypeT1=getCallTypeTable(k1)
-        callTypeT2=getCallTypeTable(k2) 
-        
+        callTypeT2=getCallTypeTable(k2)         
         
         --작은수가 먼저오게 조절절
         if level1 and level2 then

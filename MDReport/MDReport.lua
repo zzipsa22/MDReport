@@ -20,17 +20,6 @@ local who,channel,level,level2,callTypeT,callType2,comb
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
 
-function mysplit (inputstr, sep)
-    if sep == nil then
-        sep = "%s"
-    end
-    local t={}
-    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        table.insert(t, str)
-    end
-    return t
-end
-
 local hasteClass={
     {"술사",GetSpellLink(32182)},
     {"법사",GetSpellLink(80353)},
@@ -531,4 +520,41 @@ function filterCharsByFilter(chars,filter,f1,f2)
     else
         return nil
     end
+end
+
+function mysplit (inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
+function mysplitN(a)
+    local b,FN,LN,SS,SE
+    for i=1,string.len(a) do
+        b=tonumber(string.sub(a,1,i))
+        if b==nil then
+            SS=i
+            if i>1 then
+                FN=tonumber(string.sub(a,1,i-1))
+            end            
+            break
+        end
+    end
+    for i=1,string.len(a) do
+        c=tonumber(string.sub(a,-i))
+        if c==nil then
+            SE=-i
+            if i>1 then
+                LN=tonumber(string.sub(a,-i+1))
+            end            
+            break
+        end
+    end       
+    local string=string.sub(a,SS,SE)
+    return FN,string,LN
 end
