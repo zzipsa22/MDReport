@@ -133,10 +133,10 @@ function doShortReport(chars,channel,who,callType)
             end
             oneLineMessage=oneLineMessage..messageLines[i]..space
         end
+        --메세지라인 리셋셋
         messageLines={}
         messageLines[1]=oneLineMessage
     end    
-    
     reportMessageLines(messageLines,channel,who,callType)       
 end
 
