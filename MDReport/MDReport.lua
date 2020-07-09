@@ -16,7 +16,7 @@ local warnMessage={
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()  
 
-local who,channel,level,level2,callTypeT,callType2
+local who,channel,level,level2,callTypeT,callType2,comb
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
 
@@ -193,17 +193,12 @@ function filterVALUES(VALUES)
         findCharAllItem(VALUES)
         return
     else --!명령어가 단일일 경우
-        
         if callType=="currentmykey" or callType=="currentall" then
             findCharCurrent(channel,who,callType)
-        elseif callType=="all" or callType=="mykey" or callType=="levelrange" then 
+        elseif callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class"then 
             findCharAllKey(VALUES)            
         elseif callType=="parking" then        
-            findCharNeedParking(channel,who,callType) 
-        elseif callType=="dungeon"then        
-            findCharDungeon(keyword,channel,who,callType,level)  
-        elseif callType=="class" then            
-            findCharClass(keyword,channel,who,callType)       
+            findCharNeedParking(channel,who,callType)             
         elseif callType=="spell" then        
             findCharSpell(keyword,channel,who,callType)     
         elseif callType=="version" or callType=="forceversion"then        
@@ -218,23 +213,24 @@ function filterVALUES(VALUES)
                     print("특성을 단독으로 입력하여 착용가능한 모든 무기로 던전을 검색합니다. 특정 직업의 돌이 알고 싶을 경우 !직업(ex.!드루 or !사제)으로 검색하거나, 특정 무기를 지정하고 싶을 경우 무기종류,무기유형과 함께 검색해보세요.(ex.!회복!양손 or !풍운!장착)")
                     searchingTip6=searchingTip6+1
                 end
-            end                     
-            findCharAllItem(keyword,nil,"Spec_Item",channel,who,callType)
-        elseif callType=="item" and k2==nil then
+            end
+            VALUES["comb"]="Spec_Item"
+            findCharAllItem(VALUES)
+        elseif callType=="item" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip3<=howManyWarn then
                     print("!무기는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (ex. !화염!무기)")
                     searchingTip3=searchingTip3+1
                 end
             end  
-        elseif callType=="stat" and k2==nil then
+        elseif callType=="stat" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip4<=howManyWarn then
                     print("능력치는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요 (ex. !"..keyword.."!지팡이)")
                     searchingTip4=searchingTip4+1
                 end
             end   
-        elseif callType=="category" and k2==nil then
+        elseif callType=="category" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip5<=howManyWarn then
                     print("무기유형은 단독으로 검색할 수 없습니다. !한손도검 !양손둔기 처럼 무기의 종류를 지정하거나 !힘 !지능 등의 능력치와 함께 검색해주세요 (ex. !민첩!원거리장비: 총,활,석궁 검색)")
@@ -247,7 +243,7 @@ end
 
 
 --보유한 모든 돌 불러오기
-function GetHaveKeyChar()
+function GetHaveKeyCharInfo()
     if not SavedInstancesDB then  return end   
     local t=SavedInstancesDB.Toons
     local num=1
@@ -255,53 +251,20 @@ function GetHaveKeyChar()
     for k,v in pairs(t) do        
         if t[k].MythicKey.link then
             chars[num]={}
-            chars[num][1]=k
-            chars[num][2]=getCallTypeTable(t[k].Class)[2]
+            chars[num]["fullName"]=k
+            chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
+            chars[num]["keyLink"]=t[k].MythicKey.link
+            chars[num]["best"]=t[k].MythicKeyBest.level
+            chars[num]["keyLevel"]=t[k].MythicKey.level   
+            chars[num]["keyName"]=t[k].MythicKey.name            
             num=num+1           
         end                
     end    
     return chars
 end
 
-
-function findCharCurrent(channel,who,callType)
-    
-    --"currentmykey"
-    --"currentall"
-    local chars=GetHaveKeyChar()   
-    
-    local findChars={}   
-    local num=1        
-    
-    if chars~=nil then        
-        
-        for i=1,#chars do
-            if MY_NAME_IN_ADDON==chars[i][1] then                
-                findChars[1]=chars[i]
-            end
-        end    
-    end
-    --이캐릭 돌이 없으면
-    if #findChars==0 then
-        if channel=="GUILD" and callType=="currentall" then
-            return
-        end        
-        local messageLines={}
-        messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
-        reportMessageLines(messageLines,channel,who,callType)
-        return
-    end      
-    
-    doFullReport(findChars,channel,who,callType) 
-end
-
-
-
 --보유한 모든 돌 보고하기
-function findCharAllKey(VALUES)
-    
-    --"all"
-    --"mykey"
+function findCharAllKey(VALUES)    
     
     if VALUES~=nil then
         who=VALUES["who"]
@@ -312,10 +275,10 @@ function findCharAllKey(VALUES)
         level2=VALUES["level2"]         
         
         callType=callTypeT[1]
-        keyword=callTypeT[2]  
+        keyword=callTypeT[2]
     end        
     
-    local chars=GetHaveKeyChar()     
+    local chars=GetHaveKeyCharInfo()    
     local forceToShort=0     
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
@@ -336,9 +299,14 @@ function findCharAllKey(VALUES)
         return
     end  
     
+    --던전이나 직업으로 필터링링
+    if callType=="dungeon" or callType=="class" then
+        chars=filterCharsByFilter(chars,callType,keyword,nil)         
+    end    
+    
     --레벨을 지정한 경우 레벨로 한번더 필터링
     if level then 
-        chars=filterResultByLevel(chars,level,level2)        
+        chars=filterCharsByFilter(chars,"level",level,level2)        
     end    
     
     if forceToShort==1 then        
@@ -348,10 +316,41 @@ function findCharAllKey(VALUES)
     end    
 end
 
+function findCharCurrent(channel,who,callType)
+    
+    --"currentmykey"
+    --"currentall"
+    local chars=GetHaveKeyCharInfo()  
+    
+    local findChars={}   
+    local num=1        
+    
+    if chars~=nil then        
+        
+        for i=1,#chars do
+            if MY_NAME_IN_ADDON==chars[i]["fullName"] then                
+                findChars[1]=chars[i]
+            end
+        end    
+    end
+    --이캐릭 돌이 없으면
+    if #findChars==0 then
+        if channel=="GUILD" and callType=="currentall" then
+            return
+        end        
+        local messageLines={}
+        messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
+        reportMessageLines(messageLines,channel,who,callType)
+        return
+    end      
+    
+    doFullReport(findChars,channel,who,callType) 
+end
+
 
 --돌이 있으나 주차 못한 캐릭 보고하기
 function findCharNeedParking(channel,who,callType)
-    local chars=GetHaveKeyChar()
+    local chars=GetHaveKeyCharInfo()
     
     if channel==nil then channel="print" end   
     
@@ -364,10 +363,8 @@ function findCharNeedParking(channel,who,callType)
     
     if chars~=nil then       
         
-        for i=1,#chars do    
-            local p=chars[i][1]
-            local c=SavedInstancesDB.Toons[p]
-            local best=c.MythicKeyBest.level
+        for i=1,#chars do   
+            local best=chars[i]["best"]
             if (best==nil) or (best==0) then
                 findChars[parknum]=chars[i]                
                 parknum=parknum+1
@@ -415,74 +412,10 @@ function findCharNeedParking(channel,who,callType)
     
 end
 
-
---원하는 던전 돌 보고하기
-function findCharDungeon(keyword,channel,who,callType,level)
-    
-    --레벨이 범위인 경우
-    local level2=nil
-    if level~=nil and tonumber(level)==nil and level[1]~=nil then  
-        table.sort(level)        
-        level2=level[2] 
-        level=level[1]   
-    end      
-    
-    --local level=tonumber(level)
-    local chars=GetHaveKeyChar() 
-    
-    local keyword=getFullDungeonName(keyword) 
-    
-    local findChars={}   
-    local num=1        
-    
-    if chars~=nil then         
-        
-        for i=1,#chars do    
-            local p=chars[i][1]
-            local c=SavedInstancesDB.Toons[p]
-            local mapName=c.MythicKey.name
-            if mapName==keyword then
-                findChars[num]=chars[i]
-                num=num+1
-            end
-        end    
-    end  
-    
-    --레벨을 지정한 경우 레벨로 한번더 필터링    
-    if level then        
-        findChars=filterResultByLevel(findChars,level,level2)
-    end
-    
-    doFullReport(findChars,channel,who,callType)  
-    
-end
-
---원하는 직업 돌 보고하기
-function findCharClass(class,channel,who,callType)
-    
-    local chars=GetHaveKeyChar() 
-    
-    local findChars={}
-    local num=1    
-    
-    if chars~=nil then   
-        
-        for i=1,#chars do
-            if chars[i][2]==class then
-                findChars[num]=chars[i]
-                num=num+1
-            end        
-        end
-    end        
-    
-    doFullReport(findChars,channel,who,callType)     
-    
-end
-
 --원하는 특징을 가진 돌 보고하기
 function findCharSpell(class,channel,who,callType)
     
-    local chars=GetHaveKeyChar() 
+    local chars=GetHaveKeyCharInfo()
     
     local findChars={}
     local num=1
@@ -522,13 +455,13 @@ function findCharSpell(class,channel,who,callType)
     if chars~=nil then   
         
         for i=1,#chars do
-            local yourClass=chars[i][2]
+            local yourClass=chars[i]["shortClass"]
             local thisCharHaveTheSpell=0
             if hasSpellLink==1 then
                 for j=1,#classTable do
                     if yourClass==classTable[j][1] then
                         thisCharHaveTheSpell=1
-                        chars[i][3]=classTable[j][2]
+                        chars[i]["extraLink"]=classTable[j][2]
                     end
                 end
             else
@@ -559,27 +492,39 @@ function findCharSpell(class,channel,who,callType)
     end    
 end
 
-function filterResultByLevel(chars,level,level2)
+function filterCharsByFilter(chars,filter,f1,f2)
     local findChars={}
-    local num=1    
-    for i=1,#chars do    
-        local p=chars[i][1]
-        local c=SavedInstancesDB.Toons[p]
-        local keyLevel=c.MythicKey.level  
-        
-        --레벨이 범위인경우
-        if level2~=nil then
-            if level<=keyLevel and level2>=keyLevel then
+    local num=1
+    local target
+    
+    if filter=="level" then
+        f1=tonumber(f1)
+        f2=tonumber(f2)        
+    elseif filter=="dungeon" then
+        f1=getFullDungeonName(f1)        
+    end    
+    
+    for i=1,#chars do          
+        if filter=="level"and f2~=nil  then            
+            target=chars[i]["keyLevel"]              
+            if f1<=target and f2>=target then
                 findChars[num]=chars[i]
                 num=num+1                
-            end                 
-        else
-            if level==keyLevel then
+            end             
+        else 
+            if filter=="level" then                
+                target=chars[i]["keyLevel"]                  
+            elseif filter=="class" then                
+                target=chars[i]["shortClass"]   
+            elseif filter=="dungeon" then
+                target=chars[i]["keyName"]                
+            end
+            if f1==target then
                 findChars[num]=chars[i]
                 num=num+1                
-            end 
-        end            
-    end
+            end
+        end
+    end    
     if #findChars>0 then
         return findChars
     else

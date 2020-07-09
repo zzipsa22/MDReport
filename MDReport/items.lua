@@ -1,4 +1,3 @@
-
 local who,channel,level,level2,callTypeT,callType2,comb
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
@@ -444,7 +443,7 @@ function findCharAllItem(VALUES)
         comb=VALUES["comb"] 
     end
     
-    local chars=GetHaveKeyChar() 
+    local chars=GetHaveKeyCharInfo() 
     -- 콜타입을 아이템으로 강제 조정정
     local callType="item"
     
@@ -458,7 +457,7 @@ function findCharAllItem(VALUES)
     if chars~=nil then         
         
         for i=1,#chars do    
-            local p=chars[i][1]
+            local p=chars[i]["fullName"]
             local c=SavedInstancesDB.Toons[p]
             local mapName=c.MythicKey.name
             local dungeon=getShortDungeonName(mapName)
@@ -477,7 +476,7 @@ function findCharAllItem(VALUES)
             end                       
             
             if itemList then
-                chars[i][3]=itemList
+                chars[i]["extraLink"]=itemList
                 findChars[num]=chars[i]
                 num=num+1
             end

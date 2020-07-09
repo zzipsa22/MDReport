@@ -29,7 +29,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         --느낌표 잘라냄
         local keyword=strsub(msg,2) 
-        local keyNum=tonumber(keyword)
+        local keyIsNumber=tonumber(keyword)
         
         --키워드 앞뒤로 붙은 숫자 추출
         local LTCT=strsub(keyword,-2)
@@ -56,15 +56,22 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             
             local space="~"
             
-            local num1=tonumber(mysplit(keyword,space)[1])
-            local num2=tonumber(mysplit(keyword,space)[2])      
+            local before=mysplit(keyword,space)[1]
+            local after=mysplit(keyword,space)[2]
+            local num1=tonumber(before)
+            local num2=tonumber(after)      
             
-            --둘다 숫자일 경우에만 반응            
+            --숫자만 입력했으면
             if num1~=nil and num2~=nil then
                 k1="아무"
                 level1=num1
                 level2=num2
-            else return end  
+                
+            else --던전명을 같이 넣었으면 
+                k1=strsub(before,1,6)
+                level1=tonumber(strsub(before,7,-1))
+                level2=num2
+            end  
             
             --마지막이 +면
         elseif strfind(LOCT,"+")then
@@ -73,7 +80,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 k1="아무"
                 level1=tonumber(strsub(keyword,1,-2))
                 level2=99
-            elseif tonumber(firstSixChar)==nil then                
+            elseif tonumber(firstSixChar)==nil then
                 k1=firstSixChar
                 level1=tonumber(strsub(keyword,7,-2))
                 level2=99
@@ -90,21 +97,12 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 k1=firstSixChar
                 level1=tonumber(strsub(keyword,7,-2))
                 level2=2
-            else return end
-            
-            --첫 혹은 둘쨰자리가 숫자면
-        elseif (FTCN or FOCN) and strfind(LOCT,"+")then                 
-            --첫두자에 한글이 섞여있으면
-            if tonumber(firstSixChar)==nil then                
-                k1="아무"
-                level1=tonumber(strsub(keyword,1,-2))
-                level2=99               
-            end                    
+            else return end            
             
             --숫자만 입력한 경우
-        elseif keyNum then
+        elseif keyIsNumber then
             k1="아무"           
-            level1=keyNum
+            level1=keyIsNumber
             --뒤 두자가 숫자인 경우
         elseif LTCN then
             k1=strsub(keyword,1,-3)

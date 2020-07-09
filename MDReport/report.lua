@@ -53,27 +53,24 @@ function doShortReport(chars,channel,who,callType)
     
     if chars~=nil then
         
-        local charName,class,c=nil,nil,nil
+        local charName,class=nil,nil
         
         --중복직업 체크              
         local yourClass={}   
         
-        for i=1,#chars do
-            charName=chars[i][1]            
-            class=chars[i][2] 
+        for i=1,#chars do         
+            class=chars[i]["shortClass"] 
             yourClass[class]=(yourClass[class] or 0)+1             
-        end
-        local sameClass={}        
+        end   
         
         for i=1,#chars do             
-            charName=chars[i][1]     
-            class=chars[i][2]              
-            c=SavedInstancesDB.Toons[charName]           
+            charName=chars[i]["fullName"]      
+            class=chars[i]["shortClass"]            
             
-            local keylink=c.MythicKey.link
-            local keyName=c.MythicKey.name
-            local level=c.MythicKey.level
-            local best=c.MythicKeyBest.level            
+            local keyLink=chars[i]["keyLink"]
+            local keyName=chars[i]["keyName"]
+            local level=chars[i]["keyLevel"]
+            local best=chars[i]["best"]           
             local online=""
             local classStatus=""
             
@@ -91,7 +88,7 @@ function doShortReport(chars,channel,who,callType)
                 online="◀접속중"
             end            
             
-            --던전 이름 줄이기기
+            --던전 이름 줄이기
             keyName=getShortDungeonName(keyName)            
             
             local havekey,parking, parkingstar="","",""  
@@ -106,7 +103,7 @@ function doShortReport(chars,channel,who,callType)
                 end       
             end            
             
-            if keylink~=nil then
+            if keyLink~=nil then
                 havekey=keyName..level
             else
                 havekey="돌 없음"
@@ -117,10 +114,10 @@ function doShortReport(chars,channel,who,callType)
                 message=skull[class]..class.."("..havekey..parkingstar..")"..online
             elseif callType=="all" then
                 message=skull[class]..havekey.."("..classStatus..")"
-            elseif chars[i][3] and callType=="spell"then
-                message=skull[class]..class.."("..havekey..")"..chars[i][3]..online
-            elseif chars[i][3] and callType=="item"then
-                message=skull[class]..havekey.."("..chars[i][3]..")"
+            elseif chars[i]["extraLink"] and callType=="spell"then
+                message=skull[class]..class.."("..havekey..")"..chars[i]["extraLink"]..online
+            elseif chars[i]["extraLink"] and callType=="item"then
+                message=skull[class]..havekey.."("..chars[i]["extraLink"]..")"
             else
                 message=skull[class]..havekey.."("..classStatus..")"..online
             end
@@ -149,37 +146,37 @@ function doFullReport(chars,channel,who,callType)
     
     local messageLines={} 
     
-    if chars~=nil then        
+    if chars~=nil then      
+        local charName,class=nil,nil
         
-        local charName,class,c=nil,nil,nil
+        --프린트인 경우 스컬대신 아이콘을 표기하기 위해 체크
         local forceprint=0 
         
         if (channel=="print") and (who==MY_NAME_IN_GAME) then 
             forceprint=1           
         end
         
-        --중복직업 체크      
+        --중복직업 체크              
         local yourClass={}   
         
-        for i=1,#chars do
-            charName=chars[i][1]            
-            class=chars[i][2] 
+        for i=1,#chars do         
+            class=chars[i]["shortClass"] 
             yourClass[class]=(yourClass[class] or 0)+1             
-        end
-        local sameClass={}
+        end   
         
         for i=1,#chars do             
-            charName=chars[i][1]     
-            class=chars[i][2]              
-            c=SavedInstancesDB.Toons[charName]           
+            charName=chars[i]["fullName"]      
+            class=chars[i]["shortClass"]            
             
-            local keylink=c.MythicKey.link
-            local best=c.MythicKeyBest.level            
+            local keyLink=chars[i]["keyLink"]
+            local keyName=chars[i]["keyName"]
+            local level=chars[i]["keyLevel"]
+            local best=chars[i]["best"]                      
             
-            local online=""
-            
+            local online=""            
             local classStatus=""
             local headStar=""
+            
             if charName==MY_NAME_IN_ADDON then
                 online="◀접속중"
             end
@@ -204,8 +201,8 @@ function doFullReport(chars,channel,who,callType)
             
             
             local havekey,parking, parkingstar="","",""       
-            if keylink~=nil then
-                havekey=keylink
+            if keyLink~=nil then
+                havekey=keyLink
             else
                 havekey="[쐐기돌 없음]"
             end
@@ -224,10 +221,10 @@ function doFullReport(chars,channel,who,callType)
             end 
             --local extra=""
             local message=""
-            if callType=="spell" and chars[i][3] then
-                message=headStar..classStatus..chars[i][3]..": "..havekey..online
-            elseif callType=="item" and chars[i][3] then
-                message=headStar..classStatus..": "..havekey..chars[i][3] 
+            if callType=="spell" and chars[i]["extraLink"] then
+                message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
+            elseif callType=="item" and chars[i]["extraLink"] then
+                message=headStar..classStatus..": "..havekey..chars[i]["extraLink"] 
             else
                 message=headStar..class.."("..shortName..parking..")"..": "..havekey..online
             end
