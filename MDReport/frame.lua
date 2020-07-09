@@ -27,8 +27,8 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         local who=select(2, ...)   
         
-        --느낌표 잘라냄
-        local keyword=strsub(msg,2) 
+        --느낌표와 띄어쓰기 잘라냄
+        local keyword=gsub(strsub(msg,2)," ","")        
         local keyIsNumber=tonumber(keyword)
         
         --키워드 앞뒤로 붙은 숫자 추출
@@ -68,8 +68,17 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 level2=num2
                 
             else --던전명을 같이 넣었으면 
-                k1=strsub(before,1,6)
-                level1=tonumber(strsub(before,7,-1))
+                local BLTCT=strsub(before,-2)
+                local BLOCT=strsub(before,-1)
+                local BLTCN=tonumber(BLTCT)
+                local BLOCN=tonumber(BLOCT)
+                if BLTCN then
+                    k1=strsub(before,1,-3)
+                    level1=BLTCN
+                elseif BLOCN then
+                    k1=strsub(before,1,-2)
+                    level1=BLOCN                    
+                end            
                 level2=num2
             end  
             
