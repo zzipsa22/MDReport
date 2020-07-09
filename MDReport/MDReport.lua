@@ -360,12 +360,13 @@ function findCharNeedParking(channel,who,callType)
     local bestLevels={}
     local lowestLevel=0
     local highstLevel=0
+    local paringLevel=15 --15단주차
     
     if chars~=nil then       
         
         for i=1,#chars do   
             local best=chars[i]["best"]
-            if (best==nil) or (best==0) then
+            if (best==nil) or (best<paringLevel) then
                 findChars[parknum]=chars[i]                
                 parknum=parknum+1
             else
@@ -374,7 +375,7 @@ function findCharNeedParking(channel,who,callType)
             end
         end
         
-        --주차를 하나라도 했으면
+        --쐐기를 한번이라도 갔으면
         if bestnum>1 then
             table.sort(bestLevels)
             lowestLevel=bestLevels[1]
