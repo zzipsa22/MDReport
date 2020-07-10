@@ -35,7 +35,8 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         local k1=keyword
         local k2,level1,level2,callTypeT1,callTypeT2
-        local VALUES={}
+        local onlyMe,onlyOnline
+        local VALUES={}        
         
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
@@ -61,10 +62,11 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             else --던전명을 같이 넣었으면 
                 local _,string,LN=mysplitN(before)
                 k1=string
-                level2=LN
+                level1=LN or 2
+                level2=num2 or 99
             end  
             
-            --마지막이 +면
+            --마지막이 +나 -면
         elseif strfind(LOCT,"+") or strfind(LOCT,"-") then
             -- +,-랑 숫자만 입력했으면
             if tonumber(ELC) then
@@ -72,7 +74,11 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 level1=tonumber(ELC)                
             else                
                 local _,string,LN=mysplitN(ELC)
-                k1=string or "아무"
+                --내나 지금만 붙였으면
+                if string=="내" or string=="지금" then
+                    string=string.."돌"
+                end
+                k1=string or "아무"                               
                 level1=LN                
             end
             if LOCT=="+" then
@@ -93,7 +99,20 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         end        
         
         callTypeT1=getCallTypeTable(k1)
-        callTypeT2=getCallTypeTable(k2)         
+        callTypeT2=getCallTypeTable(k2)  
+        
+        --명령어가 발견이 안되면
+        if k1 and not callTypeT1 then
+            if strfind(k1,"내") then             
+                k1=gsub(k1,"내","")
+                onlyMe=1
+            end            
+            if strfind(k1,"지금") then
+                k1=gsub(k1,"지금","")
+                onlyOnline=1                
+            end
+            callTypeT1=getCallTypeTable(k1)
+        end
         
         --작은수가 먼저오게 조절절
         if level1 and level2 then
@@ -117,7 +136,9 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             VALUES["level"]=level1
             VALUES["level2"]=level2     
             VALUES["channel"]=channel            
-            VALUES["who"]=who             
+            VALUES["who"]=who   
+            VALUES["onlyMe"]=onlyMe
+            VALUES["onlyOnline"]=onlyOnline           
             
             filterVALUES(VALUES)
             

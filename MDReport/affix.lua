@@ -35,6 +35,7 @@ local affixNames = {
     [120] ="각성",
 }--격아 4시즌
 
+
 local affixAddedLevel={
     [1]="(2),",
     [2]="(4),",

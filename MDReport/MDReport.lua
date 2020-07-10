@@ -16,7 +16,7 @@ local warnMessage={
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()  
 
-local who,channel,level,level2,callTypeT,callType2,comb
+local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
 
@@ -68,7 +68,8 @@ function filterVALUES(VALUES)
         callTypeT=VALUES["callTypeT"]
         callTypeT2=VALUES["callTypeT2"]
         level=VALUES["level"]
-        level2=VALUES["level2"]         
+        level2=VALUES["level2"] 
+        onlyMe=VALUES["onlyMe"]
         
         callType=callTypeT[1]
         keyword=callTypeT[2] 
@@ -80,6 +81,10 @@ function filterVALUES(VALUES)
             extraKeyword2=callTypeT2[3]            
         end         
     end 
+    -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
+    if onlyMe==1 and who~=MY_NAME_IN_GAME then
+        return
+    end
     
     if callType=="levelrange" and level2==nil then
         VALUES["level2"]=tonumber(keyword)
@@ -131,11 +136,9 @@ function filterVALUES(VALUES)
     end 
     
     --조절값 입력
-    VALUES["channel"]=channel
+    VALUES["channel"]=channel    
     
-    
-    if callTypeT2 then --명령어가 2중이면               
-        
+    if callTypeT2 then --명령어가 2중이면             
         if (callType=="class" and callType2=="item") or (callType=="class" and callType2=="category")  or (callType=="class" and callType2=="specificitem")  then
             if keyword=="사제" or keyword=="흑마" or keyword=="법사" or keyword=="악사" then
                 callType="spec"
@@ -148,28 +151,17 @@ function filterVALUES(VALUES)
                 end
                 return
             end
-        end        
-        
-        if (callType=="spec" and callType2=="item")then
-            
-            VALUES["comb"]="Spec_Item"
-            
-        elseif (callType=="stat" and callType2=="specificitem")then 
-            
-            VALUES["comb"]="Stat_Specificitem"
-            
-        elseif (callType=="spec" and callType2=="specificitem")then
-            
-            VALUES["comb"]="Spec_Specificitem"
-            
-        elseif (callType=="stat" and callType2=="category")then 
-            
-            VALUES["comb"]="Stat_Category"            
-            
-        elseif (callType=="spec" and callType2=="category")then 
-            
-            VALUES["comb"]="Spec_Category"
-            
+        end                
+        if (callType=="spec" and callType2=="item")then            
+            VALUES["comb"]="Spec_Item"            
+        elseif (callType=="stat" and callType2=="specificitem")then             
+            VALUES["comb"]="Stat_Specificitem"            
+        elseif (callType=="spec" and callType2=="specificitem")then            
+            VALUES["comb"]="Spec_Specificitem"            
+        elseif (callType=="stat" and callType2=="category")then             
+            VALUES["comb"]="Stat_Category"                        
+        elseif (callType=="spec" and callType2=="category")then             
+            VALUES["comb"]="Spec_Category"            
         elseif (callType=="stat" and callType2=="item") then
             if who==MY_NAME_IN_GAME then
                 if searchingTip2<=howManyWarn then
@@ -181,10 +173,9 @@ function filterVALUES(VALUES)
         end
         findCharAllItem(VALUES)
         return
+        
     else --!명령어가 단일일 경우
-        if callType=="currentmykey" or callType=="currentall" then
-            findCharCurrent(channel,who,callType)
-        elseif callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class"then 
+        if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" then 
             findCharAllKey(VALUES)            
         elseif callType=="parking" then        
             findCharNeedParking(channel,who,callType)             
@@ -265,6 +256,7 @@ function findCharAllKey(VALUES)
         
         callType=callTypeT[1]
         keyword=callTypeT[2]
+        onlyOnline=VALUES["onlyOnline"]    
     end        
     
     local chars=GetHaveKeyCharInfo()    
@@ -274,6 +266,9 @@ function findCharAllKey(VALUES)
     if (callType=="all"or callType=="levelrange") and ((channel=="GUILD") or (channel=="PARTY")) then
         forceToShort=1
     end 
+    if callType=="currentall" or callType=="currentmykey" then
+        onlyOnline=1
+    end    
     
     --!내돌을 길드로 요청한 경우우 짧게 보고
     if callType=="mykey" and (channel=="GUILD") then
@@ -286,9 +281,21 @@ function findCharAllKey(VALUES)
         messageLines[1]="▶저는 현재 갖고 있는 돌이 하나도 없습니다!" 
         reportMessageLines(messageLines,channel,who,callType)
         return
-    end  
+    end      
     
-    --던전이나 직업으로 필터링링
+    -- "지금"이 붙은 경우 접속중인 캐릭터만 필터링
+    if onlyOnline==1 then
+        chars=filterCharsByFilter(chars,"name",nil,nil)
+        --이캐릭 돌이 없으면 바로 보고하고 마무리, 길드면 생략
+        if not chars and channel~="GUILD"then
+            local messageLines={}
+            messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
+            reportMessageLines(messageLines,channel,who,callType)
+            return
+        end        
+    end
+    
+    --던전이나 직업으로 필터링
     if callType=="dungeon" or callType=="class" then
         chars=filterCharsByFilter(chars,callType,keyword,nil)         
     end    
@@ -304,38 +311,6 @@ function findCharAllKey(VALUES)
         doFullReport(chars,channel,who,callType) 
     end    
 end
-
-function findCharCurrent(channel,who,callType)
-    
-    --"currentmykey"
-    --"currentall"
-    local chars=GetHaveKeyCharInfo()  
-    
-    local findChars={}   
-    local num=1        
-    
-    if chars~=nil then        
-        
-        for i=1,#chars do
-            if MY_NAME_IN_ADDON==chars[i]["fullName"] then                
-                findChars[1]=chars[i]
-            end
-        end    
-    end
-    --이캐릭 돌이 없으면
-    if #findChars==0 then
-        if channel=="GUILD" and callType=="currentall" then
-            return
-        end        
-        local messageLines={}
-        messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
-        reportMessageLines(messageLines,channel,who,callType)
-        return
-    end      
-    
-    doFullReport(findChars,channel,who,callType) 
-end
-
 
 --돌이 있으나 주차 못한 캐릭 보고하기
 function findCharNeedParking(channel,who,callType)
@@ -394,7 +369,7 @@ function findCharNeedParking(channel,who,callType)
     end       
     
     --!주차를 길드엔 짧게 보고
-    if channel=="GUILD" then                
+    if channel=="GUILD" or channel=="PARTY" then                
         doShortReport(findChars,channel,who,callType)                  
     else                
         doFullReport(findChars,channel,who,callType)            
@@ -491,7 +466,9 @@ function filterCharsByFilter(chars,filter,f1,f2)
         f1=tonumber(f1)
         f2=tonumber(f2)        
     elseif filter=="dungeon" then
-        f1=getFullDungeonName(f1)        
+        f1=getFullDungeonName(f1) 
+    elseif filter=="name" then
+        f1=MY_NAME_IN_ADDON         
     end    
     
     for i=1,#chars do          
@@ -507,7 +484,9 @@ function filterCharsByFilter(chars,filter,f1,f2)
             elseif filter=="class" then                
                 target=chars[i]["shortClass"]   
             elseif filter=="dungeon" then
-                target=chars[i]["keyName"]                
+                target=chars[i]["keyName"]     
+            elseif filter=="name" then
+                target=chars[i]["fullName"]   
             end
             if f1==target then
                 findChars[num]=chars[i]
@@ -534,27 +513,20 @@ function mysplit (inputstr, sep)
 end
 
 function mysplitN(a)
-    local b,FN,LN,SS,SE
-    for i=1,string.len(a) do
-        b=tonumber(string.sub(a,1,i))
-        if b==nil then
-            SS=i
-            if i>1 then
-                FN=tonumber(string.sub(a,1,i-1))
-            end            
-            break
+    if a==nil then return end
+    local FN,LN,SS,SE
+    for i=1,string.len(a) do       
+        if tonumber(string.sub(a,1,i))==nil then
+            if i>1 then FN=tonumber(string.sub(a,1,i-1)) end
+            SS=i; break
         end
     end
     for i=1,string.len(a) do
-        c=tonumber(string.sub(a,-i))
-        if c==nil then
-            SE=-i
-            if i>1 then
-                LN=tonumber(string.sub(a,-i+1))
-            end            
-            break
+        if tonumber(string.sub(a,-i))==nil then
+            if i>1 then LN=tonumber(string.sub(a,-i+1)) end 
+            SE=-i; break
         end
     end       
-    local string=string.sub(a,SS,SE)
-    return FN,string,LN
+    local str=string.sub(a,(SS or 0),(SE or 0))
+    return FN,str,LN
 end

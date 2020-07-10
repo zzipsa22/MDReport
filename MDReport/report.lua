@@ -140,7 +140,6 @@ function doShortReport(chars,channel,who,callType)
     reportMessageLines(messageLines,channel,who,callType)       
 end
 
-
 --자세한 보고서 작성 및 출력
 function doFullReport(chars,channel,who,callType)      
     
@@ -181,7 +180,6 @@ function doFullReport(chars,channel,who,callType)
                 online="◀접속중"
             end
             
-            --
             local cutName=gsub(charName, "%s%-.+","")
             local shortName=strsub(cutName,1,9)            
             
@@ -199,7 +197,6 @@ function doFullReport(chars,channel,who,callType)
                 end                  
             end            
             
-            
             local havekey,parking, parkingstar="","",""       
             if keyLink~=nil then
                 havekey=keyLink
@@ -210,7 +207,7 @@ function doFullReport(chars,channel,who,callType)
                 parking=","..best
                 parkingstar="▶"
             else
-                parking=",X)"
+                parking=",X"
                 parkingstar="▷"            
             end
             if forceprint==1 then
@@ -248,7 +245,6 @@ function doWarningReport(channel,who,callType)
     else return end  
     reportMessageLines(messageLines,channel,who,callType)
 end
-
 
 --메세지 출력
 function reportMessageLines(messageLines,channel,who,callType)       
