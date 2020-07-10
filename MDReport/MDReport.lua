@@ -470,29 +470,30 @@ function filterCharsByFilter(chars,filter,f1,f2)
     elseif filter=="name" then
         f1=MY_NAME_IN_ADDON         
     end    
-    
-    for i=1,#chars do          
-        if filter=="level"and f2~=nil  then            
-            target=chars[i]["keyLevel"]              
-            if f1<=target and f2>=target then
-                findChars[num]=chars[i]
-                num=num+1                
-            end             
-        else 
-            if filter=="level" then                
-                target=chars[i]["keyLevel"]                  
-            elseif filter=="class" then                
-                target=chars[i]["shortClass"]   
-            elseif filter=="dungeon" then
-                target=chars[i]["keyName"]     
-            elseif filter=="name" then
-                target=chars[i]["fullName"]   
+    if chars~=nil then
+        for i=1,#chars do          
+            if filter=="level"and f2~=nil  then            
+                target=chars[i]["keyLevel"]              
+                if f1<=target and f2>=target then
+                    findChars[num]=chars[i]
+                    num=num+1                
+                end             
+            else 
+                if filter=="level" then                
+                    target=chars[i]["keyLevel"]                  
+                elseif filter=="class" then                
+                    target=chars[i]["shortClass"]   
+                elseif filter=="dungeon" then
+                    target=chars[i]["keyName"]     
+                elseif filter=="name" then
+                    target=chars[i]["fullName"]   
+                end
+                if f1==target then
+                    findChars[num]=chars[i]
+                    num=num+1                
+                end
             end
-            if f1==target then
-                findChars[num]=chars[i]
-                num=num+1                
-            end
-        end
+        end 
     end    
     if #findChars>0 then
         return findChars
