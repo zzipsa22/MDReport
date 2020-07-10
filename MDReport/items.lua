@@ -204,7 +204,7 @@ local categoryTable={
     ["원거리장비"]={"활","총","석궁","마법봉"},
     
 }
-function MDR:getCategoryTable(category)
+function getCategoryTable(category)
     for k,v in pairs(categoryTable) do
         if category==k then
             return v
@@ -212,7 +212,7 @@ function MDR:getCategoryTable(category)
     end 
 end
 
-function MDR:getFullDungeonName(dungeon)
+function getFullDungeonName(dungeon)
     for k,v in pairs(dungeonTable) do
         if dungeon==k then
             return v[1]
@@ -220,7 +220,7 @@ function MDR:getFullDungeonName(dungeon)
     end 
 end
 
-function MDR:getShortDungeonName(dungeon)
+function getShortDungeonName(dungeon)
     for k,v in pairs(dungeonTable) do
         if dungeon==v[1] then
             return k
@@ -228,7 +228,7 @@ function MDR:getShortDungeonName(dungeon)
     end      
 end
 
-function MDR:getDungeonDropTable(dungeon)
+function getDungeonDropTable(dungeon)
     for k,v in pairs(dungeonTable) do
         if dungeon==k then
             return v[2]
@@ -236,7 +236,7 @@ function MDR:getDungeonDropTable(dungeon)
     end      
 end
 
-function MDR:getSpecStatTable(spec)
+function getSpecStatTable(spec)
     for k,v in pairs(specTable) do
         if spec==k then
             return v[1]
@@ -244,7 +244,7 @@ function MDR:getSpecStatTable(spec)
     end      
 end
 
-function MDR:getSpecWeaponTable(spec)
+function getSpecWeaponTable(spec)
     for k,v in pairs(specTable) do
         if spec==k then
             return v[2]
@@ -252,13 +252,13 @@ function MDR:getSpecWeaponTable(spec)
     end      
 end
 
-function MDR:checkDungeonHasItem(dungeon,spec,category)
+function checkDungeonHasItem(dungeon,spec,category)
     
     if dungeon==nil or spec==nil then return end
-    local statTable=MDR:getSpecStatTable(spec)
-    local weaponTable=MDR:getSpecWeaponTable(spec)
+    local statTable=getSpecStatTable(spec)
+    local weaponTable=getSpecWeaponTable(spec)
     if category~=nil then
-        local wantWeaponTypeTable=MDR:getCategoryTable(category)
+        local wantWeaponTypeTable=getCategoryTable(category)
         local num=1
         local newWeaponTable={}
         for i=1,#weaponTable do
@@ -272,7 +272,7 @@ function MDR:checkDungeonHasItem(dungeon,spec,category)
         weaponTable=newWeaponTable
     end    
     
-    local dropTable=MDR:getDungeonDropTable(dungeon)
+    local dropTable=getDungeonDropTable(dungeon)
     
     local yourWeaponTypeTable={}
     local num=1
@@ -322,10 +322,10 @@ function MDR:checkDungeonHasItem(dungeon,spec,category)
     end
 end
 
-function MDR:checkDungeonHasCategoryItem(dungeon,stat,category)
+function checkDungeonHasCategoryItem(dungeon,stat,category)
     
-    local weaponTable=MDR:getCategoryTable(category)
-    local dropTable=MDR:getDungeonDropTable(dungeon)
+    local weaponTable=getCategoryTable(category)
+    local dropTable=getDungeonDropTable(dungeon)
     
     local yourWeaponTypeTable={}
     local num=1
@@ -373,11 +373,11 @@ function MDR:checkDungeonHasCategoryItem(dungeon,stat,category)
 end
 
 
-function MDR:checkDungeonHasSpecificItem(dungeon,stat,item)
+function checkDungeonHasSpecificItem(dungeon,stat,item)
     
     if dungeon==nil or item==nil then return end
     
-    local dropTable=MDR:getDungeonDropTable(dungeon)
+    local dropTable=getDungeonDropTable(dungeon)
     local thisDungeonHasItem=0
     local thisDungeonHas={}
     local itemNum=1
@@ -421,7 +421,7 @@ function MDR:checkDungeonHasSpecificItem(dungeon,stat,item)
 end
 
 --통합 아이템 찾기
-function MDR:findCharAllItem(VALUES)
+function findCharAllItem(VALUES)
     
     if VALUES~=nil then
         who=VALUES["who"]
@@ -443,7 +443,7 @@ function MDR:findCharAllItem(VALUES)
         comb=VALUES["comb"] 
     end
     
-    local chars=MDR:GetHaveKeyCharInfo() 
+    local chars=GetHaveKeyCharInfo() 
     -- 콜타입을 아이템으로 강제 조정정
     local callType="item"
     
@@ -460,17 +460,17 @@ function MDR:findCharAllItem(VALUES)
             local p=chars[i]["fullName"]
             local c=SavedInstancesDB.Toons[p]
             local mapName=c.MythicKey.name
-            local dungeon=MDR:getShortDungeonName(mapName)
+            local dungeon=getShortDungeonName(mapName)
             local itemList
             
             if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
-                itemList=MDR:checkDungeonHasSpecificItem(dungeon,stat,item)                
+                itemList=checkDungeonHasSpecificItem(dungeon,stat,item)                
             elseif comb=="Stat_Category" then
-                itemList=MDR:checkDungeonHasCategoryItem(dungeon,stat,category) 
+                itemList=checkDungeonHasCategoryItem(dungeon,stat,category) 
             elseif comb=="Spec_Category" then 
-                itemList=MDR:checkDungeonHasItem(dungeon,spec,category)
+                itemList=checkDungeonHasItem(dungeon,spec,category)
             elseif comb=="Spec_Item" then  
-                itemList=MDR:checkDungeonHasItem(dungeon,spec,nil)
+                itemList=checkDungeonHasItem(dungeon,spec,nil)
             else
                 print("잘못됐음")
             end                       
@@ -484,8 +484,8 @@ function MDR:findCharAllItem(VALUES)
     end          
     if channel=="GUILD" then
         
-        MDR:doShortReport(findChars,channel,who,callType)         
+        doShortReport(findChars,channel,who,callType)         
     else        
-        MDR:doFullReport(findChars,channel,who,callType)  
+        doFullReport(findChars,channel,who,callType)  
     end
 end

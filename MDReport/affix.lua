@@ -1,4 +1,4 @@
-function MDR:GetAffixWeeksTable()
+function GetAffixWeeksTable()
     local affixWeeks = {    
         [1] = {[1]=5,[2]=3,[3]=9,[4]=120},
         [2] = {[1]=7,[2]=2,[3]=10,[4]=120},
@@ -15,7 +15,7 @@ function MDR:GetAffixWeeksTable()
     }  --격아 4시즌
     return affixWeeks
 end
-function MDR:GetAffixNamesTable()
+function GetAffixNamesTable()
     local affixNames = {
         [1] ="과잉",
         [2] ="변덕",
@@ -47,9 +47,9 @@ local affixAddedLevel={
     [4]="(10),",
 }
 
-function MDR:GetAffixFullText(AffixTable)    
+function GetAffixFullText(AffixTable)    
     local AffixNames={}
-    local affixNames=MDR:GetAffixNamesTable()
+    local affixNames=GetAffixNamesTable()
     AffixNames[1]=affixNames[AffixTable[3]]    
     AffixNames[2]=affixNames[AffixTable[1]]    
     AffixNames[3]=affixNames[AffixTable[2]]    
@@ -62,11 +62,11 @@ function MDR:GetAffixFullText(AffixTable)
     return affixFullText
 end
 
-function MDR:GetAnyWeeksAffix(week)
+function GetAnyWeeksAffix(week)
     
-    local thisWeek=MDR:GetThisWeek()
+    local thisWeek=GetThisWeek()
     local calledWeek=thisWeek
-    local affixWeeks=MDR:GetAffixWeeksTable()
+    local affixWeeks=GetAffixWeeksTable()
     local howManyWeeks=#affixWeeks
     if week~=nil then         
         calledWeek=thisWeek+week
@@ -77,13 +77,13 @@ function MDR:GetAnyWeeksAffix(week)
     
     local calledWeekAffix=affixWeeks[calledWeek]    
     
-    local calledWeekFullText=MDR:GetAffixFullText(calledWeekAffix)
+    local calledWeekFullText=GetAffixFullText(calledWeekAffix)
     
     return calledWeekFullText    
     
 end
 
-function MDR:GetThisWeek()
+function GetThisWeek()
     if not IsAddOnLoaded("Blizzard_ChallengesUI") then
         LoadAddOn("Blizzard_ChallengesUI")
     end
@@ -92,7 +92,7 @@ function MDR:GetThisWeek()
     C_MythicPlus.RequestRewards()
     local affixIds = C_MythicPlus.GetCurrentAffixes()
     if not affixIds then return end  
-    local affixWeeks=MDR:GetAffixWeeksTable()
+    local affixWeeks=GetAffixWeeksTable()
     local thisWeek=1    
     for week,affixes in ipairs(affixWeeks) do
         if affixes[1] == affixIds[2].id and affixes[2] == affixIds[3].id and affixes[3] == affixIds[1].id then
@@ -103,8 +103,8 @@ function MDR:GetThisWeek()
 end
 
 function isThisWeekHasSpecificAffix(affixNum)
-    local thisWeek=MDR:GetThisWeek()
-    local affixWeeks=MDR:GetAffixWeeksTable()
+    local thisWeek=GetThisWeek()
+    local affixWeeks=GetAffixWeeksTable()
     local affixTable=affixWeeks[thisWeek]
     for i=1,#affixTable do
         if affixTable[i]==affixNum then
