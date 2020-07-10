@@ -16,16 +16,16 @@ local skull={
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
 
-function doCheckVersion(channel,who,callType)
+function MDR:doCheckVersion(channel,who,callType)
     
     local messageLines={}   
     messageLines[1]="▶[쐐기돌 보고서] Ver."..version.." (Update: "..lastUpdate..")"    
     
-    reportMessageLines(messageLines,channel,who,callType)   
+    MDR:reportMessageLines(messageLines,channel,who,callType)   
 end
 
 
-function doOnlyAffixReport(keyword,channel,who,callType)  
+function MDR:doOnlyAffixReport(keyword,channel,who,callType)  
     
     local week=keyword
     local messageLines={}       
@@ -45,10 +45,10 @@ function doOnlyAffixReport(keyword,channel,who,callType)
     
     messageLines[1]="▶"..weekTitle.." 속성: "..GetAnyWeeksAffix(week) 
     
-    reportMessageLines(messageLines,channel,who,callType)    
+    MDR:reportMessageLines(messageLines,channel,who,callType)    
 end
 
-function doShortReport(chars,channel,who,callType)
+function MDR:doShortReport(chars,channel,who,callType)
     local messageLines={} 
     
     if chars~=nil then
@@ -137,11 +137,11 @@ function doShortReport(chars,channel,who,callType)
         messageLines={}
         messageLines[1]=oneLineMessage
     end    
-    reportMessageLines(messageLines,channel,who,callType)       
+    MDR:reportMessageLines(messageLines,channel,who,callType)       
 end
 
 --자세한 보고서 작성 및 출력
-function doFullReport(chars,channel,who,callType)      
+function MDR:doFullReport(chars,channel,who,callType)      
     
     local messageLines={} 
     
@@ -231,23 +231,23 @@ function doFullReport(chars,channel,who,callType)
     end      
     
     --메세지 출력
-    reportMessageLines(messageLines,channel,who,callType)    
+    MDR:reportMessageLines(messageLines,channel,who,callType)    
 end
 
 local warning=1
 
-function doWarningReport(channel,who,callType) 
+function MDR:doWarningReport(channel,who,callType) 
     local messageLines={}
     if warning<=#warnMessage then
         messageLines[#messageLines+1]=warnMessage[warning]
         warning=warning+1
         channel="print"
     else return end  
-    reportMessageLines(messageLines,channel,who,callType)
+    MDR:reportMessageLines(messageLines,channel,who,callType)
 end
 
 --메세지 출력
-function reportMessageLines(messageLines,channel,who,callType)       
+function MDR:reportMessageLines(messageLines,channel,who,callType)       
     if channel==nil then channel="print" end
     
     --최종적으로 귓말채널 반환

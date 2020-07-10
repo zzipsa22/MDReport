@@ -40,16 +40,16 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
-            k1=mysplit(keyword,"!")[1] 
-            k2=mysplit(keyword,"!")[2]            
+            k1=MDR:mysplit(keyword,"!")[1] 
+            k2=MDR:mysplit(keyword,"!")[2]            
             
             --중간에 ~를 넣은 명령어면
         elseif strfind(keyword,"~")then
             
             local space="~"
-            
-            local before=mysplit(keyword,space)[1]
-            local after=mysplit(keyword,space)[2]
+            local BNA=MDR:mysplit(keyword,space)
+            local before=BNA[1]
+            local after=BNA[2]
             local num1=tonumber(before)
             local num2=tonumber(after)      
             
@@ -60,7 +60,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 level2=num2
                 
             else --던전명을 같이 넣었으면 
-                local _,string,LN=mysplitN(before)
+                local _,string,LN=MDR:mysplitN(before)
                 k1=string
                 level1=LN or 2
                 level2=num2 or 99
@@ -73,7 +73,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 k1="아무"                
                 level1=tonumber(ELC)                
             else                
-                local _,string,LN=mysplitN(ELC)
+                local _,string,LN=MDR:mysplitN(ELC)
                 --내나 지금만 붙였으면
                 if string=="내" or string=="지금" then
                     string=string.."돌"
@@ -93,13 +93,13 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             level1=keyIsNumber
             --숫자와 단어의 조합이면
         else
-            local KFN,Kstring,KLN=mysplitN(keyword)
+            local KFN,Kstring,KLN=MDR:mysplitN(keyword)
             k1=Kstring
             level1=KLN or KFN         
         end        
         
-        callTypeT1=getCallTypeTable(k1)
-        callTypeT2=getCallTypeTable(k2)  
+        callTypeT1=MDR:getCallTypeTable(k1)
+        callTypeT2=MDR:getCallTypeTable(k2)  
         
         --명령어가 발견이 안되면
         if k1 and not callTypeT1 then
@@ -111,7 +111,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 k1=gsub(k1,"지금","")
                 onlyOnline=1                
             end
-            callTypeT1=getCallTypeTable(k1)
+            callTypeT1=MDR:getCallTypeTable(k1)
         end
         
         --작은수가 먼저오게 조절절
@@ -140,7 +140,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyOnline"]=onlyOnline           
             
-            filterVALUES(VALUES)
+            MDR:filterVALUES(VALUES)
             
             --print(callTypeT[1])
             

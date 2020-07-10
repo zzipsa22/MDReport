@@ -262,7 +262,7 @@ local callTypeTable={
     ["지지난주속성"]={"affix", -2},    
 }
 
-function getCallTypeTable(keyword)
+function MDR:getCallTypeTable(keyword)
     for k,v in pairs(callTypeTable) do
         if keyword==k then
             return v

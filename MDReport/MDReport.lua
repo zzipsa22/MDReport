@@ -54,11 +54,11 @@ local mailClass={"냥꾼","술사"}
 local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
-function filterVALUES(VALUES) 
+function MDR:filterVALUES(VALUES) 
     
     --SavedInstance 체크
     if not SavedInstancesDB then
-        doWarningReport(channel,who,"warning") 
+        MDR:doWarningReport(channel,who,"warning") 
         return
     end    
     
@@ -171,20 +171,20 @@ function filterVALUES(VALUES)
             end
         else return            
         end
-        findCharAllItem(VALUES)
+        MDR:findCharAllItem(VALUES)
         return
         
     else --!명령어가 단일일 경우
         if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" then 
-            findCharAllKey(VALUES)            
+            MDR:findCharAllKey(VALUES)            
         elseif callType=="parking" then        
-            findCharNeedParking(channel,who,callType)             
+            MDR:findCharNeedParking(channel,who,callType)             
         elseif callType=="spell" then        
-            findCharSpell(keyword,channel,who,callType)     
+            MDR:findCharSpell(keyword,channel,who,callType)     
         elseif callType=="version" or callType=="forceversion"then        
-            doCheckVersion(channel,who,callType)    
+            MDR:doCheckVersion(channel,who,callType)    
         elseif callType=="affix" then        
-            doOnlyAffixReport(keyword,channel,who,callType)  
+            MDR:doOnlyAffixReport(keyword,channel,who,callType)  
         elseif callType=="specificitem"then        
             findCharSpecificItem(nil,keyword,channel,who,callType)
         elseif callType=="spec" and k2==nil then
@@ -195,7 +195,7 @@ function filterVALUES(VALUES)
                 end
             end
             VALUES["comb"]="Spec_Item"
-            findCharAllItem(VALUES)
+            MDR:findCharAllItem(VALUES)
         elseif callType=="item" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip3<=howManyWarn then
@@ -223,7 +223,7 @@ end
 
 
 --보유한 모든 돌 불러오기
-function GetHaveKeyCharInfo()
+function MDR:GetHaveKeyCharInfo()
     if not SavedInstancesDB then  return end   
     local t=SavedInstancesDB.Toons
     local num=1
@@ -232,7 +232,7 @@ function GetHaveKeyCharInfo()
         if t[k].MythicKey.link then
             chars[num]={}
             chars[num]["fullName"]=k
-            chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
+            chars[num]["shortClass"]=MDR:getCallTypeTable(t[k].Class)[2]
             chars[num]["keyLink"]=t[k].MythicKey.link
             chars[num]["best"]=t[k].MythicKeyBest.level
             chars[num]["keyLevel"]=t[k].MythicKey.level   
@@ -244,7 +244,7 @@ function GetHaveKeyCharInfo()
 end
 
 --보유한 모든 돌 보고하기
-function findCharAllKey(VALUES)    
+function MDR:findCharAllKey(VALUES)    
     
     if VALUES~=nil then
         who=VALUES["who"]
@@ -259,7 +259,7 @@ function findCharAllKey(VALUES)
         onlyOnline=VALUES["onlyOnline"]    
     end        
     
-    local chars=GetHaveKeyCharInfo()    
+    local chars=MDR:GetHaveKeyCharInfo()    
     local forceToShort=0     
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
@@ -279,42 +279,42 @@ function findCharAllKey(VALUES)
     if callType=="all" and (channel~="GUILD")  and (#chars==0) and (level==nil) then
         local messageLines={}
         messageLines[1]="▶저는 현재 갖고 있는 돌이 하나도 없습니다!" 
-        reportMessageLines(messageLines,channel,who,callType)
+        MDR:reportMessageLines(messageLines,channel,who,callType)
         return
     end      
     
     -- "지금"이 붙은 경우 접속중인 캐릭터만 필터링
     if onlyOnline==1 then
-        chars=filterCharsByFilter(chars,"name",nil,nil)
+        chars=MDR:filterCharsByFilter(chars,"name",nil,nil)
         --이캐릭 돌이 없으면 바로 보고하고 마무리, 길드면 생략
         if not chars and channel~="GUILD"then
             local messageLines={}
             messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
-            reportMessageLines(messageLines,channel,who,callType)
+            MDR:reportMessageLines(messageLines,channel,who,callType)
             return
         end        
     end
     
     --던전이나 직업으로 필터링
     if callType=="dungeon" or callType=="class" then
-        chars=filterCharsByFilter(chars,callType,keyword,nil)         
+        chars=MDR:filterCharsByFilter(chars,callType,keyword,nil)         
     end    
     
     --레벨을 지정한 경우 레벨로 한번더 필터링
     if level then 
-        chars=filterCharsByFilter(chars,"level",level,level2)        
+        chars=MDR:filterCharsByFilter(chars,"level",level,level2)        
     end    
     
     if forceToShort==1 then        
-        doShortReport(chars,channel,who,callType)  
+        MDR:doShortReport(chars,channel,who,callType)  
     else
-        doFullReport(chars,channel,who,callType) 
+        MDR:doFullReport(chars,channel,who,callType) 
     end    
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
-function findCharNeedParking(channel,who,callType)
-    local chars=GetHaveKeyCharInfo()
+function MDR:findCharNeedParking(channel,who,callType)
+    local chars=MDR:GetHaveKeyCharInfo()
     
     if channel==nil then channel="print" end   
     
@@ -363,24 +363,24 @@ function findCharNeedParking(channel,who,callType)
         end    
         
         messageLines[1]=message
-        reportMessageLines(messageLines,channel,who,callType)       
+        MDR:reportMessageLines(messageLines,channel,who,callType)       
         
         return
     end       
     
     --!주차를 길드엔 짧게 보고
     if channel=="GUILD" or channel=="PARTY" then                
-        doShortReport(findChars,channel,who,callType)                  
+        MDR:doShortReport(findChars,channel,who,callType)                  
     else                
-        doFullReport(findChars,channel,who,callType)            
+        MDR:doFullReport(findChars,channel,who,callType)            
     end            
     
 end
 
 --원하는 특징을 가진 돌 보고하기
-function findCharSpell(class,channel,who,callType)
+function MDR:findCharSpell(class,channel,who,callType)
     
-    local chars=GetHaveKeyCharInfo()
+    local chars=MDR:GetHaveKeyCharInfo()
     
     local findChars={}
     local num=1
@@ -446,18 +446,18 @@ function findCharSpell(class,channel,who,callType)
     
     --웅심,전부는 채널에 상관없이 풀리포트
     if doFullGuildReport==1 then        
-        doFullReport(findChars,channel,who,callType)  
+        MDR:doFullReport(findChars,channel,who,callType)  
     else
         --나머지는 길드엔 숏, 나머진 풀 리포트
         if channel=="GUILD" or channel=="PARTY" then
-            doShortReport(findChars,channel,who,callType)  
+            MDR:doShortReport(findChars,channel,who,callType)  
         else
-            doFullReport(findChars,channel,who,callType)     
+            MDR:doFullReport(findChars,channel,who,callType)     
         end       
     end    
 end
 
-function filterCharsByFilter(chars,filter,f1,f2)
+function MDR:filterCharsByFilter(chars,filter,f1,f2)
     local findChars={}
     local num=1
     local target
@@ -466,7 +466,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
         f1=tonumber(f1)
         f2=tonumber(f2)        
     elseif filter=="dungeon" then
-        f1=getFullDungeonName(f1) 
+        f1=MDR:getFullDungeonName(f1) 
     elseif filter=="name" then
         f1=MY_NAME_IN_ADDON         
     end    
@@ -501,7 +501,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
     end
 end
 
-function mysplit (inputstr, sep)
+function MDR:mysplit (inputstr, sep)
     if sep == nil then
         sep = "%s"
     end
@@ -512,7 +512,7 @@ function mysplit (inputstr, sep)
     return t
 end
 
-function mysplitN(a)
+function MDR:mysplitN(a)
     if a==nil then return end
     local FN,LN,SS,SE
     for i=1,string.len(a) do       
