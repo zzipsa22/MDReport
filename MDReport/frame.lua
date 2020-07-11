@@ -8,9 +8,14 @@ MDR:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 
 MDR:SetScript("OnEvent", function(self, event, ...)
         local msg=select(1, ...)
-        --메세지가 !로 시작하지 않을 경우 리턴
+        
+        --메세지가 !로 시작하지 않지만 !가 들어있으면 앞은 버림
         if strsub(msg, 0,1)~="!" then 
-        return end
+            if  strfind(msg,"!") then
+                msg="!"..mysplit(msg,"!")[2] 
+            else return end --!가 없으면 리턴
+        end
+        
         local channel
         
         if (event== "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
@@ -114,7 +119,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             callTypeT1=getCallTypeTable(k1)
         end
         
-        --작은수가 먼저오게 조절절
+        --작은수가 먼저오게 조절
         if level1 and level2 then
             if level2<level1 then
                 local level3=level1
@@ -140,10 +145,8 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyOnline"]=onlyOnline           
             
-            filterVALUES(VALUES)
-            
-            --print(callTypeT[1])
+            filterVALUES(VALUES)          
             
             --일치하는 명령어가 없으면 리턴
-        else return end  
+        else return end
 end)
