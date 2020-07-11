@@ -9,10 +9,10 @@ MDR:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 MDR:SetScript("OnEvent", function(self, event, ...)
         local msg=select(1, ...)
         
-        --메세지가 !로 시작하지 않지만 !가 들어있으면 앞은 버림
+        --!로시작하지않고 끝자리가 !가 아니면
         if strsub(msg, 0,1)~="!" then 
-            if  strfind(msg,"!") then
-                msg="!"..mysplit(msg,"!")[2] 
+            if  strfind(msg,"!") and strsub(msg, -1)~="!"then
+                msg="!"..(mysplit(msg,"!")[2] or "") 
             else return end --!가 없으면 리턴
         end
         
