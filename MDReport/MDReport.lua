@@ -1,12 +1,6 @@
 local version="@project-version@"
 local lastUpdate="@project-date-iso@"
-local searchingTip1=0
-local searchingTip2=0
-local searchingTip3=0
-local searchingTip4=0
-local searchingTip5=0
-local searchingTip6=0
-local searchingTip7=0
+local searchingTip={0,0,0,0,0,0,0}
 local howManyWarn=3
 local warnMessage={
     [1]="▶ Saved Instances 애드온이 설치되어 있지 않아 쐐기돌 정보를 불러올 수 없습니다.",
@@ -144,9 +138,9 @@ function filterVALUES(VALUES)
                 callType="spec"
             else
                 if who==MY_NAME_IN_GAME then
-                    if searchingTip1<=howManyWarn then
+                    if searchingTip[1]<=howManyWarn then
                         print("입력하신 직업은 전문화에 따라 착용가능한 아이템이 상이하여 전문화를 지정해야만 검색할 수 있습니다. (ex.!회복!한손 or !혈죽!무기)")
-                        searchingTip1=searchingTip1+1
+                        searchingTip[1]=searchingTip[1]+1
                     end
                 end
                 return
@@ -164,9 +158,9 @@ function filterVALUES(VALUES)
             VALUES["comb"]="Spec_Category"            
         elseif (callType=="stat" and callType2=="item") then
             if who==MY_NAME_IN_GAME then
-                if searchingTip2<=howManyWarn then
+                if searchingTip[2]<=howManyWarn then
                     print("주능력치와"..'"'.."무기"..'"'.."는 함께 검색할 수 없습니다. 무기 유형(단검,지팡이)이나 종류(양손,한손)를 지정해주세요. (ex. !힘!양손 or !지능!단검)")
-                    searchingTip2=searchingTip2+1
+                    searchingTip[2]=searchingTip[2]+1
                 end
             end
         else return            
@@ -189,32 +183,32 @@ function filterVALUES(VALUES)
             findCharSpecificItem(nil,keyword,channel,who,callType)
         elseif callType=="spec" and k2==nil then
             if who==MY_NAME_IN_GAME then
-                if searchingTip6<=howManyWarn then
+                if searchingTip[6]<=howManyWarn then
                     print("특성을 단독으로 입력하여 착용가능한 모든 무기로 던전을 검색합니다. 특정 직업의 돌이 알고 싶을 경우 !직업(ex.!드루 or !사제)으로 검색하거나, 특정 무기를 지정하고 싶을 경우 무기종류,무기유형과 함께 검색해보세요.(ex.!회복!양손 or !풍운!장착)")
-                    searchingTip6=searchingTip6+1
+                    searchingTip[6]=searchingTip[6]+1
                 end
             end
             VALUES["comb"]="Spec_Item"
             findCharAllItem(VALUES)
         elseif callType=="item" and callType2==nil then
             if who==MY_NAME_IN_GAME then
-                if searchingTip3<=howManyWarn then
+                if searchingTip[3]<=howManyWarn then
                     print("!무기는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (ex. !화염!무기)")
-                    searchingTip3=searchingTip3+1
+                    searchingTip[3]=searchingTip[3]+1
                 end
             end  
         elseif callType=="stat" and callType2==nil then
             if who==MY_NAME_IN_GAME then
-                if searchingTip4<=howManyWarn then
+                if searchingTip[4]<=howManyWarn then
                     print("능력치는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요 (ex. !"..keyword.."!지팡이)")
-                    searchingTip4=searchingTip4+1
+                    searchingTip[4]=searchingTip[4]+1
                 end
             end   
         elseif callType=="category" and callType2==nil then
             if who==MY_NAME_IN_GAME then
-                if searchingTip5<=howManyWarn then
+                if searchingTip[5]<=howManyWarn then
                     print("무기유형은 단독으로 검색할 수 없습니다. !한손도검 !양손둔기 처럼 무기의 종류를 지정하거나 !힘 !지능 등의 능력치와 함께 검색해주세요 (ex. !민첩!원거리장비: 총,활,석궁 검색)")
-                    searchingTip5=searchingTip5+1
+                    searchingTip[5]=searchingTip[5]+1
                 end
             end     
         else return end     
