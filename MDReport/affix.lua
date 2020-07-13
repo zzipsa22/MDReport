@@ -65,6 +65,10 @@ end
 function GetAnyWeeksAffix(week)
     
     local thisWeek=GetThisWeek()
+    if thisWeek==nil then
+        print("적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하세요.")
+        return
+    end
     local calledWeek=thisWeek
     local affixWeeks=GetAffixWeeksTable()
     local howManyWeeks=#affixWeeks
@@ -93,7 +97,7 @@ function GetThisWeek()
     local affixIds = C_MythicPlus.GetCurrentAffixes()
     if not affixIds then return end  
     local affixWeeks=GetAffixWeeksTable()
-    local thisWeek=1    
+    local thisWeek    
     for week,affixes in ipairs(affixWeeks) do
         if affixes[1] == affixIds[2].id and affixes[2] == affixIds[3].id and affixes[3] == affixIds[1].id then
             thisWeek=week
@@ -104,6 +108,7 @@ end
 
 function isThisWeekHasSpecificAffix(affixNum)
     local thisWeek=GetThisWeek()
+    if thisWeek==nil then return false end
     local affixWeeks=GetAffixWeeksTable()
     local affixTable=affixWeeks[thisWeek]
     for i=1,#affixTable do

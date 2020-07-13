@@ -30,7 +30,8 @@ function doOnlyAffixReport(keyword,channel,who,callType)
     local week=keyword
     local messageLines={}       
     local weekTitle=""
-    
+    local affixText=GetAnyWeeksAffix(week)
+    if affixText==nil then return end
     if (week==0)then   
         weekTitle="이번주"
     elseif (week==1)then
@@ -41,9 +42,9 @@ function doOnlyAffixReport(keyword,channel,who,callType)
         weekTitle=week.."주전"
     elseif (week>1)then 
         weekTitle=week.."주뒤"        
-    end     
+    end         
     
-    messageLines[1]="▶"..weekTitle.." 속성: "..GetAnyWeeksAffix(week) 
+    messageLines[1]="▶"..weekTitle.." 속성: "..affixText 
     
     reportMessageLines(messageLines,channel,who,callType)    
 end
