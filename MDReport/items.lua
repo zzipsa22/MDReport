@@ -217,7 +217,8 @@ function getFullDungeonName(dungeon)
         if dungeon==k then
             return v[1]
         end        
-    end 
+    end
+    return dungeon
 end
 
 function getShortDungeonName(dungeon)
@@ -225,7 +226,17 @@ function getShortDungeonName(dungeon)
         if dungeon==v[1] then
             return k
         end        
-    end      
+    end
+    local string
+    if strfind(dungeon," ") then
+        local t=mysplit(dungeon," ")
+        local c1=strsub(t[1],1,3)
+        local c2=strsub(t[2],1,3)
+        string=c1..c2
+    else
+        string=strsub(dungeon,1,6)
+    end       
+    return string
 end
 
 function getDungeonDropTable(dungeon)
