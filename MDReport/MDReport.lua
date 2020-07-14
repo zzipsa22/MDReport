@@ -256,6 +256,10 @@ function findCharAllKey(VALUES)
     local chars=GetHaveKeyCharInfo()    
     local forceToShort=0     
     
+    if callType=="levelrange" then
+        level2=keyword
+    end    
+    
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
     if (callType=="all"or callType=="levelrange") and ((channel=="GUILD") or (channel=="PARTY")) then
         forceToShort=1
@@ -459,7 +463,10 @@ function filterCharsByFilter(chars,filter,f1,f2)
     
     if filter=="level" then
         f1=tonumber(f1)
-        f2=tonumber(f2)        
+        f2=tonumber(f2)
+        if f1>f2 then
+            local big=f1; f1=f2;f2=big
+        end        
     elseif filter=="dungeon" then
         f1=getFullDungeonName(f1) 
     elseif filter=="name" then
