@@ -6,23 +6,17 @@ local callTypeTable={
     ["전체돌"]={"all", nil},
     ["아무"]={"all", nil},    
     ["모든돌"]={"all", nil},
-    
-    --["내돌"]={"mykey", nil},
-    
-    --["지금내돌"]={"currentmykey", nil},
+       
     ["무슨돌"]={"currentmykey", nil},
     
-    --["지금돌"]={"currentall", nil},
     ["현재돌"]={"currentall", nil},
     ["돌내놔"]={"currentall", nil},   
     
     ["주차"]={"parking", nil},
     
     ["이상"]={"levelrange", "99"},
-    --["+"]={"levelrange", "99"},
     ["이하"]={"levelrange", "2"},
-    --["-"]={"levelrange", "2"},    
-    
+
     ["힘"]={"stat", "힘"},  
     ["민"]={"stat", "민첩"},  
     ["지"]={"stat", "지능"},      
