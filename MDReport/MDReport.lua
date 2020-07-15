@@ -464,7 +464,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
     if filter=="level" then
         f1=tonumber(f1)
         f2=tonumber(f2)
-        if f1>f2 then
+        if f1 and f2 and f1>f2 then
             local big=f1; f1=f2;f2=big
         end        
     elseif filter=="dungeon" then
