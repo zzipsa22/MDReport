@@ -1,5 +1,3 @@
-local version="@project-version@"
-local lastUpdate="@project-date-iso@"
 local searchingTip={0,0,0,0,0,0,0}
 local howManyWarn=3
 local warnMessage={

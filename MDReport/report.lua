@@ -1,3 +1,5 @@
+local version="@project-version@"
+local lastUpdate="@project-date-iso@"
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()    
 
