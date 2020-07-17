@@ -222,6 +222,8 @@ function getFullDungeonName(dungeon)
 end
 
 function getShortDungeonName(dungeon)
+    if dungeon==nil then return end
+    
     for k,v in pairs(dungeonTable) do
         if dungeon==v[1] then
             return k
@@ -493,7 +495,7 @@ function findCharAllItem(VALUES)
             end
         end    
     end          
-    if channel=="GUILD" then
+    if channel=="GUILD" or channel=="PARTY"then
         
         doShortReport(findChars,channel,who,callType)         
     else        

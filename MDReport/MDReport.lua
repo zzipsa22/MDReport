@@ -233,7 +233,7 @@ function GetHaveKeyCharInfo()
             chars[num]["keyName"]=t[k].MythicKey.name            
             num=num+1           
         end                
-    end    
+    end 
     return chars
 end
 
@@ -475,7 +475,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
     
     for i=1,#chars do          
         if filter=="level"and f2~=nil  then            
-            target=chars[i]["keyLevel"]              
+            target=chars[i]["keyLevel"] or 0              
             if f1<=target and f2>=target then
                 findChars[num]=chars[i]
                 num=num+1                

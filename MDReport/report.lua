@@ -58,12 +58,12 @@ function doShortReport(chars,channel,who,callType)
         
         --중복직업 체크              
         local yourClass={}   
-        
         for i=1,#chars do         
             class=chars[i]["shortClass"] 
             yourClass[class]=(yourClass[class] or 0)+1             
         end   
         
+        local sameClass={}      
         for i=1,#chars do             
             charName=chars[i]["fullName"]      
             class=chars[i]["shortClass"]            
@@ -76,12 +76,11 @@ function doShortReport(chars,channel,who,callType)
             local classStatus=""
             
             local cutName=gsub(charName, "%s%-.+","")
-            local shortName=strsub(cutName,1,9)
-            
+            local shortName=strsub(cutName,1,9)            
             
             if yourClass[class] and yourClass[class]>1 then
                 sameClass[class]=(sameClass[class] or 0)+1                
-                classStatus=class..sameClass[class]..":"..cutName                
+                classStatus=shortName                
             else                
                 classStatus=class                
             end
@@ -109,18 +108,18 @@ function doShortReport(chars,channel,who,callType)
             else
                 havekey="돌 없음"
             end
-            local message=""            
+            local message=""          
             
             if callType=="parking" then                 
-                message=skull[class]..class.."("..havekey..parkingstar..")"..online
+                message=skull[class]..classStatus.."("..havekey..parkingstar..")"
             elseif callType=="all" then
-                message=skull[class]..havekey.."("..classStatus..")"
+                message=skull[class]..havekey.."("..classStatus..")"               
             elseif chars[i]["extraLink"] and callType=="spell"then
-                message=skull[class]..class.."("..havekey..")"..chars[i]["extraLink"]..online
+                message=skull[class]..classStatus.."("..havekey..")"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
                 message=skull[class]..havekey.."("..chars[i]["extraLink"]..")"
             else
-                message=skull[class]..havekey.."("..classStatus..")"..online
+                message=skull[class]..havekey.."("..classStatus..")"
             end
             
             messageLines[i]=message 
@@ -164,6 +163,7 @@ function doFullReport(chars,channel,who,callType)
             yourClass[class]=(yourClass[class] or 0)+1             
         end   
         
+        local sameClass={}        
         for i=1,#chars do             
             charName=chars[i]["fullName"]      
             class=chars[i]["shortClass"]            
@@ -182,28 +182,15 @@ function doFullReport(chars,channel,who,callType)
             end
             
             local cutName=gsub(charName, "%s%-.+","")
-            local shortName=strsub(cutName,1,9)            
+            local shortName=strsub(cutName,1,9)    
+            local havekey,parking, parkingstar="","",""    
             
-            --같은 직업이 있을경우 뒤에 이름 붙이기
-            if yourClass[class] and yourClass[class]>1 then
-                sameClass[class]=(sameClass[class] or 0)+1
-                classStatus=class..sameClass[class].."("..cutName..")"
-            else
-                if (callType=="parking") then  
-                    classStatus=class.."("..shortName..")"
-                elseif (callType=="dungeon")then
-                    classStatus=class.."("..cutName..")"
-                else
-                    classStatus=class.."("..shortName..")"                    
-                end                  
-            end            
-            
-            local havekey,parking, parkingstar="","",""       
             if keyLink~=nil then
                 havekey=keyLink
             else
                 havekey="[쐐기돌 없음]"
             end
+            
             if best and best ~=0 then
                 parking=","..best
                 parkingstar="▶"
@@ -211,20 +198,35 @@ function doFullReport(chars,channel,who,callType)
                 parking=",X"
                 parkingstar="▷"            
             end
+            
+            --같은 직업이 있을경우 뒤에 이름 붙이기
+            if yourClass[class] and yourClass[class]>1 then
+                sameClass[class]=(sameClass[class] or 0)+1
+                classStatus=class..sameClass[class].."("..shortName..")"
+            else
+                if (callType=="parking") then  
+                    classStatus=class.."("..shortName..parking..")"
+                elseif (callType=="dungeon")then
+                    classStatus=class.."("..cutName..")"
+                else
+                    classStatus=class.."("..shortName..")"                    
+                end                  
+            end            
+            
             if forceprint==1 then
                 channel="print"
                 headStar=parkingstar
             else
                 headStar=skull[class]                
-            end 
-            --local extra=""
-            local message=""
+            end             
+            
+            local message=""             
             if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
             elseif callType=="item" and chars[i]["extraLink"] then
                 message=headStar..classStatus..": "..havekey..chars[i]["extraLink"] 
             else
-                message=headStar..class.."("..shortName..parking..")"..": "..havekey..online
+                message=headStar..classStatus..": "..havekey..online
             end
             
             messageLines[i]=message 

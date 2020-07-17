@@ -6,7 +6,7 @@ local callTypeTable={
     ["전체돌"]={"all", nil},
     ["아무"]={"all", nil},    
     ["모든돌"]={"all", nil},
-       
+    
     ["무슨돌"]={"currentmykey", nil},
     
     ["현재돌"]={"currentall", nil},
@@ -16,7 +16,7 @@ local callTypeTable={
     
     ["이상"]={"levelrange", "99"},
     ["이하"]={"levelrange", "2"},
-
+    
     ["힘"]={"stat", "힘"},  
     ["민"]={"stat", "민첩"},  
     ["지"]={"stat", "지능"},      
@@ -227,6 +227,8 @@ local callTypeTable={
     ["고철"]={"dungeon", "고철"},
     ["작업장"]={"dungeon", "작업"},
     ["작업"]={"dungeon", "작업"},
+    ["웨이"]={"dungeon", "웨이"},
+    ["저택"]={"dungeon", "웨이"},
     
     ["버전"]={"version", nil},
     ["버젼"]={"version", nil},
