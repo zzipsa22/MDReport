@@ -204,15 +204,9 @@ function doFullReport(chars,channel,who,callType)
             --같은 직업이 있을경우 뒤에 이름 붙이기
             if yourClass[class] and yourClass[class]>1 then
                 sameClass[class]=(sameClass[class] or 0)+1
-                classStatus=class..sameClass[class].."("..shortName..")"
-            else
-                if (callType=="parking") then  
-                    classStatus=class.."("..shortName..parking..")"
-                elseif (callType=="dungeon")then
-                    classStatus=class.."("..cutName..")"
-                else
-                    classStatus=class.."("..shortName..")"                    
-                end                  
+                classStatus=class..sameClass[class].."("..shortName..parking..")"
+            else                
+                classStatus=class.."("..shortName..parking..")"
             end            
             
             if forceprint==1 then
