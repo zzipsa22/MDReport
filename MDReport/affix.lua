@@ -44,7 +44,7 @@ local affixAddedLevel={
     [1]="(2),",
     [2]="(4),",
     [3]="(7),",
-    [4]="(10),",
+    [4]="(10)",
 }
 
 function GetAffixFullText(AffixTable)    
