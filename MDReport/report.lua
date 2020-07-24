@@ -73,16 +73,17 @@ function doShortReport(chars,channel,who,callType)
             local keyLink=chars[i]["keyLink"]
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
-            local best=chars[i]["best"]           
+            local best=chars[i]["best"]
+            local itemLevel=chars[i]["itemLevel"]            
             local online=""
-            local classStatus=""
-            
+            local classStatus=""            
             local cutName=gsub(charName, "%s%-.+","")
-            local shortName=strsub(cutName,1,9)            
+            local shortName=strsub(cutName,1,9)
+            local shorterName=strsub(cutName,1,6)
             
             if yourClass[class] and yourClass[class]>1 then
                 sameClass[class]=(sameClass[class] or 0)+1                
-                classStatus=shortName                
+                classStatus=class..sameClass[class]..":"..shorterName                
             else                
                 classStatus=class                
             end
@@ -99,7 +100,7 @@ function doShortReport(chars,channel,who,callType)
                 
             else 
                 if callType=="parking" then
-                    parkingstar=",X"                    
+                    parkingstar=""                    
                 else  
                     parkingstar=""            
                 end       
@@ -108,7 +109,7 @@ function doShortReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyName..level
             else
-                havekey="돌 없음"
+                havekey="돌X, "..math.floor(itemLevel).."Lv"
             end
             local message=""          
             
@@ -127,17 +128,24 @@ function doShortReport(chars,channel,who,callType)
             messageLines[i]=message 
         end        
         -- 한줄로 줄이기
-        local oneLineMessage=""        
+        local oneLineMessage={}
+        local num=1
+        local maxNum=8
+        local lineNum=math.floor(#messageLines/maxNum)+1
+        local charPerLine=math.floor(#messageLines/lineNum)
+        
         for i=1,#messageLines do
             local space=""
             if i<#messageLines then
                 space=" "                
-            end
-            oneLineMessage=oneLineMessage..messageLines[i]..space
+            end           
+            if #messageLines>maxNum then
+                num=math.floor((i-1)/charPerLine)+1                
+            end            
+            oneLineMessage[num]=(oneLineMessage[num] or "")..messageLines[i]..space
         end
         --메세지라인 리셋셋
-        messageLines={}
-        messageLines[1]=oneLineMessage
+        messageLines=oneLineMessage
     end    
     reportMessageLines(messageLines,channel,who,callType)       
 end

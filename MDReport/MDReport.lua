@@ -11,6 +11,9 @@ local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()
 local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
+local SIL=475 --시즌 아이템레벨 최고값
+local SILC=15 --허용가능 레벨편차
+local SCL=120 --현재 시즌 캐릭터 만렙
 
 local hasteClass={
     {"술사",GetSpellLink(32182)},
@@ -38,6 +41,51 @@ local curseClass={
     {"드루",GetSpellLink(2782)},
     {"법사",GetSpellLink(475)},
     {"술사",GetSpellLink(51886)},
+}
+
+local RealmMap= {
+    {
+        "렉사르", -- [1]
+        "와일드해머", -- [2]
+        "윈드러너", -- [3]
+    }, -- [1]
+    {
+        "데스윙", -- [1]
+        "알렉스트라자", -- [2]
+    }, -- [2]
+    {
+        "가로나", -- [1]
+        "굴단", -- [2]
+        "줄진", -- [3]
+    }, -- [3]
+    {
+        "노르간논", -- [1]
+        "달라란", -- [2]
+        "말퓨리온", -- [3]
+        "세나리우스", -- [4]
+    }, -- [4]
+    {
+        "불타는 군단", -- [1]
+        "스톰레이지", -- [2]        
+    }, -- [5]
+    ["렉사르"] = 1,
+    ["와일드해머"] = 1,
+    ["데스윙"] = 2,
+    ["말퓨리온"] = 4,
+    ["달라란"] = 4,
+    ["굴단"] = 3,
+    ["줄진"] = 3,
+    ["윈드러너"] = 1,
+    ["알렉스트라자"] = 2,
+    ["가로나"] = 3,
+    ["노르간논"] = 4,
+    ["세나리우스"] = 4,
+    ["불타는 군단"] = 5,
+    ["스톰레이지"] = 5,
+    ["아즈샤라"] = 6,
+    ["하이잘"] = 7,
+    ["듀로탄"] = 1,
+    ["헬스크림"] = 9,
 }
 
 local clothClass={"법사","사제","흑마"}
@@ -170,7 +218,7 @@ function filterVALUES(VALUES)
         if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" then 
             findCharAllKey(VALUES)            
         elseif callType=="parking" then        
-            findCharNeedParking(channel,who,callType)             
+            findCharNeedParking(channel,who,callType,keyword)             
         elseif callType=="spell" then        
             findCharSpell(keyword,channel,who,callType)     
         elseif callType=="version" or callType=="forceversion"then        
@@ -215,23 +263,37 @@ end
 
 
 --보유한 모든 돌 불러오기
-function GetHaveKeyCharInfo()
+function GetHaveKeyCharInfo(type)
     if not SavedInstancesDB then  return end   
     local t=SavedInstancesDB.Toons
     local num=1
     local chars={}
-    for k,v in pairs(t) do        
-        if t[k].MythicKey.link then
-            chars[num]={}
-            chars[num]["fullName"]=k
-            chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
-            chars[num]["keyLink"]=t[k].MythicKey.link
-            chars[num]["best"]=t[k].MythicKeyBest.level
-            chars[num]["keyLevel"]=t[k].MythicKey.level   
-            chars[num]["keyName"]=t[k].MythicKey.name            
-            num=num+1           
-        end                
-    end 
+    local faction=UnitFactionGroup("player")
+    local realm=gsub(GetRealmName()," ","")
+    
+    for k,v in pairs(t) do
+        local charRealm=mysplit(gsub(k," ",""),"-")[2]
+        if t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
+            if t[k].MythicKey.link then
+                chars[num]={}
+                chars[num]["fullName"]=k
+                chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
+                chars[num]["keyLink"]=t[k].MythicKey.link
+                chars[num]["best"]=t[k].MythicKeyBest.level
+                chars[num]["keyLevel"]=t[k].MythicKey.level   
+                chars[num]["keyName"]=t[k].MythicKey.name            
+                chars[num]["itemLevel"]=t[k].IL          
+                num=num+1
+            elseif (t[k].IL>=(SIL-SILC)) or (type=="soft" and t[k].IL>=(SIL-3*SILC)) or (type=="hard" and t[k].Level==SCL)  then 
+                --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
+                chars[num]={}
+                chars[num]["fullName"]=k
+                chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
+                chars[num]["itemLevel"]=t[k].IL
+                num=num+1
+            end
+        end        
+    end
     return chars
 end
 
@@ -309,8 +371,8 @@ function findCharAllKey(VALUES)
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
-function findCharNeedParking(channel,who,callType)
-    local chars=GetHaveKeyCharInfo()
+function findCharNeedParking(channel,who,callType,keyword)
+    local chars=GetHaveKeyCharInfo(keyword)
     
     if channel==nil then channel="print" end   
     
@@ -531,3 +593,4 @@ function mysplitN(a)
     local str=string.sub(a,(SS or 0),(SE or 0))
     return FN,str,LN
 end
+

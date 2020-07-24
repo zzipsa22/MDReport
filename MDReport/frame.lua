@@ -145,7 +145,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyOnline"]=onlyOnline           
             
-            filterVALUES(VALUES)          
+            filterVALUES(VALUES)
             
             --일치하는 명령어가 없으면 리턴
         else return end
