@@ -84,7 +84,7 @@ local RealmMap= {
     ["스톰레이지"] = 5,
     ["아즈샤라"] = 6,
     ["하이잘"] = 7,
-    ["듀로탄"] = 1,
+    ["듀로탄"] = 8,
     ["헬스크림"] = 9,
 }
 
@@ -593,4 +593,3 @@ function mysplitN(a)
     local str=string.sub(a,(SS or 0),(SE or 0))
     return FN,str,LN
 end
-
