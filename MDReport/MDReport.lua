@@ -311,9 +311,12 @@ function findCharAllKey(VALUES)
         callType=callTypeT[1]
         keyword=callTypeT[2]
         onlyOnline=VALUES["onlyOnline"]    
-    end        
-    
-    local chars=GetHaveKeyCharInfo()    
+    end
+    local type=nil
+    if callType=="class" then
+        type="hard"
+    end    
+    local chars=GetHaveKeyCharInfo(type)    
     local forceToShort=0     
     
     if callType=="levelrange" then

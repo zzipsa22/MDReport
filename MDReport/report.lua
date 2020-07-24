@@ -182,7 +182,7 @@ function doFullReport(chars,channel,who,callType)
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
             local best=chars[i]["best"]                      
-            
+            local itemLevel=chars[i]["itemLevel"]                
             local online=""            
             local classStatus=""
             local headStar=""
@@ -198,7 +198,7 @@ function doFullReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyLink
             else
-                havekey="[쐐기돌 없음]"
+                havekey="[쐐기돌 없음, "..math.floor(itemLevel).."Lv]"
             end
             
             if best and best ~=0 then
