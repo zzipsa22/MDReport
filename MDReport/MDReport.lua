@@ -11,39 +11,23 @@ local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()
 local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
+local SCL=120 -- 현 확팩 만렙렙
 
-local DIL={ --단수별 드랍템 레벨
-    [2]=435,
-    [3]=435,
-    [4]=440,
-    [5]=445,
-    [6]=445,
-    [7]=450,
-    [8]=455,
-    [9]=455,
-    [10]=455,
-    [11]=460,
-    [12]=460,
-    [13]=460,
-    [14]=465,
-    [15]=465,
-}
-
-local DL={ --던전별  레벨 차감
-    [2]=150,
-    [3]=150,
-    [4]=45,
-    [5]=45,
-    [6]=45,
-    [7]=35,
-    [8]=35,
-    [9]=35,
-    [10]=25,
-    [11]=25,
-    [12]=25,
-    [13]=15,
-    [14]=15,
-    [15]=5,
+local DIL={ --단수별 허용레벨 / 드랍템 레벨
+    [2]=80,--435,
+    [3]=280,--435,
+    [4]=375,--440,
+    [5]=380,--445,
+    [6]=385,--445,
+    [7]=400,--450,
+    [8]=405,--455,
+    [9]=410,--455,
+    [10]=425,--455,
+    [11]=430,--460,
+    [12]=435,--460,
+    [13]=445,--460,
+    [14]=450,--465,
+    [15]=460,--465,
 }
 
 local hasteClass={
@@ -330,7 +314,7 @@ function GetHaveKeyCharInfo(type,level)
     local realm=gsub(GetRealmName()," ","")
     local L=level
     if L>15 or L==nil then L=15;elseif L<2 then L=2;end
-    local minLevel=DIL[L]-DL[L]    
+    local minLevel=DIL[L]  
     
     for k,v in pairs(t) do
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
@@ -345,7 +329,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL          
                 num=num+1                
-            elseif (t[k].IL>=minLevel) then                 
+            elseif (t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) then                 
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
