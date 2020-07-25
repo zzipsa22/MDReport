@@ -14,7 +14,7 @@ local callType2,keyword2,extraKeyword2
 local SCL=120 -- 현 확팩 만렙렙
 
 local DIL={ --단수별 허용레벨 / 드랍템 레벨
-    [2]=80,--435,
+    [2]=280,--435,
     [3]=280,--435,
     [4]=375,--440,
     [5]=380,--445,
@@ -329,7 +329,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL          
                 num=num+1                
-            elseif (t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) then                 
+            elseif (type~="haveKeyOnly" and t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) then                 
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
@@ -371,7 +371,8 @@ function findCharAllKey(VALUES)
     end
     local type=nil
     if callType=="class" then
-        type="hard"        
+        type="hard"
+    else type="haveKeyOnly"
     end    
     local chars=GetHaveKeyCharInfo(type)    
     local forceToShort=0     
