@@ -12,7 +12,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         --!로시작하지않고 끝자리가 !가 아니면
         if strsub(msg, 0,1)~="!" then 
             if  strfind(msg,"!") and strsub(msg, -1)~="!"then
-                msg="!"..(mysplit(msg,"!")[2] or "") 
+                msg="!"..(MDRsplit(msg,"!")[2] or "") 
             else return end --!가 없으면 리턴
         end
         
@@ -45,16 +45,16 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
-            k1=mysplit(keyword,"!")[1] 
-            k2=mysplit(keyword,"!")[2]            
+            k1=MDRsplit(keyword,"!")[1] 
+            k2=MDRsplit(keyword,"!")[2]            
             
             --중간에 ~를 넣은 명령어면
         elseif strfind(keyword,"~")then
             
             local space="~"
             
-            local before=mysplit(keyword,space)[1]
-            local after=mysplit(keyword,space)[2]
+            local before=MDRsplit(keyword,space)[1]
+            local after=MDRsplit(keyword,space)[2]
             local num1=tonumber(before)
             local num2=tonumber(after)      
             
@@ -65,7 +65,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 level2=num2
                 
             else --던전명을 같이 넣었으면 
-                local _,string,LN=mysplitN(before)
+                local _,string,LN=MDRnumsplit(before)
                 k1=string
                 level1=LN or 2
                 level2=num2 or 99
@@ -78,7 +78,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 k1="아무"                
                 level1=tonumber(ELC)                
             else                
-                local _,string,LN=mysplitN(ELC)
+                local _,string,LN=MDRnumsplit(ELC)
                 --내나 지금만 붙였으면
                 if string=="내" or string=="지금" then
                     string=string.."돌"
@@ -98,7 +98,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             level1=keyIsNumber
             --숫자와 단어의 조합이면
         else
-            local KFN,Kstring,KLN=mysplitN(keyword)
+            local KFN,Kstring,KLN=MDRnumsplit(keyword)
             k1=Kstring
             level1=KLN or KFN         
         end        

@@ -13,6 +13,7 @@ local callTypeTable={
     ["돌내놔"]={"currentall", nil},   
     
     ["주차"]={"parking", nil},
+    ["단주차"]={"parking", nil},
     ["합법"]={"parking", nil},
     ["합법주차"]={"parking", nil},
     ["편법"]={"parking", "soft"},

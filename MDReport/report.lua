@@ -58,11 +58,12 @@ function doShortReport(chars,channel,who,callType)
         
         local charName,class=nil,nil
         
-        --중복직업 체크              
-        local yourClass={}   
+        --중복직업 체크 및 돌 순서대로 정렬             
+        local yourClass={}
+        
         for i=1,#chars do         
             class=chars[i]["shortClass"] 
-            yourClass[class]=(yourClass[class] or 0)+1             
+            yourClass[class]=(yourClass[class] or 0)+1  
         end   
         
         local sameClass={}      
@@ -95,12 +96,15 @@ function doShortReport(chars,channel,who,callType)
             keyName=getShortDungeonName(keyName)            
             
             local havekey,parking, parkingstar="","",""  
-            if best and best ~=0 then                
-                parkingstar=","..best             
-                
+            if best and best ~=0 then 
+                if callType=="parking" then
+                    parkingstar=":"..best                    
+                else  
+                    parkingstar=","..best             
+                end                   
             else 
                 if callType=="parking" then
-                    parkingstar=""                    
+                    parkingstar=":Χ"                    
                 else  
                     parkingstar=""            
                 end       
@@ -109,12 +113,12 @@ function doShortReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyName..level
             else
-                havekey="돌X, "..math.floor(itemLevel).."Lv"
+                havekey=math.floor(itemLevel).."Lv"
             end
             local message=""          
             
             if callType=="parking" then                 
-                message=skull[class]..classStatus.."("..havekey..parkingstar..")"
+                message=skull[class]..classStatus.."("..havekey..")"..parkingstar
             elseif callType=="all" then
                 message=skull[class]..havekey.."("..classStatus..")"               
             elseif chars[i]["extraLink"] and callType=="spell"then
@@ -130,10 +134,9 @@ function doShortReport(chars,channel,who,callType)
         -- 한줄로 줄이기
         local oneLineMessage={}
         local num=1
-        local maxNum=8
-        local lineNum=math.floor(#messageLines/maxNum)+1
-        local charPerLine=math.floor(#messageLines/lineNum)
-        
+        local maxNum=9
+        local lineNum=math.floor((#messageLines-1)/maxNum)+1
+        local charPerLine=math.floor(#messageLines/lineNum)+1        
         for i=1,#messageLines do
             local space=""
             if i<#messageLines then
@@ -205,7 +208,7 @@ function doFullReport(chars,channel,who,callType)
                 parking=","..best
                 parkingstar="▶"
             else
-                parking=",X"
+                parking=",Χ"
                 parkingstar="▷"            
             end
             

@@ -11,9 +11,40 @@ local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()
 local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
-local SIL=475 --시즌 아이템레벨 최고값
-local SILC=15 --허용가능 레벨편차
-local SCL=120 --현재 시즌 캐릭터 만렙
+
+local DIL={ --단수별 드랍템 레벨
+    [2]=435,
+    [3]=435,
+    [4]=440,
+    [5]=445,
+    [6]=445,
+    [7]=450,
+    [8]=455,
+    [9]=455,
+    [10]=455,
+    [11]=460,
+    [12]=460,
+    [13]=460,
+    [14]=465,
+    [15]=465,
+}
+
+local DL={ --던전별  레벨 차감
+    [2]=150,
+    [3]=150,
+    [4]=45,
+    [5]=45,
+    [6]=45,
+    [7]=35,
+    [8]=35,
+    [9]=35,
+    [10]=25,
+    [11]=25,
+    [12]=25,
+    [13]=15,
+    [14]=15,
+    [15]=5,
+}
 
 local hasteClass={
     {"술사",GetSpellLink(32182)},
@@ -218,7 +249,7 @@ function filterVALUES(VALUES)
         if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" then 
             findCharAllKey(VALUES)            
         elseif callType=="parking" then        
-            findCharNeedParking(channel,who,callType,keyword)             
+            findCharNeedParking(channel,who,callType,keyword,level)             
         elseif callType=="spell" then        
             findCharSpell(keyword,channel,who,callType)     
         elseif callType=="version" or callType=="forceversion"then        
@@ -262,17 +293,47 @@ function filterVALUES(VALUES)
 end
 
 
+function MDRspairs(t, order)
+    -- collect the keys
+    local keys = {}
+    for k in pairs(t) do keys[#keys+1] = k end
+    
+    -- if order function given, sort by it by passing the table and keys a, b,
+    -- otherwise just sort the keys 
+    if order then
+        table.sort(keys, function(a,b) return order(t, a, b) end)
+    else
+        table.sort(keys)
+    end
+    
+    -- return the iterator function
+    local i = 0
+    return function()
+        i = i + 1
+        if keys[i] then
+            return keys[i], t[keys[i]]
+        end
+    end
+end
+
 --보유한 모든 돌 불러오기
-function GetHaveKeyCharInfo(type)
+function GetHaveKeyCharInfo(type,level)   
     if not SavedInstancesDB then  return end   
+    if type=="hard" then level=2
+    elseif type=="soft" then level=level-5
+        if level<2 then level=2 end        
+    elseif level==nil then level=15 end    
     local t=SavedInstancesDB.Toons
     local num=1
     local chars={}
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
+    local L=level
+    if L>15 or L==nil then L=15;elseif L<2 then L=2;end
+    local minLevel=DIL[L]-DL[L]    
     
     for k,v in pairs(t) do
-        local charRealm=mysplit(gsub(k," ",""),"-")[2]
+        local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         if t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
             if t[k].MythicKey.link then
                 chars[num]={}
@@ -283,17 +344,29 @@ function GetHaveKeyCharInfo(type)
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL          
-                num=num+1
-            elseif (t[k].IL>=(SIL-SILC)) or (type=="soft" and t[k].IL>=(SIL-3*SILC)) or (type=="hard" and t[k].Level==SCL)  then 
+                num=num+1                
+            elseif (t[k].IL>=minLevel) then                 
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["itemLevel"]=t[k].IL
+                chars[num]["keyLevel"]=0
                 num=num+1
             end
         end        
     end
+    local newChars={}
+    local newChars2={}
+    local charsNum=1
+    for i=1,#chars do
+        newChars[chars[i]]=chars[i]["keyLevel"]        
+    end    
+    for k,v in MDRspairs(newChars, function(t,a,b) return t[b] < t[a] end) do
+        newChars2[charsNum]=k
+        charsNum=charsNum+1
+    end
+    chars=newChars2
     return chars
 end
 
@@ -314,7 +387,7 @@ function findCharAllKey(VALUES)
     end
     local type=nil
     if callType=="class" then
-        type="hard"
+        type="hard"        
     end    
     local chars=GetHaveKeyCharInfo(type)    
     local forceToShort=0     
@@ -374,8 +447,9 @@ function findCharAllKey(VALUES)
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
-function findCharNeedParking(channel,who,callType,keyword)
-    local chars=GetHaveKeyCharInfo(keyword)
+function findCharNeedParking(channel,who,callType,keyword,level)
+    if level==nil then level=15 end
+    local chars=GetHaveKeyCharInfo(keyword,level)
     
     if channel==nil then channel="print" end   
     
@@ -385,13 +459,13 @@ function findCharNeedParking(channel,who,callType,keyword)
     local bestLevels={}
     local lowestLevel=0
     local highstLevel=0
-    local paringLevel=15 --15단주차
+    local parkingLevel=level--15단주차
     
     if chars~=nil then       
         
         for i=1,#chars do   
             local best=chars[i]["best"]
-            if (best==nil) or (best<paringLevel) then
+            if (best==nil) or (best<parkingLevel) then
                 findChars[parknum]=chars[i]                
                 parknum=parknum+1
             else
@@ -418,7 +492,7 @@ function findCharNeedParking(channel,who,callType,keyword)
         local messageLines={}
         local message=""
         if (chars~=nil) and (#chars>0) then            
-            message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."-"..highstLevel.."단)" 
+            message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
         else
             message="▶저는 주차는 고사하고 현재 갖고 있는 돌이 하나도 없습니다!"             
         end    
@@ -567,7 +641,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
     end
 end
 
-function mysplit (inputstr, sep)
+function MDRsplit (inputstr, sep)
     if sep == nil then
         sep = "%s"
     end
@@ -578,7 +652,7 @@ function mysplit (inputstr, sep)
     return t
 end
 
-function mysplitN(a)
+function MDRnumsplit(a)
     if a==nil then return end
     local FN,LN,SS,SE
     for i=1,string.len(a) do       

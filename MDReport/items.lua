@@ -231,7 +231,7 @@ function getShortDungeonName(dungeon)
     end
     local string
     if strfind(dungeon," ") then
-        local t=mysplit(dungeon," ")
+        local t=MDRsplit(dungeon," ")
         local c1=strsub(t[1],1,3)
         local c2=strsub(t[2],1,3)
         string=c1..c2
