@@ -11,7 +11,7 @@ local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()
 local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
-local SCL=50 -- 현 확팩 만렙렙
+local SCL=50 -- 현 확팩 만렙
 
 local DIL={ --단수별 허용레벨 / 드랍템 레벨
     [2]=30,--435,
