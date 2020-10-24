@@ -249,7 +249,7 @@ function filterVALUES(VALUES)
         elseif callType=="spec" and k2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[6]<=howManyWarn then
-                    print("특성을 단독으로 입력하여 착용가능한 모든 무기로 던전을 검색합니다. 특정 직업의 돌이 알고 싶을 경우 !직업(ex.!드루 or !사제)으로 검색하거나, 특정 무기를 지정하고 싶을 경우 무기종류,무기유형과 함께 검색해보세요.(ex.!회복!양손 or !풍운!장착)")
+                    print("특성을 단독으로 입력하여 착용가능한 모든 무기로 던전을 검색합니다. 특정 직업의 돌이 알고 싶을 경우 !직업(ex.!드루 or !사제)으로 검색하거나, 특정 무기를 지정하고 싶을 경우 전문화와 무기종류,무기유형을 함께 검색해보세요.(ex.!회복!양손 or !풍운!장착)")
                     searchingTip[6]=searchingTip[6]+1
                 end
             end
@@ -659,4 +659,3 @@ function MDRnumsplit(a)
     local str=string.sub(a,(SS or 0),(SE or 0))
     return FN,str,LN
 end
-

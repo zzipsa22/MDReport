@@ -84,7 +84,7 @@ function doShortReport(chars,channel,who,callType)
             
             if yourClass[class] and yourClass[class]>1 then
                 sameClass[class]=(sameClass[class] or 0)+1                
-                classStatus=class..sameClass[class]..":"..shorterName                
+                classStatus=class..sameClass[class]..","..shorterName                
             else                
                 classStatus=class                
             end
@@ -98,7 +98,7 @@ function doShortReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""  
             if best and best ~=0 then 
                 if callType=="parking" then
-                    parkingstar=":"..best                    
+                    parkingstar=":"..best.."완"                    
                 else  
                     parkingstar=","..best             
                 end                   
@@ -113,16 +113,16 @@ function doShortReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyName..level
             else
-                havekey=math.floor(itemLevel).."Lv"
+                havekey="템렙"..math.floor(itemLevel)
             end
             local message=""          
             
             if callType=="parking" then                 
-                message=skull[class]..classStatus.."("..havekey..")"..parkingstar
+                message=skull[class]..classStatus.."["..havekey.."]"..parkingstar
             elseif callType=="all" then
-                message=skull[class]..havekey.."("..classStatus..")"               
+                message=skull[class].."["..havekey.."]:"..classStatus              
             elseif chars[i]["extraLink"] and callType=="spell"then
-                message=skull[class]..classStatus.."("..havekey..")"..chars[i]["extraLink"]
+                message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
                 message=skull[class]..havekey.."("..chars[i]["extraLink"]..")"
             else
@@ -201,11 +201,11 @@ function doFullReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyLink
             else
-                havekey="[쐐기돌 없음, "..math.floor(itemLevel).."Lv]"
+                havekey="[쐐기돌 없음, 템렙"..math.floor(itemLevel).."]"
             end
             
             if best and best ~=0 then
-                parking=","..best
+                parking=","..best.."완"
                 parkingstar="▶"
             else
                 parking=",Χ"
