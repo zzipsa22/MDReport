@@ -36,12 +36,13 @@ local DIL={ --단수별 허용레벨 / 드랍템 레벨
 function MDRCommands(msg, editbox)   
     
     print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r] 기본 명령어 목록")
-    print("▷|cffffff00!돌|r : 소유한 모든 돌 정보를 검색. 이하 대부분의 명령어들은 '|cffffff00내|r'와 함께 조합하면 나만 출력, '|cffffff00지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r !돌 !|cffffff00내|r돌 !|cffffff00지금|r돌 !돌|cffffff0015~18|r !돌|cffffff0025+|r")
-    print("▷|cffffff00!던전명|r : 던전 이름으로 검색. |cFF33FF99ex)|r !아탈 !아탈|cffffff0018|r !|cffffff00지금|r아탈")
-    print("▷|cffffff00!직업명|r : 직업 이름으로 검색. |cFF33FF99ex)|r !드루 !드루|cffffff0015-|r !|cffffff00내|r드루")
-    print("▷|cffffff00!주차|r : 주차정보 검색. 주차를 못했거나 최대 보상을 받을 수 있는 단수(격아4시즌 기준 15단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r !주차 !|cffffff00내|r주차 !주차|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함")
-    print("▷|cffffff00!캐릭터이름|r : 캐릭터 이름으로 검색. 뒷글자는 생략가능하나 앞부분은 일치해야합니다. |cFF33FF99ex)|r 캐릭명이 '아무개' 일 경우 !아무개,!아무,!아 = 가능, !무개 !개 는 불가능.")
-    print("▷|cffffff00!속성|r : 이번주 쐐기 속성을 출력. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r !속성 !지난주속성 !다다음주속성")
+    print("  ▷이하 모든 명령어는 |cFF40ff40길드말|r과 |cFFaaaaff파티말|r, |cFFff80ff귓속말|r에 입력했을 때만 반응합니다.")    
+    print("  ▷|cffC79C6E!돌|r : 소유한 모든 돌 정보를 검색. 이하 대부분의 명령어들은 '|cff0070DE내|r'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r !|cffC79C6E돌|r !|cff0070DE내|r|cffC79C6E돌|r !|cffF58CBA지금|r|cffC79C6E돌|r !|cffC79C6E돌|r|cffffff0015~18|r !|cffC79C6E돌|r|cffffff0025+|r")
+    print("  ▷|cff40C7EB!던전명|r : 던전 이름으로 검색. |cFF33FF99ex)|r !|cff40C7EB아탈|r !|cff40C7EB아탈|r|cffffff0018|r !|cffF58CBA지금|r|cff40C7EB아탈|r")
+    print("  ▷|cffFF7D0A!직업명|r : 직업 이름으로 검색. |cFF33FF99ex)|r !|cffFF7D0A드루|r !|cffFF7D0A드루|r|cffffff0015-|r !|cff0070DE내|r|cffFF7D0A드루|r")
+    print("  ▷|cff8787ED!주차|r : 주차정보 검색. 주차를 못했거나 최대 보상을 받을 수 있는 단수(격아4시즌 기준 15단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r !|cff8787ED주차|r !|cff0070DE내|r|cff8787ED주차|r !|cff8787ED주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함")
+    print("  ▷|cffA9D271!캐릭터이름|r : 캐릭터 이름으로 검색. 뒷글자는 생략가능하나 앞부분은 일치해야합니다. |cFF33FF99ex)|r 캐릭명이 '아무개' 일 경우 !아무개,!아무,!아 = 가능, !무개 !개 는 불가능.")
+    print("  ▷|cffC41F3B!속성|r : 이번주 쐐기 속성을 출력. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r !|cffC41F3B속성|r !지난주|cffC41F3B속성|r !다다음주|cffC41F3B속성|r")
     print("▶보다 자세한 사용법은 |cffffff00트위치|r나 |cffffff00Curse|r에서 |cFF33FF99MDReport|r 페이지에 방문하여 확인해보세요.")
     
 end
