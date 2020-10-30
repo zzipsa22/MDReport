@@ -263,8 +263,8 @@ local warning=1
 
 function doWarningReport(channel,who,callType) 
     local messageLines={}
-    if warning<=#warnMessage then
-        messageLines[#messageLines+1]=warnMessage[warning]
+    if warning<=#MDRwarnMessage then
+        messageLines[#messageLines+1]=MDRwarnMessage[warning]
         warning=warning+1
         channel="print"
     else return end  
