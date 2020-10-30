@@ -196,16 +196,22 @@ function doFullReport(chars,channel,who,callType)
             end
             
             local cutName=gsub(charName, "%s%-.+","")
-            local shortName=strsub(cutName,1,9)    
+            local shortName
+            if callType=="charname"then
+                shortName=cutName
+            else
+                shortName=strsub(cutName,1,9)
+            end           
+            
             local havekey,parking, parkingstar="","",""    
             
             if keyLink~=nil then
                 havekey=keyLink
             else
                 if not charLevel then
-                    havekey="[쐐기돌 없음, 템렙"..math.floor(itemLevel).."]"
+                    havekey="[{rt7}쐐기돌 없음: 템렙"..math.floor(itemLevel).."]"
                 else
-                    havekey="[레벨업 중: 현재 "..charLevel.."렙]"
+                    havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
                 end                
             end
             
@@ -213,8 +219,13 @@ function doFullReport(chars,channel,who,callType)
                 parking=","..best.."완"
                 parkingstar="▶"
             else
-                parking=",Χ"
-                parkingstar="▷"            
+                if not charLevel then
+                    parking=",Χ"
+                    parkingstar="▷"            
+                else
+                    parking=""
+                    parkingstar=""
+                end                
             end
             
             --같은 직업이 있을경우 뒤에 이름 붙이기

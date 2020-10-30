@@ -633,7 +633,8 @@ function filterCharsByFilter(chars,filter,f1,f2)
             elseif filter=="name" then
                 target=chars[i]["fullName"]   
             elseif filter=="CharName"  then
-                target=chars[i]["cutName"]
+                target=strsub(chars[i]["cutName"],0,strlen(f1))
+                f1=string.gsub(f1, "(%a)([%w_']*)", MDRtitleCase)
             end
             if f1==target then
                 findChars[num]=chars[i]
@@ -677,4 +678,9 @@ function MDRnumsplit(a)
     end       
     local str=string.sub(a,(SS or 0),(SE or 0))
     return FN,str,LN
+end
+
+
+function MDRtitleCase( first, rest )
+    return first:upper()..rest:lower()
 end
