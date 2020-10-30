@@ -220,12 +220,11 @@ function doFullReport(chars,channel,who,callType)
                 parkingstar="▶"
             else
                 if not charLevel then
-                    parking=",Χ"
-                    parkingstar="▷"            
+                    parking=",Χ"                    
                 else
-                    parking=""
-                    parkingstar=""
-                end                
+                    parking=""                    
+                end   
+                parkingstar="▷"             
             end
             
             --같은 직업이 있을경우 뒤에 이름 붙이기
