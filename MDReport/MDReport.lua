@@ -41,18 +41,18 @@ function MDRCommands(msg, editbox)
     print("  ▷|cff40C7EB!던전명|r : 던전 이름으로 검색. |cFF33FF99ex)|r !|cff40C7EB아탈|r !|cff40C7EB아탈|r|cffffff0018|r !|cffF58CBA지금|r|cff40C7EB아탈|r")
     print("  ▷|cffFF7D0A!직업명|r : 직업 이름으로 검색. |cFF33FF99ex)|r !|cffFF7D0A드루|r !|cffFF7D0A드루|r|cffffff0015-|r !|cff0070DE내|r|cffFF7D0A드루|r")
     print("  ▷|cff8787ED!주차|r : 주차정보 검색. 주차를 못했거나 최대 보상을 받을 수 있는 단수(격아4시즌 기준 15단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r !|cff8787ED주차|r !|cff0070DE내|r|cff8787ED주차|r !|cff8787ED주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함")
-    print("  ▷|cffA9D271!캐릭터이름|r : 캐릭터 이름으로 검색. 뒷글자는 생략가능하나 앞부분은 일치해야합니다. |cFF33FF99ex)|r 캐릭명이 '아무개' 일 경우 !아무개,!아무,!아 = 가능, !무개 !개 는 불가능.")
+    print("  ▷|cffA9D271!캐릭터이름|r : 캐릭터 이름으로 검색. 뒷글자는 생략가능하나 앞부분은 일치해야합니다. |cFF33FF99ex)|r 캐릭명이 '아무개' 일 경우 !|cffA9D271아무개|r,!|cffA9D271아무|r,!|cffA9D271아|r = |cFF40ff40가능|r, !|cffA9D271무개|r !|cffA9D271개|r 는 |cffC41F3B불가능|r.")
     print("  ▷|cffC41F3B!속성|r : 이번주 쐐기 속성을 출력. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r !|cffC41F3B속성|r !지난주|cffC41F3B속성|r !다다음주|cffC41F3B속성|r")
     print("▶보다 자세한 사용법은 |cffffff00트위치|r나 |cffffff00Curse|r에서 |cFF33FF99MDReport|r 페이지에 방문하여 확인해보세요.")
     
 end
 
 --명령어 등록
-SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/mdreport','/쐐'
+SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/Tho','/쐐'
 SlashCmdList["MDReport"] = MDRCommands 
 
 
-C_Timer.After(5, function()        
+C_Timer.After(10, function()        
         local x = GetLocale()
         if x ~= "koKR" then -- XXX temp, Options/Locales needs updated
             print("|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
@@ -61,7 +61,7 @@ C_Timer.After(5, function()
                 doWarningReport(channel,who,"warning") 
                 return
             end 
-            print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r]를 설치해주셔서 감사합니다. 사용법을 보시려면 채팅창에 |cffffff00/mdr|r 또는 |cffffff00/쐐|r 를 입력해보세요.")               
+            print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r]를 설치해주셔서 감사합니다. 사용법을 보시려면 채팅창에 |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r 를 입력해보세요.")               
         end
 end)
 
