@@ -19,7 +19,7 @@ local callTypeTable={
     ["편법"]={"parking", "soft"},
     ["편법주차"]={"parking", "soft"},
     ["불법"]={"parking", "hard"},    
-    ["불법주차"]={"parking", "hard"},    
+    ["불법주차"]={"parking", "hard"},
     
     ["이상"]={"levelrange", "99"},
     ["이하"]={"levelrange", "2"},

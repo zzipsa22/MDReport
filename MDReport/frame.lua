@@ -40,7 +40,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         local k1=keyword
         local k2,level1,level2,callTypeT1,callTypeT2
-        local onlyMe,onlyOnline
+        local onlyMe,onlyOnline,CharName
         local VALUES={}        
         
         --명령어가 이중인지 체크        
@@ -108,6 +108,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         --명령어가 발견이 안되면
         if k1 and not callTypeT1 then
+            local name=k1
             if strfind(k1,"내") then             
                 k1=gsub(k1,"내","")
                 onlyMe=1
@@ -117,6 +118,13 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 onlyOnline=1                
             end
             callTypeT1=getCallTypeTable(k1)
+            --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
+            if not callTypeT1 then
+                callTypeT1=getCallTypeTable("아무")
+                CharName=name
+                --print(CharName)
+            end
+            
         end
         
         --작은수가 먼저오게 조절
@@ -144,6 +152,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             VALUES["who"]=who   
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyOnline"]=onlyOnline           
+            VALUES["CharName"]=CharName
             
             filterVALUES(VALUES)
             

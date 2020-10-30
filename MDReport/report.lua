@@ -112,7 +112,7 @@ function doShortReport(chars,channel,who,callType)
             
             if keyLink~=nil then
                 havekey=keyName..level
-            else
+            else                
                 havekey="템렙"..math.floor(itemLevel)
             end
             local message=""          
@@ -185,7 +185,8 @@ function doFullReport(chars,channel,who,callType)
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
             local best=chars[i]["best"]                      
-            local itemLevel=chars[i]["itemLevel"]                
+            local itemLevel=chars[i]["itemLevel"]
+            local charLevel=chars[i]["charLevel"]
             local online=""            
             local classStatus=""
             local headStar=""
@@ -201,7 +202,11 @@ function doFullReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyLink
             else
-                havekey="[쐐기돌 없음, 템렙"..math.floor(itemLevel).."]"
+                if not charLevel then
+                    havekey="[쐐기돌 없음, 템렙"..math.floor(itemLevel).."]"
+                else
+                    havekey="[레벨업 중: 현재 "..charLevel.."렙]"
+                end                
             end
             
             if best and best ~=0 then

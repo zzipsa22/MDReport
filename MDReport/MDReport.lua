@@ -8,7 +8,7 @@ local warnMessage={
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()  
 
-local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe
+local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe,CharName
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
 local SCL=50 -- 현 확팩 만렙
@@ -234,7 +234,7 @@ function filterVALUES(VALUES)
         return
         
     else --!명령어가 단일일 경우
-        if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" then 
+        if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" or callType=="charname" then             
             findCharAllKey(VALUES)            
         elseif callType=="parking" then        
             findCharNeedParking(channel,who,callType,keyword,level)             
@@ -326,6 +326,7 @@ function GetHaveKeyCharInfo(type,level)
             if t[k].MythicKey.link then
                 chars[num]={}
                 chars[num]["fullName"]=k
+                chars[num]["cutName"]=gsub(k, "%s%-.+","")
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["keyLink"]=t[k].MythicKey.link
                 chars[num]["best"]=t[k].MythicKeyBest.level
@@ -333,12 +334,17 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL          
                 num=num+1                
-            elseif (type~="haveKeyOnly" and t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) then                 
+            elseif (type~="haveKeyOnly" and ((t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) or type=="superhard")) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
+                chars[num]["cutName"]=gsub(k, "%s%-.+","")                
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
-                chars[num]["itemLevel"]=t[k].IL
+                if t[k].Level==SCL then
+                    chars[num]["itemLevel"]=t[k].IL
+                else
+                    chars[num]["charLevel"]=t[k].Level                
+                end                
                 chars[num]["keyLevel"]=0
                 num=num+1
             end
@@ -371,11 +377,17 @@ function findCharAllKey(VALUES)
         
         callType=callTypeT[1]
         keyword=callTypeT[2]
-        onlyOnline=VALUES["onlyOnline"]    
+        onlyOnline=VALUES["onlyOnline"]   
+        CharName=VALUES["CharName"]
+        
     end
     local type=nil
+    if CharName then callType="charname" end
+    
     if callType=="class" then
         type="hard"
+    elseif callType=="charname" then
+        type="superhard"
     else type="haveKeyOnly"
     end    
     local chars=GetHaveKeyCharInfo(type)    
@@ -421,6 +433,11 @@ function findCharAllKey(VALUES)
     --던전이나 직업으로 필터링
     if callType=="dungeon" or callType=="class" then
         chars=filterCharsByFilter(chars,callType,keyword,nil)         
+    end    
+    
+    --캐릭터이름을 지정한 경우 필터링
+    if CharName then
+        chars=filterCharsByFilter(chars,"CharName",CharName,nil)
     end    
     
     --레벨을 지정한 경우 레벨로 한번더 필터링
@@ -596,7 +613,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
     elseif filter=="dungeon" then
         f1=getFullDungeonName(f1) 
     elseif filter=="name" then
-        f1=MY_NAME_IN_ADDON         
+        f1=MY_NAME_IN_ADDON   
     end   
     
     for i=1,#chars do          
@@ -615,10 +632,12 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 target=chars[i]["keyName"]     
             elseif filter=="name" then
                 target=chars[i]["fullName"]   
+            elseif filter=="CharName"  then
+                target=chars[i]["cutName"]
             end
             if f1==target then
                 findChars[num]=chars[i]
-                num=num+1                
+                num=num+1
             end
         end
     end 
