@@ -119,7 +119,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             end
             callTypeT1=getCallTypeTable(k1)
             --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-            if not callTypeT1 then
+            if ((not callTypeT1) and name~="") then
                 callTypeT1=getCallTypeTable("아무")
                 CharName=name
                 --print(CharName)

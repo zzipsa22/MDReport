@@ -61,7 +61,7 @@ C_Timer.After(10, function()
                 doWarningReport(channel,who,"warning") 
                 return
             end 
-            print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r]를 설치해주셔서 감사합니다. 사용법을 보시려면 채팅창에 |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r 를 입력해보세요.")               
+            print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r]를 설치해주셔서 감사합니다. 사용법을 보시려면 채팅창에 |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r 를 입력해보세요.")    
         end
 end)
 
@@ -418,7 +418,8 @@ function findCharAllKey(VALUES)
         
     end
     local type=nil
-    if CharName then callType="charname" end
+    CharName=gsub(CharName," ","")
+    if (CharName and CharName~="" ) then callType="charname" end   
     
     if callType=="class" then
         type="hard"
