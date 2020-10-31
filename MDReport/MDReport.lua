@@ -418,7 +418,7 @@ function findCharAllKey(VALUES)
         
     end
     local type=nil
-    CharName=gsub(CharName," ","")
+
     if (CharName and CharName~="" ) then callType="charname" end   
     
     if callType=="class" then
