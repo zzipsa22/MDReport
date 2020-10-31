@@ -124,7 +124,7 @@ function doShortReport(chars,channel,who,callType)
             elseif chars[i]["extraLink"] and callType=="spell"then
                 message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
-                message=skull[class]..havekey.."("..chars[i]["extraLink"]..")"
+                message=skull[class]..havekey..":"..chars[i]["extraLink"]
             else
                 message=skull[class]..havekey.."("..classStatus..")"
             end
@@ -206,7 +206,12 @@ function doFullReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""    
             
             if keyLink~=nil then
-                havekey=keyLink
+                if callType=="item" then
+                    keyName=getShortDungeonName(keyName)                      
+                    havekey=keyName..level
+                else
+                    havekey=keyLink
+                end                
             else
                 if not charLevel then
                     havekey="[{rt7}쐐기돌 없음: 템렙"..math.floor(itemLevel).."]"
@@ -246,7 +251,7 @@ function doFullReport(chars,channel,who,callType)
             if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
             elseif callType=="item" and chars[i]["extraLink"] then
-                message=headStar..classStatus..": "..havekey..chars[i]["extraLink"] 
+                message=headStar..havekey..": "..chars[i]["extraLink"] 
             else
                 message=headStar..classStatus..": "..havekey..online
             end

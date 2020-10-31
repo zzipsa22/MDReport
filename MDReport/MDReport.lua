@@ -280,8 +280,9 @@ function filterVALUES(VALUES)
             doCheckVersion(channel,who,callType)    
         elseif callType=="affix" then        
             doOnlyAffixReport(keyword,channel,who,callType)  
-        elseif callType=="specificitem"then        
-            findCharSpecificItem(nil,keyword,channel,who,callType)
+        elseif callType=="specificitem"then 
+            VALUES["comb"]="Spec_Specificitem"       
+            findCharAllItem(VALUES)
         elseif callType=="spec" and k2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[6]<=howManyWarn then
@@ -418,7 +419,7 @@ function findCharAllKey(VALUES)
         
     end
     local type=nil
-
+    
     if (CharName and CharName~="" ) then callType="charname" end   
     
     if callType=="class" then

@@ -1,147 +1,149 @@
 local who,channel,level,level2,callTypeT,callType2,comb
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
-
+local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
 local dungeonTable={
     ["자유"]={
         "자유지대",
         {
-            {"힘","양손도검"},
-            {"힘","한손둔기"},
-            {"민첩","단검"},
-            {"민첩","한손도검"},
-            {"민첩","총"},            
+            {"힘","양손도검",159634},
+            {"힘","한손둔기",159633},
+            {"민첩","단검",159132},
+            {"민첩","한손도검",159635},
+            {"민첩","총",159130},            
         }          
     },
     
     ["보랄"]={
         "보랄러스 공성전",
         {
-            {"힘","장창"},
-            {"힘","양손둔기"},
-            {"힘","한손도검"},
-            {"민첩","전투검"},
-            {"민첩","한손둔기"},               
+            {"힘","장창",159972},
+            {"힘","양손둔기",159650},
+            {"힘","한손도검",159649},
+            {"민첩","전투검",159651},
+            {"민첩","한손둔기",159973},               
         }
     },
     
     ["세스"]={
         "세스랄리스 사원",
         {
-            {"지능","지팡이"},
-            {"민첩","장창"},
-            {"힘","한손도검"},
-            {"민첩","한손도검"},
-            {"지능","한손둔기"}, 
-            {"민첩","활"},              
-            {"","방패"},           
+            {"지능","지팡이",159636},
+            {"민첩","장창",158370},
+            {"힘","한손도검",158373},
+            {"민첩","한손도검",158714},
+            {"지능","한손둔기",158369}, 
+            {"민첩","활",159637},              
+            {"","방패",159664},           
         }
     },
     
     ["썩굴"]={
         "썩은굴",
         {
-            {"힘","양손도끼"},
-            {"민첩","장창"},
-            {"민첩","장착무기"},
-            {"지능","한손둔기"}, 
-            {"민첩","단검"},              
-            {"","방패"},           
+            {"힘","양손도끼",159654},
+            {"민첩","장창",159655},
+            {"민첩","장착무기",159653},
+            {"지능","한손둔기",159652}, 
+            {"민첩","단검",159134},              
+            {"","방패",159665},           
         }
     },
     
     ["아탈"]={
         "아탈다자르",
         {
-            {"민첩","장착무기"},
-            {"민첩","단검"},   
-            {"힘","한손둔기"},            
-            {"민첩","활"},     
-            {"지능","마법봉"},    
-            {"","방패"},  
-            {"지능","보조"},                 
+            {"민첩","장착무기",160269},
+            {"민첩","단검",158323},   
+            {"힘","한손둔기",159632},            
+            {"민첩","활",158711},     
+            {"지능","마법봉",158321},    
+            {"","방패",158713},  
+            {"지능","보조",158322},                 
         }
     },
     
     ["왕노"]={
         "왕노다지 광산!!",
         {
-            {"힘","양손둔기"},
-            {"지능","한손둔기"}, 
-            {"민첩","총"},       
-            {"","방패"},              
+            {"힘","양손둔기",159638},
+            {"지능","한손둔기",159641}, 
+            {"민첩","총",159639},       
+            {"","방패",159663},              
         }
     },
     
     ["왕안"]={
         "왕들의 안식처",
         {
-            {"민첩","장창"},
-            {"힘","양손도검"},
-            {"민첩","단검"},     
-            {"지능","한손도검"}, 
-            {"지능","단검"},  
-            {"민첩","총"},               
+            {"민첩","장창",159642},
+            {"힘","양손도검",159644},
+            {"지능","한손도검",160216}, 
+            {"지능","단검",159137},              
+            {"민첩","한손둔기",159645},
+            {"민첩","단검",159136},                 
+            {"민첩","석궁",159643},      
+            {"지능","보조",159667},                 
         }
     },
     
     ["웨이"]={
         "웨이크레스트 저택",
         {
-            {"민첩","장창"},
-            {"민첩","장착무기"},
-            {"민첩","한손둔기"},     
-            {"지능","단검"},  
-            {"힘","한손도끼"},
-            {"지능","보조"},               
+            {"민첩","지팡이",159662},
+            {"민첩","장착무기",159659},
+            {"민첩","한손둔기",159661},     
+            {"지능","단검",159133},  
+            {"힘","한손도끼",159660},
+            {"지능","보조",159669},               
         }
     },    
     
     ["고철"]={
         "작전명: 메카곤 - 고철장",
         {
-            {"힘","양손둔기"},
-            {"민첩","지팡이"},
-            {"민첩","한손둔기"},  
-            {"민첩","한손도끼"},    
-            {"지능","한손도검"}, 
-            {"민첩","단검"},  
-            {"","방패"},   
-            {"힘","한손도끼"},  
-            {"민첩","총"},                
+            {"힘","양손둔기",169050},
+            {"민첩","지팡이",169035},
+            {"민첩","한손둔기",169052},  
+            {"민첩","한손도끼",169058},    
+            {"지능","한손도검",169062}, 
+            {"민첩","단검",169066},  
+            {"","방패",169068},   
+            {"힘","한손도끼",168963},  
+            {"민첩","총",169077},                
         }
     },
     
     ["작업"]={
         "작전명: 메카곤 - 작업장",
         {
-            {"지능","한손둔기"}, 
-            {"민첩","단검"},  
-            {"지능","지팡이"},
-            {"힘","한손도검"},            
+            {"지능","한손둔기",168955}, 
+            {"민첩","단검",168962},  
+            {"지능","지팡이",168973},
+            {"힘","한손도검",169608},            
         }
     },    
     
     ["톨다"]={
         "톨 다고르",
         {
-            {"민첩","장창"},
-            {"지능","지팡이"},
-            {"민첩","전투검"},
-            {"힘","한손둔기"},        
-            {"민첩","단검"},  
-            {"민첩","총"},     
-            {"","방패"},   
-            {"지능","보조"},                
+            {"민첩","장창",159656},
+            {"지능","지팡이",159129},
+            {"민첩","전투검",160110},
+            {"힘","한손둔기",159658},        
+            {"민첩","단검",159131},  
+            {"민첩","총",159657},     
+            {"","방패",159666},   
+            {"지능","보조",159668},                
         }
     },    
     
     ["폭사"]={
         "폭풍의 사원",
         {
-            {"지능","지팡이"},
-            {"민첩","단검"},  
-            {"지능","한손도검"},             
+            {"지능","지팡이",158371},
+            {"민첩","단검",159135},  
+            {"지능","한손도검",159646},             
         }
     },    
 }
@@ -313,9 +315,17 @@ function checkDungeonHasItem(dungeon,spec,category)
                     if dropTable[j][1]~="" then
                         space=" "
                     end                
-                    thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
-                else
-                    thisDungeonHas[itemNum]=dropTable[j][2]
+                    if dropTable[j][3] then
+                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
+                    end                      
+                else   
+                    if dropTable[j][3] then
+                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        thisDungeonHas[itemNum]=dropTable[j][2]
+                    end                                      
                 end           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
@@ -364,8 +374,12 @@ function checkDungeonHasCategoryItem(dungeon,stat,category)
                 local space=""
                 if dropTable[j][1]~="" then
                     space=" "
-                end                
-                thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
+                end               
+                if dropTable[j][3] then
+                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                else
+                    thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
+                end           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
             end            
@@ -394,29 +408,20 @@ function checkDungeonHasSpecificItem(dungeon,stat,item)
     local thisDungeonHasItem=0
     local thisDungeonHas={}
     local itemNum=1
-    local itemList=""
-    
+    local itemList=""    
     for j=1,#dropTable do
-        if stat and item~="방패" then
-            if dropTable[j][1]==stat and dropTable[j][2]==item then 
-                local space=""
-                if dropTable[j][1]~="" then
-                    space=" "
-                end          
+        if stat and dropTable[j][2]==item and ((item~="방패"and dropTable[j][1]==stat) or item=="방패")then 
+            local space=""
+            if dropTable[j][1]~="" then
+                space=" "
+            end   
+            if dropTable[j][3] then
+                _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+            else
                 thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
-                thisDungeonHasItem=1
-                itemNum=itemNum+1
-            end            
-        else
-            if dropTable[j][2]==item then 
-                local space=""
-                if dropTable[j][1]~="" then
-                    space=" "
-                end          
-                thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
-                thisDungeonHasItem=1
-                itemNum=itemNum+1
-            end      
+            end                 
+            thisDungeonHasItem=1
+            itemNum=itemNum+1            
         end        
     end
     
@@ -430,7 +435,7 @@ function checkDungeonHasSpecificItem(dungeon,stat,item)
         return itemList
     else
         return nil        
-    end
+    end    
 end
 
 --통합 아이템 찾기
@@ -460,21 +465,29 @@ function findCharAllItem(VALUES)
     -- 콜타입을 아이템으로 강제 조정정
     local callType="item"
     
-    local stat=keyword
+    local stat, spec
+    --주스탯 특정이 가능할 경우
+    spec=keyword    
+    if extraKeyword then        
+        stat=extraKeyword
+    else        
+        stat=keyword
+    end    
     local spec=keyword
     local item=keyword2
     local category=keyword2       
+    --print("spec:"..spec)
+    --print("stat:"..stat)
     
     local findChars={}   
     local num=1        
-    if chars~=nil then         
-        
-        for i=1,#chars do    
+    if chars~=nil then        
+        for i=1,#chars do  
             local p=chars[i]["fullName"]
             local c=SavedInstancesDB.Toons[p]
             local mapName=c.MythicKey.name
             local dungeon=getShortDungeonName(mapName)
-            local itemList
+            local itemList   
             
             if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
                 itemList=checkDungeonHasSpecificItem(dungeon,stat,item)                
@@ -485,21 +498,45 @@ function findCharAllItem(VALUES)
             elseif comb=="Spec_Item" then  
                 itemList=checkDungeonHasItem(dungeon,spec,nil)
             else
-                print("잘못됐음")
-            end                       
-            
-            if itemList then
-                chars[i]["extraLink"]=itemList
-                findChars[num]=chars[i]
-                num=num+1
-            end
+                --print("잘못됐음")
+            end                     
         end    
-    end          
-    if channel=="GUILD" or channel=="PARTY"then
-        
-        doShortReport(findChars,channel,who,callType)         
-    else        
-        doFullReport(findChars,channel,who,callType)  
-    end
+    end   
+    
+    C_Timer.After(0.1, function()            
+            if chars~=nil then        
+                for i=1,#chars do    
+                    local p=chars[i]["fullName"]
+                    local c=SavedInstancesDB.Toons[p]
+                    local mapName=c.MythicKey.name
+                    local dungeon=getShortDungeonName(mapName)
+                    local itemList
+                    
+                    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
+                        itemList=checkDungeonHasSpecificItem(dungeon,stat,item)                
+                    elseif comb=="Stat_Category" then
+                        itemList=checkDungeonHasCategoryItem(dungeon,stat,category) 
+                    elseif comb=="Spec_Category" then 
+                        itemList=checkDungeonHasItem(dungeon,spec,category)
+                    elseif comb=="Spec_Item" then  
+                        itemList=checkDungeonHasItem(dungeon,spec,nil)
+                    else
+                        --print("잘못됐음")
+                    end                       
+                    
+                    if itemList then
+                        chars[i]["extraLink"]=itemList
+                        findChars[num]=chars[i]
+                        num=num+1
+                    end
+                end    
+            end       
+            
+            if channel=="GUILD" or channel=="PARTY"then
+                doFullReport(findChars,channel,who,callType)  
+                --doShortReport(findChars,channel,who,callType)         
+            else        
+                doFullReport(findChars,channel,who,callType)  
+            end    
+    end)
 end
-
