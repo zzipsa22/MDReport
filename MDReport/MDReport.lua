@@ -1,7 +1,7 @@
 local version="@project-version@"
 local lastUpdate="@project-date-iso@"
-local searchingTip={0,0,0,0,0,0,0}
-local howManyWarn=3
+local searchingTip={0,0,0,0,0,0,0,0}
+local howManyWarn=10
 MDRwarnMessage={
     [1]="▶[|cFF33FF99쐐기돌 보고서 "..version.."|r] Saved Instances 애드온이 설치되어 있지 않아 쐐기돌 정보를 불러올 수 없습니다.",
     [2]="▶[|cFF33FF99쐐기돌 보고서 "..version.."|r] 트위치나 인벤, 루리웹등에서 Saved Instances 를 다운받아 설치해주세요."    
@@ -10,7 +10,7 @@ MDRwarnMessage={
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()  
 
-local who,channel,level,level2,callTypeT,callType2,comb,onlyOnline,onlyMe,CharName
+local who,channel,level,level2,callTypeT,callTypeT2,comb,onlyOnline,onlyMe,CharName
 local callType,keyword,extraKeyword
 local callType2,keyword2,extraKeyword2
 local SCL=50 -- 현 확팩 만렙
@@ -31,6 +31,41 @@ local DIL={ --단수별 허용레벨 / 드랍템 레벨
     [14]=90,--465,
     [15]=95,--465,
 }
+
+local classInfo={
+    ["도적"]={"도적","FFF569","암살","무법"},
+    ["죽기"]={"죽음의 기사","C41F3B","혈기","부정"},    
+    ["드루"]={"드루이드","FF7D0A","조화","회복"},
+    ["전사"]={"전사","C79C6E","방어","분노"},
+    ["기사"]={"성기사","F58CBA","징기","신기"},
+    ["술사"]={"주술사","0070DE","고술","정술"},
+    ["수도"]={"수도사","00FF96","풍운","운무"},
+    ["냥꾼"]={"사냥꾼","A9D271","사격","생존"},
+    ["사제"]={"사제","FFFFFF","암흑","수양"},
+    ["흑마"]={"흑마법사","8787ED","고통","파괴"},
+    ["법사"]={"마법사","40C7EB","화법","냉법"},
+    ["악사"]={"악마 사냥꾼","A330C9","파멸","복수"}, 
+    [""]={}
+}
+
+function MDRcolor(keyword,num,text)
+    
+    local color=classInfo[keyword][2]
+    local class=classInfo[keyword][1]
+    
+    if not num or num==1 then
+        return "|cff"..color..class.."|r"
+    elseif num==-1 then
+        return "|cff".."80e7EB"..text.."|r"        
+    elseif num==-2 then
+        return "|cff".."F5aCdA"..text.."|r"        
+    elseif num==0 and text then
+        return "|cff"..color..text.."|r"        
+    else        
+        return "|cff"..color..classInfo[keyword][num].."|r"
+    end    
+end
+
 
 --명령어 입력시 실행할 함수
 function MDRCommands(msg, editbox)   
@@ -173,13 +208,24 @@ function filterVALUES(VALUES)
         if callTypeT2 then
             callType2=callTypeT2[1]
             keyword2=callTypeT2[2] 
-            extraKeyword2=callTypeT2[3]            
+            extraKeyword2=callTypeT2[3]
+        else
+            callType2,keyword2,extraKeyword2=nil,nil,nil
         end         
     end 
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=MY_NAME_IN_GAME then
         return
     end
+    
+    
+    if callType then
+        print("callType:"..callType)
+    end
+    if callType2 then
+        print("callType2:"..callType2)
+    end
+    
     
     if callType=="levelrange" and level2==nil then
         VALUES["level2"]=tonumber(keyword)
@@ -237,10 +283,14 @@ function filterVALUES(VALUES)
         if (callType=="class" and callType2=="item") or (callType=="class" and callType2=="category")  or (callType=="class" and callType2=="specificitem")  then
             if keyword=="사제" or keyword=="흑마" or keyword=="법사" or keyword=="악사" then
                 callType="spec"
-            else
-                if who==MY_NAME_IN_GAME then
+            else                
+                if who==MY_NAME_IN_GAME then                    
                     if searchingTip[1]<=howManyWarn then
-                        print("입력하신 직업은 전문화에 따라 착용가능한 아이템이 상이하여 전문화를 지정해야만 검색할 수 있습니다. (ex.!회복!한손 or !혈죽!무기)")
+                        local neun="는"
+                        if keyword=="도적" or keyword=="냥꾼" then
+                            neun="은"
+                        end                                                
+                        print("▶"..MDRcolor(keyword)..neun.." "..MDRcolor(keyword,-1,"전문화").."에 따라 착용가능 아이템 범주가 달라 "..MDRcolor(keyword,-1,"전문화").."로 검색해야만합니다. (|cFF33FF99ex|r.!"..MDRcolor(keyword,3).."!무기 or !"..MDRcolor(keyword,4).."!한손)")
                         searchingTip[1]=searchingTip[1]+1
                     end
                 end
@@ -260,7 +310,7 @@ function filterVALUES(VALUES)
         elseif (callType=="stat" and callType2=="item") then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[2]<=howManyWarn then
-                    print("주능력치와"..'"'.."무기"..'"'.."는 함께 검색할 수 없습니다. 무기 유형(단검,지팡이)이나 종류(양손,한손)를 지정해주세요. (ex. !힘!양손 or !지능!단검)")
+                    print("▶|cFFFFF569능력치|r와"..'"'.."무기"..'"'.."는 함께 검색할 수 없습니다. 무기 유형(단검,지팡이)이나 종류(양손,한손)를 지정해주세요. (|cFF33FF99ex|r. !|cFFFFF569힘|r!양손 or !|cFFFFF569지능|r!단검)")
                     searchingTip[2]=searchingTip[2]+1
                 end
             end
@@ -281,36 +331,66 @@ function filterVALUES(VALUES)
         elseif callType=="affix" then        
             doOnlyAffixReport(keyword,channel,who,callType)  
         elseif callType=="specificitem"then 
-            VALUES["comb"]="Spec_Specificitem"       
-            findCharAllItem(VALUES)
-        elseif callType=="spec" and k2==nil then
+            --!주스탯이 고정인 무기종류는 검색통과
+            if keyword=="보조" or keyword=="마법봉" or keyword=="석궁" or keyword=="활" or keyword=="총" or keyword=="전투검" or keyword=="방패" then
+                VALUES["comb"]="Spec_Specificitem"       
+                findCharAllItem(VALUES)                
+            else
+                if who==MY_NAME_IN_GAME then
+                    if searchingTip[7]<=howManyWarn then 
+                        local neun="는"
+                        if keyword=="장창" or keyword=="단검" or keyword=="한손도검" or keyword=="양손도검" then
+                            neun="은"
+                        end                        
+                        print("▶!"..MDRcolor("",-2,keyword)..neun.." 단독으로 검색할 수 없습니다. "..MDRcolor("",-1,"전문화").."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. !|cffC79C6E분노|r!"..MDRcolor("",-2,keyword)..", !|cFFFFF569힘|r!"..MDRcolor("",-2,keyword)..")")                        
+                        searchingTip[7]=searchingTip[7]+1                    
+                    end
+                end     
+            end            
+            --!전문화로만 검색시 !무기검색으로 유도
+        elseif callType=="spec" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[6]<=howManyWarn then
-                    print("특성을 단독으로 입력하여 착용가능한 모든 무기로 던전을 검색합니다. 특정 직업의 돌이 알고 싶을 경우 !직업(ex.!드루 or !사제)으로 검색하거나, 특정 무기를 지정하고 싶을 경우 전문화와 무기종류,무기유형을 함께 검색해보세요.(ex.!회복!양손 or !풍운!장착)")
+                    local class=getCallTypeTable(keyword)[4] or getCallTypeTable(keyword)[2] 
+                    
+                    local neun,ga,ro="는","가","로"                   
+                    if class=="도적" or class=="냥꾼" then
+                        neun,ga,ro="은","이","으로"
+                    end                         
+                    
+                    print("▶"..MDRcolor(class,-1,"전문화").."를 단독으로 입력한 경우 해당 전문화가 착용가능한 모든 무기로 던전을 검색합니다. (=!"..MDRcolor(class,0,keyword).."!무기) "..MDRcolor(class)..ga.." 소지한 돌이 알고 싶을 경우 !"..MDRcolor(class,0,class)..ro.." 검색하거나, 특정 무기를 지정하고 싶을 경우 "..MDRcolor(class,-1,"전문화").."와 무기종류,무기범주를 함께 검색해보세요.(|cFF33FF99ex|r.!"..MDRcolor(class,3).."!양손 or !"..MDRcolor(class,4).."!장착)")
                     searchingTip[6]=searchingTip[6]+1
                 end
             end
             VALUES["comb"]="Spec_Item"
             findCharAllItem(VALUES)
+            
+            --!무기만 단독검색시
         elseif callType=="item" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[3]<=howManyWarn then
-                    print("!무기는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (ex. !화염!무기)")
+                    print("▶!무기는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (|cFF33FF99ex|r. !"..MDRcolor("",-1,"화염").."!무기)")
                     searchingTip[3]=searchingTip[3]+1
                 end
             end  
+            
+            --스탯만 단독검색시            
         elseif callType=="stat" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[4]<=howManyWarn then
-                    print("능력치는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요 (ex. !"..keyword.."!지팡이)")
+                    print("▶|cFFFFF569능력치|r는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요 (|cFF33FF99ex|r. !|cFFFFF569"..keyword.."|r!지팡이)")
                     searchingTip[4]=searchingTip[4]+1
+                    --print(searchingTip[4])
                 end
             end   
+            
+            --스탯지정없이 무기범주만 단독검색시
         elseif callType=="category" and callType2==nil then
             if who==MY_NAME_IN_GAME then
                 if searchingTip[5]<=howManyWarn then
-                    print("무기유형은 단독으로 검색할 수 없습니다. !한손도검 !양손둔기 처럼 무기의 종류를 지정하거나 !힘 !지능 등의 능력치와 함께 검색해주세요 (ex. !민첩!원거리장비: 총,활,석궁 검색)")
+                    print("▶"..MDRcolor("",-1,"무기범주").."(한손,양손,근접,원거리)는 단독으로 검색할 수 없습니다. !"..MDRcolor("",-2,"한손도검").." !"..MDRcolor("",-2,"양손둔기").." 처럼 무기의 종류를 지정하거나 !|cFFFFF569힘|r !|cFFFFF569지능|r 등의 능력치와 함께 검색해주세요 (|cFF33FF99ex|r. !|cFFFFF569힘|r!"..MDRcolor("",-1,keyword)..", !|cFFFFF569민첩|r!"..MDRcolor("",-2,"한손도검")..")")
                     searchingTip[5]=searchingTip[5]+1
+                    --print(searchingTip[5])
                 end
             end     
         else return end     

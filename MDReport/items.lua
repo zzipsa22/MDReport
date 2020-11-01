@@ -456,7 +456,9 @@ function findCharAllItem(VALUES)
         if callTypeT2 then
             callType2=callTypeT2[1]
             keyword2=callTypeT2[2] 
-            extraKeyword2=callTypeT2[3]            
+            extraKeyword2=callTypeT2[3]
+        else
+            callType2,keyword2,extraKeyword2=nil,nil,nil
         end          
         comb=VALUES["comb"] 
     end
@@ -465,19 +467,34 @@ function findCharAllItem(VALUES)
     -- 콜타입을 아이템으로 강제 조정정
     local callType="item"
     
-    local stat, spec
-    --주스탯 특정이 가능할 경우
-    spec=keyword    
-    if extraKeyword then        
-        stat=extraKeyword
-    else        
-        stat=keyword
-    end    
-    local spec=keyword
+    local stat, spec=nil,keyword    
     local item=keyword2
-    local category=keyword2       
-    --print("spec:"..spec)
-    --print("stat:"..stat)
+    local category=keyword2  
+    
+    --주스탯 특정이 가능할 경우
+    --print("keyword:"..keyword)
+    if keyword=="힘" or keyword=="민첩" or keyword=="지능" then
+        stat=keyword
+        
+        --공용
+    elseif keyword=="방패" then        
+        stat=""
+        item=keyword
+        
+        --only 지능
+    elseif keyword=="보조"or  keyword=="마법봉"then        
+        stat="지능"
+        item=keyword
+        
+        --only 민첩
+    elseif keyword=="총"or  keyword=="석궁"or  keyword=="활" or keyword=="전투검" then        
+        stat="민첩"
+        item=keyword
+    elseif extraKeyword then 
+        stat=extraKeyword
+    else
+        stat=keyword
+    end      
     
     local findChars={}   
     local num=1        
