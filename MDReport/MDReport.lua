@@ -97,7 +97,7 @@ C_Timer.After(10, function()
                 doWarningReport(channel,who,"warning") 
                 return
             end 
-            print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r]를 설치해주셔서 감사합니다. 사용법을 보시려면 채팅창에 |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r 를 입력해보세요.")    
+            print("▶[|cFF33FF99쐐기돌 보고서 "..version.."|r]: 이제 '캐릭터이름'과 '무기'로도 쐐기돌을 검색할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")    
         end
 end)
 
