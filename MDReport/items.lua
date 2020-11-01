@@ -177,14 +177,14 @@ local specTable={
     ["흑마"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
     
     ["도적"]={{"민첩"},{"단검","장착무기","한손도끼","한손둔기","한손도검"}},
-    ["무법"]={{"민첩"},{"단검","장착무기","한손도끼","한손둔기","한손도검"}},
+    ["무법"]={{"민첩"},{"장착무기","한손도끼","한손둔기","한손도검"}},
     ["잠행"]={{"민첩"},{"단검"}},
     ["암살"]={{"민첩"},{"단검"}},
     
     ["전사"]={{"힘"},{"한손도끼","양손도끼","단검","장착무기","한손둔기","양손둔기","장창","지팡이","한손도검","양손도검","방패"}},
     ["방어"]={{"힘"},{"단검","한손도끼","한손둔기","한손도검","방패"}},
     ["무기"]={{"힘"},{"양손도끼","양손둔기","장창","지팡이","양손도검"}},
-    ["분노"]={{"힘"},{"양손도끼","양손둔기","장창","지팡이","양손도검"}},
+    ["분노"]={{"힘"},{"한손도끼","양손도끼","단검","장착무기","한손둔기","양손둔기","장창","지팡이","한손도검","양손도검"}},
     
     ["죽기"]={{"힘"},{"한손도끼","양손도끼","한손둔기","양손둔기","장창","한손도검","양손도검"}},
     ["냉기"]={{"힘"},{"한손도끼","한손둔기","한손도검","양손도끼","양손둔기","장창","양손도검"}},
@@ -265,6 +265,28 @@ function getSpecWeaponTable(spec)
             return v[2]
         end        
     end      
+end
+
+function checkSpecCanUseItem(spec,item)
+    local weapons=getSpecWeaponTable(spec)    
+    local can=false
+    for i=1,#weapons do
+        if item==weapons[i] then
+            can=true
+        end      
+    end    
+    return can
+end
+
+function checkSpecCanUseStat(class,stat)
+    local stats=getSpecStatTable(class)   
+    local can=false
+    for i=1,#stats do
+        if stat==stats[i] then
+            can=true
+        end      
+    end    
+    return can
 end
 
 function checkDungeonHasItem(dungeon,spec,category)
@@ -447,11 +469,14 @@ function findCharAllItem(VALUES)
         callTypeT=VALUES["callTypeT"]
         callTypeT2=VALUES["callTypeT2"]
         level=VALUES["level"]
-        level2=VALUES["level2"]         
+        level2=VALUES["level2"]                 
         
-        callType=callTypeT[1]
-        keyword=callTypeT[2] 
-        extraKeyword=callTypeT[3] 
+        comb=VALUES["comb"] 
+        if callTypeT then
+            callType=callTypeT[1]
+            keyword=callTypeT[2] 
+            extraKeyword=callTypeT[3] 
+        end
         
         if callTypeT2 then
             callType2=callTypeT2[1]
@@ -459,17 +484,70 @@ function findCharAllItem(VALUES)
             extraKeyword2=callTypeT2[3]
         else
             callType2,keyword2,extraKeyword2=nil,nil,nil
-        end          
-        comb=VALUES["comb"] 
+        end  
     end
     
+    if comb=="Class_Stat" then
+        local newSpec
+        if keyword=="드루" then if
+            keyword2=="지능" then newSpec="회드" elseif
+            keyword2=="민첩" then newSpec="야드"  end
+            
+        elseif keyword=="술사" then if
+            keyword2=="지능" then newSpec="정술" elseif
+            keyword2=="민첩" then newSpec="고술" end
+            
+        elseif keyword=="수도" then if
+            keyword2=="지능" then newSpec="운무" elseif
+            keyword2=="민첩" then newSpec="양조" end
+            
+        elseif keyword=="기사" then if
+            keyword2=="지능" then newSpec="신기" end
+            
+        elseif keyword=="사제" or keyword=="법사" or keyword=="흑마" or keyword=="악사" then            
+        else             
+            return            
+        end
+        
+        callTypeT=getCallTypeTable(newSpec)
+        
+    end    
+    
+    if comb=="Class_Stat" or comb=="Spec_Stat"then
+        callTypeT2=getCallTypeTable("무기")
+        comb="Spec_Item"
+    end
+    
+    if callTypeT then
+        callType=callTypeT[1]
+        keyword=callTypeT[2] 
+        extraKeyword=callTypeT[3] 
+    end
+    
+    if callTypeT2 then
+        callType2=callTypeT2[1]
+        keyword2=callTypeT2[2] 
+        extraKeyword2=callTypeT2[3]
+    else
+        callType2,keyword2,extraKeyword2=nil,nil,nil
+    end  
+    
     local chars=GetHaveKeyCharInfo() 
-    -- 콜타입을 아이템으로 강제 조정정
+    -- 콜타입을 아이템으로 강제 조정
     local callType="item"
     
     local stat, spec=nil,keyword    
     local item=keyword2
-    local category=keyword2  
+    local category=keyword2          
+    
+    --[[
+    if keyword then
+        print("keyword:"..keyword)        
+    end
+    if keyword2 then
+        print("keyword2:"..keyword2)
+    end 
+    ]]
     
     --주스탯 특정이 가능할 경우
     --print("keyword:"..keyword)
@@ -495,6 +573,7 @@ function findCharAllItem(VALUES)
     else
         stat=keyword
     end      
+    
     
     local findChars={}   
     local num=1        

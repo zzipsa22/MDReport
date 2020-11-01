@@ -1,6 +1,6 @@
 local version="@project-version@"
 local lastUpdate="@project-date-iso@"
-local searchingTip={0,0,0,0,0,0,0,0}
+local searchingTip={0,0,0,0,0,0,0,0,0,0,0,0,0}
 local howManyWarn=10
 MDRwarnMessage={
     [1]="▶[|cFF33FF99쐐기돌 보고서 "..version.."|r] Saved Instances 애드온이 설치되어 있지 않아 쐐기돌 정보를 불러올 수 없습니다.",
@@ -288,22 +288,96 @@ function filterVALUES(VALUES)
                 if who==MY_NAME_IN_GAME then                    
                     if searchingTip[1]<=howManyWarn then
                         local neun="는"
-                        if keyword=="도적" or keyword=="냥꾼" then
+                        if keyword=="도적" or keyword=="냥꾼"  or class=="악사" then
                             neun="은"
-                        end                                                
+                        end                       
                         print("▶"..MDRcolor(keyword)..neun.." "..MDRcolor(keyword,-1,"전문화").."에 따라 착용가능 아이템 범주가 달라 "..MDRcolor(keyword,-1,"전문화").."로 검색해야만합니다. (|cFF33FF99ex|r.!"..MDRcolor(keyword,3).."!무기 or !"..MDRcolor(keyword,4).."!한손)")
                         searchingTip[1]=searchingTip[1]+1
                     end
                 end
                 return
             end
-        end                
+        end        
+        
         if (callType=="spec" and callType2=="item")then            
-            VALUES["comb"]="Spec_Item"            
+            VALUES["comb"]="Spec_Item" 
+            
+        elseif (callType=="class" and callType2=="stat") then  
+            local class,stat=keyword,keyword2
+            if checkSpecCanUseStat(class,stat) then
+                if class=="전사" or (class=="기사" and stat=="힘")  or class=="도적" or class=="냥꾼" or class=="죽기" then
+                    if who==MY_NAME_IN_GAME then                    
+                        if searchingTip[11]<=howManyWarn then
+                            local neun="는"
+                            if class=="도적" or class=="냥꾼" then
+                                neun="은"
+                            end
+                            local eul="을"                        
+                            print("▶"..MDRcolor(class)..neun.." "..MDRcolor(keyword,-1,"전문화").."에 따라 착용할 수 있는 아이템이 상이해 |cFFFFF569"..stat.." 능력치|r와 함께 검색할 수 없습니다. "..MDRcolor(keyword,-1,"전문화").."를 지정해서 검색해보세요.")
+                            searchingTip[11]=searchingTip[11]+1                        
+                        end
+                    end  
+                    return
+                else 
+                    VALUES["comb"]="Class_Stat"
+                end                
+            else
+                if who==MY_NAME_IN_GAME then                    
+                    if searchingTip[9]<=howManyWarn then
+                        local neun="는"
+                        if class=="도적" or class=="냥꾼" or class=="악사" then
+                            neun="은"
+                        end
+                        local eul="을"                        
+                        print("▶"..MDRcolor(class)..neun.." |cFFFFF569"..keyword2.."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
+                        searchingTip[9]=searchingTip[9]+1                        
+                    end
+                end                
+                return 
+            end
+            
+        elseif (callType=="spec" and callType2=="stat") then  
+            local spec,stat,class=keyword,keyword2,callTypeT[4]
+            if checkSpecCanUseStat(spec,stat) then
+                VALUES["comb"]="Spec_Stat"   
+            else
+                if who==MY_NAME_IN_GAME then                    
+                    if searchingTip[10]<=howManyWarn then
+                        local neun="는"
+                        if class=="도적" or class=="냥꾼" or class=="악사" then
+                            neun="은"
+                        end
+                        local eul="을"                        
+                        print("▶"..MDRcolor(class,0,spec).." "..MDRcolor(class)..neun.." |cFFFFF569"..keyword2.."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
+                        searchingTip[10]=searchingTip[10]+1                        
+                    end
+                end                
+                return 
+            end
+            
         elseif (callType=="stat" and callType2=="specificitem")then             
             VALUES["comb"]="Stat_Specificitem"            
-        elseif (callType=="spec" and callType2=="specificitem")then            
-            VALUES["comb"]="Spec_Specificitem"            
+        elseif (callType=="spec" and callType2=="specificitem")then 
+            local class=callTypeT[4] or keyword
+            if checkSpecCanUseItem(class,keyword2) then            
+                VALUES["comb"]="Spec_Specificitem"       
+            else 
+                if who==MY_NAME_IN_GAME then                    
+                    if searchingTip[8]<=howManyWarn then
+                        local neun="는"
+                        if class=="도적" or class=="냥꾼" or class=="악사" then
+                            neun="은"
+                        end
+                        local eul="를"
+                        if keyword2=="장창" or keyword2=="단검" or keyword2=="한손도검" or keyword2=="양손도검" or keyword2=="마법봉" then
+                            eul="을"
+                        end   
+                        print("▶"..MDRcolor(class)..neun.." "..keyword2..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")
+                        searchingTip[8]=searchingTip[8]+1                        
+                    end
+                end                
+                return 
+            end            
         elseif (callType=="stat" and callType2=="category")then             
             VALUES["comb"]="Stat_Category"                        
         elseif (callType=="spec" and callType2=="category")then             
@@ -357,6 +431,8 @@ function filterVALUES(VALUES)
                     local neun,ga,ro="는","가","로"                   
                     if class=="도적" or class=="냥꾼" then
                         neun,ga,ro="은","이","으로"
+                    elseif  class=="악사" then
+                        neun,ga,ro="은","이","로"                        
                     end                         
                     
                     print("▶"..MDRcolor(class,-1,"전문화").."를 단독으로 입력한 경우 해당 전문화가 착용가능한 모든 무기로 던전을 검색합니다. (=!"..MDRcolor(class,0,keyword).."!무기) "..MDRcolor(class)..ga.." 소지한 돌이 알고 싶을 경우 !"..MDRcolor(class,0,class)..ro.." 검색하거나, 특정 무기를 지정하고 싶을 경우 "..MDRcolor(class,-1,"전문화").."와 무기종류,무기범주를 함께 검색해보세요.(|cFF33FF99ex|r.!"..MDRcolor(class,3).."!양손 or !"..MDRcolor(class,4).."!장착)")
