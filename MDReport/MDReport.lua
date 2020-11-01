@@ -78,6 +78,7 @@ function MDRCommands(msg, editbox)
     print("  ▷|cff8787ED!주차|r : 주차정보 검색. 주차를 못했거나 최대 보상을 받을 수 있는 단수(격아4시즌 기준 15단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r !|cff8787ED주차|r !|cff0070DE내|r|cff8787ED주차|r !|cff8787ED주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함")
     print("  ▷|cffA9D271!캐릭터이름|r : 캐릭터 이름으로 검색. 뒷글자는 생략가능하나 앞부분은 일치해야합니다. |cFF33FF99ex)|r 캐릭명이 '아무개' 일 경우 !|cffA9D271아무개|r,!|cffA9D271아무|r,!|cffA9D271아|r = |cFF40ff40가능|r, !|cffA9D271무개|r !|cffA9D271개|r 는 |cffC41F3B불가능|r.")
     print("  ▷|cffC41F3B!속성|r : 이번주 쐐기 속성을 출력. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r !|cffC41F3B속성|r !지난주|cffC41F3B속성|r !다다음주|cffC41F3B속성|r")
+    print("  ▷!|cFF80e7EB전문화|r, !|cFFFFF569능력치|r와 !|cFFaaaaaa무기|r, !|cFFF5aCdA무기범주|r, !|cff8787ED무기종류|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 보유하고 있을 경우 불러올 수 있습니다. |cFF33FF99ex|r) !|cFF80e7EB회드|r!|cFFaaaaaa무기|r, !|cFFFFF569지능|r!|cff8787ED단검|r, !|cff8787ED방패|r, !|cFFFFF569민첩|r!|cFFF5aCdA근접|r, !|cFFFFF569힘|r!|cFFF5aCdA한손|r, !|cFF80e7EB고술|r!|cFFaaaaaa무기|r, !|cFF80e7EB양조|r!|cFFF5aCdA양손|r" )
     print("▶보다 자세한 사용법은 |cffffff00트위치|r나 |cffffff00Curse|r에서 |cFF33FF99MDReport|r 페이지에 방문하여 확인해보세요.")
     
 end
@@ -218,14 +219,14 @@ function filterVALUES(VALUES)
         return
     end
     
-    
+    --[[
     if callType then
         print("callType:"..callType)
     end
     if callType2 then
         print("callType2:"..callType2)
     end
-    
+    ]]
     
     if callType=="levelrange" and level2==nil then
         VALUES["level2"]=tonumber(keyword)
