@@ -8,6 +8,7 @@
 
 MDReport.lua
 
+extra.lua
 affix.lua
 calltype.lua
 frame.lua

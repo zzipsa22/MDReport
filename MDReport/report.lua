@@ -1,5 +1,3 @@
-local version="@project-version@"
-local lastUpdate="@project-date-iso@"
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()    
 
@@ -21,7 +19,7 @@ local skull={
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
-    messageLines[1]="▶[쐐기돌 보고서] Ver."..version.." (Update: "..lastUpdate..")"    
+    messageLines[1]="▶[쐐기돌 보고서] Ver."..MDRversion.." (Update: "..MDRlastUpdate..")"    
     
     reportMessageLines(messageLines,channel,who,callType)   
 end
