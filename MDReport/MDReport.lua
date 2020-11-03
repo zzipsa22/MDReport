@@ -1,5 +1,6 @@
 MDRversion="@project-version@"
 MDRlastUpdate="@project-date-iso@"
+MDRguide=0
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()  
 

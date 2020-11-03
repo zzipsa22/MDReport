@@ -1,6 +1,10 @@
 local _,className=UnitClass("player")
 local  _,_,_,classColor=GetClassColor(className)  
 local playerName = UnitName("player")
+local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
+local dices={}
+local diceReportChannel
+local diceWait=0
 
 --명령어 등록
 SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/Tho','/쐐'
@@ -15,10 +19,51 @@ C_Timer.After(10, function()
                 doWarningReport(channel,who,"warning") 
                 return
             end 
-            
-            print("▶[|cFF33FF99쐐기돌 보고서 "..MDRversion.."|r]: 이제 |c"..classColor.."!캐릭터이름|r과 조합하여 명령어에 반응할 사람을 지정할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")    
+            if MDRguide<1 then
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDRversion.."|r]: 이제 |c"..classColor.."!캐릭터이름|r과 조합하여 명령어에 반응할 사람을 지정할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")                               
+                MDRguide=MDRguide+1
+            end
         end
 end)
+
+function MDRmakeDice(channel,who,...)
+    dices={}
+    for i = 1, select('#', ...) do
+        dices[i]=select(i, ...)
+    end 
+    if channel=="WHISPER_OUT" or #dices<2 then return end
+    
+    --나에게서 귓말이 들어오는 경우 프린트로 변경
+    if (channel=="WHISPER_IN") and who==MY_NAME_IN_GAME then
+        channel="print"
+    end 
+    diceReportChannel=channel
+    diceWait=1
+    RandomRoll(1,#dices)    
+end
+
+
+function MDRdice(msg)
+    if diceWait==0 then return end
+    local resultNum
+    local messageLines={}
+    if playerName==strsub(msg,1,strlen(playerName)) then
+        local num=MDRsplit(msg," ")[5]
+        local n1=tonumber(strsub(num,1,1))
+        local n2=tonumber(strsub(num,1,2))
+        if n2 then resultNum=n2
+        else
+            resultNum=n1     
+        end 
+        messageLines[1]=resultNum.."번 "..(dices[resultNum] or "알 수 없음").." 한 표."
+        
+        reportMessageLines(messageLines,diceReportChannel,who,"dice")
+        diceWait=0
+    else
+        return        
+    end       
+end
+
 
 function MDRCommands(msg, editbox)   
     local messageLines={}

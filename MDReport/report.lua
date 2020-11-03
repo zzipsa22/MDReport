@@ -277,7 +277,7 @@ end
 
 --메세지 출력
 function reportMessageLines(messageLines,channel,who,callType)       
-    if channel==nil then channel="print" end
+    if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
     
     --최종적으로 귓말채널 반환
     if (channel=="WHISPER_IN") or (channel=="WHISPER_OUT")  then

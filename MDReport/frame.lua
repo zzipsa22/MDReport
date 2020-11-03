@@ -7,7 +7,13 @@ MDR:RegisterEvent("CHAT_MSG_WHISPER")
 MDR:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 
 MDR:SetScript("OnEvent", function(self, event, ...)
-         local msg=select(1, ...)
+        local msg=select(1, ...)
+        
+        if (event=="CHAT_MSG_SYSTEM") then 
+            MDRdice(msg)
+            return
+        end
+        
         
         --애드온에 의해 출력된 메시지는 무시
         if strfind(msg,"▶") or strfind(msg,"▷")then return end
@@ -30,10 +36,10 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         elseif (event=="CHAT_MSG_WHISPER_INFORM") then
             channel="WHISPER_OUT"            
         elseif (event=="CHAT_MSG_WHISPER") then
-            channel="WHISPER_IN"
+            channel="WHISPER_IN"            
         else return end
         
-        local who=select(2, ...)   
+        local who=select(2, ...)          
         
         --느낌표와 띄어쓰기 잘라냄
         local keyword=gsub(strsub(msg,2)," ","")        
@@ -49,7 +55,11 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
             k1=MDRsplit(keyword,"!")[1] 
-            k2=MDRsplit(keyword,"!")[2]            
+            k2=MDRsplit(keyword,"!")[2]
+            k3=MDRsplit(keyword,"!")[3]
+            k4=MDRsplit(keyword,"!")[4]
+            k5=MDRsplit(keyword,"!")[5]
+            k6=MDRsplit(keyword,"!")[6]
             
             --중간에 ~를 넣은 명령어면
         elseif strfind(keyword,"~") then
@@ -108,6 +118,11 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         callTypeT1=getCallTypeTable(k1)
         callTypeT2=getCallTypeTable(k2) 
+        
+        if k1=="주사위" then
+            MDRmakeDice(channel,who,k2,k3,k4,k5,k6)
+            return            
+        end        
         
         if not callTypeT1 and k1~="" and callTypeT2 then
             onlyYou=k1
@@ -189,3 +204,4 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
+
