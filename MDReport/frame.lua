@@ -7,9 +7,12 @@ MDR:RegisterEvent("CHAT_MSG_WHISPER")
 MDR:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 
 MDR:SetScript("OnEvent", function(self, event, ...)
-        local msg=select(1, ...)
+         local msg=select(1, ...)
         
-        --!로시작하지않고 끝자리가 !가 아니면
+        --애드온에 의해 출력된 메시지는 무시
+        if strfind(msg,"▶") or strfind(msg,"▷")then return end
+        
+        --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
             if  strfind(msg,"!") and strsub(msg, -1)~="!"then
                 msg="!"..(MDRsplit(msg,"!")[2] or "") 
@@ -40,7 +43,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         
         local k1=keyword
         local k2,level1,level2,callTypeT1,callTypeT2
-        local onlyMe,onlyOnline,CharName
+        local onlyMe,onlyOnline,CharName,onlyYou
         local VALUES={}        
         
         --명령어가 이중인지 체크        
@@ -49,7 +52,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             k2=MDRsplit(keyword,"!")[2]            
             
             --중간에 ~를 넣은 명령어면
-        elseif strfind(keyword,"~")then
+        elseif strfind(keyword,"~") then
             
             local space="~"
             
@@ -104,7 +107,23 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         end        
         
         callTypeT1=getCallTypeTable(k1)
-        callTypeT2=getCallTypeTable(k2)  
+        callTypeT2=getCallTypeTable(k2) 
+        
+        if not callTypeT1 and k1~="" and callTypeT2 then
+            onlyYou=k1
+        elseif not callTypeT2 and k2~="" and callTypeT1 then
+            onlyYou=k2            
+        end
+        
+        --이름을 먼저 쓴 경우 이름이 뒤로
+        if not callTypeT1 and callTypeT2 and (callTypeT2[1]=="all" or callTypeT2[1]=="parking" or callTypeT2[1]=="class") then
+            
+            callTypeT1=callTypeT2 
+            callTypeT2=nil
+        else
+            --onlyYou=k2
+        end          
+        
         
         --명령어가 발견이 안되면
         if k1 and not callTypeT1 then
@@ -121,8 +140,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
             if ((not callTypeT1) and name~="") then
                 callTypeT1=getCallTypeTable("아무")
-                CharName=name
-                --print(CharName)
+                CharName=name                
             end
             
         end
@@ -137,7 +155,18 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         end                
         
         --명령어 조합인 경우 순서 바꾸기
-        if callTypeT1~=nil and (callTypeT1[1]=="item" or callTypeT1[1]=="specificitem" or callTypeT1[1]=="category") and callTypeT2~=nil then
+        if callTypeT1 and callTypeT2 and
+        (callTypeT1[1]=="item" or
+            callTypeT1[1]=="specificitem" or            
+            
+            (callTypeT1[1]=="stat" and callTypeT2[1]=="class") or
+            
+            (callTypeT1[1]=="stat" and callTypeT2[1]=="spec") or
+            
+            callTypeT1[1]=="dungeon" or
+            
+            callTypeT1[1]=="category")  
+        then
             local callTypeT3=callTypeT1
             callTypeT1=callTypeT2
             callTypeT2=callTypeT3
@@ -151,6 +180,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             VALUES["channel"]=channel            
             VALUES["who"]=who   
             VALUES["onlyMe"]=onlyMe
+            VALUES["onlyYou"]=onlyYou
             VALUES["onlyOnline"]=onlyOnline           
             VALUES["CharName"]=CharName
             

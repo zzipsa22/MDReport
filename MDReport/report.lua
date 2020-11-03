@@ -124,7 +124,7 @@ function doShortReport(chars,channel,who,callType)
             elseif chars[i]["extraLink"] and callType=="spell"then
                 message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
-                message=skull[class]..havekey..":"..chars[i]["extraLink"]
+                message=skull[class].."["..havekey.."]:"..chars[i]["extraLink"]
             else
                 message=skull[class]..havekey.."("..classStatus..")"
             end
@@ -150,11 +150,12 @@ function doShortReport(chars,channel,who,callType)
         --메세지라인 리셋셋
         messageLines=oneLineMessage
     end    
+    
     reportMessageLines(messageLines,channel,who,callType)       
 end
 
 --자세한 보고서 작성 및 출력
-function doFullReport(chars,channel,who,callType)      
+function doFullReport(chars,channel,who,callType)          
     
     local messageLines={} 
     

@@ -66,7 +66,7 @@ function GetAnyWeeksAffix(week)
     
     local thisWeek=GetThisWeek()
     if thisWeek==nil then
-        print("적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하세요.")
+        print("▶적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하세요.")
         return
     end
     local calledWeek=thisWeek
