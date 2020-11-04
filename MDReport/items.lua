@@ -547,7 +547,12 @@ function findCharAllItem(VALUES)
             extraKeyword[callTypeT[i][1]]=callTypeT[i][3]                    
         end   
     end
-    --print(comb)
+    print(comb)
+    
+    if comb=="Trinket"then
+        
+    end    
+    
     if comb=="Class_Stat" then
         local newSpec
         if keyword["class"]=="드루" then if
@@ -603,7 +608,8 @@ function findCharAllItem(VALUES)
     end        
     
     local stat=keyword["stat"] or extraKeyword["class"]
-    local spec=keyword["spec"]    
+    local spec=keyword["spec"]
+    local role=keyword["role"]
     local item=keyword["specificitem"]
     local category=keyword["category"]          
     

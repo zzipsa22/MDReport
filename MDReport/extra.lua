@@ -16,7 +16,7 @@ C_Timer.After(10, function()
                 return
             end 
             if MDRguide<1 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDRversion.."|r]: 이제 |c"..classColor.."!캐릭터이름|r과 조합하여 명령어에 반응할 사람을 지정할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")                               
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDRversion.."|r]: 이제 |c"..classColor.."!닉네임|r과 조합하여 명령어에 반응할 사람을 지정할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")                               
                 MDRguide=MDRguide+1
             end
         end
@@ -158,9 +158,12 @@ end
 
 function MDRmakeDice(channel,who,k)
     dices={}
+    dicesB={}
     if #k<3 then return end
     for i=1,#k do
-        dices[i]=k[i+1]
+        local subject=getFullDungeonName(k[i+1]) or k[i+1]
+        dices[i]=subject
+        dicesB[i]=k[i+1]
     end    
     
     if channel=="WHISPER_OUT" or #dices<2 then return end
@@ -170,8 +173,20 @@ function MDRmakeDice(channel,who,k)
         channel="print"
     end 
     diceReportChannel=channel
-    diceWait=1
-    RandomRoll(1,#dices)    
+    
+    if who==MY_NAME_IN_GAME then
+        local message=""
+        local messageLines={}
+        for i=1,#dices do
+            message=message..i.."."..dicesB[i].." "
+        end
+        messageLines[1]=message
+        reportMessageLines(messageLines,diceReportChannel,who,"dice")        
+    end   
+    C_Timer.After(1, function()               
+            diceWait=1
+            RandomRoll(1,#dices)    
+    end)    
 end
 
 
@@ -187,10 +202,11 @@ function MDRdice(msg)
         else
             resultNum=n1     
         end 
-        messageLines[1]=resultNum.."번 '"..(dices[resultNum] or "알 수 없음").."' 한 표."
-        
-        reportMessageLines(messageLines,diceReportChannel,who,"dice")
-        diceWait=0
+        messageLines[1]="'"..(dices[resultNum] or "알 수 없음").."'"
+        C_Timer.After(1.5, function()    
+                reportMessageLines(messageLines,diceReportChannel,who,"dice")
+                diceWait=0
+        end) 
     else
         return        
     end       

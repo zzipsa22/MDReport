@@ -249,6 +249,20 @@ function filterVALUES(VALUES)
         if (callType["spec"]==1 and callType["item"]==1)then            
             VALUES["comb"]="Spec_Item" 
             
+        elseif callType["trinket"]==1 and (callType["role"]==1 or callType["stat"]==1)then
+            if keyword["role"]=="힐러" or keyword["role"]=="탱커"  then           
+                
+            elseif not callType["stat"] then            
+                print("스탯을 지정해야함") 
+                return
+                
+            elseif not callType["role"] then              
+                print("역할을 지정해야함") 
+                return
+            end
+            print("검색 조건 충분")
+            VALUES["comb"]="Trinket" 
+            
             --던전+스펙
         elseif (callType["spec"]==1 and callType["dungeon"]==1) then  
             VALUES["comb"]="Spec_Dungeon"    
@@ -403,11 +417,11 @@ function filterVALUES(VALUES)
             VALUES["comb"]="Spec_Item"
             findCharAllItem(VALUES)
             
-            --!무기만 단독검색시
-        elseif callType["item"]==1 and #callTypeB==1 then
+            --!무기or 장신구만 단독검색시
+        elseif (callType["item"]==1 or callType["trinket"]==1)and #callTypeB==1 then
             if who==MY_NAME_IN_GAME then
                 
-                print("▶|cFFaaaaaa무기|r는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (|cFF33FF99ex|r. !"..MDRcolor(krClass,3).."|cFFaaaaaa!무기|r)")
+                print("▶|cFFaaaaaa"..(keyword["trinket"] or keyword["item"] ).."|r는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (|cFF33FF99ex|r. !"..MDRcolor(krClass,3).."|cFFaaaaaa!"..(keyword["trinket"] or keyword["item"] ).."|r)")
                 
             end  
             
