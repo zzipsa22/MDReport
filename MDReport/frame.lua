@@ -5,6 +5,7 @@ MDR:RegisterEvent("CHAT_MSG_PARTY_LEADER")
 MDR:RegisterEvent("CHAT_MSG_GUILD")
 MDR:RegisterEvent("CHAT_MSG_WHISPER")
 MDR:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+MDR:RegisterEvent("CHAT_MSG_SYSTEM")
 
 MDR:SetScript("OnEvent", function(self, event, ...)
         local msg=select(1, ...)
