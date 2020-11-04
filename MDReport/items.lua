@@ -1,8 +1,9 @@
 local who,channel,level,level2,callTypeT,comb
 local callType,callTypeB,keyword,extraKeyword={},{},{},{}
 local meGame=UnitName("player").."-"..GetRealmName()
+local krClass,className=UnitClass("player")
 local tips={0,0,0}
-local warns=5
+local warns=3
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
 local bonus1="::::::::50:65::16:4:6536:6513:1533:4786::::" ;--일반
 local bonus2="::::::::50:65::16:5:6536:6516:6513:1514:4786::::" ;--메카
@@ -471,18 +472,34 @@ function checkDungeonHasTrinket(VALUES)
             (strfind(dropTable[j][1],stat) and role=="탱커")  --스탯이 일치하는 탱커          
         ) then            
             local header
+            if dropTable[j][4]=="탱커"and role=="탱커" then
+                header="탱"
+            elseif strfind(dropTable[j][4],"탱") and role=="탱커" then
+                header=stat
+            elseif dropTable[j][4]=="힐러" and role=="힐러" then
+                header="힐"
+            elseif strfind(dropTable[j][4],"힐") and role=="힐러" then
+                header="지능"
+            elseif strfind(dropTable[j][4],"딜러") and role=="딜러" then
+                header=stat
+            end
+            
+            
+            
+            --[[
             if role=="탱커" or role=="힐러"then
                 header=strsub(role,0,3).." "
             else
                 header=stat.." "
             end
+]]
             if sameDungeon then
                 thisDungeonHas[itemNum]=sameDungeon
             else                
                 if link==1 then
                     _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
                 else
-                    thisDungeonHas[itemNum]=header..dropTable[j][2]
+                    thisDungeonHas[itemNum]=header.." "..dropTable[j][2]
                 end
             end                           
             thisDungeonHasItem=1
@@ -669,6 +686,12 @@ function findCharAllItem(VALUES)
         elseif keyword["role"]=="탱커" and not keyword["stat"] then
             stat=extraKeyword["role"]
         end 
+        if keyword["dungeon"] then
+            link=1
+        else
+            link=0
+        end         
+        
         --print("role:"..role)
         --print("stat:"..stat)        
     end    
@@ -718,7 +741,7 @@ function findCharAllItem(VALUES)
     
     local link=0
     
-    if comb=="Spec_Dungeon" then
+    if comb=="Spec_Dungeon" or (comb=="Trinket" and keyword["dungeon"])then
         chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
         link=1
     end    
@@ -754,7 +777,7 @@ function findCharAllItem(VALUES)
     local findChars={}   
     local num=1
     
-    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" or comb=="Trinket"then
+    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" then
         link=1        
     elseif comb=="Stat_Category" or comb=="Spec_Category" then
         link=0
@@ -831,16 +854,24 @@ function findCharAllItem(VALUES)
             if VALUES["link"] ==1 then
                 doFullReport(findChars,channel,who,"item")                     
             else
-                if who==meGame and (callType["class"]==1 or callType["spec"]==1) then 
-                    if tips[1]<warns then
-                        local yourClass=keyword["spec"] or keyword["class"]
-                        local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
-                        C_Timer.After(1, function()                           
-                                print("▶검색결과가 있을 경우 해당 |cffa335ee[아이템 링크]|r를 보시려면 !"..MDRcolor("전문화",-1).."와 !|cff8787ED던전이름|r, 혹은 |cffF58CBA무기종류|r를 함께 입력해보세요. (|cFF33FF99ex|r. !"..MDRcolor(class,0,yourClass).."!|cff8787ED아탈|r, !"..MDRcolor(class,0,yourClass).."!|cffF58CBA지팡이|r)")              
-                                
-                        end)  
-                        tips[1]=tips[1]+1
-                    end                    
+                if who==meGame and (callType["class"]==1 or callType["spec"]==1 or callType["trinket"]==1) then 
+                    
+                    local yourClass=keyword["spec"] or keyword["class"]
+                    if not yourClass then yourClass=krClass end
+                    --local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
+                    C_Timer.After(2, function()                               
+                            if callType["trinket"]==1 then
+                                if tips[1]<warns then                                    
+                                    print("▶|cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r을 같이 검색해보세요. (|cFF33FF99ex|r. !"..MDRcolor("도적",0,(keyword["stat"] or keyword["role"])).."!장신구!|cff8787ED아탈|r)")  
+                                    tips[1]=tips[1]+1  
+                                end                                
+                            else
+                                if tips[2]<warns then
+                                    print("▶|cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("!전문화",-1).."와 |cff8787ED!던전이름|r, 혹은 |cffF58CBA무기종류|r를 함께 입력해보세요. (|cFF33FF99ex|r. !"..MDRcolor(yourClass,3).."!|cff8787ED아탈|r, !"..MDRcolor(yourClass,4).."!|cffF58CBA지팡이|r)")  
+                                    tips[2]=tips[2]+1
+                                end                                
+                            end                            
+                    end)    
                 end      
                 doShortReport(findChars,channel,who,"item") 
             end    

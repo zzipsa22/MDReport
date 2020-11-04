@@ -96,7 +96,7 @@ local RealmMap= {
     ["노르간논"] = 2,
     ["세나리우스"] = 2,
     
-    ["듀로탄"] = 1,
+    ["듀로탄"] = 3,
     ["불타는 군단"] = 3,
     ["스톰레이지"] = 3,
     
@@ -251,22 +251,50 @@ function filterVALUES(VALUES)
             VALUES["comb"]="Spec_Item" 
             
         elseif callType["trinket"]==1 and (callType["role"]==1 or callType["stat"]==1)then
-            if keyword["role"]=="힐러"then           
-                print("공용,힐러용 다 보여줌")
+            if keyword["role"]=="힐러"then  
+                if who==meGame then
+                    print("▶"..MDRcolor("힐러",-1).." [수양/신성, "..MDRcolor("운무",0)..", "..MDRcolor("회복",0)..", "..MDRcolor("징벌",0,"신기")..", "..MDRcolor("복원",0).."] 로 사용 가능한 모든 장신구를 검색합니다.")
+                end
                 
             elseif keyword["role"]=="탱커" then                
                 if extraKeyword["role"]=="힘/민첩" and not keyword["stat"]  then
-                    print("탱전용만 보여줌,힘/민과 같이검색하세요")     
+                    if who==meGame then
+                        print("▶"..MDRcolor("탱커",-1).." "..MDRcolor("전용",-2).." 장신구를 검색합니다. "..MDRcolor("탱커",-1).."로 사용 가능한 "..MDRcolor("모든 장신구",-2).."를 검색하시려면 "..MDRcolor("도적",0,"힘").."이나 "..MDRcolor("도적",0,"민첩").."과 함께 검색해보세요. |cFF33FF99ex)|r "..MDRcolor("!힘탱",-1).."!장신구, "..MDRcolor("!탱커",-1).."!장신구"..MDRcolor("도적",0,"!민첩"))     
+                    end
+                    
                 elseif callType["stat"]==1 or extraKeyword["role"]~="힘/민첩" then 
-                    print((keyword["stat"] or extraKeyword["role"]).." 탱커 장신구 보여줌")                  
+                    if who==meGame then
+                        local classType
+                        if keyword["stat"]=="힘" or extraKeyword["role"]=="힘" then
+                            classType=MDRcolor("도적",0,"힘").."을 사용하는 "..MDRcolor("탱커",-1).." ["..MDRcolor("보호",0)..", "..MDRcolor("혈기",0)..", "..MDRcolor("방어",0).."] "
+                        else
+                            classType=MDRcolor("도적",0,"민첩").."을 사용하는 "..MDRcolor("탱커",-1).." ["..MDRcolor("수호",0)..", "..MDRcolor("양조",0)..", "..MDRcolor("복수",0).."] "                            
+                        end                        
+                        print("▶"..classType.."로 사용 가능한 장신구를 검색합니다.") 
+                    end                    
                 end              
                 
-            elseif not callType["stat"] then            
-                print("스탯을 지정해야함") 
+            elseif not callType["stat"] then 
+                if who==meGame then
+                    print("▶딜러 장신구를 검색하시려면 능력치를 지정해야합니다.") 
+                end                
                 return
                 
-            elseif not callType["role"] then              
-                print(keyword["stat"].." 딜러로 설정함") 
+            elseif not callType["role"] then 
+                if who==meGame then
+                    local classType
+                    if keyword["stat"]=="힘" then
+                        classType=MDRcolor("도적",0,"힘").."을 사용하는 "..MDRcolor("딜러",-1).." ["..MDRcolor("무기",0,"무기/분노")..", "..MDRcolor("냉죽",0,"냉기/부정")..", "..MDRcolor("징벌",0).."] "
+                    elseif keyword["stat"]=="지능" then
+                        classType=MDRcolor("도적",0,"지능").."을 사용하는 "..MDRcolor("딜러",-1).." ["..MDRcolor("마법사")..", "..MDRcolor("흑마법사")..", "..MDRcolor("암흑",0)..", "..MDRcolor("조화",0)..", "..MDRcolor("정기",0).."] "
+                        
+                    elseif keyword["stat"]=="민첩" then
+                        classType=MDRcolor("도적",0,"민첩").."을 사용하는 "..MDRcolor("딜러",-1).." ["..MDRcolor("도적")..", "..MDRcolor("사냥꾼")..", "..MDRcolor("풍운",0)..", "..MDRcolor("야성",0)..", "..MDRcolor("고양",0)..", "..MDRcolor("파멸",0).."] "
+                        
+                    end
+                    
+                    print("▶"..classType.."로 사용 가능한 장신구를 검색합니다.") 
+                end                
             end
             --print("검색 조건 충분")
             VALUES["comb"]="Trinket" 
@@ -816,4 +844,3 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
-
