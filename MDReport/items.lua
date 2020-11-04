@@ -348,7 +348,7 @@ end
 
 function checkDungeonHasItem(VALUES)
     
-    local dungeon,spec,stat,category,link,item
+    local dungeon,spec,stat,category,link,item,sameDungeon
     
     if VALUES~=nil then
         dungeon=VALUES["dungeon"]
@@ -356,7 +356,8 @@ function checkDungeonHasItem(VALUES)
         stat=VALUES["stat"]
         category=VALUES["category"]
         link=VALUES["link"]              
-        item=VALUES["item"]                 
+        item=VALUES["item"]  
+        sameDungeon=VALUES["sameDungeon"]               
     end            
     
     if dungeon==nil or spec==nil then return end    
@@ -412,11 +413,15 @@ function checkDungeonHasItem(VALUES)
                 if category~=nil then
                     --header=dropTable[j][1].." "
                 end           
-                if link==1 then
-                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                else
-                    thisDungeonHas[itemNum]=header..dropTable[j][2]
-                end                     
+                if sameDungeon then
+                    thisDungeonHas[itemNum]=sameDungeon
+                else                
+                    if link==1 then
+                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        thisDungeonHas[itemNum]=header..dropTable[j][2]
+                    end
+                end                            
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
             end            
@@ -438,7 +443,7 @@ end
 
 function checkDungeonHasCategoryItem(VALUES)
     
-    local dungeon,spec,stat,category,link,item
+    local dungeon,spec,stat,category,link,item,sameDungeon
     
     if VALUES~=nil then
         dungeon=VALUES["dungeon"]
@@ -446,7 +451,8 @@ function checkDungeonHasCategoryItem(VALUES)
         stat=VALUES["stat"]
         category=VALUES["category"]
         link=VALUES["link"]              
-        item=VALUES["item"]                 
+        item=VALUES["item"]      
+        sameDungeon=VALUES["sameDungeon"]
     end      
     
     --던전에 따라 보너스ID 지정
@@ -482,11 +488,15 @@ function checkDungeonHasCategoryItem(VALUES)
                 if category~=nil then
                     header=dropTable[j][1].." "
                 end           
-                if link==1 then
-                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                else
-                    thisDungeonHas[itemNum]=header..dropTable[j][2]
-                end                     
+                if sameDungeon then
+                    thisDungeonHas[itemNum]=sameDungeon
+                else                
+                    if link==1 then
+                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        thisDungeonHas[itemNum]=header..dropTable[j][2]
+                    end
+                end                           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
             end            
@@ -508,7 +518,7 @@ end
 
 function checkDungeonHasSpecificItem(VALUES)    
     
-    local dungeon,spec,stat,category,link,item
+    local dungeon,spec,stat,category,link,item,sameDungeon
     
     if VALUES~=nil then
         dungeon=VALUES["dungeon"]
@@ -516,7 +526,8 @@ function checkDungeonHasSpecificItem(VALUES)
         stat=VALUES["stat"]
         category=VALUES["category"]
         link=VALUES["link"]              
-        item=VALUES["item"]                 
+        item=VALUES["item"]
+        sameDungeon=VALUES["sameDungeon"]        
     end    
     
     --던전에 따라 보너스ID 지정
@@ -533,12 +544,17 @@ function checkDungeonHasSpecificItem(VALUES)
             local header=""
             if category~=nil then
                 header=dropTable[j][1].." "
-            end   
-            if link==1 then
-                _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-            else
-                thisDungeonHas[itemNum]=header..dropTable[j][2]
-            end                 
+            end
+            if sameDungeon then
+                thisDungeonHas[itemNum]=sameDungeon
+                --print(sameDungeon)
+            else                
+                if link==1 then
+                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                else
+                    thisDungeonHas[itemNum]=header..dropTable[j][2]
+                end
+            end            
             thisDungeonHasItem=1
             itemNum=itemNum+1            
         end        
@@ -704,6 +720,7 @@ function findCharAllItem(VALUES)
             end                     
         end    
     end      
+    local dun={}
     
     C_Timer.After(0.1, function()            
             if chars~=nil then        
@@ -711,6 +728,11 @@ function findCharAllItem(VALUES)
                     local p=chars[i]["fullName"]
                     local c=SavedInstancesDB.Toons[p]
                     local mapName=c.MythicKey.name
+                    if dun[mapName] then
+                        VALUES["sameDungeon"]=dun[mapName]
+                    else                 
+                        VALUES["sameDungeon"]=nil
+                    end                                       
                     VALUES["dungeon"]=getShortDungeonName(mapName)
                     local itemList   
                     if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
@@ -728,6 +750,7 @@ function findCharAllItem(VALUES)
                     if itemList then
                         chars[i]["extraLink"]=itemList
                         findChars[num]=chars[i]
+                        dun[mapName]=num
                         num=num+1
                     end
                 end    

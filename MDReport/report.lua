@@ -114,6 +114,7 @@ function doShortReport(chars,channel,who,callType)
                 havekey="템렙"..math.floor(itemLevel)
             end
             local message=""          
+            local sameCheck
             
             if callType=="parking" then                 
                 message=skull[class]..classStatus.."["..havekey.."]"..parkingstar
@@ -122,12 +123,24 @@ function doShortReport(chars,channel,who,callType)
             elseif chars[i]["extraLink"] and callType=="spell"then
                 message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
-                message=skull[class].."["..havekey.."]:"..chars[i]["extraLink"]
+                sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
+                if sameCheck then                   
+                    message=""..skull[class]..havekey.."]"
+                else                    
+                    message=skull[class].."["..havekey.."]:"..chars[i]["extraLink"]
+                end               
             else
                 message=skull[class]..havekey.."("..classStatus..")"
             end
             
-            messageLines[i]=message 
+            if sameCheck then
+                local before=MDRsplit(messageLines[sameCheck],"]")[1]                
+                local after=MDRsplit(messageLines[sameCheck],"]")[2]
+                messageLines[sameCheck]=before..message..after
+            else
+                messageLines[i]=message 
+            end     
+            
         end        
         -- 한줄로 줄이기
         local oneLineMessage={}
@@ -246,16 +259,28 @@ function doFullReport(chars,channel,who,callType)
                 headStar=skull[class]                
             end             
             
-            local message=""             
+            local message=""
+            local sameCheck
             if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
-            elseif callType=="item" and chars[i]["extraLink"] then
-                message=headStar..havekey..": "..chars[i]["extraLink"] 
+            elseif callType=="item" and chars[i]["extraLink"] then                
+                sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
+                if sameCheck then                   
+                    message=","..headStar..havekey.."▶"
+                else      
+                    message=headStar..havekey.."▶"..chars[i]["extraLink"] 
+                end 
             else
                 message=headStar..classStatus..": "..havekey..online
             end
             
-            messageLines[i]=message 
+            if sameCheck then
+                local before=MDRsplit(messageLines[sameCheck],"▶")[1]                
+                local after=MDRsplit(messageLines[sameCheck],"▶")[2]
+                messageLines[sameCheck]=before..message..after
+            else
+                messageLines[i]=message 
+            end            
         end
     end      
     
