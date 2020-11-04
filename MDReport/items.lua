@@ -15,7 +15,7 @@ local dungeonTable={
             {"민첩","단검",159132},
             {"민첩","한손도검",159635},
             {"민첩","총",159130}, 
-            {"민첩","장신구",155881,"딜러,탱커"},                 
+            {"민첩","장신구",155881,"딜러/탱커"},                 
         }          
     },
     
@@ -27,7 +27,7 @@ local dungeonTable={
             {"힘","한손도검",159649},
             {"민첩","전투검",159651},
             {"민첩","한손둔기",159973},               
-            {"민첩","장신구",159623,"딜러,탱커"},  
+            {"민첩","장신구",159623,"딜러/탱커"},  
             {"지능","장신구",159622,"딜러"},  
         }
     },
@@ -41,9 +41,9 @@ local dungeonTable={
             {"민첩","한손도검",158714},
             {"지능","한손둔기",158369}, 
             {"민첩","활",159637},              
-            {"","방패",159664},    
-            {"민첩","장신구",158374,"딜러,탱커"},     
-            {"힘","장신구",158367,"딜러,탱커"},                         
+            {"힘/지능","방패",159664},    
+            {"민첩","장신구",158374,"딜러/탱커"},     
+            {"힘","장신구",158367,"딜러/탱커"},                         
             {"지능","장신구",158368,"힐러"},                 
         }
     },
@@ -56,9 +56,9 @@ local dungeonTable={
             {"민첩","장착무기",159653},
             {"지능","한손둔기",159652}, 
             {"민첩","단검",159134},              
-            {"","방패",159665}, 
-            {"힘,민첩","장신구",159626,"탱커"},         
-            {"힘","장신구",159625,"딜러,탱커"},                 
+            {"힘/지능","방패",159665}, 
+            {"힘/민첩","장신구",159626,"탱커"},         
+            {"힘","장신구",159625,"딜러/탱커"},                 
         }
     },
     
@@ -70,11 +70,11 @@ local dungeonTable={
             {"힘","한손둔기",159632},            
             {"민첩","활",158711},     
             {"지능","마법봉",158321},    
-            {"","방패",158713},  
+            {"힘/지능","방패",158713},  
             {"지능","보조",158322},              
             {"지능","장신구",159610,"딜러"},             
-            {"힘","장신구",158712,"딜러,탱커"},             
-            {"민첩","장신구",158319,"딜러,탱커"},             
+            {"힘","장신구",158712,"딜러/탱커"},             
+            {"민첩","장신구",158319,"딜러/탱커"},             
             {"지능","장신구",158320,"힐러"},             
         }
     },
@@ -85,9 +85,9 @@ local dungeonTable={
             {"힘","양손둔기",159638},
             {"지능","한손둔기",159641}, 
             {"민첩","총",159639},       
-            {"","방패",159663},     
-            {"힘","장신구",159611,"딜러,탱커"},             
-            {"민첩","장신구",159612,"딜러,탱커"},                 
+            {"힘/지능","방패",159663},     
+            {"힘","장신구",159611,"딜러/탱커"},             
+            {"민첩","장신구",159612,"딜러/탱커"},                 
         }
     },
     
@@ -102,8 +102,8 @@ local dungeonTable={
             {"민첩","단검",159136},                 
             {"민첩","석궁",159643},      
             {"지능","보조",159667}, 
-            {"민첩","장신구",159617,"딜러,탱커"},             
-            {"힘,민첩","장신구",159618,"탱커"},                 
+            {"민첩","장신구",159617,"딜러/탱커"},             
+            {"힘/민첩","장신구",159618,"탱커"},                 
         }
     },
     
@@ -116,9 +116,9 @@ local dungeonTable={
             {"지능","단검",159133},  
             {"힘","한손도끼",159660},
             {"지능","보조",159669},   
-            {"지능","장신구",159631,"힐러,딜러"},      
-            {"지능","장신구",159630,"힐러,딜러"},     
-            {"힘","장신구",159616,"딜러,탱커"},                 
+            {"지능","장신구",159631,"힐러/딜러"},      
+            {"지능","장신구",159630,"힐러/딜러"},     
+            {"힘","장신구",159616,"딜러/탱커"},                 
         }
     },    
     
@@ -131,10 +131,10 @@ local dungeonTable={
             {"민첩","한손도끼",169058},    
             {"지능","한손도검",169062}, 
             {"민첩","단검",169066},  
-            {"","방패",169068},   
+            {"힘/지능","방패",169068},   
             {"힘","한손도끼",168963},  
             {"민첩","총",169077},     
-            {"힘,민첩","장신구",169769,"딜러"},                     
+            {"힘/민첩","장신구",169769,"딜러"},                     
         }
     },
     
@@ -145,7 +145,7 @@ local dungeonTable={
             {"민첩","단검",168962},  
             {"지능","지팡이",168973},
             {"힘","한손도검",169608},      
-            {"힘,민첩","장신구",168965,"탱커"},     
+            {"힘/민첩","장신구",168965,"탱커"},     
             {"지능","장신구",169344,"힐러"},             
         }
     },    
@@ -159,11 +159,11 @@ local dungeonTable={
             {"힘","한손둔기",159658},        
             {"민첩","단검",159131},  
             {"민첩","총",159657},     
-            {"","방패",159666},   
+            {"힘/지능","방패",159666},   
             {"지능","보조",159668},    
-            {"지능","장신구",159615,"힐러,딜러"},             
-            {"힘","장신구",159627,"딜러,탱커"},             
-            {"민첩","장신구",159628,"딜러,탱커"},             
+            {"지능","장신구",159615,"힐러/딜러"},             
+            {"힘","장신구",159627,"딜러/탱커"},             
+            {"민첩","장신구",159628,"딜러/탱커"},             
         }
     },    
     
@@ -173,9 +173,9 @@ local dungeonTable={
             {"지능","지팡이",158371},
             {"민첩","단검",159135},  
             {"지능","한손도검",159646},       
-            {"민첩","장신구",159614,"딜러,탱커"},    
-            {"힘","장신구",159619,"딜러,탱커"},    
-            {"지능","장신구",159620,"힐러,딜러"},                
+            {"민첩","장신구",159614,"딜러/탱커"},    
+            {"힘","장신구",159619,"딜러/탱커"},    
+            {"지능","장신구",159620,"힐러/딜러"},                
         }
     },    
 }
@@ -346,14 +346,28 @@ function getBonusIDs(dungeon)
 end
 
 
-function checkDungeonHasItem(dungeon,spec,category,link)
+function checkDungeonHasItem(VALUES)
     
-    if dungeon==nil or spec==nil then return end
+    local dungeon,spec,stat,category,link,item
+    
+    if VALUES~=nil then
+        dungeon=VALUES["dungeon"]
+        spec=VALUES["spec"]
+        stat=VALUES["stat"]
+        category=VALUES["category"]
+        link=VALUES["link"]              
+        item=VALUES["item"]                 
+    end            
+    
+    if dungeon==nil or spec==nil then return end    
     
     --던전에 따라 보너스ID 지정
     local bonus=getBonusIDs(dungeon)    
+    local dropTable=getDungeonDropTable(dungeon)
     
-    local statTable=getSpecStatTable(spec)
+    
+    
+    local stat=getSpecStatTable(spec)[1]
     local weaponTable=getSpecWeaponTable(spec)
     if category~=nil then
         local wantWeaponTypeTable=getCategoryTable(category)
@@ -367,84 +381,21 @@ function checkDungeonHasItem(dungeon,spec,category,link)
                 end                
             end            
         end 
+        --print("이기능이 사용됨")
         weaponTable=newWeaponTable
     end    
     
-    local dropTable=getDungeonDropTable(dungeon)
     
-    local yourWeaponTypeTable={}
-    local num=1
-    if statTable==nil or weaponTable==nil or dropTable==nil then return end
-    
-    for i=1,#statTable do
-        for j=1,#weaponTable do        
-            yourWeaponTypeTable[num]={}
-            yourWeaponTypeTable[num][1]=statTable[i]
-            yourWeaponTypeTable[num][2]=weaponTable[j]
-            num=num+1
-        end    
-    end
-    local thisDungeonHasItem=0
-    local thisDungeonHas={}
-    local itemNum=1
-    local itemList=""
-    for i=1,#yourWeaponTypeTable do
-        local stat=yourWeaponTypeTable[i][1]
-        local type=yourWeaponTypeTable[i][2]
-        for j=1,#dropTable do
-            if (dropTable[j][1]==stat or dropTable[j][1]=="") and dropTable[j][2]==type then
-                if category~=nil then
-                    local space=""
-                    if dropTable[j][1]~="" then
-                        space=" "
-                    end                
-                    if link==1 then
-                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                    else
-                        thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
-                    end                      
-                else   
-                    if link==1 then
-                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                    else
-                        thisDungeonHas[itemNum]=dropTable[j][2]
-                    end                                      
-                end           
-                thisDungeonHasItem=1
-                itemNum=itemNum+1
-            end            
-        end       
-    end
-    for i=1,#thisDungeonHas do                    
-        itemList=itemList..thisDungeonHas[i]
-        if i<#thisDungeonHas then
-            itemList=itemList..","
-        end                    
-    end
-    if thisDungeonHasItem==1 then
-        return itemList
-    else
-        return nil        
-    end
-end
-
-function checkDungeonHasCategoryItem(dungeon,stat,category,link)
-    
-    local weaponTable=getCategoryTable(category)
-    local dropTable=getDungeonDropTable(dungeon)
-    
-    --던전에 따라 보너스ID 지정
-    local bonus=getBonusIDs(dungeon)    
-    
+    --아래부터 공통
     local yourWeaponTypeTable={}
     local num=1
     
-    if  weaponTable==nil or dropTable==nil then return end        
+    if weaponTable==nil or dropTable==nil then return end
     
     for j=1,#weaponTable do        
         yourWeaponTypeTable[num]={}
         yourWeaponTypeTable[num][1]=stat
-        yourWeaponTypeTable[num][2]=weaponTable[j]
+        yourWeaponTypeTable[num][2]=weaponTable[j]          
         num=num+1
     end    
     
@@ -456,21 +407,91 @@ function checkDungeonHasCategoryItem(dungeon,stat,category,link)
         local stat=yourWeaponTypeTable[i][1]
         local type=yourWeaponTypeTable[i][2]
         for j=1,#dropTable do
-            if dropTable[j][1]==stat and dropTable[j][2]==type then
-                local space=""
-                if dropTable[j][1]~="" then
-                    space=" "
-                end               
+            if strfind(dropTable[j][1],stat) and strfind(dropTable[j][2],type) then
+                local header=""
+                if category~=nil then
+                    --header=dropTable[j][1].." "
+                end           
                 if link==1 then
                     _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
                 else
-                    thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
-                end           
+                    thisDungeonHas[itemNum]=header..dropTable[j][2]
+                end                     
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
             end            
         end       
+    end   
+    for i=1,#thisDungeonHas do                    
+        itemList=itemList..thisDungeonHas[i]
+        if i<#thisDungeonHas then
+            itemList=itemList..","
+        end                    
     end
+    
+    if thisDungeonHasItem==1 then
+        return itemList
+    else
+        return nil        
+    end
+end
+
+function checkDungeonHasCategoryItem(VALUES)
+    
+    local dungeon,spec,stat,category,link,item
+    
+    if VALUES~=nil then
+        dungeon=VALUES["dungeon"]
+        spec=VALUES["spec"]
+        stat=VALUES["stat"]
+        category=VALUES["category"]
+        link=VALUES["link"]              
+        item=VALUES["item"]                 
+    end      
+    
+    --던전에 따라 보너스ID 지정
+    local bonus=getBonusIDs(dungeon)    
+    local dropTable=getDungeonDropTable(dungeon)
+    
+    
+    local weaponTable=getCategoryTable(category)
+    
+    --아래부터 공통
+    local yourWeaponTypeTable={}
+    local num=1
+    
+    if  weaponTable==nil or dropTable==nil then return end        
+    
+    for j=1,#weaponTable do        
+        yourWeaponTypeTable[num]={}
+        yourWeaponTypeTable[num][1]=stat
+        yourWeaponTypeTable[num][2]=weaponTable[j]
+        num=num+1        
+    end        
+    
+    local thisDungeonHasItem=0
+    local thisDungeonHas={}
+    local itemNum=1
+    local itemList=""
+    for i=1,#yourWeaponTypeTable do
+        local stat=yourWeaponTypeTable[i][1]
+        local type=yourWeaponTypeTable[i][2]
+        for j=1,#dropTable do
+            if strfind(dropTable[j][1],stat) and strfind(dropTable[j][2],type) then
+                local header=""
+                if category~=nil then
+                    header=dropTable[j][1].." "
+                end           
+                if link==1 then
+                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                else
+                    thisDungeonHas[itemNum]=header..dropTable[j][2]
+                end                     
+                thisDungeonHasItem=1
+                itemNum=itemNum+1
+            end            
+        end       
+    end   
     for i=1,#thisDungeonHas do                    
         itemList=itemList..thisDungeonHas[i]
         if i<#thisDungeonHas then
@@ -485,10 +506,18 @@ function checkDungeonHasCategoryItem(dungeon,stat,category,link)
     end    
 end
 
-
-function checkDungeonHasSpecificItem(dungeon,stat,item,link)
+function checkDungeonHasSpecificItem(VALUES)    
     
-    if dungeon==nil or item==nil then return end
+    local dungeon,spec,stat,category,link,item
+    
+    if VALUES~=nil then
+        dungeon=VALUES["dungeon"]
+        spec=VALUES["spec"]
+        stat=VALUES["stat"]
+        category=VALUES["category"]
+        link=VALUES["link"]              
+        item=VALUES["item"]                 
+    end    
     
     --던전에 따라 보너스ID 지정
     local bonus=getBonusIDs(dungeon)    
@@ -497,29 +526,30 @@ function checkDungeonHasSpecificItem(dungeon,stat,item,link)
     local thisDungeonHasItem=0
     local thisDungeonHas={}
     local itemNum=1
-    local itemList=""    
+    local itemList=""  
+    
     for j=1,#dropTable do
-        if stat and dropTable[j][2]==item and ((item~="방패"and dropTable[j][1]==stat) or item=="방패")then 
-            local space=""
-            if dropTable[j][1]~="" then
-                space=" "
+        if stat and strfind(dropTable[j][2],item) and strfind(dropTable[j][1],stat) then 
+            local header=""
+            if category~=nil then
+                header=dropTable[j][1].." "
             end   
             if link==1 then
                 _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
             else
-                thisDungeonHas[itemNum]=dropTable[j][1]..space..dropTable[j][2]
+                thisDungeonHas[itemNum]=header..dropTable[j][2]
             end                 
             thisDungeonHasItem=1
             itemNum=itemNum+1            
         end        
-    end
-    
+    end    
     for i=1,#thisDungeonHas do                    
         itemList=itemList..thisDungeonHas[i]
         if i<#thisDungeonHas then
             itemList=itemList..","
         end                    
     end
+    
     if thisDungeonHasItem==1 then
         return itemList
     else
@@ -547,7 +577,7 @@ function findCharAllItem(VALUES)
             extraKeyword[callTypeT[i][1]]=callTypeT[i][3]                    
         end   
     end
-    print(comb)
+    --print(comb)
     
     if comb=="Trinket"then
         
@@ -591,7 +621,7 @@ function findCharAllItem(VALUES)
         elseif callType["item"]==1 then
             comb="Spec_Item"
         end
-        print("new", comb)
+        --print("new", comb)
     end
     
     local chars=GetHaveKeyCharInfo()        
@@ -629,7 +659,6 @@ function findCharAllItem(VALUES)
         item=keyword["specificitem"]
         link=1
         
-        
         --only 민첩
     elseif keyword["specificitem"]=="총"or  keyword["specificitem"]=="석궁"or  keyword["specificitem"]=="활" or keyword["specificitem"]=="전투검" then        
         stat="민첩"
@@ -638,39 +667,43 @@ function findCharAllItem(VALUES)
     elseif extraKeyword["spec"] then 
         stat=extraKeyword["spec"]        
     end      
-    --[[
-    print("stat",stat)
-    print("spec",stat)
-    print("item",stat)
-    print("stat",stat)
-    print("category",category)        
-    ]]
+    
     local findChars={}   
-    local num=1        
-    if chars~=nil then        
+    local num=1
+    
+    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" then
+        link=1        
+    elseif comb=="Stat_Category" or comb=="Spec_Category" then
+        link=0
+    end    
+    
+    VALUES={}
+    VALUES["spec"]=spec
+    VALUES["stat"]=stat
+    VALUES["category"]=category
+    VALUES["link"]=link              
+    VALUES["item"]=item   
+    
+    if chars~=nil then 
         for i=1,#chars do  
             local p=chars[i]["fullName"]
             local c=SavedInstancesDB.Toons[p]
             local mapName=c.MythicKey.name
-            local dungeon=getShortDungeonName(mapName)
+            VALUES["dungeon"]=getShortDungeonName(mapName)
             local itemList   
-            
             if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
-                link=1
-                itemList=checkDungeonHasSpecificItem(dungeon,stat,item,link)                
+                itemList=checkDungeonHasSpecificItem(VALUES)                
             elseif comb=="Stat_Category" then
-                link=0
-                itemList=checkDungeonHasCategoryItem(dungeon,stat,category,link) 
+                itemList=checkDungeonHasCategoryItem(VALUES) 
             elseif comb=="Spec_Category" then 
-                link=0
-                itemList=checkDungeonHasItem(dungeon,spec,category,link)
+                itemList=checkDungeonHasItem(VALUES)
             elseif comb=="Spec_Item" then  
-                itemList=checkDungeonHasItem(dungeon,spec,nil,link)
+                itemList=checkDungeonHasItem(VALUES)
             else
                 --print("잘못됐음")
             end                     
         end    
-    end   
+    end      
     
     C_Timer.After(0.1, function()            
             if chars~=nil then        
@@ -678,20 +711,16 @@ function findCharAllItem(VALUES)
                     local p=chars[i]["fullName"]
                     local c=SavedInstancesDB.Toons[p]
                     local mapName=c.MythicKey.name
-                    local dungeon=getShortDungeonName(mapName)
-                    local itemList
-                    
+                    VALUES["dungeon"]=getShortDungeonName(mapName)
+                    local itemList   
                     if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
-                        link=1
-                        itemList=checkDungeonHasSpecificItem(dungeon,stat,item,link)                
+                        itemList=checkDungeonHasSpecificItem(VALUES)                
                     elseif comb=="Stat_Category" then
-                        link=0
-                        itemList=checkDungeonHasCategoryItem(dungeon,stat,category,link) 
+                        itemList=checkDungeonHasCategoryItem(VALUES) 
                     elseif comb=="Spec_Category" then 
-                        link=0
-                        itemList=checkDungeonHasItem(dungeon,spec,category,link)
+                        itemList=checkDungeonHasItem(VALUES)
                     elseif comb=="Spec_Item" then  
-                        itemList=checkDungeonHasItem(dungeon,spec,nil,link)
+                        itemList=checkDungeonHasItem(VALUES)
                     else
                         --print("잘못됐음")
                     end                       
@@ -702,8 +731,9 @@ function findCharAllItem(VALUES)
                         num=num+1
                     end
                 end    
-            end       
-            if link==1 then
+            end              
+            
+            if VALUES["link"] ==1 then
                 doFullReport(findChars,channel,who,"item")                     
             else
                 if who==MY_NAME_IN_GAME and (callType["class"]==1 or callType["spec"]==1) then 

@@ -257,8 +257,7 @@ function filterVALUES(VALUES)
                 return
                 
             elseif not callType["role"] then              
-                print("역할을 지정해야함") 
-                return
+                print("딜러로 설정함") 
             end
             print("검색 조건 충분")
             VALUES["comb"]="Trinket" 
