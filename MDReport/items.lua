@@ -1,6 +1,6 @@
 local who,channel,level,level2,callTypeT,comb
 local callType,callTypeB,keyword,extraKeyword={},{},{},{}
-local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()
+local meGame=UnitName("player").."-"..GetRealmName()
 local tips={0,0,0}
 local warns=5
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
@@ -441,6 +441,69 @@ function checkDungeonHasItem(VALUES)
     end
 end
 
+function checkDungeonHasTrinket(VALUES)
+    local dungeon,spec,stat,category,link,item,sameDungeon,role
+    if VALUES~=nil then
+        dungeon=VALUES["dungeon"]
+        spec=VALUES["spec"]
+        stat=VALUES["stat"]
+        category=VALUES["category"]
+        link=VALUES["link"]              
+        item=VALUES["item"] 
+        role=VALUES["role"]  
+        sameDungeon=VALUES["sameDungeon"]
+    end   
+    local bonus=getBonusIDs(dungeon)    
+    local dropTable=getDungeonDropTable(dungeon)
+    
+    local num=1
+    
+    if  dropTable==nil then return end        
+    
+    local thisDungeonHasItem=0
+    local thisDungeonHas={}
+    local itemNum=1
+    local itemList=""
+    
+    for j=1,#dropTable do
+        if dropTable[j][2]=="장신구" and (
+            (strfind(dropTable[j][1],stat) and strfind(dropTable[j][4],role)) or --스탯과 역할이 일치
+            (strfind(dropTable[j][1],stat) and role=="탱커")  --스탯이 일치하는 탱커          
+        ) then            
+            local header
+            if role=="탱커" or role=="힐러"then
+                header=strsub(role,0,3).." "
+            else
+                header=stat.." "
+            end
+            if sameDungeon then
+                thisDungeonHas[itemNum]=sameDungeon
+            else                
+                if link==1 then
+                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                else
+                    thisDungeonHas[itemNum]=header..dropTable[j][2]
+                end
+            end                           
+            thisDungeonHasItem=1
+            itemNum=itemNum+1
+        end            
+    end     
+    
+    for i=1,#thisDungeonHas do                    
+        itemList=itemList..thisDungeonHas[i]
+        if i<#thisDungeonHas then
+            itemList=itemList..","
+        end                    
+    end
+    
+    if thisDungeonHasItem==1 then
+        return itemList
+    else
+        return nil        
+    end    
+end
+
 function checkDungeonHasCategoryItem(VALUES)
     
     local dungeon,spec,stat,category,link,item,sameDungeon
@@ -457,8 +520,7 @@ function checkDungeonHasCategoryItem(VALUES)
     
     --던전에 따라 보너스ID 지정
     local bonus=getBonusIDs(dungeon)    
-    local dropTable=getDungeonDropTable(dungeon)
-    
+    local dropTable=getDungeonDropTable(dungeon)    
     
     local weaponTable=getCategoryTable(category)
     
@@ -595,8 +657,20 @@ function findCharAllItem(VALUES)
     end
     --print(comb)
     
+    local stat=keyword["stat"] or extraKeyword["class"]
+    
+    local role=keyword["role"] 
     if comb=="Trinket"then
-        
+        if keyword["stat"] and not keyword["role"] then
+            role="딜러"            
+        end
+        if keyword["role"]=="힐러" then
+            stat="지능"
+        elseif keyword["role"]=="탱커" and not keyword["stat"] then
+            stat=extraKeyword["role"]
+        end 
+        --print("role:"..role)
+        --print("stat:"..stat)        
     end    
     
     if comb=="Class_Stat" then
@@ -653,18 +727,11 @@ function findCharAllItem(VALUES)
         comb="Spec_Item"
     end        
     
-    local stat=keyword["stat"] or extraKeyword["class"]
     local spec=keyword["spec"]
-    local role=keyword["role"]
     local item=keyword["specificitem"]
-    local category=keyword["category"]          
+    local category=keyword["category"]         
     
-    --주스탯 특정이 가능할 경우
-    if keyword["stat"]=="힘" or keyword["stat"]=="민첩" or keyword["stat"]=="지능" then
-        stat=keyword["stat"]
-        
-        --공용
-    elseif keyword["specificitem"]=="방패" then        
+    if keyword["specificitem"]=="방패" then        
         stat=""
         item=keyword["specificitem"]
         link=1
@@ -687,7 +754,7 @@ function findCharAllItem(VALUES)
     local findChars={}   
     local num=1
     
-    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" then
+    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" or comb=="Trinket"then
         link=1        
     elseif comb=="Stat_Category" or comb=="Spec_Category" then
         link=0
@@ -697,7 +764,8 @@ function findCharAllItem(VALUES)
     VALUES["spec"]=spec
     VALUES["stat"]=stat
     VALUES["category"]=category
-    VALUES["link"]=link              
+    VALUES["link"]=link
+    VALUES["role"]=role    
     VALUES["item"]=item   
     
     if chars~=nil then 
@@ -715,6 +783,8 @@ function findCharAllItem(VALUES)
                 itemList=checkDungeonHasItem(VALUES)
             elseif comb=="Spec_Item" then  
                 itemList=checkDungeonHasItem(VALUES)
+            elseif comb=="Trinket" then    
+                itemList=checkDungeonHasTrinket(VALUES)
             else
                 --print("잘못됐음")
             end                     
@@ -743,6 +813,8 @@ function findCharAllItem(VALUES)
                         itemList=checkDungeonHasItem(VALUES)
                     elseif comb=="Spec_Item" then  
                         itemList=checkDungeonHasItem(VALUES)
+                    elseif comb=="Trinket" then    
+                        itemList=checkDungeonHasTrinket(VALUES)
                     else
                         --print("잘못됐음")
                     end                       
@@ -759,7 +831,7 @@ function findCharAllItem(VALUES)
             if VALUES["link"] ==1 then
                 doFullReport(findChars,channel,who,"item")                     
             else
-                if who==MY_NAME_IN_GAME and (callType["class"]==1 or callType["spec"]==1) then 
+                if who==meGame and (callType["class"]==1 or callType["spec"]==1) then 
                     if tips[1]<warns then
                         local yourClass=keyword["spec"] or keyword["class"]
                         local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 

@@ -1,5 +1,5 @@
-local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
-local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()    
+local meGame=UnitName("player").."-"..GetRealmName()    
+local meAddon=UnitName("player").." - "..GetRealmName()    
 
 local skull={
     ["술사"]="{rt6}",--네모(파랑)
@@ -19,7 +19,7 @@ local skull={
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
-    messageLines[1]="▶[쐐기돌 보고서] Ver."..MDRversion.." (Update: "..MDRlastUpdate..")"    
+    messageLines[1]="▶[쐐기돌 보고서] Ver."..MDR["version"].." (Update: "..MDR["lastUpdate"]..")"    
     
     reportMessageLines(messageLines,channel,who,callType)   
 end
@@ -64,7 +64,8 @@ function doShortReport(chars,channel,who,callType)
             yourClass[class]=(yourClass[class] or 0)+1  
         end   
         
-        local sameClass={}      
+        local sameClass={}
+        local mNum=1
         for i=1,#chars do             
             charName=chars[i]["fullName"]      
             class=chars[i]["shortClass"]            
@@ -86,7 +87,7 @@ function doShortReport(chars,channel,who,callType)
             else                
                 classStatus=class                
             end
-            if charName==MY_NAME_IN_ADDON then
+            if charName==meAddon then
                 online="◀접속중"
             end            
             
@@ -138,7 +139,8 @@ function doShortReport(chars,channel,who,callType)
                 local after=MDRsplit(messageLines[sameCheck],"▶")[2]
                 messageLines[sameCheck]=before..message..after
             else
-                messageLines[i]=message 
+                messageLines[mNum]=message
+                mNum=mNum+1
             end     
             
         end        
@@ -176,7 +178,7 @@ function doFullReport(chars,channel,who,callType)
         --프린트인 경우 스컬대신 아이콘을 표기하기 위해 체크
         local forceprint=0 
         
-        if (channel=="print") and (who==MY_NAME_IN_GAME) then 
+        if (channel=="print") and (who==meGame) then 
             forceprint=1           
         end
         
@@ -188,7 +190,8 @@ function doFullReport(chars,channel,who,callType)
             yourClass[class]=(yourClass[class] or 0)+1             
         end   
         
-        local sameClass={}        
+        local sameClass={}
+        local mNum=1
         for i=1,#chars do             
             charName=chars[i]["fullName"]      
             class=chars[i]["shortClass"]            
@@ -203,7 +206,7 @@ function doFullReport(chars,channel,who,callType)
             local classStatus=""
             local headStar=""
             
-            if charName==MY_NAME_IN_ADDON then
+            if charName==meAddon then
                 online="◀접속중"
             end
             
@@ -279,7 +282,8 @@ function doFullReport(chars,channel,who,callType)
                 local after=MDRsplit(messageLines[sameCheck],"▶")[2]
                 messageLines[sameCheck]=before..message..after
             else
-                messageLines[i]=message 
+                messageLines[mNum]=message
+                mNum=mNum+1
             end            
         end
     end      

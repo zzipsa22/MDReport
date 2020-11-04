@@ -1,9 +1,10 @@
 local _,className=UnitClass("player")
 local  _,_,_,classColor=GetClassColor(className)  
 local playerName = UnitName("player")
-local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
+local meGame=UnitName("player").."-"..GetRealmName()    
 local dices={}
 local diceReportChannel
+local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 local diceWait=0
 
 C_Timer.After(10, function()        
@@ -15,9 +16,9 @@ C_Timer.After(10, function()
                 doWarningReport(channel,who,"warning") 
                 return
             end 
-            if MDRguide<1 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDRversion.."|r]: 이제 |c"..classColor.."!닉네임|r과 조합하여 명령어에 반응할 사람을 지정할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")                               
-                MDRguide=MDRguide+1
+            if MDR["guide"]<1 then
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |c"..classColor.."!닉네임|r과 조합하여 명령어에 반응할 사람을 지정할 수 있습니다. (도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r)")                               
+                MDR["guide"]=MDR["guide"]+1
             end
         end
 end)
@@ -169,16 +170,16 @@ function MDRmakeDice(channel,who,k)
     if channel=="WHISPER_OUT" or #dices<2 then return end
     
     --나에게서 귓말이 들어오는 경우 프린트로 변경
-    if (channel=="WHISPER_IN") and who==MY_NAME_IN_GAME then
+    if (channel=="WHISPER_IN") and who==meGame then
         channel="print"
     end 
     diceReportChannel=channel
     
-    if who==MY_NAME_IN_GAME then
-        local message=""
-        local messageLines={}
+    if who==meGame then
+        local message="MDR ▶ "
+        local messageLines={}        
         for i=1,#dices do
-            message=message..i.."."..dicesB[i].." "
+            message=message..diceNums[i].." "..dicesB[i]..", "
         end
         message=message.." ( /주사위 "..#dices.." )"
         messageLines[1]=message
@@ -203,7 +204,7 @@ function MDRdice(msg)
         else
             resultNum=n1     
         end 
-        messageLines[1]="'"..(dices[resultNum] or "알 수 없음").."'"
+        messageLines[1]=diceNums[resultNum].." "..(dices[resultNum] or "알 수 없음")
         C_Timer.After(1.5, function()    
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")
                 diceWait=0
@@ -219,7 +220,7 @@ function MDRCommands(msg, editbox)
     msg=gsub(msg,"!","") 
     messageLines[1]=" "
     if not msg or msg=="" then
-        messageLines[#messageLines+1]="[  |cFF33FF99쐐기돌 보고서 "..MDRversion.."|r 기본 명령어 목록  ]"
+        messageLines[#messageLines+1]="[  |cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r 기본 명령어 목록  ]"
         messageLines[#messageLines+1]="▷이하 모든 명령어는 |cFF40ff40길드말|r과 |cFFaaaaff파티말|r, |cFFff80ff귓속말|r에 입력했을 때만 반응합니다."
         messageLines[#messageLines+1]="▷기본 명령어: |cffC79C6E!돌|r, |cff8787ED!주차|r, |cff40C7EB!던전명|r, |cffFF7D0A!직업명|r, |cffA9D271!닉네임|r, |cffC41F3B!속성|r, |cFFaaaaaa!무기|r"
         messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 사용법을 보시려면 |cffffff00/쐐|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
