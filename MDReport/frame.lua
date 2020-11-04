@@ -12,8 +12,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         if (event=="CHAT_MSG_SYSTEM") then 
             MDRdice(msg)
             return
-        end
-        
+        end        
         
         --애드온에 의해 출력된 메시지는 무시
         if strfind(msg,"▶") or strfind(msg,"▷")then return end
@@ -47,19 +46,17 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         local ELC=strsub(keyword,1,-2)        
         local LOCT=strsub(keyword,-1)
         
-        local k1=keyword
-        local k2,level1,level2,callTypeT1,callTypeT2
+        local level1,level2
         local onlyMe,onlyOnline,CharName,onlyYou
-        local VALUES={}        
+        local VALUES={} 
+        
+        local k={} 
+        local callTypeT={}
+        k[1]=keyword          
         
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
-            k1=MDRsplit(keyword,"!")[1] 
-            k2=MDRsplit(keyword,"!")[2]
-            k3=MDRsplit(keyword,"!")[3]
-            k4=MDRsplit(keyword,"!")[4]
-            k5=MDRsplit(keyword,"!")[5]
-            k6=MDRsplit(keyword,"!")[6]
+            k=MDRsplit(keyword,"!")          
             
             --중간에 ~를 넣은 명령어면
         elseif strfind(keyword,"~") then
@@ -73,13 +70,13 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             
             --숫자만 입력했으면
             if num1~=nil and num2~=nil then
-                k1="아무"
+                k[1]="아무"
                 level1=num1
                 level2=num2
                 
             else --던전명을 같이 넣었으면 
                 local _,string,LN=MDRnumsplit(before)
-                k1=string
+                k[1]=string
                 level1=LN or 2
                 level2=num2 or 99
             end  
@@ -88,7 +85,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         elseif strfind(LOCT,"+") or strfind(LOCT,"-") then
             -- +,-랑 숫자만 입력했으면
             if tonumber(ELC) then
-                k1="아무"                
+                k[1]="아무"                
                 level1=tonumber(ELC)                
             else                
                 local _,string,LN=MDRnumsplit(ELC)
@@ -96,7 +93,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 if string=="내" or string=="지금" then
                     string=string.."돌"
                 end
-                k1=string or "아무"                               
+                k[1]=string or "아무"                               
                 level1=LN                
             end
             if LOCT=="+" then
@@ -107,54 +104,50 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             
             --숫자만 입력한 경우
         elseif keyIsNumber then
-            k1="아무"           
+            k[1]="아무"           
             level1=keyIsNumber
             --숫자와 단어의 조합이면
         else
             local KFN,Kstring,KLN=MDRnumsplit(keyword)
-            k1=Kstring
+            k[1]=Kstring
             level1=KLN or KFN         
-        end        
+        end   
         
-        callTypeT1=getCallTypeTable(k1)
-        callTypeT2=getCallTypeTable(k2) 
-        
-        if k1=="주사위" then
-            MDRmakeDice(channel,who,k2,k3,k4,k5,k6)
+        --명령어 판독 시작
+        if k[1]=="주사위" then
+            MDRmakeDice(channel,who,k)
             return            
+        end   
+        
+        local ct=1
+        for i=1,#k do
+            if getCallTypeTable(k[i]) then
+                callTypeT[ct]=getCallTypeTable(k[i])
+                ct=ct+1
+            end            
         end        
         
-        if not callTypeT1 and k1~="" and callTypeT2 then
-            onlyYou=k1
-        elseif not callTypeT2 and k2~="" and callTypeT1 then
-            onlyYou=k2            
-        end
-        
-        --이름을 먼저 쓴 경우 이름이 뒤로
-        if not callTypeT1 and callTypeT2 and (callTypeT2[1]=="all" or callTypeT2[1]=="parking" or callTypeT2[1]=="class") then
-            
-            callTypeT1=callTypeT2 
-            callTypeT2=nil
-        else
-            --onlyYou=k2
-        end          
-        
+        if callTypeT[1] and k[2]~="" and not getCallTypeTable(k[2]) then        
+            onlyYou=k[2] 
+        elseif callTypeT[1] and k[1]~="" and not getCallTypeTable(k[1]) then            
+            onlyYou=k[1]            
+        end        
         
         --명령어가 발견이 안되면
-        if k1 and not callTypeT1 then
-            local name=k1
-            if strfind(k1,"내") then             
-                k1=gsub(k1,"내","")
+        if k[1] and not callTypeT[1] then
+            local name=k[1]
+            if strfind(k[1],"내") then             
+                k[1]=gsub(k[1],"내","")
                 onlyMe=1
             end            
-            if strfind(k1,"지금") then
-                k1=gsub(k1,"지금","")
+            if strfind(k[1],"지금") then
+                k[1]=gsub(k[1],"지금","")
                 onlyOnline=1                
             end
-            callTypeT1=getCallTypeTable(k1)
+            callTypeT[1]=getCallTypeTable(k[1])
             --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-            if ((not callTypeT1) and name~="") then
-                callTypeT1=getCallTypeTable("아무")
+            if ((not callTypeT[1]) and name~="") then
+                callTypeT[1]=getCallTypeTable("아무")
                 CharName=name                
             end
             
@@ -167,29 +160,10 @@ MDR:SetScript("OnEvent", function(self, event, ...)
                 level1=level2
                 level2=level3
             end            
-        end                
+        end               
         
-        --명령어 조합인 경우 순서 바꾸기
-        if callTypeT1 and callTypeT2 and
-        (callTypeT1[1]=="item" or
-            callTypeT1[1]=="specificitem" or            
-            
-            (callTypeT1[1]=="stat" and callTypeT2[1]=="class") or
-            
-            (callTypeT1[1]=="stat" and callTypeT2[1]=="spec") or
-            
-            callTypeT1[1]=="dungeon" or
-            
-            callTypeT1[1]=="category")  
-        then
-            local callTypeT3=callTypeT1
-            callTypeT1=callTypeT2
-            callTypeT2=callTypeT3
-        end              
-        
-        if callTypeT1 then
-            VALUES["callTypeT"]=callTypeT1
-            VALUES["callTypeT2"]=callTypeT2 
+        if callTypeT[1] then
+            VALUES["callTypeT"]=callTypeT
             VALUES["level"]=level1
             VALUES["level2"]=level2     
             VALUES["channel"]=channel            
@@ -204,4 +178,5 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
+
 

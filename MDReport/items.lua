@@ -1,9 +1,8 @@
-local who,channel,level,level2,callTypeT,callType2,comb
-local callType,keyword,extraKeyword
-local callType2,keyword2,extraKeyword2
+local who,channel,level,level2,callTypeT,comb
+local callType,callTypeB,keyword,extraKeyword={},{},{},{}
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()
 local tips={0,0,0}
-local warns=3
+local warns=5
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
 local bonus1="::::::::50:65::16:4:6536:6513:1533:4786::::" ;--일반
 local bonus2="::::::::50:65::16:5:6536:6516:6513:1514:4786::::" ;--메카
@@ -16,7 +15,7 @@ local dungeonTable={
             {"민첩","단검",159132},
             {"민첩","한손도검",159635},
             {"민첩","총",159130}, 
-			{"민첩","장신구",155881,"딜러,탱커"}, 				
+            {"민첩","장신구",155881,"딜러,탱커"},                 
         }          
     },
     
@@ -28,8 +27,8 @@ local dungeonTable={
             {"힘","한손도검",159649},
             {"민첩","전투검",159651},
             {"민첩","한손둔기",159973},               
-			{"민첩","장신구",159623,"딜러,탱커"},  
-			{"지능","장신구",159622,"딜러"},  
+            {"민첩","장신구",159623,"딜러,탱커"},  
+            {"지능","장신구",159622,"딜러"},  
         }
     },
     
@@ -43,9 +42,9 @@ local dungeonTable={
             {"지능","한손둔기",158369}, 
             {"민첩","활",159637},              
             {"","방패",159664},    
-			{"민첩","장신구",158374,"딜러,탱커"}, 	
-			{"힘","장신구",158367,"딜러,탱커"}, 						
-			{"지능","장신구",158368,"힐러"}, 				
+            {"민첩","장신구",158374,"딜러,탱커"},     
+            {"힘","장신구",158367,"딜러,탱커"},                         
+            {"지능","장신구",158368,"힐러"},                 
         }
     },
     
@@ -58,8 +57,8 @@ local dungeonTable={
             {"지능","한손둔기",159652}, 
             {"민첩","단검",159134},              
             {"","방패",159665}, 
-			{"힘,민첩","장신구",159626,"탱커"}, 		
-			{"힘","장신구",159625,"딜러,탱커"}, 				
+            {"힘,민첩","장신구",159626,"탱커"},         
+            {"힘","장신구",159625,"딜러,탱커"},                 
         }
     },
     
@@ -72,11 +71,11 @@ local dungeonTable={
             {"민첩","활",158711},     
             {"지능","마법봉",158321},    
             {"","방패",158713},  
-            {"지능","보조",158322},  			
-			{"지능","장신구",159610,"딜러"}, 			
-			{"힘","장신구",158712,"딜러,탱커"}, 			
-			{"민첩","장신구",158319,"딜러,탱커"}, 			
-			{"지능","장신구",158320,"힐러"}, 			
+            {"지능","보조",158322},              
+            {"지능","장신구",159610,"딜러"},             
+            {"힘","장신구",158712,"딜러,탱커"},             
+            {"민첩","장신구",158319,"딜러,탱커"},             
+            {"지능","장신구",158320,"힐러"},             
         }
     },
     
@@ -87,8 +86,8 @@ local dungeonTable={
             {"지능","한손둔기",159641}, 
             {"민첩","총",159639},       
             {"","방패",159663},     
-			{"힘","장신구",159611,"딜러,탱커"}, 			
-			{"민첩","장신구",159612,"딜러,탱커"}, 				
+            {"힘","장신구",159611,"딜러,탱커"},             
+            {"민첩","장신구",159612,"딜러,탱커"},                 
         }
     },
     
@@ -102,7 +101,9 @@ local dungeonTable={
             {"민첩","한손둔기",159645},
             {"민첩","단검",159136},                 
             {"민첩","석궁",159643},      
-            {"지능","보조",159667},                 
+            {"지능","보조",159667}, 
+            {"민첩","장신구",159617,"딜러,탱커"},             
+            {"힘,민첩","장신구",159618,"탱커"},                 
         }
     },
     
@@ -115,9 +116,9 @@ local dungeonTable={
             {"지능","단검",159133},  
             {"힘","한손도끼",159660},
             {"지능","보조",159669},   
-			{"지능","장신구",159631,"힐러,딜러"}, 	 
-			{"지능","장신구",159630,"힐러,딜러"}, 	
-			{"힘","장신구",159616,"딜러,탱커"}, 				
+            {"지능","장신구",159631,"힐러,딜러"},      
+            {"지능","장신구",159630,"힐러,딜러"},     
+            {"힘","장신구",159616,"딜러,탱커"},                 
         }
     },    
     
@@ -133,7 +134,7 @@ local dungeonTable={
             {"","방패",169068},   
             {"힘","한손도끼",168963},  
             {"민첩","총",169077},     
-			{"힘,민첩","장신구",169769,"딜러"}, 					
+            {"힘,민첩","장신구",169769,"딜러"},                     
         }
     },
     
@@ -144,8 +145,8 @@ local dungeonTable={
             {"민첩","단검",168962},  
             {"지능","지팡이",168973},
             {"힘","한손도검",169608},      
-			{"힘,민첩","장신구",168965,"탱커"}, 	
-			{"지능","장신구",169344,"힐러"}, 			
+            {"힘,민첩","장신구",168965,"탱커"},     
+            {"지능","장신구",169344,"힐러"},             
         }
     },    
     
@@ -160,9 +161,9 @@ local dungeonTable={
             {"민첩","총",159657},     
             {"","방패",159666},   
             {"지능","보조",159668},    
-			{"지능","장신구",159615,"힐러,딜러"},             
-			{"힘","장신구",159627,"딜러,탱커"},             
-			{"민첩","장신구",159628,"딜러,탱커"},             
+            {"지능","장신구",159615,"힐러,딜러"},             
+            {"힘","장신구",159627,"딜러,탱커"},             
+            {"민첩","장신구",159628,"딜러,탱커"},             
         }
     },    
     
@@ -172,24 +173,24 @@ local dungeonTable={
             {"지능","지팡이",158371},
             {"민첩","단검",159135},  
             {"지능","한손도검",159646},       
-			{"민첩","장신구",159614,"딜러,탱커"},    
-			{"힘","장신구",159619,"딜러,탱커"},    
-			{"지능","장신구",159620,"힐러,딜러"},    			
+            {"민첩","장신구",159614,"딜러,탱커"},    
+            {"힘","장신구",159619,"딜러,탱커"},    
+            {"지능","장신구",159620,"힐러,딜러"},                
         }
     },    
 }
 
 local specTable={
     ["기사"]={{"힘","지능"},{"한손도끼","양손도끼","한손둔기","양손둔기","장창","한손도검","양손도검","방패"}},
-    ["보기"]={{"힘"},{"한손도끼","한손둔기","한손도검","방패"}},
-    ["징기"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
+    ["보호"]={{"힘"},{"한손도끼","한손둔기","한손도검","방패"}},
+    ["징벌"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
     ["신기"]={{"지능"},{"한손도끼","한손둔기","한손도검","방패"}},
     
     ["드루"]={{"민첩","지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
-    ["조드"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
-    ["야드"]={{"민첩"},{"양손둔기","장창","지팡이"}},
-    ["수드"]={{"민첩"},{"양손둔기","장창","지팡이"}},
-    ["회드"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
+    ["조화"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
+    ["야성"]={{"민첩"},{"양손둔기","장창","지팡이"}},
+    ["수호"]={{"민첩"},{"양손둔기","장창","지팡이"}},
+    ["회복"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
     
     ["수도"]={{"민첩","지능"},{"장창","지팡이","한손도끼","장착무기","한손둔기","한손도검","보조"}},
     ["양조"]={{"민첩"},{"한손도끼","장착무기","한손둔기","한손도검","장창","지팡이"}},
@@ -197,24 +198,24 @@ local specTable={
     ["풍운"]={{"민첩"},{"한손도끼","장착무기","한손둔기","한손도검","장창","지팡이"}},
     
     ["술사"]={{"민첩","지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
-    ["고술"]={{"민첩"},{"한손도끼","한손둔기"}},
-    ["복술"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
-    ["정술"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
+    ["고양"]={{"민첩"},{"한손도끼","한손둔기"}},
+    ["복원"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
+    ["정기"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
     
     ["사제"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},    
-    ["암사"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
-    ["수사"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
-    ["신사"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
+    ["암흑"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
+    ["수양"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
+    ["신성"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
     
     ["법사"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},    
-    ["화법"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
+    ["화염"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
     ["냉법"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
-    ["비법"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
+    ["비전"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
     
     ["흑마"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},    
-    ["파흑"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
-    ["고흑"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
-    ["악흑"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
+    ["파괴"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
+    ["고통"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
+    ["악마"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
     
     
     ["도적"]={{"민첩"},{"단검","장착무기","한손도끼","한손둔기","한손도검"}},
@@ -224,22 +225,22 @@ local specTable={
     
     ["전사"]={{"힘"},{"한손도끼","양손도끼","단검","장착무기","한손둔기","양손둔기","장창","지팡이","한손도검","양손도검","방패"}},
     ["방어"]={{"힘"},{"단검","한손도끼","한손둔기","한손도검","방패"}},
-    ["무전"]={{"힘"},{"양손도끼","양손둔기","장창","지팡이","양손도검"}},
-    ["분전"]={{"힘"},{"한손도끼","양손도끼","단검","장착무기","한손둔기","양손둔기","장창","지팡이","한손도검","양손도검"}},
+    ["무기"]={{"힘"},{"양손도끼","양손둔기","장창","지팡이","양손도검"}},
+    ["분노"]={{"힘"},{"한손도끼","양손도끼","단검","장착무기","한손둔기","양손둔기","장창","지팡이","한손도검","양손도검"}},
     
     ["죽기"]={{"힘"},{"한손도끼","양손도끼","한손둔기","양손둔기","장창","한손도검","양손도검"}},
-    ["냉죽"]={{"힘"},{"한손도끼","한손둔기","한손도검","양손도끼","양손둔기","장창","양손도검"}},
-    ["부죽"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
-    ["혈죽"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
+    ["냉기"]={{"힘"},{"한손도끼","한손둔기","한손도검","양손도끼","양손둔기","장창","양손도검"}},
+    ["부정"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
+    ["혈기"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
     
     ["악사"]={{"민첩"},{"전투검","장착무기","한손도끼","한손도검"}},
     ["파멸"]={{"민첩"},{"전투검","장착무기","한손도끼","한손도검"}},
     ["복수"]={{"민첩"},{"전투검","장착무기","한손도끼","한손도검"}},
     
     ["냥꾼"]={{"민첩"},{"활","석궁","총","장창","지팡이","양손도검","양손도끼"}},
-    ["야냥"]={{"민첩"},{"활","석궁","총"}},
-    ["격냥"]={{"민첩"},{"활","석궁","총"}},
-    ["생냥"]={{"민첩"},{"장창","지팡이","양손도검","양손도끼"}},
+    ["야수"]={{"민첩"},{"활","석궁","총"}},
+    ["사격"]={{"민첩"},{"활","석궁","총"}},
+    ["생존"]={{"민첩"},{"장창","지팡이","양손도검","양손도끼"}},
 }
 
 local categoryTable={
@@ -529,130 +530,115 @@ end
 --통합 아이템 찾기
 function findCharAllItem(VALUES)
     
+    local callType,callTypeB,keyword,extraKeyword={},{},{},{}
+    
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
         callTypeT=VALUES["callTypeT"]
-        callTypeT2=VALUES["callTypeT2"]
         level=VALUES["level"]
         level2=VALUES["level2"]                 
         
         comb=VALUES["comb"] 
-        if callTypeT then
-            callType=callTypeT[1]
-            keyword=callTypeT[2] 
-            extraKeyword=callTypeT[3] 
-        end
-        
-        if callTypeT2 then
-            callType2=callTypeT2[1]
-            keyword2=callTypeT2[2] 
-            extraKeyword2=callTypeT2[3]
-        else
-            callType2,keyword2,extraKeyword2=nil,nil,nil
-        end  
+        for i=1,#callTypeT do
+            callTypeB[i]=callTypeT[i][1]
+            callType[callTypeT[i][1]]=1
+            keyword[callTypeT[i][1]]=callTypeT[i][2]
+            extraKeyword[callTypeT[i][1]]=callTypeT[i][3]                    
+        end   
     end
-    
+    --print(comb)
     if comb=="Class_Stat" then
         local newSpec
-        if keyword=="드루" then if
-            keyword2=="지능" then newSpec="회드" elseif
-            keyword2=="민첩" then newSpec="야드"  end
+        if keyword["class"]=="드루" then if
+            keyword["stat"]=="지능" then newSpec="회복" elseif
+            keyword["stat"]=="민첩" then newSpec="야성"  end
             
-        elseif keyword=="술사" then if
-            keyword2=="지능" then newSpec="정술" elseif
-            keyword2=="민첩" then newSpec="고술" end
+        elseif keyword["class"]=="술사" then if
+            keyword["stat"]=="지능" then newSpec="정기" elseif
+            keyword["stat"]=="민첩" then newSpec="고양" end
             
-        elseif keyword=="수도" then if
-            keyword2=="지능" then newSpec="운무" elseif
-            keyword2=="민첩" then newSpec="양조" end
+        elseif keyword["class"]=="수도" then if
+            keyword["stat"]=="지능" then newSpec="운무" elseif
+            keyword["stat"]=="민첩" then newSpec="양조" end
             
-        elseif keyword=="기사" then if
-            keyword2=="지능" then newSpec="신기" end
+        elseif keyword["class"]=="기사" then if
+            keyword["stat"]=="지능" then newSpec="신기" end
             
-        elseif keyword=="사제" or keyword=="법사" or keyword=="흑마" or keyword=="악사" then            
+        elseif keyword["class"]=="사제" or keyword["class"]=="법사" or keyword["class"]=="흑마" or keyword["class"]=="악사" then   
+            newSpec=MDRgetClassInfo(keyword["class"])[3]            
         else             
             return            
+        end        
+        keyword["spec"]=newSpec
+        
+    end          
+    
+    if comb=="Class_Something" then
+        local newSpec=MDRgetClassInfo(keyword["class"])[3]
+        keyword["spec"]=newSpec
+        if callType["dungeon"]==1 then
+            comb="Spec_Dungeon"
+        elseif callType["category"]==1 then
+            comb="Spec_Category"
+        elseif callType["specificitem"]==1 then
+            comb="Spec_Specificitem"
+        elseif callType["item"]==1 then
+            comb="Spec_Item"
         end
-        
-        callTypeT=getCallTypeTable(newSpec)
-        
-    end        
+        print("new", comb)
+    end
     
     local chars=GetHaveKeyCharInfo()        
     
     local link=0
     
     if comb=="Spec_Dungeon" then
-        chars=filterCharsByFilter(chars,"dungeon",keyword2,nil)
+        chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
         link=1
     end    
-    
-    if comb=="Class_Stat" or comb=="Spec_Stat"  or comb=="Spec_Dungeon" then
-        callTypeT2=getCallTypeTable("무기")
-    end
-    
-    if callTypeT then
-        callType=callTypeT[1]
-        keyword=callTypeT[2] 
-        extraKeyword=callTypeT[3] 
-    end
-    
-    if callTypeT2 then
-        callType2=callTypeT2[1]
-        keyword2=callTypeT2[2] 
-        extraKeyword2=callTypeT2[3]
-    else
-        callType2,keyword2,extraKeyword2=nil,nil,nil
-    end         
     
     if comb=="Class_Stat" or comb=="Spec_Stat"  or comb=="Spec_Dungeon" then
         comb="Spec_Item"
     end        
     
-    local stat, spec=nil,keyword    
-    local item=keyword2
-    local category=keyword2          
-    
-    --[[
-    if keyword then
-        print("keyword:"..keyword)        
-    end
-    if keyword2 then
-        print("keyword2:"..keyword2)
-    end 
-    ]]
+    local stat=keyword["stat"] or extraKeyword["class"]
+    local spec=keyword["spec"]    
+    local item=keyword["specificitem"]
+    local category=keyword["category"]          
     
     --주스탯 특정이 가능할 경우
-    --print("keyword:"..keyword)
-    if keyword=="힘" or keyword=="민첩" or keyword=="지능" then
-        stat=keyword
+    if keyword["stat"]=="힘" or keyword["stat"]=="민첩" or keyword["stat"]=="지능" then
+        stat=keyword["stat"]
         
         --공용
-    elseif keyword=="방패" then        
+    elseif keyword["specificitem"]=="방패" then        
         stat=""
-        item=keyword
+        item=keyword["specificitem"]
         link=1
         
         --only 지능
-    elseif keyword=="보조"or  keyword=="마법봉"then        
+    elseif keyword["specificitem"]=="보조"or  keyword["specificitem"]=="마법봉"then        
         stat="지능"
-        item=keyword
+        item=keyword["specificitem"]
         link=1
         
         
         --only 민첩
-    elseif keyword=="총"or  keyword=="석궁"or  keyword=="활" or keyword=="전투검" then        
+    elseif keyword["specificitem"]=="총"or  keyword["specificitem"]=="석궁"or  keyword["specificitem"]=="활" or keyword["specificitem"]=="전투검" then        
         stat="민첩"
-        item=keyword
+        item=keyword["specificitem"]
         link=1        
-    elseif extraKeyword then 
-        stat=extraKeyword
-    else
-        stat=keyword
+    elseif extraKeyword["spec"] then 
+        stat=extraKeyword["spec"]        
     end      
-    
-    
+    --[[
+    print("stat",stat)
+    print("spec",stat)
+    print("item",stat)
+    print("stat",stat)
+    print("category",category)        
+    ]]
     local findChars={}   
     local num=1        
     if chars~=nil then        
@@ -714,11 +700,12 @@ function findCharAllItem(VALUES)
             if link==1 then
                 doFullReport(findChars,channel,who,"item")                     
             else
-                if who==MY_NAME_IN_GAME and (callType=="class"or callType=="spec") then 
+                if who==MY_NAME_IN_GAME and (callType["class"]==1 or callType["spec"]==1) then 
                     if tips[1]<warns then
-                        local class=getCallTypeTable(keyword)[4] or getCallTypeTable(keyword)[2] 
+                        local yourClass=keyword["spec"] or keyword["class"]
+                        local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
                         C_Timer.After(1, function()                           
-                                print("▶검색결과가 있을 경우 해당 |cffa335ee[아이템 링크]|r를 보시려면 !"..MDRcolor("",-1,"전문화").."와 !|cff8787ED던전이름|r, 혹은 |cffF58CBA무기종류|r를 함께 입력해보세요. (|cFF33FF99ex|r. !"..MDRcolor(class,0,keyword).."!|cff8787ED아탈|r, !"..MDRcolor(class,0,keyword).."!|cffF58CBA지팡이|r)")              
+                                print("▶검색결과가 있을 경우 해당 |cffa335ee[아이템 링크]|r를 보시려면 !"..MDRcolor("전문화",-1).."와 !|cff8787ED던전이름|r, 혹은 |cffF58CBA무기종류|r를 함께 입력해보세요. (|cFF33FF99ex|r. !"..MDRcolor(class,0,yourClass).."!|cff8787ED아탈|r, !"..MDRcolor(class,0,yourClass).."!|cffF58CBA지팡이|r)")              
                                 
                         end)  
                         tips[1]=tips[1]+1

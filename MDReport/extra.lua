@@ -6,10 +6,6 @@ local dices={}
 local diceReportChannel
 local diceWait=0
 
---명령어 등록
-SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/Tho','/쐐'
-SlashCmdList["MDReport"] = MDRCommands 
-
 C_Timer.After(10, function()        
         local x = GetLocale()
         if x ~= "koKR" then -- XXX temp, Options/Locales needs updated
@@ -26,11 +22,147 @@ C_Timer.After(10, function()
         end
 end)
 
-function MDRmakeDice(channel,who,...)
+local classInfo={
+    ["도적"]={
+        "도적",
+        "FFF569",
+        "암살",
+        "무법",
+        "잠행"
+    },
+    ["죽기"]={
+        "죽음의 기사",
+        "C41F3B",
+        "혈기",
+        "부정",
+        "냉죽"
+    },    
+    ["드루"]={
+        "드루이드",
+        "FF7D0A",
+        "조화","조드",
+        "회복","회드",
+        "야성","야드",
+        "수호","수드",
+    },
+    ["전사"]={
+        "전사",
+        "C79C6E",
+        "방어","방전",
+        "분노","분전",
+        "무기","무전",
+    },
+    ["기사"]={
+        "성기사",
+        "F58CBA",
+        "징벌","징기",
+        "신성","신기",
+        "보호","보기",
+    },
+    ["술사"]={
+        "주술사",
+        "0070DE",
+        "고양","고술",
+        "정기","정술",
+        "복원","복술",
+    },
+    ["수도"]={
+        "수도사",
+        "00FF96",
+        "풍운",
+        "운무",
+        "양조"
+    },
+    ["냥꾼"]={
+        "사냥꾼",
+        "A9D271",
+        "사격","격냥",
+        "생존","생냥",
+        "야수","야냥",
+    },
+    ["사제"]={
+        "사제",
+        "FFFFFF",
+        "암흑","암사",
+        "신사","수사",
+        "수양","신사",
+    },
+    ["흑마"]={
+        "흑마법사",
+        "8787ED",
+        "고통","고흑",
+        "파괴","파흑",
+        "악마","악흑",
+    },
+    ["법사"]={
+        "마법사",
+        "40C7EB",
+        "화염","화법",
+        "냉기","냉법",
+        "비전","비법",
+    },
+    ["악사"]={
+        "악마 사냥꾼",
+        "A330C9",
+        "파멸",
+        "복수"
+    },
+    
+    [""]={}
+}
+
+function MDRgetClassInfo(keyword)    
+    return classInfo[keyword]
+end
+
+function MDRgetClassName(keyword)
+    for k,v in pairs(classInfo) do
+        for i=1,#v do
+            if keyword==v[i]  or keyword==k then
+                return v[1]
+            end        
+        end        
+    end   
+end
+
+function MDRcolor(keyword,type,keyword2)
+    local text
+    for k,v in pairs(classInfo) do
+        for i=1,#v do
+            if keyword==v[i] or keyword==k or type==-1 or type==-2 then
+                local color=v[2]                
+                if not type or type==1  then
+                    text=v[1] -- 드루이드 
+                elseif type==0 then
+                    text=keyword2 or keyword --입력한대로
+                elseif type==2 then
+                    text=k -- 드루
+                elseif type==-1 then --하늘색                    
+                    color="80e7EB"
+                    text=keyword
+                elseif type==-2 then --핑크색
+                    color="F5aCdA"
+                    text=keyword
+                elseif type==3 then --전문화 출력1
+                    text=v[3]
+                elseif type==4 then --전문화 출력2
+                    text=v[5] or v[4]
+                elseif type==10 then --전문화+직업
+                    text=keyword.." "..v[1]
+                end                
+                return "|cff"..color..(text or "?").."|r"       
+            end        
+        end        
+    end   
+end
+
+function MDRmakeDice(channel,who,k)
     dices={}
-    for i = 1, select('#', ...) do
-        dices[i]=select(i, ...)
-    end 
+    if #k<3 then return end
+    for i=1,#k do
+        dices[i]=k[i+1]
+    end    
+    
     if channel=="WHISPER_OUT" or #dices<2 then return end
     
     --나에게서 귓말이 들어오는 경우 프린트로 변경
@@ -55,7 +187,7 @@ function MDRdice(msg)
         else
             resultNum=n1     
         end 
-        messageLines[1]=resultNum.."번 "..(dices[resultNum] or "알 수 없음").." 한 표."
+        messageLines[1]=resultNum.."번 '"..(dices[resultNum] or "알 수 없음").."' 한 표."
         
         reportMessageLines(messageLines,diceReportChannel,who,"dice")
         diceWait=0
@@ -114,23 +246,9 @@ function MDRCommands(msg, editbox)
     reportMessageLines(messageLines,"print","","help")
 end
 
-function MDRcolor(keyword,num,text)
-    
-    local color=classInfo[keyword][2]
-    local class=classInfo[keyword][1]
-    
-    if not num or num==1 then
-        return "|cff"..color..class.."|r"
-    elseif num==-1 then
-        return "|cff".."80e7EB"..text.."|r"        
-    elseif num==-2 then
-        return "|cff".."F5aCdA"..text.."|r"        
-    elseif num==0 and text then
-        return "|cff"..color..text.."|r"        
-    else        
-        return "|cff"..color..classInfo[keyword][num].."|r"
-    end    
-end
+--명령어 등록
+SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/Tho','/쐐'
+SlashCmdList["MDReport"] = MDRCommands 
 
 function MDRsplit (inputstr, sep)
     if sep == nil then

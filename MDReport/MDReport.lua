@@ -3,11 +3,10 @@ MDRlastUpdate="@project-date-iso@"
 MDRguide=0
 local MY_NAME_IN_GAME=UnitName("player").."-"..GetRealmName()    
 local MY_NAME_IN_ADDON=UnitName("player").." - "..GetRealmName()  
-
-local who,channel,level,level2,callTypeT,callTypeT2
+local krClass,className=UnitClass("player")
+local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName
-local callType,keyword,extraKeyword
-local callType2,keyword2,extraKeyword2
+local callType,callTypeB,keyword,extraKeyword={},{},{},{}
 local SCL=50 -- 현 확팩 만렙
 
 local DIL={ --단수별 허용레벨 / 드랍템 레벨
@@ -25,22 +24,6 @@ local DIL={ --단수별 허용레벨 / 드랍템 레벨
     [13]=85,--460,
     [14]=90,--465,
     [15]=95,--465,
-}
-
-local classInfo={
-    ["도적"]={"도적","FFF569","암살","무법"},
-    ["죽기"]={"죽음의 기사","C41F3B","혈죽","부죽"},    
-    ["드루"]={"드루이드","FF7D0A","조드","회드"},
-    ["전사"]={"전사","C79C6E","방어","분노"},
-    ["기사"]={"성기사","F58CBA","징기","신기"},
-    ["술사"]={"주술사","0070DE","고술","정술"},
-    ["수도"]={"수도사","00FF96","풍운","운무"},
-    ["냥꾼"]={"사냥꾼","A9D271","격냥","생냥"},
-    ["사제"]={"사제","FFFFFF","암사","신사"},
-    ["흑마"]={"흑마법사","8787ED","고통","파괴"},
-    ["법사"]={"마법사","40C7EB","화법","냉법"},
-    ["악사"]={"악마 사냥꾼","A330C9","파멸","복수"}, 
-    [""]={}
 }
 
 local hasteClass={
@@ -134,27 +117,25 @@ function filterVALUES(VALUES)
         return
     end    
     
+    callType,callTypeB,keyword,extraKeyword={},{},{},{}
+    
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
         callTypeT=VALUES["callTypeT"]
-        callTypeT2=VALUES["callTypeT2"]
         level=VALUES["level"]
         level2=VALUES["level2"] 
         onlyMe=VALUES["onlyMe"]
         onlyYou=VALUES["onlyYou"]
-        callType=callTypeT[1]
-        keyword=callTypeT[2] 
-        extraKeyword=callTypeT[3] 
-        CharName=VALUES["CharName"]        
+        for i=1,#callTypeT do
+            callTypeB[i]=callTypeT[i][1]
+            --print(i..":"..callTypeT[i][1])
+            callType[callTypeT[i][1]]=1
+            keyword[callTypeT[i][1]]=callTypeT[i][2]
+            extraKeyword[callTypeT[i][1]]=callTypeT[i][3]            
+        end   
+        CharName=VALUES["CharName"]               
         
-        if callTypeT2 then
-            callType2=callTypeT2[1]
-            keyword2=callTypeT2[2] 
-            extraKeyword2=callTypeT2[3]
-        else
-            callType2,keyword2,extraKeyword2=nil,nil,nil
-        end         
     end 
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=MY_NAME_IN_GAME then
@@ -165,7 +146,7 @@ function filterVALUES(VALUES)
     if onlyYou then
         if strlen(onlyYou)<4 then
             if who==MY_NAME_IN_GAME then    
-                print("▶"..MDRcolor("",-2,onlyYou)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
+                print("▶"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
             end            
         return end  --검색어가 짧으면 무시
         
@@ -176,7 +157,7 @@ function filterVALUES(VALUES)
     if CharName then
         if strlen(CharName)<4 then
             if who==MY_NAME_IN_GAME then    
-                print("▶"..MDRcolor("",-2,CharName)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
+                print("▶"..MDRcolor(CharName,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
             end            
         return end  --검색어가 짧으면 무시 
     end
@@ -185,48 +166,39 @@ function filterVALUES(VALUES)
     --[[
     if  onlyYou  then        
         print("찾는사람:"..onlyYou)
-    end
-    
-    if callType then
-        print("callType:"..callType)
-    end
-    if callType2 then
-        print("callType2:"..callType2)
-    end
+    end    
     ]]
-    
-    
-    if callType=="levelrange" and level2==nil then
-        VALUES["level2"]=tonumber(keyword)
+    if callType["levelrange"]==1 and level2==nil then
+        VALUES["level2"]=tonumber(keyword["levelrange"])        
     end    
     
     --범위지정인데 범위값이 없으면 리턴
-    if callType=="levelrange" and level==nil then
+    if callType["levelrange"]==1  and level==nil then
         return
     end  
     
     --내가 아닌 사람이 !속성을 요청하는 경우 리턴
-    if who~=MY_NAME_IN_GAME and (callType=="affix")then
+    if who~=MY_NAME_IN_GAME and callType["affix"]==1 then
         return        
     end   
     
     --버전요청을 한 사람이 나일 경우 리턴
-    if callType=="forceversion" and who==MY_NAME_IN_GAME then
+    if callType["forceversion"]==1 and who==MY_NAME_IN_GAME then
         return
     end  
     
     --버전체크를 한 사람이 내가 아닐 경우 리턴
-    if callType=="version" and who~=MY_NAME_IN_GAME then
+    if callType["version"]==1  and who~=MY_NAME_IN_GAME then
         return
     end      
     
     --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
-    if (callType=="mykey" or callType=="currentmykey") and who~=MY_NAME_IN_GAME and channel~="WHISPER_OUT" then 
+    if (callType["mykey"]==1 or callType["currentmykey"]==1) and who~=MY_NAME_IN_GAME and channel~="WHISPER_OUT" then 
         return 
     end       
     
     --내가 보낸 귓말이고, 나한테 보냈거나 !내돌/!지금내돌을 요청한게 아니면 리턴
-    if (channel=="WHISPER_OUT") and ((who==MY_NAME_IN_GAME) or (callType~="mykey" and callType~="currentmykey"))  then
+    if (channel=="WHISPER_OUT") and ((who==MY_NAME_IN_GAME) or (callType["mykey"]~=1 or callType["currentmykey"]~=1) )  then
         return       
     end        
     
@@ -239,29 +211,34 @@ function filterVALUES(VALUES)
     end       
     
     --버전체크 채널 강제 조정
-    if callType=="version" then
+    if callType["version"]==1 then
         channel="print"
-    elseif callType=="forceversion" then
+    elseif callType["forceversion"]==1 then
         channel="WHISPER"        
     end 
     
     --조절값 입력
     VALUES["channel"]=channel    
     
-    if callTypeT2 then --명령어가 2중이면   
+    if callTypeT[2] then --명령어가 2중이면   
         --직업과 조합해서 검색시
-        if (callType=="class" and callType2=="item") or (callType=="class" and callType2=="category")  or (callType=="class" and callType2=="specificitem")  or (callType=="class" and callType2=="dungeon") then
-            if keyword=="사제" or keyword=="흑마" or keyword=="법사" or keyword=="악사" then
-                callType="spec"
-                VALUES["callTypeT"]=getCallTypeTable(classInfo[keyword][3])
+        if callType["class"]==1 and (callType["item"]==1 or  callType["category"]==1  or callType["specificitem"]==1  or  callType["dungeon"]==1) then
+            
+            if keyword["class"]=="사제" or keyword["class"]=="흑마" or keyword["class"]=="법사" or keyword["class"]=="악사" then
+                
+                VALUES["comb"]="Class_Something" 
+                
+                --print("class_item")
+                ---callType="spec"
+                --VALUES["callTypeT"][1]=getCallTypeTable(classInfo[keyword["class"]][3])
             else                
                 if who==MY_NAME_IN_GAME then                    
                     
                     local neun="는"
-                    if keyword=="도적" or keyword=="냥꾼"  or class=="악사" then
+                    if keyword["class"]=="도적" or keyword["class"]=="냥꾼"  or class=="악사" then
                         neun="은"
                     end                       
-                    print("▶"..MDRcolor(keyword)..neun.." "..MDRcolor(keyword,-1,"전문화").."에 따라 착용가능 아이템 범주가 달라 "..MDRcolor(keyword,-1,"전문화").."로 검색해야만합니다. (|cFF33FF99ex|r.!"..MDRcolor(keyword,3).."!무기 or !"..MDRcolor(keyword,4).."!한손)")
+                    print("▶"..MDRcolor(keyword["class"])..neun.." "..MDRcolor("전문화",-1).."에 따라 착용가능 아이템 범주가 달라 "..MDRcolor("전문화",-1).."로 검색해야만합니다. (|cFF33FF99ex|r.!"..MDRcolor(keyword["class"],3).."!무기 or !"..MDRcolor(keyword["class"],4).."!한손)")
                     
                 end
                 return
@@ -269,16 +246,16 @@ function filterVALUES(VALUES)
         end        
         
         --전문화+무기
-        if (callType=="spec" and callType2=="item")then            
+        if (callType["spec"]==1 and callType["item"]==1)then            
             VALUES["comb"]="Spec_Item" 
             
             --던전+스펙
-        elseif (callType=="spec" and callType2=="dungeon") then  
+        elseif (callType["spec"]==1 and callType["dungeon"]==1) then  
             VALUES["comb"]="Spec_Dungeon"    
             
             --직업+스탯            
-        elseif (callType=="class" and callType2=="stat") then  
-            local class,stat=keyword,keyword2            
+        elseif (callType["class"]==1 and callType["stat"]==1) then  
+            local class,stat=keyword["class"],keyword["stat"]            
             if checkSpecCanUseStat(class,stat) then
                 if class=="전사" or (class=="기사" and stat=="힘")  or class=="도적" or class=="냥꾼" or class=="죽기" then
                     if who==MY_NAME_IN_GAME then                    
@@ -288,7 +265,7 @@ function filterVALUES(VALUES)
                             neun="은"
                         end
                         local eul="을"                        
-                        print("▶"..MDRcolor(class)..neun.." "..MDRcolor(keyword,-1,"전문화").."에 따라 착용할 수 있는 아이템이 상이해 |cFFFFF569"..stat.." 능력치|r와 함께 검색할 수 없습니다. "..MDRcolor(keyword,-1,"전문화").."를 지정해서 검색해보세요.")
+                        print("▶"..MDRcolor(class)..neun.." "..MDRcolor("전문화",-1).."에 따라 착용할 수 있는 아이템이 상이해 |cFFFFF569"..stat.." 능력치|r와 함께 검색할 수 없습니다. "..MDRcolor("전문화",-1).."를 지정해서 검색해보세요.")
                         
                     end  
                     return
@@ -303,15 +280,15 @@ function filterVALUES(VALUES)
                         neun="은"
                     end
                     local eul="을"                        
-                    print("▶"..MDRcolor(class)..neun.." |cFFFFF569"..keyword2.."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
+                    print("▶"..MDRcolor(class)..neun.." |cFFFFF569"..keyword["stat"].."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
                     
                 end                
                 return 
             end
             
             --전문화+스탯
-        elseif (callType=="spec" and callType2=="stat") then  
-            local spec,stat,class=keyword,keyword2,callTypeT[4]
+        elseif (callType["spec"]==1 and callType["stat"]==1) then  
+            local spec,stat,class=keyword["spec"],keyword["stat"],callTypeT[1][4]
             if checkSpecCanUseStat(spec,stat) then
                 VALUES["comb"]="Spec_Stat"   
             else
@@ -322,20 +299,20 @@ function filterVALUES(VALUES)
                         neun="은"
                     end
                     local eul="을"                        
-                    print("▶"..MDRcolor(class,0,spec).." "..MDRcolor(class)..neun.." |cFFFFF569"..keyword2.."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
+                    print("▶"..MDRcolor(spec,0).." "..MDRcolor(class)..neun.." |cFFFFF569"..keyword["stat"].."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
                     
                 end                
                 return 
             end
             --스탯+무기종류
-        elseif (callType=="stat" and callType2=="specificitem")then             
+        elseif (callType["stat"]==1 and callType["specificitem"]==1)then             
             VALUES["comb"]="Stat_Specificitem"  
             
             --전문화+무기종류
-        elseif (callType=="spec" and callType2=="specificitem")then 
-            local class=callTypeT[4] or keyword
-            if checkSpecCanUseItem(class,keyword2) then            
-                VALUES["comb"]="Spec_Specificitem"       
+        elseif (callType["spec"]==1 and callType["specificitem"]==1)then 
+            local spec,class=keyword["spec"], callTypeT[1][4]
+            if checkSpecCanUseItem(spec,keyword["specificitem"]) then            
+                VALUES["comb"]="Spec_Specificitem" 
             else 
                 if who==MY_NAME_IN_GAME then                    
                     
@@ -344,65 +321,74 @@ function filterVALUES(VALUES)
                         neun="은"
                     end
                     local eul="를"
-                    if keyword2=="장창" or keyword2=="단검" or keyword2=="한손도검" or keyword2=="양손도검" or keyword2=="마법봉" then
+                    if keyword["specificitem"]=="장창" or keyword["specificitem"]=="단검" or keyword["specificitem"]=="한손도검" or keyword["specificitem"]=="양손도검" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁"  or keyword["specificitem"]=="활"  or keyword["specificitem"]=="총"  then
                         eul="을"
                     end   
-                    print("▶"..MDRcolor(class)..neun.." "..keyword2..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")
+                    print("▶"..MDRcolor(spec,10)..neun.." "..keyword["specificitem"]..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")
                     
                 end                
                 return 
             end            
             --스탯+무기범주
-        elseif (callType=="stat" and callType2=="category")then             
+        elseif (callType["stat"]==1 and callType["category"]==1)then             
             VALUES["comb"]="Stat_Category"  
             --전문화+범주
-        elseif (callType=="spec" and callType2=="category")then             
+        elseif (callType["spec"]==1 and callType["category"]==1)then             
             VALUES["comb"]="Spec_Category"            
             --스탯+무기
-        elseif (callType=="stat" and callType2=="item") then
+        elseif (callType["stat"]==1 and callType["item"]==1) then
             if who==MY_NAME_IN_GAME then
                 
                 print("▶|cFFFFF569능력치|r와"..'"'.."무기"..'"'.."는 함께 검색할 수 없습니다. 무기 유형(단검,지팡이)이나 종류(양손,한손)를 지정해주세요. (|cFF33FF99ex|r. !|cFFFFF569힘|r!양손 or !|cFFFFF569지능|r!단검)")
                 
             end
-            return
-        else return            
+            return           
         end
-        findCharAllItem(VALUES)
+        if VALUES["comb"] then
+            findCharAllItem(VALUES)
+        end        
         return
         
     else --!명령어가 단일일 경우
-        if callType=="all" or callType=="mykey" or callType=="levelrange" or callType=="dungeon" or callType=="class" or callType=="currentmykey" or callType=="currentall" or callType=="charname" then             
+        if callType["all"]==1 or 
+        callType["mykey"]==1 or 
+        callType["levelrange"]==1 or 
+        callType["dungeon"]==1 or 
+        callType["class"]==1 or 
+        callType["currentmykey"]==1 or 
+        callType["currentall"]==1 or         
+        callType["charname"]==1 then            
+            
             findCharAllKey(VALUES)            
-        elseif callType=="parking" then        
-            findCharNeedParking(channel,who,callType,keyword,level)             
-        elseif callType=="spell" then        
-            findCharSpell(keyword,channel,who,callType)     
-        elseif callType=="version" or callType=="forceversion"then        
+        elseif callType["parking"]==1 then        
+            findCharNeedParking(channel,who,"parking",keyword["parking"],level)             
+        elseif callType["spell"]==1 then        
+            findCharSpell(keyword["spell"],channel,who,"spell")     
+        elseif callType["version"]==1 or callType["forceversion"]==1 then        
             doCheckVersion(channel,who,callType)    
-        elseif callType=="affix" then        
-            doOnlyAffixReport(keyword,channel,who,callType)  
-        elseif callType=="specificitem"then 
+        elseif callType["affix"]==1 then        
+            doOnlyAffixReport(keyword["affix"],channel,who,"affix")  
+        elseif callType["specificitem"]==1 then 
             --!주스탯이 고정인 무기종류는 검색통과
-            if keyword=="보조" or keyword=="마법봉" or keyword=="석궁" or keyword=="활" or keyword=="총" or keyword=="전투검" or keyword=="방패" then
+            if keyword["specificitem"]=="보조" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁" or keyword["specificitem"]=="활" or keyword["specificitem"]=="총" or keyword["specificitem"]=="전투검" or keyword["specificitem"]=="방패" then
                 VALUES["comb"]="Spec_Specificitem"       
                 findCharAllItem(VALUES)                
             else
                 if who==MY_NAME_IN_GAME then
                     
                     local neun="는"
-                    if keyword=="장창" or keyword=="단검" or keyword=="한손도검" or keyword=="양손도검" then
+                    if keyword["specificitem"]=="장창" or keyword["specificitem"]=="단검" or keyword["specificitem"]=="한손도검" or keyword["specificitem"]=="양손도검" then
                         neun="은"
                     end                        
-                    print("▶!"..MDRcolor("",-2,keyword)..neun.." 단독으로 검색할 수 없습니다. "..MDRcolor("",-1,"전문화").."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. !|cffC79C6E분노|r!"..MDRcolor("",-2,keyword)..", !|cFFFFF569힘|r!"..MDRcolor("",-2,keyword)..")")                        
+                    print("▶!"..MDRcolor(keyword["specificitem"],-2)..neun.." 단독으로 검색할 수 없습니다. "..MDRcolor("전문화",-1).."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. !|cffC79C6E분노|r!"..MDRcolor(keyword["specificitem"],-2)..", !|cFFFFF569힘|r!"..MDRcolor(keyword["specificitem"],-2)..")")                        
                     
                 end     
             end            
             --!전문화로만 검색시 !무기검색으로 유도
-        elseif callType=="spec" and callType2==nil then
+        elseif callType["spec"]==1 and #callTypeB==1 then
             if who==MY_NAME_IN_GAME then
                 
-                local class=getCallTypeTable(keyword)[4] or getCallTypeTable(keyword)[2] 
+                local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["spec"])[2] 
                 
                 local neun,ga,ro="는","가","로"                   
                 if class=="도적" or class=="냥꾼" then
@@ -411,33 +397,33 @@ function filterVALUES(VALUES)
                     neun,ga,ro="은","이","로"                        
                 end                         
                 
-                print("▶"..MDRcolor(class,-1,"전문화").."를 단독으로 입력한 경우 해당 전문화가 착용가능한 모든 무기로 던전을 검색합니다. (=!"..MDRcolor(class,0,keyword).."!무기) "..MDRcolor(class)..ga.." 소지한 돌이 알고 싶을 경우 !"..MDRcolor(class,0,class)..ro.." 검색하거나, 특정 무기를 지정하고 싶을 경우 "..MDRcolor(class,-1,"전문화").."와 무기종류,무기범주를 함께 검색해보세요.(|cFF33FF99ex|r.!"..MDRcolor(class,3).."!양손 or !"..MDRcolor(class,4).."!장착)")
+                print("▶"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 해당 전문화가 착용가능한 모든 무기로 던전을 검색합니다. (=!"..MDRcolor(class,0,keyword["spec"]).."!무기) "..MDRcolor(class)..ga.." 소지한 돌이 알고 싶을 경우 !"..MDRcolor(class,2)..ro.." 검색하거나, 특정 무기를 지정하고 싶을 경우 "..MDRcolor(class,0,"전문화").."와 무기종류,무기범주를 함께 검색해보세요.(|cFF33FF99ex|r.!"..MDRcolor(class,3).."!양손 or !"..MDRcolor(class,4).."!장착)")
                 
             end
             VALUES["comb"]="Spec_Item"
             findCharAllItem(VALUES)
             
             --!무기만 단독검색시
-        elseif callType=="item" and callType2==nil then
+        elseif callType["item"]==1 and #callTypeB==1 then
             if who==MY_NAME_IN_GAME then
                 
-                print("▶!무기는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (|cFF33FF99ex|r. !"..MDRcolor("",-1,"화염").."!무기)")
+                print("▶|cFFaaaaaa무기|r는 단독으로 검색할 수 없습니다. 특성을 지정해주세요 (|cFF33FF99ex|r. !"..MDRcolor(krClass,3).."|cFFaaaaaa!무기|r)")
                 
             end  
             
             --스탯만 단독검색시            
-        elseif callType=="stat" and callType2==nil then
+        elseif callType["stat"]==1 and #callTypeB==1 then
             if who==MY_NAME_IN_GAME then
                 
-                print("▶|cFFFFF569능력치|r는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요 (|cFF33FF99ex|r. !|cFFFFF569"..keyword.."|r!지팡이)")
+                print("▶|cFFFFF569능력치|r는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요 (|cFF33FF99ex|r. !|cFFFFF569"..keyword["stat"].."|r!지팡이)")
                 
             end   
             
             --스탯지정없이 무기범주만 단독검색시
-        elseif callType=="category" and callType2==nil then
+        elseif callType["category"]==1 and #callTypeB==1 then
             if who==MY_NAME_IN_GAME then
                 
-                print("▶"..MDRcolor("",-1,"무기범주").."(한손,양손,근접,원거리)는 단독으로 검색할 수 없습니다. !"..MDRcolor("",-2,"한손도검").." !"..MDRcolor("",-2,"양손둔기").." 처럼 무기의 종류를 지정하거나 !|cFFFFF569힘|r !|cFFFFF569지능|r 등의 능력치와 함께 검색해주세요 (|cFF33FF99ex|r. !|cFFFFF569힘|r!"..MDRcolor("",-1,keyword)..", !|cFFFFF569민첩|r!"..MDRcolor("",-2,"한손도검")..")")
+                print("▶"..MDRcolor("무기범주",-1).."(한손,양손,근접,원거리)는 단독으로 검색할 수 없습니다. "..MDRcolor("!한손도검",-2).." "..MDRcolor("!양손둔기",-2).." 처럼 무기의 종류를 지정하거나 |cFFFFF569!힘|r |cFFFFF569!지능|r 등의 능력치와 함께 검색해주세요 (|cFF33FF99ex|r. |cFFFFF569!힘|r"..MDRcolor("!"..keyword["category"],-1)..", |cFFFFF569!민첩|r"..MDRcolor("!한손도검",-2)..")")
                 
             end     
         else return end     
@@ -533,8 +519,8 @@ function findCharAllKey(VALUES)
         level=VALUES["level"]
         level2=VALUES["level2"]         
         
-        callType=callTypeT[1]
-        keyword=callTypeT[2]
+        callType=callTypeT[1][1]
+        keyword=callTypeT[1][2]
         onlyOnline=VALUES["onlyOnline"]   
         CharName=VALUES["CharName"]
         
