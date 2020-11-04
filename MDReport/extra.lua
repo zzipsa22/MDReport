@@ -180,6 +180,7 @@ function MDRmakeDice(channel,who,k)
         for i=1,#dices do
             message=message..i.."."..dicesB[i].." "
         end
+        message=message.." ( /주사위 "..#dices.." )"
         messageLines[1]=message
         reportMessageLines(messageLines,diceReportChannel,who,"dice")        
     end   
