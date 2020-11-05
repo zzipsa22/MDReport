@@ -1,13 +1,13 @@
-local MDR = CreateFrame("Frame")
+local MDRF = CreateFrame("Frame")
 
-MDR:RegisterEvent("CHAT_MSG_PARTY")
-MDR:RegisterEvent("CHAT_MSG_PARTY_LEADER") 
-MDR:RegisterEvent("CHAT_MSG_GUILD")
-MDR:RegisterEvent("CHAT_MSG_WHISPER")
-MDR:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
-MDR:RegisterEvent("CHAT_MSG_SYSTEM")
+MDRF:RegisterEvent("CHAT_MSG_PARTY")
+MDRF:RegisterEvent("CHAT_MSG_PARTY_LEADER") 
+MDRF:RegisterEvent("CHAT_MSG_GUILD")
+MDRF:RegisterEvent("CHAT_MSG_WHISPER")
+MDRF:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
 
-MDR:SetScript("OnEvent", function(self, event, ...)
+MDRF:SetScript("OnEvent", function(self, event, ...)
         
         local msg=select(1, ...)      
         
