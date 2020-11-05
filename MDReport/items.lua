@@ -1,5 +1,5 @@
 local who,channel,level,level2,callTypeT,comb
-local callType,callTypeB,keyword,extraKeyword={},{},{},{}
+local callType,callTypeB,keyword,extraKeyword,doubleExtraKeyword={},{},{},{},{}
 local meGame=UnitName("player").."-"..GetRealmName()
 local krClass,className=UnitClass("player")
 local tips={}
@@ -374,7 +374,7 @@ function checkDungeonHasTrinket(VALUES)
     --print(filter)
     --전문화와 조합한 경우 스탯 가져오기
     if not stat and spec then
-        print("전문화로부터 스펙 가져오기")        
+        --print("전문화로부터 스펙 가져오기")        
         stat=getSpecStatTable(spec)[1]
     end
     
@@ -542,7 +542,7 @@ end
 --통합 아이템 분류류
 function findCharAllItem(VALUES)
     local callType,callTypeB,keyword,extraKeyword,doubleExtraKeyword={},{},{},{},{}
-    
+    --print("도착")
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
@@ -578,9 +578,8 @@ function findCharAllItem(VALUES)
         else
             link=0
         end        
-        
         --print("role:"..role)
-        --print("stat:"..stat)        
+        --print("stat:"..stat)         
     end    
     
     if comb=="Class_Stat" then
@@ -628,7 +627,7 @@ function findCharAllItem(VALUES)
     local link=0
     local filter
     
-    if comb=="Spec_Dungeon" or (comb=="Trinket" and keyword["dungeon"])then
+    if keyword["dungeon"] then
         chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
         link=1
     end    
@@ -639,36 +638,30 @@ function findCharAllItem(VALUES)
     
     local spec=keyword["spec"]
     local item=keyword["specificitem"]
-    local category=keyword["category"]         
+    local category=keyword["category"]
+    --local stat=keyword["stat"] or extraKeyword["spec"]   
     
     if keyword["specificitem"]=="방패" then        
         stat=""
         item=keyword["specificitem"]
-        link=1
+        
         
         --only 지능
     elseif keyword["specificitem"]=="보조"or  keyword["specificitem"]=="마법봉"then        
-        stat="지능"
+        stat=""
         item=keyword["specificitem"]
-        link=1
+        
         
         --only 민첩
     elseif keyword["specificitem"]=="총"or  keyword["specificitem"]=="석궁"or  keyword["specificitem"]=="활" or keyword["specificitem"]=="전투검" then        
-        stat="민첩"
+        stat=""
         item=keyword["specificitem"]
-        link=1        
-    elseif extraKeyword["spec"] then 
-        stat=extraKeyword["spec"]        
-    end      
+    end
+    
+    
     
     local findChars={}   
     local num=1
-    
-    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" then
-        link=1  
-    elseif comb=="Stat_Category" or comb=="Spec_Category" then
-        link=0
-    end    
     
     if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
         filter="specificitem"        
@@ -690,18 +683,19 @@ function findCharAllItem(VALUES)
     VALUES["filter"]=filter
     
     --검색타입에 대한 알림
-    if who==meGame and (callType["class"]==1 or callType["spec"] ) then         
+    if who==meGame and link~=1 then         
         local yourClass=keyword["spec"] or keyword["class"]
         if not yourClass then yourClass=krClass end
         --local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
-        
-        if (not tips[1] or tips[1]<warns) and link~=1 then
-            local message,weapon,spec,class,Class,eul,ro,LC
+
+        if (not tips[1] or tips[1]<warns) and link~=1 and comb~="Trinket" then
+
+            local message,weapon,spec,class,Class,eul,ro,LC,space,kwa
             class=MDRcolor(keyword["class"] or doubleExtraKeyword["spec"],5)
             if class=="마법사" or class=="사제" or class=="흑마법사" or class=="악마 사냥꾼" then
                 spec=""
             else
-                spec=MDRcolor(keyword["spec"],0).." "
+                spec=(MDRcolor(keyword["spec"],0) or "").." "
             end
             
             if class=="도적" or class=="사냥꾼" or class=="악마 사냥꾼" then
@@ -723,12 +717,25 @@ function findCharAllItem(VALUES)
             Class=MDRcolor(class)
             if LC=="검" or LC=="궁" or LC=="활" or LC=="총" or LC=="봉" or LC=="창"    then
                 eul="을"
+                kwa="과"
             else
                 eul="를"
+                kwa="와"
             end
+            if stat=="" then
+                space=""
+            else
+                space=" "
+            end
+            
             --if extraKeyword["spec"]
             
-            message="▶"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다.  |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor(class,0,"!"..(keyword["class"] or keyword["spec"])).."|cff8787ED!던전이름|r으로 검색해보세요. "
+            if keyword["spec"] then
+                message="▶"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다.  |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
+            else
+                message="▶"..MDRcolor("도적",0,stat)..space..Weapon..eul.." 모두 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
+            end
+            
             print(message)
             tips[1]=(tips[1] or 0)+1
         end                  

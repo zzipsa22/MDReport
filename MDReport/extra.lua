@@ -227,7 +227,7 @@ function MDRCommands(msg, editbox)
     if strlen(playerName)>6 then
         n1=strsub(playerName,0,6)
         n2=strsub(playerName,-6)
-        m1=MDRcolor(krClass,0,"!"..playerName)..","..MDRcolor(krClass,0,"!"..n1)..","..MDRcolor(krClass,0,"!"..n2).."모두 가능."
+        m1=MDRcolor(krClass,0,"!"..playerName)..","..MDRcolor(krClass,0,"!"..n1)..","..MDRcolor(krClass,0,"!"..n2).." 모두 가능."
     else
         n1=playerName
         n2=playerName
@@ -269,8 +269,8 @@ function MDRCommands(msg, editbox)
         messageLines[#messageLines+1]="▶|cFF80e7EB!전문화|r, |cFFFFF569!능력치|r와 |cFFaaaaaa!무기|r, |cFFF5aCdA!무기범주|r, |cffC79C6E!무기종류|r, |cff8787ED!던전이름|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!회드|r|cFFaaaaaa!무기|r, |cFFFFF569!지능|r|cffC79C6E!단검|r, |cffC79C6E!방패|r, |cFFFFF569!민첩|r|cFFF5aCdA!원거리|r, |cFFFFF569!힘|r|cFFF5aCdA!한손|r, |cFF80e7EB!고술|r|cff8787ED!아탈|r, |cFF80e7EB!양조|r|cffC79C6E!장창|r"
         
     elseif msg=="장신구"  then   
-        messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r 를 |cFF80e7EB!역할|r, |cFFFFF569!능력치|r와 조합하여 원하는 장신구를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!힐러|r|cFF00ff00!장신구|r, |cFFFFF569!민첩|r|cFF00ff00!장신구|r"
-        
+        messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r와 |cFF80e7EB!역할|r, |cFFFFF569!능력치|r를 조합하면 특정 장신구를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!힐러|r|cFF00ff00!장신구|r, |cFFFFF569!민첩|r|cFF00ff00!장신구|r"
+        messageLines[#messageLines+1]="▷|cFFaaaaaa!무기|r는 "..MDRcolor(krClass,0,"!".."전문화").."와, |cFF00ff00!장신구|r는 |cFF80e7EB!역할|r과 조합 한다고 생각하시면 기억하기 쉽습니다."
     else
         return
     end
