@@ -2,8 +2,8 @@ local who,channel,level,level2,callTypeT,comb
 local callType,callTypeB,keyword,extraKeyword={},{},{},{}
 local meGame=UnitName("player").."-"..GetRealmName()
 local krClass,className=UnitClass("player")
-local tips={0,0,0}
-local warns=3
+local tips={}
+local warns=100
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
 local bonus1="::::::::50:65::16:4:6536:6513:1533:4786::::" ;--일반
 local bonus2="::::::::50:65::16:5:6536:6516:6513:1514:4786::::" ;--메카
@@ -346,104 +346,8 @@ function getBonusIDs(dungeon)
     return bonus
 end
 
-
-function checkDungeonHasItem(VALUES)
-    
-    local dungeon,spec,stat,category,link,item,sameDungeon
-    
-    if VALUES~=nil then
-        dungeon=VALUES["dungeon"]
-        spec=VALUES["spec"]
-        stat=VALUES["stat"]
-        category=VALUES["category"]
-        link=VALUES["link"]              
-        item=VALUES["item"]  
-        sameDungeon=VALUES["sameDungeon"]               
-    end            
-    
-    if dungeon==nil or spec==nil then return end    
-    
-    --던전에 따라 보너스ID 지정
-    local bonus=getBonusIDs(dungeon)    
-    local dropTable=getDungeonDropTable(dungeon)
-    
-    
-    
-    local stat=getSpecStatTable(spec)[1]
-    local weaponTable=getSpecWeaponTable(spec)
-    if category~=nil then
-        local wantWeaponTypeTable=getCategoryTable(category)
-        local num=1
-        local newWeaponTable={}
-        for i=1,#weaponTable do
-            for j=1,#wantWeaponTypeTable do
-                if weaponTable[i]== wantWeaponTypeTable[j] then
-                    newWeaponTable[num]=weaponTable[i]
-                    num=num+1
-                end                
-            end            
-        end 
-        --print("이기능이 사용됨")
-        weaponTable=newWeaponTable
-    end    
-    
-    
-    --아래부터 공통
-    local yourWeaponTypeTable={}
-    local num=1
-    
-    if weaponTable==nil or dropTable==nil then return end
-    
-    for j=1,#weaponTable do        
-        yourWeaponTypeTable[num]={}
-        yourWeaponTypeTable[num][1]=stat
-        yourWeaponTypeTable[num][2]=weaponTable[j]          
-        num=num+1
-    end    
-    
-    local thisDungeonHasItem=0
-    local thisDungeonHas={}
-    local itemNum=1
-    local itemList=""
-    for i=1,#yourWeaponTypeTable do
-        local stat=yourWeaponTypeTable[i][1]
-        local type=yourWeaponTypeTable[i][2]
-        for j=1,#dropTable do
-            if strfind(dropTable[j][1],stat) and strfind(dropTable[j][2],type) then
-                local header=""
-                if category~=nil then
-                    --header=dropTable[j][1].." "
-                end           
-                if sameDungeon then
-                    thisDungeonHas[itemNum]=sameDungeon
-                else                
-                    if link==1 then
-                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                    else
-                        thisDungeonHas[itemNum]=header..dropTable[j][2]
-                    end
-                end                            
-                thisDungeonHasItem=1
-                itemNum=itemNum+1
-            end            
-        end       
-    end   
-    for i=1,#thisDungeonHas do                    
-        itemList=itemList..thisDungeonHas[i]
-        if i<#thisDungeonHas then
-            itemList=itemList..","
-        end                    
-    end
-    
-    if thisDungeonHasItem==1 then
-        return itemList
-    else
-        return nil        
-    end
-end
-
 function checkDungeonHasTrinket(VALUES)
-    local dungeon,spec,stat,category,link,item,sameDungeon,role
+    local dungeon,spec,stat,category,link,item,sameDungeon,role,filter
     if VALUES~=nil then
         dungeon=VALUES["dungeon"]
         spec=VALUES["spec"]
@@ -453,141 +357,181 @@ function checkDungeonHasTrinket(VALUES)
         item=VALUES["item"] 
         role=VALUES["role"]  
         sameDungeon=VALUES["sameDungeon"]
-    end   
+        filter=VALUES["filter"]
+    end  
+    
     local bonus=getBonusIDs(dungeon)    
     local dropTable=getDungeonDropTable(dungeon)
     
-    local num=1
-    
-    if  dropTable==nil then return end        
-    
     local thisDungeonHasItem=0
     local thisDungeonHas={}
     local itemNum=1
     local itemList=""
     
-    for j=1,#dropTable do
-        if dropTable[j][2]=="장신구" and (
-            (strfind(dropTable[j][1],stat) and strfind(dropTable[j][4],role)) or --스탯과 역할이 일치
-            (strfind(dropTable[j][1],stat) and role=="탱커")  --스탯이 일치하는 탱커          
-        ) then            
-            local header
-            if dropTable[j][4]=="탱커"and role=="탱커" then
-                header="탱"
-            elseif strfind(dropTable[j][4],"탱") and role=="탱커" then
-                header=stat
-            elseif dropTable[j][4]=="힐러" and role=="힐러" then
-                header="힐"
-            elseif strfind(dropTable[j][4],"힐") and role=="힐러" then
-                header="지능"
-            elseif strfind(dropTable[j][4],"딜러") and role=="딜러" then
-                header=stat
-            end
-            
-            
-            
-            --[[
-            if role=="탱커" or role=="힐러"then
-                header=strsub(role,0,3).." "
-            else
-                header=stat.." "
-            end
-]]
-            if sameDungeon then
-                thisDungeonHas[itemNum]=sameDungeon
-            else                
-                if link==1 then
-                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                else
-                    thisDungeonHas[itemNum]=header.." "..dropTable[j][2]
-                end
-            end                           
-            thisDungeonHasItem=1
-            itemNum=itemNum+1
-        end            
-    end     
-    
-    for i=1,#thisDungeonHas do                    
-        itemList=itemList..thisDungeonHas[i]
-        if i<#thisDungeonHas then
-            itemList=itemList..","
-        end                    
+    local weaponTable
+    local yourWeaponTypeTable={}
+    local num=1    
+    --print(filter)
+    --전문화와 조합한 경우 스탯 가져오기
+    if not stat and spec then
+        print("전문화로부터 스펙 가져오기")        
+        stat=getSpecStatTable(spec)[1]
     end
     
-    if thisDungeonHasItem==1 then
-        return itemList
-    else
-        return nil        
-    end    
-end
-
-function checkDungeonHasCategoryItem(VALUES)
+    if  dropTable==nil then return end            
     
-    local dungeon,spec,stat,category,link,item,sameDungeon
-    
-    if VALUES~=nil then
-        dungeon=VALUES["dungeon"]
-        spec=VALUES["spec"]
-        stat=VALUES["stat"]
-        category=VALUES["category"]
-        link=VALUES["link"]              
-        item=VALUES["item"]      
-        sameDungeon=VALUES["sameDungeon"]
-    end      
-    
-    --던전에 따라 보너스ID 지정
-    local bonus=getBonusIDs(dungeon)    
-    local dropTable=getDungeonDropTable(dungeon)    
-    
-    local weaponTable=getCategoryTable(category)
-    
-    --아래부터 공통
-    local yourWeaponTypeTable={}
-    local num=1
-    
-    if  weaponTable==nil or dropTable==nil then return end        
-    
-    for j=1,#weaponTable do        
-        yourWeaponTypeTable[num]={}
-        yourWeaponTypeTable[num][1]=stat
-        yourWeaponTypeTable[num][2]=weaponTable[j]
-        num=num+1        
-    end        
-    
-    local thisDungeonHasItem=0
-    local thisDungeonHas={}
-    local itemNum=1
-    local itemList=""
-    for i=1,#yourWeaponTypeTable do
-        local stat=yourWeaponTypeTable[i][1]
-        local type=yourWeaponTypeTable[i][2]
+    --스탯+무기범주를 찾는 경우
+    if filter=="category" and category and stat then
+        weaponTable=getCategoryTable(category)
+        for j=1,#weaponTable do        
+            yourWeaponTypeTable[num]={}
+            yourWeaponTypeTable[num][1]=stat
+            yourWeaponTypeTable[num][2]=weaponTable[j]
+            num=num+1        
+        end              
+        for i=1,#yourWeaponTypeTable do
+            local stat=yourWeaponTypeTable[i][1]
+            local type=yourWeaponTypeTable[i][2]
+            for j=1,#dropTable do
+                if strfind(dropTable[j][1],stat) and strfind(dropTable[j][2],type) then
+                    local header=""
+                    if category~=nil then
+                        header=dropTable[j][1].." "
+                    end           
+                    if sameDungeon then
+                        thisDungeonHas[itemNum]=sameDungeon
+                    else                
+                        if link==1 then
+                            _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                        else
+                            thisDungeonHas[itemNum]=header..dropTable[j][2]
+                        end
+                    end                           
+                    thisDungeonHasItem=1
+                    itemNum=itemNum+1
+                end            
+            end       
+        end        
+        
+        --전문화를 지정한 경우
+    elseif filter=="spec" and spec then                
+        
+        weaponTable=getSpecWeaponTable(spec)
+        
+        --전문화에 무기범주까지 지정한 경우
+        if category~=nil then
+            local wantWeaponTypeTable=getCategoryTable(category)
+            local num=1
+            local newWeaponTable={}
+            for i=1,#weaponTable do
+                for j=1,#wantWeaponTypeTable do
+                    if weaponTable[i]== wantWeaponTypeTable[j] then
+                        newWeaponTable[num]=weaponTable[i]
+                        num=num+1
+                    end                
+                end            
+            end 
+            --print("지정된 무기종류 지정")
+            weaponTable=newWeaponTable
+        end            
+        
+        for j=1,#weaponTable do        
+            yourWeaponTypeTable[num]={}
+            yourWeaponTypeTable[num][1]=stat
+            yourWeaponTypeTable[num][2]=weaponTable[j]          
+            num=num+1
+        end            
+        
+        for i=1,#yourWeaponTypeTable do
+            local stat=yourWeaponTypeTable[i][1]
+            local type=yourWeaponTypeTable[i][2]
+            for j=1,#dropTable do
+                if strfind(dropTable[j][1],stat) and strfind(dropTable[j][2],type) then
+                    local header=""
+                    if category~=nil then
+                        --header=dropTable[j][1].." "
+                    end           
+                    if sameDungeon then
+                        thisDungeonHas[itemNum]=sameDungeon
+                    else                
+                        if link==1 then
+                            _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                        else
+                            thisDungeonHas[itemNum]=header..dropTable[j][2]
+                        end
+                    end                            
+                    thisDungeonHasItem=1
+                    itemNum=itemNum+1
+                end            
+            end       
+        end           
+        
+        --특정아이템을 지정한 경우
+    elseif filter=="specificitem" and item and stat then
+        
         for j=1,#dropTable do
-            if strfind(dropTable[j][1],stat) and strfind(dropTable[j][2],type) then
+            if stat and strfind(dropTable[j][2],item) and strfind(dropTable[j][1],stat) then 
                 local header=""
                 if category~=nil then
                     header=dropTable[j][1].." "
-                end           
+                end
                 if sameDungeon then
                     thisDungeonHas[itemNum]=sameDungeon
+                    --print(sameDungeon)
                 else                
                     if link==1 then
                         _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
                     else
                         thisDungeonHas[itemNum]=header..dropTable[j][2]
                     end
+                end            
+                thisDungeonHasItem=1
+                itemNum=itemNum+1            
+            end        
+        end 
+        
+        --장신구를 찾는 경우
+    elseif filter=="trinket" then        
+        for j=1,#dropTable do
+            if dropTable[j][2]=="장신구" and (
+                (strfind(dropTable[j][1],stat) and strfind(dropTable[j][4],role)) 
+                --or --스탯과 역할이 일치
+                --(strfind(dropTable[j][1],stat) and role=="탱커")  --스탯이 일치하는 탱커          
+            ) then            
+                local header
+                if dropTable[j][4]=="탱커"and role=="탱커" then
+                    header="탱"
+                elseif strfind(dropTable[j][4],"탱") and role=="탱커" then
+                    header=stat
+                elseif dropTable[j][4]=="힐러" and role=="힐러" then
+                    header="힐"
+                elseif strfind(dropTable[j][4],"힐") and role=="힐러" then
+                    header="지능"
+                elseif strfind(dropTable[j][4],"딜러") and role=="딜러" then
+                    header=stat
+                end            
+                
+                if sameDungeon then
+                    thisDungeonHas[itemNum]=sameDungeon
+                else                
+                    if link==1 then
+                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        thisDungeonHas[itemNum]=(header or "?").." "..dropTable[j][2]
+                    end
                 end                           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
             end            
-        end       
-    end   
+        end  
+    end    
+    
     for i=1,#thisDungeonHas do                    
         itemList=itemList..thisDungeonHas[i]
         if i<#thisDungeonHas then
             itemList=itemList..","
         end                    
-    end
-    
+    end    
     if thisDungeonHasItem==1 then
         return itemList
     else
@@ -595,67 +539,9 @@ function checkDungeonHasCategoryItem(VALUES)
     end    
 end
 
-function checkDungeonHasSpecificItem(VALUES)    
-    
-    local dungeon,spec,stat,category,link,item,sameDungeon
-    
-    if VALUES~=nil then
-        dungeon=VALUES["dungeon"]
-        spec=VALUES["spec"]
-        stat=VALUES["stat"]
-        category=VALUES["category"]
-        link=VALUES["link"]              
-        item=VALUES["item"]
-        sameDungeon=VALUES["sameDungeon"]        
-    end    
-    
-    --던전에 따라 보너스ID 지정
-    local bonus=getBonusIDs(dungeon)    
-    
-    local dropTable=getDungeonDropTable(dungeon)
-    local thisDungeonHasItem=0
-    local thisDungeonHas={}
-    local itemNum=1
-    local itemList=""  
-    
-    for j=1,#dropTable do
-        if stat and strfind(dropTable[j][2],item) and strfind(dropTable[j][1],stat) then 
-            local header=""
-            if category~=nil then
-                header=dropTable[j][1].." "
-            end
-            if sameDungeon then
-                thisDungeonHas[itemNum]=sameDungeon
-                --print(sameDungeon)
-            else                
-                if link==1 then
-                    _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                else
-                    thisDungeonHas[itemNum]=header..dropTable[j][2]
-                end
-            end            
-            thisDungeonHasItem=1
-            itemNum=itemNum+1            
-        end        
-    end    
-    for i=1,#thisDungeonHas do                    
-        itemList=itemList..thisDungeonHas[i]
-        if i<#thisDungeonHas then
-            itemList=itemList..","
-        end                    
-    end
-    
-    if thisDungeonHasItem==1 then
-        return itemList
-    else
-        return nil        
-    end    
-end
-
---통합 아이템 찾기
+--통합 아이템 분류류
 function findCharAllItem(VALUES)
-    
-    local callType,callTypeB,keyword,extraKeyword={},{},{},{}
+    local callType,callTypeB,keyword,extraKeyword,doubleExtraKeyword={},{},{},{},{}
     
     if VALUES~=nil then
         who=VALUES["who"]
@@ -669,7 +555,8 @@ function findCharAllItem(VALUES)
             callTypeB[i]=callTypeT[i][1]
             callType[callTypeT[i][1]]=1
             keyword[callTypeT[i][1]]=callTypeT[i][2]
-            extraKeyword[callTypeT[i][1]]=callTypeT[i][3]                    
+            extraKeyword[callTypeT[i][1]]=callTypeT[i][3]  
+            doubleExtraKeyword[callTypeT[i][1]]=callTypeT[i][4]
         end   
     end
     --print(comb)
@@ -690,7 +577,7 @@ function findCharAllItem(VALUES)
             link=1
         else
             link=0
-        end         
+        end        
         
         --print("role:"..role)
         --print("stat:"..stat)        
@@ -718,8 +605,7 @@ function findCharAllItem(VALUES)
         else             
             return            
         end        
-        keyword["spec"]=newSpec
-        
+        keyword["spec"]=newSpec        
     end          
     
     if comb=="Class_Something" then
@@ -740,6 +626,7 @@ function findCharAllItem(VALUES)
     local chars=GetHaveKeyCharInfo()        
     
     local link=0
+    local filter
     
     if comb=="Spec_Dungeon" or (comb=="Trinket" and keyword["dungeon"])then
         chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
@@ -778,10 +665,20 @@ function findCharAllItem(VALUES)
     local num=1
     
     if comb=="Stat_Specificitem" or comb=="Spec_Specificitem" then
-        link=1        
+        link=1  
     elseif comb=="Stat_Category" or comb=="Spec_Category" then
         link=0
     end    
+    
+    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
+        filter="specificitem"        
+    elseif comb=="Stat_Category" then
+        filter="category"
+    elseif comb=="Spec_Category" or comb=="Spec_Item" then 
+        filter="spec"        
+    elseif comb=="Trinket" then  
+        filter="trinket"              
+    end  
     
     VALUES={}
     VALUES["spec"]=spec
@@ -789,7 +686,53 @@ function findCharAllItem(VALUES)
     VALUES["category"]=category
     VALUES["link"]=link
     VALUES["role"]=role    
-    VALUES["item"]=item   
+    VALUES["item"]=item     
+    VALUES["filter"]=filter
+    
+    --검색타입에 대한 알림
+    if who==meGame and (callType["class"]==1 or callType["spec"] ) then         
+        local yourClass=keyword["spec"] or keyword["class"]
+        if not yourClass then yourClass=krClass end
+        --local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
+        
+        if (not tips[1] or tips[1]<warns) and link~=1 then
+            local message,weapon,spec,class,Class,eul,ro,LC
+            class=MDRcolor(keyword["class"] or doubleExtraKeyword["spec"],5)
+            if class=="마법사" or class=="사제" or class=="흑마법사" or class=="악마 사냥꾼" then
+                spec=""
+            else
+                spec=MDRcolor(keyword["spec"],0).." "
+            end
+            
+            if class=="도적" or class=="사냥꾼" or class=="악마 사냥꾼" then
+                ro="으로"
+            else
+                ro="로"
+            end
+            
+            if keyword["category"] then                        
+                weapon=keyword["category"]
+            elseif keyword["specificitem"] then
+                weapon=keyword["specificitem"]
+            else
+                weapon="모든 무기"
+            end                    
+            Weapon=MDRcolor(weapon,-2)
+            LC=strsub(weapon,-3)
+            
+            Class=MDRcolor(class)
+            if LC=="검" or LC=="궁" or LC=="활" or LC=="총" or LC=="봉" or LC=="창"    then
+                eul="을"
+            else
+                eul="를"
+            end
+            --if extraKeyword["spec"]
+            
+            message="▶"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다.  |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor(class,0,"!"..(keyword["class"] or keyword["spec"])).."|cff8787ED!던전이름|r으로 검색해보세요. "
+            print(message)
+            tips[1]=(tips[1] or 0)+1
+        end                  
+    end   
     
     if chars~=nil then 
         for i=1,#chars do  
@@ -797,26 +740,13 @@ function findCharAllItem(VALUES)
             local c=SavedInstancesDB.Toons[p]
             local mapName=c.MythicKey.name
             VALUES["dungeon"]=getShortDungeonName(mapName)
-            local itemList   
-            if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
-                itemList=checkDungeonHasSpecificItem(VALUES)                
-            elseif comb=="Stat_Category" then
-                itemList=checkDungeonHasCategoryItem(VALUES) 
-            elseif comb=="Spec_Category" then 
-                itemList=checkDungeonHasItem(VALUES)
-            elseif comb=="Spec_Item" then  
-                itemList=checkDungeonHasItem(VALUES)
-            elseif comb=="Trinket" then    
-                itemList=checkDungeonHasTrinket(VALUES)
-            else
-                --print("잘못됐음")
-            end                     
+            local itemList=checkDungeonHasTrinket(VALUES)                     
         end    
     end      
     local dun={}
     
     C_Timer.After(0.1, function()            
-            if chars~=nil then        
+            if chars~=nil then 
                 for i=1,#chars do    
                     local p=chars[i]["fullName"]
                     local c=SavedInstancesDB.Toons[p]
@@ -827,20 +757,7 @@ function findCharAllItem(VALUES)
                         VALUES["sameDungeon"]=nil
                     end                                       
                     VALUES["dungeon"]=getShortDungeonName(mapName)
-                    local itemList   
-                    if comb=="Stat_Specificitem" or comb=="Spec_Specificitem"then
-                        itemList=checkDungeonHasSpecificItem(VALUES)                
-                    elseif comb=="Stat_Category" then
-                        itemList=checkDungeonHasCategoryItem(VALUES) 
-                    elseif comb=="Spec_Category" then 
-                        itemList=checkDungeonHasItem(VALUES)
-                    elseif comb=="Spec_Item" then  
-                        itemList=checkDungeonHasItem(VALUES)
-                    elseif comb=="Trinket" then    
-                        itemList=checkDungeonHasTrinket(VALUES)
-                    else
-                        --print("잘못됐음")
-                    end                       
+                    local itemList=checkDungeonHasTrinket(VALUES)                    
                     
                     if itemList then
                         chars[i]["extraLink"]=itemList
@@ -849,30 +766,11 @@ function findCharAllItem(VALUES)
                         num=num+1
                     end
                 end    
-            end              
+            end         
             
             if VALUES["link"] ==1 then
-                doFullReport(findChars,channel,who,"item")                     
-            else
-                if who==meGame and (callType["class"]==1 or callType["spec"]==1 or callType["trinket"]==1) then 
-                    
-                    local yourClass=keyword["spec"] or keyword["class"]
-                    if not yourClass then yourClass=krClass end
-                    --local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
-                    C_Timer.After(2, function()                               
-                            if callType["trinket"]==1 then
-                                if tips[1]<warns then                                    
-                                    print("▶|cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r을 같이 검색해보세요. (|cFF33FF99ex|r. !"..MDRcolor("도적",0,(keyword["stat"] or keyword["role"])).."!장신구!|cff8787ED아탈|r)")  
-                                    tips[1]=tips[1]+1  
-                                end                                
-                            else
-                                if tips[2]<warns then
-                                    print("▶|cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("!전문화",-1).."와 |cff8787ED!던전이름|r, 혹은 |cffF58CBA무기종류|r를 함께 입력해보세요. (|cFF33FF99ex|r. !"..MDRcolor(yourClass,3).."!|cff8787ED아탈|r, !"..MDRcolor(yourClass,4).."!|cffF58CBA지팡이|r)")  
-                                    tips[2]=tips[2]+1
-                                end                                
-                            end                            
-                    end)    
-                end      
+                doFullReport(findChars,channel,who,"item")
+            else                
                 doShortReport(findChars,channel,who,"item") 
             end    
     end)

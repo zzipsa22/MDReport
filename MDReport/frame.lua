@@ -9,16 +9,16 @@ MDR:RegisterEvent("CHAT_MSG_SYSTEM")
 
 MDR:SetScript("OnEvent", function(self, event, ...)
         
-        if MDR["running"]==1 then 
-            return
-        end
-        
-        local msg=select(1, ...)
+        local msg=select(1, ...)      
         
         if (event=="CHAT_MSG_SYSTEM") then 
             MDRdice(msg)
             return
-        end       
+        end    
+        
+        if MDR["running"]==1 then 
+            return
+        end
         
         --애드온에 의해 출력된 메시지는 무시
         if strfind(msg,"▶") or strfind(msg,"▷")then return end
@@ -122,6 +122,7 @@ MDR:SetScript("OnEvent", function(self, event, ...)
         --명령어 판독 시작
         if k[1]=="주사위" then
             MDRmakeDice(channel,who,k)
+            MDR["running"]=1            
             return            
         end   
         
@@ -184,3 +185,4 @@ MDR:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
+

@@ -126,7 +126,7 @@ function doShortReport(chars,channel,who,callType)
             elseif chars[i]["extraLink"] and callType=="item"then
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   
-                    message=skull[class]..havekey.."▶"
+                    message=skull[class]..havekey
                 else                    
                     message=skull[class]..havekey.."▶["..chars[i]["extraLink"].."]"
                 end               
@@ -136,7 +136,7 @@ function doShortReport(chars,channel,who,callType)
             
             if sameCheck then
                 local before=MDRsplit(messageLines[sameCheck],"▶")[1]                
-                local after=MDRsplit(messageLines[sameCheck],"▶")[2]
+                local after=gsub(messageLines[sameCheck],before,"")
                 messageLines[sameCheck]=before..message..after
             else
                 messageLines[mNum]=message
@@ -269,17 +269,16 @@ function doFullReport(chars,channel,who,callType)
             elseif callType=="item" and chars[i]["extraLink"] then                
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   
-                    message=","..headStar..havekey.."▶"
+                    message=","..headStar..havekey
                 else      
                     message=headStar..havekey.."▶"..chars[i]["extraLink"] 
                 end 
             else
                 message=headStar..classStatus..": "..havekey..online
             end
-            
             if sameCheck then
                 local before=MDRsplit(messageLines[sameCheck],"▶")[1]                
-                local after=MDRsplit(messageLines[sameCheck],"▶")[2]
+                local after=gsub(messageLines[sameCheck],before,"")
                 messageLines[sameCheck]=before..message..after
             else
                 messageLines[mNum]=message
@@ -305,13 +304,14 @@ function doWarningReport(channel,who,callType)
 end
 
 --메세지 출력
-function reportMessageLines(messageLines,channel,who,callType)       
+function reportMessageLines(messageLines,channel,who,callType)   
+    
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
     
     --최종적으로 귓말채널 반환
     if (channel=="WHISPER_IN") or (channel=="WHISPER_OUT")  then
         channel="WHISPER"
-    end        
+    end       
     
     for i=1,#messageLines do 
         if channel=="print"then
