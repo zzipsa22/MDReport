@@ -179,7 +179,7 @@ function filterVALUES(VALUES)
                     message=" 님에게 "..MDRcolor("전사",0,callTypeT[1][2])..range.."요청합니다."
                 elseif callTypeT[1][1]=="class" then
                     if not level then
-                        range=" 캐릭터를 " 
+                        range=" 캐릭터 정보를 " 
                     end                    
                     message=" 님에게 "..MDRcolor(callTypeT[1][2])..range.."요청합니다."
                 elseif callTypeT[1][1]=="parking" then
@@ -190,7 +190,7 @@ function filterVALUES(VALUES)
                     end      
                     message=" 님에게 "..MDRcolor(getFullDungeonName(callTypeT[1][2]),-2)..range.."요청합니다."
                 else 
-                    message=" 님에게 [ "..MDRcolor(callTypeT[1][2],-2)..range.." 정보를 요청합니다."
+                    message=" 님에게 "..MDRcolor(callTypeT[1][2],-2).." 정보를 요청합니다."
                 end                 
                 print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
             end            

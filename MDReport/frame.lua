@@ -21,10 +21,10 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
-            if  strfind(msg,"!") and strsub(msg, -1)~="!"then
+            --[[if  strfind(msg,"!") and strsub(msg, -1)~="!"then
                 msg="!"..(MDRsplit(msg,"!")[2] or "") 
-            else return end --!가 없으면 리턴
-        end
+            else ]]
+        return end --!가 없으면 리턴
         
         local channel
         
@@ -51,13 +51,13 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                     message="|cffff0000▶"..msg.."|r: 검색 결과가 섞이지 않게 하기 위해 "..MDRcolor("도적",0,MDR["cooltime"].."초").."의 재사용 대기시간을 두고 있습니다. 잠시 후 다시 시도하세요."
                 end
                 print(message)
-				MDR["running"]=0							
-            end            
+            end  
+            MDR["running"]=0                         
             return
         end
         
         --느낌표와 띄어쓰기 잘라냄
-        local keyword=gsub(msg," ","")        
+        --local keyword=gsub(msg," ","")        
         
         local level1,level2
         local onlyMe,onlyOnline,CharName,onlyYou
@@ -65,14 +65,20 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         local k={} 
         local callTypeT={}
-        k[1]=keyword          
+        --k[1]=keyword          
         
         --명령어가 이중인지 체크        
-        if strfind(keyword,"!") then
-            k=MDRsplit(keyword,"!")     
+        if strfind(msg,"!") then
+            k=MDRsplit(msg,"!")     
         end
         
-        for i=1,#k do            
+        for i=1,#k do  
+            if strfind(k[i],"주사위") then
+                MDRmakeDice(channel,who,k)
+                MDR["running"]=1            
+                return            
+            end             
+            k[i]=gsub(k[i]," ","") 
             
             local keyIsNumber=tonumber(k[i])
             local ELC=strsub(k[i],1,-2)        
@@ -132,12 +138,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             end   
         end
         
-        --명령어 판독 시작
-        if k[1]=="주사위" then
-            MDRmakeDice(channel,who,k)
-            MDR["running"]=1            
-            return            
-        end   
+        --명령어 판독 시작        
         
         local ct=1
         for i=1,#k do
@@ -199,4 +200,3 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
-

@@ -203,10 +203,23 @@ function MDRmakeDice(channel,who,k)
     dices={}
     dicesB={}
     if #k<3 then return end
+    local num=1
     for i=1,#k do
-        local subject=getFullDungeonName(k[i+1]) or k[i+1]
-        dices[i]=subject
-        dicesB[i]=k[i+1]
+        local subject
+        local subT=MDRsplit(k[i]," ") 
+        for j=1,#subT do
+            local space=" "
+            if j==1 then
+                space=""
+            end            
+            subject=(subject or "")..space..subT[j]
+        end
+        if not strfind(k[i],"주사위") then
+            subject=getFullDungeonName(subject) or subject           
+            dices[num]=subject
+            dicesB[num]=k[i]          
+            num=num+1            
+        end
     end    
     
     if channel=="WHISPER_OUT" or #dices<2 then return end
@@ -222,8 +235,10 @@ function MDRmakeDice(channel,who,k)
         local messageLines={}        
         for i=1,#dices do
             local space=", "
+            print(dices[i])
+            
             if i==#dices then space="" end
-            message=message..diceNums[i].." "..dicesB[i]..space
+            message=message..diceNums[i].." "..dices[i]..space
         end
         message=message.." : /주사위 "..#dices..""
         messageLines[1]=message
@@ -232,7 +247,7 @@ function MDRmakeDice(channel,who,k)
     C_Timer.After(1, function()               
             diceWait=1
             RandomRoll(1,#dices)
-            MDR["running"]=0            
+            MDR["running"]=0  
     end)    
 end
 
