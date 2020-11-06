@@ -181,9 +181,11 @@ function MDRmakeDice(channel,who,k)
         local message="MDR ▶ "
         local messageLines={}        
         for i=1,#dices do
-            message=message..diceNums[i].." "..dicesB[i]..", "
+            local space=", "
+            if i==#dices then space="" end
+            message=message..diceNums[i].." "..dicesB[i]..space
         end
-        message=message.." ( /주사위 "..#dices.." )"
+        message=message.." : /주사위 "..#dices..""
         messageLines[1]=message
         reportMessageLines(messageLines,diceReportChannel,who,"dice")        
     end   
