@@ -6,6 +6,7 @@ MDR["cooltime"]=2
 MDR["meGame"]=UnitName("player").."-"..GetRealmName()    
 MDR["meAddon"]=UnitName("player").." - "..GetRealmName()  
 MDR["krClass"],MDR["className"]=UnitClass("player")
+MDR["lastSeen"]=1209600 --2주
 local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
@@ -598,7 +599,8 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["best"]=t[k].MythicKeyBest.level
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
-                chars[num]["itemLevel"]=t[k].IL          
+                chars[num]["itemLevel"]=t[k].IL
+                chars[num]["lastSeen"]=t[k].LastSeen
                 num=num+1                
             elseif (type~="haveKeyOnly" and ((t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) or type=="superhard")) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
@@ -612,6 +614,7 @@ function GetHaveKeyCharInfo(type,level)
                     chars[num]["charLevel"]=t[k].Level                
                 end                
                 chars[num]["keyLevel"]=0
+                chars[num]["lastSeen"]=t[k].LastSeen                
                 num=num+1
             end
         end        
@@ -883,7 +886,8 @@ function filterCharsByFilter(chars,filter,f1,f2)
         f1=meAddon   
     end   
     
-    for i=1,#chars do          
+    for i=1,#chars do
+        local lastSeen=time()-chars[i]["lastSeen"]  
         if filter=="level"and f2~=nil  then            
             target=chars[i]["keyLevel"] or 0              
             if f1<=target and f2>=target then
@@ -903,7 +907,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 target=string.gsub(chars[i]["fullName"], "(%a)([%w_']*)", MDRtitleLower)
                 f1=string.gsub(f1, "(%a)([%w_']*)", MDRtitleLower)
             end
-            if f1==target or (filter=="CharName" and strfind(target,f1)) then
+            if f1==target or (filter=="CharName" and strfind(target,f1) and lastSeen<MDR["lastSeen"]) then
                 findChars[num]=chars[i]
                 num=num+1
             end
