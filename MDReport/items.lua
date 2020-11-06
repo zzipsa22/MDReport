@@ -71,7 +71,7 @@ local dungeonTable={
             {"민첩","활",158711},     
             {"지능","마법봉",158321},    
             {"힘/지능","방패",158713},  
-            {"지능","보조",158322},              
+            {"지능","보조장비",158322},              
             {"지능","장신구",159610,"딜러"},             
             {"힘","장신구",158712,"딜러/탱커"},             
             {"민첩","장신구",158319,"딜러/탱커"},             
@@ -101,7 +101,7 @@ local dungeonTable={
             {"민첩","한손둔기",159645},
             {"민첩","단검",159136},                 
             {"민첩","석궁",159643},      
-            {"지능","보조",159667}, 
+            {"지능","보조장비",159667}, 
             {"민첩","장신구",159617,"딜러/탱커"},             
             {"힘/민첩","장신구",159618,"탱커"},                 
         }
@@ -115,7 +115,7 @@ local dungeonTable={
             {"민첩","한손둔기",159661},     
             {"지능","단검",159133},  
             {"힘","한손도끼",159660},
-            {"지능","보조",159669},   
+            {"지능","보조장비",159669},   
             {"지능","장신구",159631,"힐러/딜러"},      
             {"지능","장신구",159630,"힐러/딜러"},     
             {"힘","장신구",159616,"딜러/탱커"},                 
@@ -160,7 +160,7 @@ local dungeonTable={
             {"민첩","단검",159131},  
             {"민첩","총",159657},     
             {"힘/지능","방패",159666},   
-            {"지능","보조",159668},    
+            {"지능","보조장비",159668},    
             {"지능","장신구",159615,"힐러/딜러"},             
             {"힘","장신구",159627,"딜러/탱커"},             
             {"민첩","장신구",159628,"딜러/탱커"},             
@@ -186,36 +186,36 @@ local specTable={
     ["징벌"]={{"힘"},{"양손도끼","양손둔기","장창","양손도검"}},
     ["신기"]={{"지능"},{"한손도끼","한손둔기","한손도검","방패"}},
     
-    ["드루"]={{"민첩","지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
-    ["조화"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
+    ["드루"]={{"민첩","지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조장비"}},
+    ["조화"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조장비"}},
     ["야성"]={{"민첩"},{"양손둔기","장창","지팡이"}},
     ["수호"]={{"민첩"},{"양손둔기","장창","지팡이"}},
-    ["회복"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조"}},
+    ["회복"]={{"지능"},{"단검","장착무기","한손둔기","양손둔기","장창","지팡이","보조장비"}},
     
-    ["수도"]={{"민첩","지능"},{"장창","지팡이","한손도끼","장착무기","한손둔기","한손도검","보조"}},
+    ["수도"]={{"민첩","지능"},{"장창","지팡이","한손도끼","장착무기","한손둔기","한손도검","보조장비"}},
     ["양조"]={{"민첩"},{"한손도끼","장착무기","한손둔기","한손도검","장창","지팡이"}},
-    ["운무"]={{"지능"},{"장창","지팡이","한손도끼","장착무기","한손둔기","한손도검","보조"}},
+    ["운무"]={{"지능"},{"장창","지팡이","한손도끼","장착무기","한손둔기","한손도검","보조장비"}},
     ["풍운"]={{"민첩"},{"한손도끼","장착무기","한손둔기","한손도검","장창","지팡이"}},
     
-    ["술사"]={{"민첩","지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
+    ["술사"]={{"민첩","지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조장비","방패"}},
     ["고양"]={{"민첩"},{"한손도끼","한손둔기"}},
-    ["복원"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
-    ["정기"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조","방패"}},
+    ["복원"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조장비","방패"}},
+    ["정기"]={{"지능"},{"한손도끼","양손도끼","단검","장착","한손둔기","양손둔기","지팡이","보조장비","방패"}},
     
-    ["사제"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},    
-    ["암흑"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
-    ["수양"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
-    ["신성"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},
+    ["사제"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조장비"}},    
+    ["암흑"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조장비"}},
+    ["수양"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조장비"}},
+    ["신성"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조장비"}},
     
-    ["법사"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},    
-    ["화염"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
-    ["냉법"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
-    ["비전"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
+    ["법사"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조장비"}},    
+    ["화염"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조장비"}},    
+    ["냉법"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조장비"}},    
+    ["비전"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조장비"}},
     
-    ["흑마"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조"}},    
-    ["파괴"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},
-    ["고통"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
-    ["악마"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조"}},    
+    ["흑마"]={{"지능"},{"단검","지팡이","한손둔기","마법봉","보조장비"}},    
+    ["파괴"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조장비"}},
+    ["고통"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조장비"}},    
+    ["악마"]={{"지능"},{"단검","지팡이","한손도검","마법봉","보조장비"}},    
     
     
     ["도적"]={{"민첩"},{"단검","장착무기","한손도끼","한손둔기","한손도검"}},
@@ -345,7 +345,7 @@ function getBonusIDs(dungeon)
     return bonus
 end
 
-function checkDungeonHasTrinket(VALUES)
+function checkDungeonHasItem(VALUES)
     local dungeon,spec,stat,category,link,item,sameDungeon,role,filter
     if VALUES~=nil then
         dungeon=VALUES["dungeon"]
@@ -538,7 +538,7 @@ function checkDungeonHasTrinket(VALUES)
     end    
 end
 
---통합 아이템 분류류
+--통합 아이템 분류
 function findCharAllItem(VALUES)
     local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
     --print("도착")
@@ -562,7 +562,8 @@ function findCharAllItem(VALUES)
     
     local stat=keyword["stat"] or keyword2["class"]
     
-    local role=keyword["role"] 
+    local role=keyword["role"]     
+    
     if comb=="Trinket"then
         if keyword["stat"] and not keyword["role"] then
             role="딜러"            
@@ -571,11 +572,6 @@ function findCharAllItem(VALUES)
             stat="지능"
         elseif keyword["role"]=="탱커" and not keyword["stat"] then
             stat=keyword2["role"]
-        end 
-        if keyword["dungeon"] then
-            link=1
-        else
-            link=0
         end        
         --print("role:"..role)
         --print("stat:"..stat)         
@@ -603,12 +599,10 @@ function findCharAllItem(VALUES)
         else             
             return            
         end        
-        keyword["spec"]=newSpec        
-    end          
-    
-    if comb=="Class_Something" then
-        local newSpec=MDRgetClassInfo(keyword["class"])[3]
-        keyword["spec"]=newSpec
+        keyword["spec"]=newSpec     
+        
+    elseif comb=="Class_Something" then
+        keyword["spec"]=MDRgetClassInfo(keyword["class"])[3]
         if callType["dungeon"]==1 then
             comb="Spec_Dungeon"
         elseif callType["category"]==1 then
@@ -647,14 +641,12 @@ function findCharAllItem(VALUES)
     if keyword["specificitem"]=="방패" then        
         stat=""        
         --only 지능
-    elseif keyword["specificitem"]=="보조"or  keyword["specificitem"]=="마법봉"then        
+    elseif keyword["specificitem"]=="보조장비"or  keyword["specificitem"]=="마법봉"then        
         stat=""        
         --only 민첩
     elseif keyword["specificitem"]=="총"or  keyword["specificitem"]=="석궁"or  keyword["specificitem"]=="활" or keyword["specificitem"]=="전투검" then        
         stat=""        
-    end
-    
-    
+    end       
     
     local findChars={}   
     local num=1
@@ -694,11 +686,7 @@ function findCharAllItem(VALUES)
                 spec=(MDRcolor(keyword["spec"],0) or "").." "
             end
             
-            if class=="도적" or class=="사냥꾼" or class=="악마 사냥꾼" then
-                ro="으로"
-            else
-                ro="로"
-            end
+            ro=MDRko(class,"로")
             
             if keyword["category"] then                        
                 weapon=keyword["category"]
@@ -708,21 +696,17 @@ function findCharAllItem(VALUES)
                 weapon="모든 무기"
             end                    
             Weapon=MDRcolor(weapon,-2)
-            LC=strsub(weapon,-3)
             
             Class=MDRcolor(class)
-            if LC=="검" or LC=="궁" or LC=="활" or LC=="총" or LC=="봉" or LC=="창"    then
-                eul="을"
-                kwa="과"
-            else
-                eul="를"
-                kwa="와"
-            end
+            
             if stat=="" then
                 space=""
             else
                 space=" "
             end
+            
+            eul=MDRko(weapon,"을")
+            kwa=MDRko(weapon,"과")
             
             --if keyword2["spec"]
             
@@ -743,7 +727,7 @@ function findCharAllItem(VALUES)
             local c=SavedInstancesDB.Toons[p]
             local mapName=c.MythicKey.name
             VALUES["dungeon"]=getShortDungeonName(mapName)
-            local itemList=checkDungeonHasTrinket(VALUES)                     
+            local itemList=checkDungeonHasItem(VALUES)                     
         end    
     end      
     local dun={}
@@ -760,7 +744,7 @@ function findCharAllItem(VALUES)
                         VALUES["sameDungeon"]=nil
                     end                                       
                     VALUES["dungeon"]=getShortDungeonName(mapName)
-                    local itemList=checkDungeonHasTrinket(VALUES)                    
+                    local itemList=checkDungeonHasItem(VALUES)                    
                     
                     if itemList then
                         chars[i]["extraLink"]=itemList

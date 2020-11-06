@@ -177,8 +177,8 @@ local callTypeTable={
     ["한손도끼"]={"specificitem", "한손도끼"},
     ["양손도끼"]={"specificitem", "양손도끼"},
     ["마법봉"]={"specificitem", "마법봉"},
-    ["보조"]={"specificitem", "보조"},
-    ["보조장비"]={"specificitem", "보조"},
+    ["보조"]={"specificitem", "보조장비"},
+    ["보조장비"]={"specificitem", "보조장비"},
     ["장창"]={"specificitem", "장창"},
     ["무기"]={"item", "무기"},
     

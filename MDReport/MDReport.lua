@@ -286,16 +286,9 @@ function filterVALUES(VALUES)
             else 
                 if who==meGame then                    
                     
-                    local neun="는"
-                    if class=="도적" or class=="냥꾼" or class=="악사" then
-                        neun="은"
-                    end
-                    local eul="를"
-                    if keyword["specificitem"]=="장창" or keyword["specificitem"]=="단검" or keyword["specificitem"]=="한손도검" or keyword["specificitem"]=="양손도검" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁"  or keyword["specificitem"]=="활"  or keyword["specificitem"]=="총"  then
-                        eul="을"
-                    end   
-                    print("|cFFff0000▶|r"..specClass..neun.." "..MDRcolor(keyword["specificitem"],-2)..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")
-                    
+                    local neun=MDRko(MDRcolor(spec or class,5),"는")
+                    local eul=MDRko(keyword["specificitem"],"을")
+                    print("|cFFff0000▶|r"..specClass..neun.." "..MDRcolor(keyword["specificitem"],-2)..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")                    
                 end                
                 return 
             end   
@@ -308,16 +301,11 @@ function filterVALUES(VALUES)
                 
                 VALUES["comb"]="Class_Something" 
                 
-                --print("class_item")
-                ---callType="spec"
-                --VALUES["callTypeT"][1]=getCallTypeTable(classInfo[keyword["class"]][3])
             else  
                 if who==meGame then                    
                     
-                    local neun="는"
-                    if keyword["class"]=="도적" or keyword["class"]=="냥꾼"  or class=="악사" then
-                        neun="은"
-                    end                       
+                    local neun=MDRko(MDRcolor(keyword["class"],5),"는")
+                    
                     print("|cFFff0000▶|r"..MDRcolor(keyword["class"])..neun.." "..MDRcolor("전문화",-1).."에 따라 착용가능 아이템 범주가 달라 "..MDRcolor("전문화",-1).."로 검색해야만합니다. (|cFF33FF99ex|r.!"..MDRcolor(keyword["class"],3).."!무기 or !"..MDRcolor(keyword["class"],4).."!한손)")
                     
                 end
@@ -413,12 +401,9 @@ function filterVALUES(VALUES)
                 if class=="전사" or (class=="기사" and stat=="힘")  or class=="도적" or class=="냥꾼" or class=="죽기" then
                     if who==meGame then                    
                         
-                        local neun="는"
-                        if class=="도적" or class=="냥꾼" then
-                            neun="은"
-                        end
-                        local eul="을"                        
-                        print("|cFFff0000▶|r"..MDRcolor(class)..neun.." "..MDRcolor("전문화",-1).."에 따라 착용할 수 있는 아이템이 상이해 |cFFFFF569"..stat.." 능력치|r와 함께 검색할 수 없습니다. "..MDRcolor("전문화",-1).."를 지정해서 검색해보세요.")
+                        local neun=MDRko(MDRcolor(keyword["class"],5),"는")
+                        
+                        print("|cFFff0000▶|r"..MDRcolor(class)..neun.." "..MDRcolor("전문화",-1).."에 따라 착용할 수 있는 아이템이 달라 |cFFFFF569"..stat.." 능력치|r와 함께 검색할 수 없습니다. "..MDRcolor("전문화",-1).."를 지정해서 검색해보세요.")
                         
                     end  
                     return
@@ -428,11 +413,8 @@ function filterVALUES(VALUES)
             else
                 if who==meGame then                    
                     
-                    local neun="는"
-                    if class=="도적" or class=="냥꾼" or class=="악사" then
-                        neun="은"
-                    end
-                    local eul="을"                        
+                    local neun=MDRko(MDRcolor(keyword["class"],5),"는")
+                    
                     print("|cFFff0000▶|r"..MDRcolor(class)..neun.." |cFFFFF569"..keyword["stat"].."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
                     
                 end                
@@ -449,11 +431,8 @@ function filterVALUES(VALUES)
             else
                 if who==meGame then                    
                     
-                    local neun="는"
-                    if class=="도적" or class=="냥꾼" or class=="악사" then
-                        neun="은"
-                    end
-                    local eul="을"                        
+                    local neun=MDRko(MDRcolor(keyword["spec"],5),"는")
+                    
                     print("|cFFff0000▶|r"..MDRcolor(spec,0).." "..MDRcolor(class)..neun.." |cFFFFF569"..keyword["stat"].."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
                     
                 end                
@@ -505,16 +484,13 @@ function filterVALUES(VALUES)
             
         elseif callType["specificitem"] then 
             --!주스탯이 고정인 무기종류는 검색통과
-            if keyword["specificitem"]=="보조" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁" or keyword["specificitem"]=="활" or keyword["specificitem"]=="총" or keyword["specificitem"]=="전투검" or keyword["specificitem"]=="방패" then
+            if keyword["specificitem"]=="보조장비" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁" or keyword["specificitem"]=="활" or keyword["specificitem"]=="총" or keyword["specificitem"]=="전투검" or keyword["specificitem"]=="방패" then
                 VALUES["comb"]="Spec_Specificitem"       
                 findCharAllItem(VALUES)                
             else
                 if who==meGame then
                     
-                    local neun="는"
-                    if keyword["specificitem"]=="장창" or keyword["specificitem"]=="단검" or keyword["specificitem"]=="한손도검" or keyword["specificitem"]=="양손도검" then
-                        neun="은"
-                    end                        
+                    local neun=MDRko(keyword["specificitem"],"는")       
                     print("|cFFff0000▶|r"..MDRcolor(keyword["specificitem"],-2)..neun.." 단독으로 검색할 수 없습니다. "..MDRcolor("전문화",-1).."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. "..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3)..MDRcolor("!"..keyword["specificitem"],-2)..", |cFFFFF569!힘|r"..MDRcolor("!"..keyword["specificitem"],-2)..")")                        
                     
                 end     
@@ -525,12 +501,9 @@ function filterVALUES(VALUES)
                 
                 local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["spec"])[2] 
                 
-                local neun,ga,ro="는","가","로"                   
-                if class=="도적" or class=="냥꾼" then
-                    neun,ga,ro="은","이","으로"
-                elseif  class=="악사" then
-                    neun,ga,ro="은","이","로"                        
-                end                         
+                local neun=MDRko(MDRcolor(class,5),"는")
+                local ga=MDRko(MDRcolor(class,5),"가")
+                local ro=MDRko(class,"로")                                 
                 
                 print("|cFFffff00▶|r"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 해당 "..MDRcolor(class,0,"전문화").."로 사용 가능한 "..MDRcolor("모든 무기",-2).."로 던전을 검색합니다. "..MDRcolor(class)..ga.." 소지한 돌을 찾고자 하는 경우 "..MDRcolor(class,0,"!"..class)..ro.." 검색하거나, 특정 무기를 지정하고 싶을 경우 "..MDRcolor(class,0,"전문화").."와 "..MDRcolor("무기종류",-2)..", "..MDRcolor("무기범주",-1).."를 함께 검색해보세요.(|cFF33FF99ex|r. "..MDRcolor(class,0,"!")..MDRcolor(class,3)..MDRcolor("!양손",-1).." or "..MDRcolor(class,0,"!")..MDRcolor(class,4)..MDRcolor("!단검",-2)..")")
                 
@@ -939,3 +912,4 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
+

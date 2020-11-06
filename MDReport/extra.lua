@@ -126,6 +126,43 @@ function MDRgetClassName(keyword)
     end   
 end
 
+function MDRko(keyword,type)    
+    if not keyword then return "" end
+    local LC=strsub(gsub(keyword,"!",""),-3)
+    local kwa,neun,eul,ro,ga
+    local result=""
+    local LCtable={
+        "검","궁","활","총","봉","창", --무기
+        "꾼","적", --직업
+        "돌","원","상","전","장","택","굴","산" --격아던전
+    }
+    local Batchim=0
+    for i=1,#LCtable do
+        if LC==LCtable[i] then
+            Batchim=1
+            break
+        end
+    end   
+    
+    if Batchim==1 then
+        kwa,neun,eul,ro,ga="과","은","을","으로","이"
+    else
+        kwa,neun,eul,ro,ga="와","는","를","로","가"
+    end
+    if type=="과" or type=="와" then
+        result=kwa
+    elseif type=="은" or type=="는" then
+        result=neun
+    elseif type=="을" or type=="를" then
+        result=eul
+    elseif type=="으로" or type=="로" then
+        result=ro
+    elseif type=="이" or type=="가" then
+        result=ga
+    end    
+    return result
+end
+
 function MDRcolor(keyword,type,keyword2)
     local text
     for k,v in pairs(classInfo) do
