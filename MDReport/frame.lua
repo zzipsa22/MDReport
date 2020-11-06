@@ -45,12 +45,13 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if MDR["running"]==1 then 
             if MDR["meGame"]==who and channel~="WHISPER_OUT" then
                 local message
-                if MDR["who"]~=who then
+                if MDR["who"] and MDR["who"]~=who then
                     message="|cffff0000▶"..msg.."|r: "..MDRcolor("["..MDRsplit(MDR["who"],"-")[1].."]",-1).." 님의 요청을 먼저 처리하고 있습니다. "..MDRcolor("도적",0,MDR["cooltime"].."초").." 후 다시 시도하세요."
                 else                    
                     message="|cffff0000▶"..msg.."|r: 검색 결과가 섞이지 않게 하기 위해 "..MDRcolor("도적",0,MDR["cooltime"].."초").."의 재사용 대기시간을 두고 있습니다. 잠시 후 다시 시도하세요."
                 end
                 print(message)
+				MDR["running"]=0							
             end            
             return
         end

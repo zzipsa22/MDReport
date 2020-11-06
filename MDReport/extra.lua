@@ -197,6 +197,9 @@ function MDRcolor(keyword,type,keyword2)
 end
 
 function MDRmakeDice(channel,who,k)
+    C_Timer.After(2, function()             
+            MDR["running"]=0            
+    end)    
     dices={}
     dicesB={}
     if #k<3 then return end
