@@ -1,7 +1,6 @@
-local krClass,className=UnitClass("player")
+local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
 local  _,_,_,classColor=GetClassColor(className)  
 local playerName = UnitName("player")
-local meGame=UnitName("player").."-"..GetRealmName()    
 local dices={}
 local diceReportChannel
 local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}

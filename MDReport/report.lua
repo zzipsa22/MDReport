@@ -1,5 +1,4 @@
-local meGame=UnitName("player").."-"..GetRealmName()    
-local meAddon=UnitName("player").." - "..GetRealmName()    
+local meGame,meAddon=MDR["meGame"],MDR["meAddon"]
 
 local skull={
     ["술사"]="{rt6}",--네모(파랑)

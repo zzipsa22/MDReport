@@ -14,11 +14,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if (event=="CHAT_MSG_SYSTEM") then 
             MDRdice(msg)
             return
-        end    
-        
-        if MDR["running"]==1 then 
-            return
-        end
+        end   
         
         --애드온에 의해 출력된 메시지는 무시
         if strfind(msg,"▶") or strfind(msg,"▷")then return end
@@ -44,7 +40,20 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             channel="WHISPER_IN"            
         else return end
         
-        local who=select(2, ...)          
+        local who=select(2, ...)
+        
+        if MDR["running"]==1 then 
+            if MDR["meGame"]==who then
+                local message
+                if MDR["who"]~=who then
+                    message="|cffff0000▶"..msg.."|r: "..MDRcolor("["..MDRsplit(MDR["who"],"-")[1].."]",-1).." 님의 요청을 먼저 처리하고 있습니다. "..MDRcolor("도적",0,MDR["cooltime"].."초").." 후 다시 시도하세요."
+                else                    
+                    message="|cffff0000▶"..msg.."|r: 검색 결과가 섞이지 않게 하기 위해 "..MDRcolor("도적",0,MDR["cooltime"].."초").."의 재사용 대기시간을 두고 있습니다. 잠시 후 다시 시도하세요."
+                end
+                print(message)
+            end            
+            return
+        end
         
         --느낌표와 띄어쓰기 잘라냄
         local keyword=gsub(strsub(msg,2)," ","")        
@@ -181,6 +190,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             VALUES["CharName"]=CharName
             
             filterVALUES(VALUES)
+            MDR["who"]=who
             MDR["running"]=1
             --일치하는 명령어가 없으면 리턴
         else return end

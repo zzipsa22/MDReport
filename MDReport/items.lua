@@ -1,7 +1,6 @@
 local who,channel,level,level2,callTypeT,comb
-local callType,callTypeB,keyword,extraKeyword,doubleExtraKeyword={},{},{},{},{}
-local meGame=UnitName("player").."-"..GetRealmName()
-local krClass,className=UnitClass("player")
+local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
+local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
 local tips={}
 local warns=100
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
@@ -411,7 +410,31 @@ function checkDungeonHasTrinket(VALUES)
                     itemNum=itemNum+1
                 end            
             end       
-        end        
+        end       
+        
+        --특정아이템을 지정한 경우
+    elseif filter=="specificitem" and item and stat then
+        
+        for j=1,#dropTable do
+            if stat and strfind(dropTable[j][2],item) and strfind(dropTable[j][1],stat) then 
+                local header=""
+                if category~=nil then
+                    header=dropTable[j][1].." "
+                end
+                if sameDungeon then
+                    thisDungeonHas[itemNum]=sameDungeon
+                    --print(sameDungeon)
+                else                
+                    if link==1 then
+                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        thisDungeonHas[itemNum]=header..dropTable[j][2]
+                    end
+                end            
+                thisDungeonHasItem=1
+                itemNum=itemNum+1            
+            end        
+        end 
         
         --전문화를 지정한 경우
     elseif filter=="spec" and spec then                
@@ -464,31 +487,7 @@ function checkDungeonHasTrinket(VALUES)
                     itemNum=itemNum+1
                 end            
             end       
-        end           
-        
-        --특정아이템을 지정한 경우
-    elseif filter=="specificitem" and item and stat then
-        
-        for j=1,#dropTable do
-            if stat and strfind(dropTable[j][2],item) and strfind(dropTable[j][1],stat) then 
-                local header=""
-                if category~=nil then
-                    header=dropTable[j][1].." "
-                end
-                if sameDungeon then
-                    thisDungeonHas[itemNum]=sameDungeon
-                    --print(sameDungeon)
-                else                
-                    if link==1 then
-                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
-                    else
-                        thisDungeonHas[itemNum]=header..dropTable[j][2]
-                    end
-                end            
-                thisDungeonHasItem=1
-                itemNum=itemNum+1            
-            end        
-        end 
+        end         
         
         --장신구를 찾는 경우
     elseif filter=="trinket" then        
@@ -541,7 +540,7 @@ end
 
 --통합 아이템 분류류
 function findCharAllItem(VALUES)
-    local callType,callTypeB,keyword,extraKeyword,doubleExtraKeyword={},{},{},{},{}
+    local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
     --print("도착")
     if VALUES~=nil then
         who=VALUES["who"]
@@ -555,13 +554,13 @@ function findCharAllItem(VALUES)
             callTypeB[i]=callTypeT[i][1]
             callType[callTypeT[i][1]]=1
             keyword[callTypeT[i][1]]=callTypeT[i][2]
-            extraKeyword[callTypeT[i][1]]=callTypeT[i][3]  
-            doubleExtraKeyword[callTypeT[i][1]]=callTypeT[i][4]
+            keyword2[callTypeT[i][1]]=callTypeT[i][3]  
+            keyword3[callTypeT[i][1]]=callTypeT[i][4]
         end   
     end
     --print(comb)
     
-    local stat=keyword["stat"] or extraKeyword["class"]
+    local stat=keyword["stat"] or keyword2["class"]
     
     local role=keyword["role"] 
     if comb=="Trinket"then
@@ -571,7 +570,7 @@ function findCharAllItem(VALUES)
         if keyword["role"]=="힐러" then
             stat="지능"
         elseif keyword["role"]=="탱커" and not keyword["stat"] then
-            stat=extraKeyword["role"]
+            stat=keyword2["role"]
         end 
         if keyword["dungeon"] then
             link=1
@@ -630,32 +629,29 @@ function findCharAllItem(VALUES)
     if keyword["dungeon"] then
         chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
         link=1
-    end    
-    
-    if comb=="Class_Stat" or comb=="Spec_Stat"  or comb=="Spec_Dungeon" then
-        comb="Spec_Item"
     end        
     
     local spec=keyword["spec"]
     local item=keyword["specificitem"]
     local category=keyword["category"]
-    --local stat=keyword["stat"] or extraKeyword["spec"]   
+    --local stat=keyword["stat"] or keyword2["spec"]   
+    
+    if (comb=="Class_Stat" or comb=="Spec_Stat"  or comb=="Spec_Dungeon") then
+        if item then
+            comb="Spec_Specificitem"
+        else            
+            comb="Spec_Item"
+        end        
+    end        
     
     if keyword["specificitem"]=="방패" then        
-        stat=""
-        item=keyword["specificitem"]
-        
-        
+        stat=""        
         --only 지능
     elseif keyword["specificitem"]=="보조"or  keyword["specificitem"]=="마법봉"then        
-        stat=""
-        item=keyword["specificitem"]
-        
-        
+        stat=""        
         --only 민첩
     elseif keyword["specificitem"]=="총"or  keyword["specificitem"]=="석궁"or  keyword["specificitem"]=="활" or keyword["specificitem"]=="전투검" then        
-        stat=""
-        item=keyword["specificitem"]
+        stat=""        
     end
     
     
@@ -671,8 +667,8 @@ function findCharAllItem(VALUES)
         filter="spec"        
     elseif comb=="Trinket" then  
         filter="trinket"              
-    end  
-    
+    end      
+    --print(filter)
     VALUES={}
     VALUES["spec"]=spec
     VALUES["stat"]=stat
@@ -687,11 +683,11 @@ function findCharAllItem(VALUES)
         local yourClass=keyword["spec"] or keyword["class"]
         if not yourClass then yourClass=krClass end
         --local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
-
+        
         if (not tips[1] or tips[1]<warns) and link~=1 and comb~="Trinket" then
-
+            
             local message,weapon,spec,class,Class,eul,ro,LC,space,kwa
-            class=MDRcolor(keyword["class"] or doubleExtraKeyword["spec"],5)
+            class=MDRcolor(keyword["class"] or keyword3["spec"],5)
             if class=="마법사" or class=="사제" or class=="흑마법사" or class=="악마 사냥꾼" then
                 spec=""
             else
@@ -728,12 +724,12 @@ function findCharAllItem(VALUES)
                 space=" "
             end
             
-            --if extraKeyword["spec"]
+            --if keyword2["spec"]
             
             if keyword["spec"] then
-                message="▶"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다.  |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
+                message="|cFF00ff00▶|r"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다.  |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
             else
-                message="▶"..MDRcolor("도적",0,stat)..space..Weapon..eul.." 모두 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
+                message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat)..space..Weapon..eul.." 모두 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
             end
             
             print(message)
