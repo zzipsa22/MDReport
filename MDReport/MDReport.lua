@@ -495,21 +495,25 @@ function filterVALUES(VALUES)
                     
                 end     
             end            
-            --!전문화로만 검색시 !무기검색으로 유도
+            --!전문화만 단독 검색시 직업으로 보여주고 무기검색법 알려주기
         elseif callType["spec"] then
             if who==meGame then
-                
-                local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["spec"])[2] 
-                
+                local spec=keyword["spec"]                
+                local class=getCallTypeTable(spec)[4] or getCallTypeTable(spec)[2] 
                 local neun=MDRko(MDRcolor(class,5),"는")
                 local ga=MDRko(MDRcolor(class,5),"가")
                 local ro=MDRko(class,"로")                                 
                 
-                print("|cFFffff00▶|r"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 해당 "..MDRcolor(class,0,"전문화").."로 사용 가능한 "..MDRcolor("모든 무기",-2).."로 던전을 검색합니다. "..MDRcolor(class)..ga.." 소지한 돌을 찾고자 하는 경우 "..MDRcolor(class,0,"!"..class)..ro.." 검색하거나, 특정 무기를 지정하고 싶을 경우 "..MDRcolor(class,0,"전문화").."와 "..MDRcolor("무기종류",-2)..", "..MDRcolor("무기범주",-1).."를 함께 검색해보세요.(|cFF33FF99ex|r. "..MDRcolor(class,0,"!")..MDRcolor(class,3)..MDRcolor("!양손",-1).." or "..MDRcolor(class,0,"!")..MDRcolor(class,4)..MDRcolor("!단검",-2)..")")
+                print("|cFFffff00▶|r"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 전문화 대신 "..MDRcolor(class,0,"직업").." 정보를 요청합니다. ("..MDRcolor(class,0,"!"..class)..")")
+                
+                print("|cFFffff00▷|r"..MDRcolor(spec,10)..ro.." 사용 가능한 |cffaaaaaa무기|r를 검색하고 싶은 경우 "..MDRcolor(spec,0,"!"..spec).."|cffaaaaaa!무기|r 로 검색해보세요.")
+                print("▷도움말이 필요한 경우: |cffffff00/쐐|r, |cffffff00/쐐|r |cFFaaaaaa무기|r")
                 
             end
-            VALUES["comb"]="Spec_Item"
-            findCharAllItem(VALUES)
+            VALUES["callTypeT"][1]=getCallTypeTable(keyword3["spec"])
+            findCharAllKey(VALUES)              
+            --VALUES["comb"]="Spec_Item"
+            --findCharAllItem(VALUES)
             
             --!무기만 단독검색시
         elseif callType["item"] then
@@ -912,4 +916,3 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
-
