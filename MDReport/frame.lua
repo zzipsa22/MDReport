@@ -43,7 +43,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         local who=select(2, ...)
         
         if MDR["running"]==1 then 
-            if MDR["meGame"]==who then
+            if MDR["meGame"]==who and channel~="WHISPER_OUT" then
                 local message
                 if MDR["who"]~=who then
                     message="|cffff0000▶"..msg.."|r: "..MDRcolor("["..MDRsplit(MDR["who"],"-")[1].."]",-1).." 님의 요청을 먼저 처리하고 있습니다. "..MDRcolor("도적",0,MDR["cooltime"].."초").." 후 다시 시도하세요."
@@ -56,10 +56,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         end
         
         --느낌표와 띄어쓰기 잘라냄
-        local keyword=gsub(strsub(msg,2)," ","")        
-        local keyIsNumber=tonumber(keyword)
-        local ELC=strsub(keyword,1,-2)        
-        local LOCT=strsub(keyword,-1)
+        local keyword=gsub(msg," ","")        
         
         local level1,level2
         local onlyMe,onlyOnline,CharName,onlyYou
@@ -71,62 +68,68 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         --명령어가 이중인지 체크        
         if strfind(keyword,"!") then
-            k=MDRsplit(keyword,"!")          
+            k=MDRsplit(keyword,"!")     
+        end
+        
+        for i=1,#k do            
             
-            --중간에 ~를 넣은 명령어면
-        elseif strfind(keyword,"~") then
+            local keyIsNumber=tonumber(k[i])
+            local ELC=strsub(k[i],1,-2)        
+            local LOCT=strsub(k[i],-1)
             
-            local space="~"
-            
-            local before=MDRsplit(keyword,space)[1]
-            local after=MDRsplit(keyword,space)[2]
-            local num1=tonumber(before)
-            local num2=tonumber(after)      
-            
-            --숫자만 입력했으면
-            if num1~=nil and num2~=nil then
-                k[1]="아무"
-                level1=num1
-                level2=num2
+            --중간에 ~를 넣은 명령어면            
+            if strfind(k[i],"~") then              
+                local space="~"                     
+                local before=MDRsplit(k[i],space)[1]
+                local after=MDRsplit(k[i],space)[2]
+                local num1=tonumber(before)
+                local num2=tonumber(after)      
                 
-            else --던전명을 같이 넣었으면 
-                local _,string,LN=MDRnumsplit(before)
-                k[1]=string
-                level1=LN or 2
-                level2=num2 or 99
-            end  
-            
-            --마지막이 +나 -면
-        elseif strfind(LOCT,"+") or strfind(LOCT,"-") then
-            -- +,-랑 숫자만 입력했으면
-            if tonumber(ELC) then
-                k[1]="아무"                
-                level1=tonumber(ELC)                
-            else                
-                local _,string,LN=MDRnumsplit(ELC)
-                --내나 지금만 붙였으면
-                if string=="내" or string=="지금" then
-                    string=string.."돌"
+                --숫자만 입력했으면
+                if num1~=nil and num2~=nil then
+                    k[i]="아무"
+                    level1=num1
+                    level2=num2
+                    
+                else --던전명을 같이 넣었으면 
+                    local _,string,LN=MDRnumsplit(before)
+                    k[i]=string
+                    level1=LN or 2
+                    level2=num2 or 99
+                end  
+                
+                --마지막이 +나 -면
+            elseif strfind(LOCT,"+") or strfind(LOCT,"-") then
+                -- +,-랑 숫자만 입력했으면
+                if tonumber(ELC) then
+                    k[i]="아무"                
+                    level1=tonumber(ELC)                
+                else                
+                    local _,string,LN=MDRnumsplit(ELC)
+                    --내나 지금만 붙였으면
+                    if string=="내" or string=="지금" then
+                        string=string.."돌"
+                    end
+                    k[i]=string or "아무"                               
+                    level1=LN                
                 end
-                k[1]=string or "아무"                               
-                level1=LN                
-            end
-            if LOCT=="+" then
-                level2=99
-            else
-                level2=2
-            end           
-            
-            --숫자만 입력한 경우
-        elseif keyIsNumber then
-            k[1]="아무"           
-            level1=keyIsNumber
-            --숫자와 단어의 조합이면
-        else
-            local KFN,Kstring,KLN=MDRnumsplit(keyword)
-            k[1]=Kstring
-            level1=KLN or KFN         
-        end   
+                if LOCT=="+" then
+                    level2=99
+                else
+                    level2=2
+                end           
+                
+                --숫자만 입력한 경우
+            elseif keyIsNumber then
+                k[i]="아무"           
+                level1=keyIsNumber
+                --숫자와 단어의 조합이면
+            elseif tonumber(LOCT) then
+                local KFN,Kstring,KLN=MDRnumsplit(k[i])
+                k[i]=Kstring
+                level1=KLN or KFN                  
+            end   
+        end
         
         --명령어 판독 시작
         if k[1]=="주사위" then
@@ -177,7 +180,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 level2=level3
             end            
         end               
-        
+        --print((level1 or"").."~"..(level2 or""))
         if callTypeT[1] then
             VALUES["callTypeT"]=callTypeT
             VALUES["level"]=level1

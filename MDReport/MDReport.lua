@@ -160,15 +160,38 @@ function filterVALUES(VALUES)
                 print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
                 return --검색어가 짧으면 무시
             else
-                local message=""
-                if callTypeT[1][1]=="all" then
-                    message=" 님에게 '"..MDRcolor("전사",0,callTypeT[1][2]).."' 정보를 요청합니다."
-                elseif callTypeT[1][1]=="class" then
-                    message=" 님의 '"..MDRcolor(callTypeT[1][2]).."' 캐릭터를 요청합니다."
-                elseif callTypeT[1][1]=="parking" then
-                    message=" 님의 '"..MDRcolor("흑마",0,callTypeT[1][2]).."' 정보를 요청합니다."
-                else return end                  
+                local message,range=""," 을 "
+                --print((level or"").."~"..(level2 or""))                
+                if level==2 and level2 then
+                    range=", "..MDRcolor("도적",0,level2.."단 이하") .." 를 "                  
+                elseif level and level2==99 then
+                    range=", "..MDRcolor("도적",0,level.."단 이상").." 을 "
+                elseif level and not level2 then
+                    range=", "..MDRcolor("도적",0,level.."단").." 돌을 "
+                elseif level and level2 then
+                    range=", "..MDRcolor("도적",0,level.."~"..level2.."단").." 돌을 "
+                end
                 
+                if callTypeT[1][1]=="all" then
+                    if not level then
+                        range="의 쐐기돌을 " 
+                    end         
+                    message=" 님에게 "..MDRcolor("전사",0,callTypeT[1][2])..range.."요청합니다."
+                elseif callTypeT[1][1]=="class" then
+                    if not level then
+                        range=" 캐릭터를 " 
+                    end                    
+                    message=" 님에게 "..MDRcolor(callTypeT[1][2])..range.."요청합니다."
+                elseif callTypeT[1][1]=="parking" then
+                    message=" 님에게 "..MDRcolor("흑마",0,callTypeT[1][2]).." 정보를 요청합니다."
+                elseif callTypeT[1][1]=="dungeon" then
+                    if not level then
+                        range=" 쐐기돌을 " 
+                    end      
+                    message=" 님에게 "..MDRcolor(getFullDungeonName(callTypeT[1][2]),-2)..range.."요청합니다."
+                else 
+                    message=" 님에게 [ "..MDRcolor(callTypeT[1][2],-2)..range.." 정보를 요청합니다."
+                end                 
                 print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
             end            
         end  
