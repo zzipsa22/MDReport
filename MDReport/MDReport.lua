@@ -103,7 +103,7 @@ local RealmMap= {
     ["노르간논"] = 2,
     ["세나리우스"] = 2,
     
-    ["듀로탄"] = 3,
+    ["듀로탄"] = 1,
     ["불타는 군단"] = 3,
     ["스톰레이지"] = 3,
     
@@ -167,19 +167,19 @@ function filterVALUES(VALUES)
                 print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
                 return --검색어가 짧으면 무시
             else
-                local message,range=""," 을 "
+                local message,range="",""
                 --print((level or"").."~"..(level2 or""))                
                 if level==2 and level2 then
-                    range=", "..MDRcolor("도적",0,level2.."단 이하") .." 를 "                  
+                    range=", "..MDRcolor("도적",0,level2.."단 이하").." 돌"                 
                 elseif level and level2==99 then
-                    range=", "..MDRcolor("도적",0,level.."단 이상").." 을 "
+                    range=", "..MDRcolor("도적",0,level.."단 이상").." 돌"
                 elseif level and not level2 then
-                    range=", "..MDRcolor("도적",0,level.."단").." 돌을 "
+                    range=", "..MDRcolor("도적",0,level.."단").." 돌"
                 elseif level and level2 then
-                    range=", "..MDRcolor("도적",0,level.."~"..level2.."단").." 돌을 "
+                    range=", "..MDRcolor("도적",0,level.."~"..level2.."단").." 돌"
                 end
                 
-                if callTypeT[1][1]=="all" then
+                --[[if callTypeT[1][1]=="all" then
                     if not level then
                         range="의 쐐기돌을 " 
                     end         
@@ -197,13 +197,35 @@ function filterVALUES(VALUES)
                     end      
                     message=" 님에게 "..MDRcolor(getFullDungeonName(callTypeT[1][2]),-2)..range.."요청합니다."
                 else
-                    local cmdLines,space="",", "
-                    for i=1,#callTypeT do
-                        if i==#callTypeT then space="" end
-                        cmdLines=cmdLines..MDRcolor(keyword[callTypeB[i]],-2)..space
+]]
+                local cmdLines,space="",", "
+                local callTypes={}
+                
+                for i=1,#callTypeT do 
+                    local type=0
+                    local word=keyword[callTypeB[i]]
+                    if callTypeT[i][1]=="class" then
+                        type=1
+                    elseif callTypeT[i][1]=="dungeon" then
+                        word=getFullDungeonName(word)
                     end                    
-                    message=" 님에게 "..cmdLines.." 정보를 요청합니다."
-                end                 
+                    if not callTypes[callTypeB[i]] then
+                        if (callTypeT[i][1]=="all" and not callType["dungeon"]) or
+                        callTypeT[i][1]~="all" then
+                            cmdLines=cmdLines..MDRcolor(word,type)..space
+                            callTypes[callTypeB[i]]=1 
+                        end
+                    end                        
+                end   
+                if strsub(cmdLines,strlen(space)*-1)==space then
+                    cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
+                end
+                cmdLines=cmdLines..range
+                local CL=gsub(cmdLines,"|r","")
+                local eul=MDRko(CL,"을")                
+                
+                message=" 님에게 "..cmdLines..eul.." 요청합니다."
+                --end                 
                 print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
             end            
         end  
@@ -278,7 +300,7 @@ function filterVALUES(VALUES)
     --조절값 입력
     VALUES["channel"]=channel    
     
-    if #callTypeB>1 and (callType["item"] or callType["trinket"] or callType["stat"] or callType["spec"] or callType["class"] or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면 
+    if #callTypeB>1 and not callType["all"] and not callType["parking"] and (callType["item"] or callType["trinket"] or callType["stat"] or callType["spec"] or callType["class"] or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면         
         
         --무기 사용 가능 여부 체크
         if ((callType["spec"] or callType["class"])  and callType["specificitem"]) then 
@@ -481,10 +503,10 @@ function filterVALUES(VALUES)
             callType["class"] or 
             callType["currentmykey"] or 
             callType["currentall"] or         
-            callType["charname"] )  and #callTypeB==1 then            
+            callType["charname"] )  then           
             
             findCharAllKey(VALUES)            
-        elseif callType["parking"] and #callTypeB==1 then        
+        elseif callType["parking"] then        
             findCharNeedParking(channel,who,"parking",keyword["parking"],level)             
         elseif callType["spell"] and #callTypeB==1 then        
             findCharSpell(keyword["spell"],channel,who,"spell")     
@@ -646,6 +668,8 @@ end
 --보유한 모든 돌 보고하기
 function findCharAllKey(VALUES)    
     
+    callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
+    
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
@@ -654,44 +678,55 @@ function findCharAllKey(VALUES)
         level=VALUES["level"]
         level2=VALUES["level2"]         
         
-        callType=callTypeT[1][1]
-        keyword=callTypeT[1][2]
+        --callType=callTypeT[1][1]
+        --keyword=callTypeT[1][2]
         onlyOnline=VALUES["onlyOnline"]   
         CharName=VALUES["CharName"]
         
+        for i=1,#callTypeT do
+            callTypeB[i]=callTypeT[i][1]
+            --print(i..":"..callTypeT[i][1])
+            callType[callTypeT[i][1]]=1
+            keyword[callTypeT[i][1]]=callTypeT[i][2]
+            keyword2[callTypeT[i][1]]=callTypeT[i][3]
+            keyword3[callTypeT[i][1]]=callTypeT[i][4]              
+        end           
     end
-    local type=nil
+    
+    local type=nil    
     
     if (CharName and CharName~="" ) then callType="charname" end   
     
-    if callType=="class" then
+    if callType["class"] then
         type="hard"
-    elseif callType=="charname" then
+    elseif callType["charname"] then
         type="superhard"
     else type="haveKeyOnly"
     end    
     local chars=GetHaveKeyCharInfo(type)    
-    local forceToShort=0     
+    local forceToShort=0    
     
-    if callType=="levelrange" then
+    if callType["levelrange"] then
         level2=keyword
-    end    
+    end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType=="all"or callType=="levelrange") and ((channel=="GUILD") or (channel=="PARTY")) then
+    if (callType["all"] or callType["levelrange"])  and 
+    (not callType["class"] and not callType["dungeon"]) and
+    (channel=="GUILD" or channel=="PARTY") then
         forceToShort=1
     end 
-    if callType=="currentall" or callType=="currentmykey" then
+    if callType["currentall"] or callType["currentmykey"] then
         onlyOnline=1
     end    
     
     --!내돌을 길드로 요청한 경우우 짧게 보고
-    if callType=="mykey" and (channel=="GUILD") then
+    if callType["mykey"] and (channel=="GUILD") then
         forceToShort=1
     end 
     
     --!돌이고 레벨을 지정하지 않았으며 길드가 아닌 곳에서 요청했는데 키가 하나도 없을 경우
-    if callType=="all" and (channel~="GUILD")  and (#chars==0) and (level==nil) then
+    if callType["all"] and (channel~="GUILD")  and (#chars==0) and (level==nil) then
         local messageLines={}
         messageLines[1]="▶저는 현재 갖고 있는 돌이 하나도 없습니다!" 
         reportMessageLines(messageLines,channel,who,callType)
@@ -711,8 +746,12 @@ function findCharAllKey(VALUES)
     end
     
     --던전이나 직업으로 필터링
-    if callType=="dungeon" or callType=="class" then
-        chars=filterCharsByFilter(chars,callType,keyword,nil)         
+    if callType["dungeon"] then
+        chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)         
+    end    
+    
+    if  callType["class"] then
+        chars=filterCharsByFilter(chars,"class",keyword["class"],nil)         
     end    
     
     --레벨을 지정한 경우 레벨로 한번더 필터링

@@ -51,7 +51,7 @@ local classInfo={
         "전사",
         "방어","방전",
         "분노","분전",
-        "무기","무전",
+        "무기","무전","모든 던전"
     },
     ["기사"]={        
         "F58CBA",
@@ -93,7 +93,7 @@ local classInfo={
         "흑마법사",
         "고통","고흑",
         "파괴","파흑",
-        "악마","악흑",
+        "악마","악흑", "주차"
     },
     ["법사"]={        
         "40C7EB",
@@ -141,7 +141,8 @@ function MDRko(keyword,type)
     local LCtable={
         "검","궁","활","총","봉","창", --무기
         "꾼","적", --직업
-        "돌","원","상","전","장","택","굴","산" --격아던전
+        "돌","원","상","전","장","택","굴","산", --격아던전
+        "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
     }
     local Batchim=0
     for i=1,#LCtable do
@@ -171,11 +172,11 @@ function MDRko(keyword,type)
 end
 
 function MDRcolor(keyword,type,keyword2)
-    local text
+    local text,color    
     for k,v in pairs(classInfo) do
-        for i=1,#v do
+        for i=1,#v do            
             if strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2 then
-                local color=v[1]                
+                color=v[1]                 
                 if not type or type==1  then
                     text=v[2] -- 드루이드 
                 elseif type==0 then
@@ -195,12 +196,12 @@ function MDRcolor(keyword,type,keyword2)
                 elseif type==5 then --색깔없이 직업만 출력                  
                     return v[2]
                 elseif type==10 then --전문화+직업
-                    text=keyword.." "..v[2]
-                end                
-                return "|cff"..color..(text or "?").."|r"       
-            end        
+                    text=keyword.." "..v[2]                    
+                end               
+            end            
         end        
-    end   
+    end    
+    return "|cff"..(color or "F5aCdA")..(text or keyword or"?").."|r"        
 end
 
 function MDRmakeDice(channel,who,k)
