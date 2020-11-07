@@ -6,7 +6,9 @@ MDR["cooltime"]=2
 MDR["meGame"]=UnitName("player").."-"..GetRealmName()    
 MDR["meAddon"]=UnitName("player").." - "..GetRealmName()  
 MDR["krClass"],MDR["className"]=UnitClass("player")
-MDR["lastSeen"]=1209600 --2주
+MDR["lastSeen"]=4838400 --8주
+MDR["maxChar"]=2
+MDR["textLength"]=3
 local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
@@ -154,11 +156,14 @@ function filterVALUES(VALUES)
         return
     end
     
+    local length=MDR["textLength"]
+    local kLength=math.floor((length-1)/3+1)
+    
     -- 찾는 사람을 지정한 경우
-    if onlyYou then
+    if onlyYou then        
         if who==meGame then  
-            if strlen(onlyYou)<4 then               
-                print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
+            if strlen(onlyYou)<length then               
+                print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
                 return --검색어가 짧으면 무시
             else
                 local message,range=""," 을 "
@@ -202,9 +207,9 @@ function filterVALUES(VALUES)
     end    
     
     if CharName then
-        if strlen(CharName)<4 then
+        if strlen(CharName)<length then
             if who==meGame then    
-                print("|cffff0000▶|r"..MDRcolor(CharName,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF5692|r글자 이상, 영문 |cFFFFF5694|r자 이상)")
+                print("|cffff0000▶|r"..MDRcolor(CharName,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
             end            
         return end  --검색어가 짧으면 무시 
     end
@@ -708,6 +713,22 @@ function findCharAllKey(VALUES)
     --캐릭터이름을 지정한 경우 필터링
     if CharName then
         chars=filterCharsByFilter(chars,"CharName",CharName,nil)
+        if chars then
+            local maxChar=MDR["maxChar"]
+            local charsNum=#chars
+            if #chars>maxChar then            
+                for i=1,#chars do
+                    if i>maxChar then
+                        chars[i]=nil 
+                    end                
+                end  
+                local messageLines={}
+                messageLines[1]="▶["..CharName.."]: 검색결과가 너무 많아 일부만 출력합니다. (일치하는 검색 결과 : "..charsNum.."개) 캐릭터를 특정하려면 !{직업}과 함께 검색해보세요." 
+                C_Timer.After(#chars*0.5, function()
+                        reportMessageLines(messageLines,channel,who,callType)
+                end)
+            end 
+        end        
     end    
     
     --레벨을 지정한 경우 레벨로 한번더 필터링

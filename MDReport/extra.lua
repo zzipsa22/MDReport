@@ -24,91 +24,98 @@ C_Timer.After(10, function()
 end)
 
 local classInfo={
-    ["도적"]={
-        "도적",
+    ["도적"]={        
         "FFF569",
+        "도적",
         "암살",
         "무법",
         "잠행"
     },
-    ["죽기"]={
-        "죽음의 기사",
+    ["죽기"]={        
         "C41F3B",
+        "죽음의 기사",
         "혈기",
         "부정",
         "냉기","냉죽"
     },    
-    ["드루"]={
-        "드루이드",
+    ["드루"]={        
         "FF7D0A",
+        "드루이드",
         "조화","조드",
         "회복","회드",
         "야성","야드",
         "수호","수드",
     },
-    ["전사"]={
-        "전사",
+    ["전사"]={        
         "C79C6E",
+        "전사",
         "방어","방전",
         "분노","분전",
         "무기","무전",
     },
-    ["기사"]={
-        "성기사",
+    ["기사"]={        
         "F58CBA",
+        "성기사",
         "징벌","징기",
         "신성","신기",
         "보호","보기",
     },
-    ["술사"]={
-        "주술사",
+    ["술사"]={        
         "0070DE",
+        "주술사",
         "고양","고술",
         "정기","정술",
         "복원","복술",
     },
-    ["수도"]={
-        "수도사",
+    ["수도"]={        
         "00FF96",
+        "수도사",
         "풍운",
         "운무",
         "양조"
     },
-    ["냥꾼"]={
-        "사냥꾼",
+    ["냥꾼"]={        
         "A9D271",
+        "사냥꾼",
         "사격","격냥",
         "생존","생냥",
         "야수","야냥",
     },
-    ["사제"]={
-        "사제",
+    ["사제"]={        
         "FFFFFF",
+        "사제",
         "암흑","암사",
         "신사","수사",
         "수양","신사",
     },
-    ["흑마"]={
-        "흑마법사",
+    ["흑마"]={        
         "8787ED",
+        "흑마법사",
         "고통","고흑",
         "파괴","파흑",
         "악마","악흑",
     },
-    ["법사"]={
-        "마법사",
+    ["법사"]={        
         "40C7EB",
+        "마법사",
         "화염","화법",
         "비전","비법",
         "냉법",        
     },
-    ["악사"]={
-        "악마 사냥꾼",
+    ["악사"]={        
         "A330C9",
+        "악마 사냥꾼",
         "파멸",
         "복수"
     },
-    
+    ["무기"]={"aaaaaa"},
+    ["하늘"]={"80e7EB"},
+    ["핑크"]={"F5aCdA" },
+    ["빨강"]={"ff0000" },
+    ["노랑"]={"ffff00"},   
+    ["초록"]={"00ff00"},   
+    ["파랑"]={"0000ff"},   
+    ["보라"]={"00ffff"},       
     [""]={}
 }
 
@@ -167,10 +174,10 @@ function MDRcolor(keyword,type,keyword2)
     local text
     for k,v in pairs(classInfo) do
         for i=1,#v do
-            if keyword==v[i] or keyword==k or type==-1 or type==-2 then
-                local color=v[2]                
+            if strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2 then
+                local color=v[1]                
                 if not type or type==1  then
-                    text=v[1] -- 드루이드 
+                    text=v[2] -- 드루이드 
                 elseif type==0 then
                     text=keyword2 or keyword --입력한대로
                 elseif type==2 then
@@ -186,9 +193,9 @@ function MDRcolor(keyword,type,keyword2)
                 elseif type==4 then --전문화 출력2
                     text=v[5] or v[4]
                 elseif type==5 then --색깔없이 직업만 출력                  
-                    return v[1]
+                    return v[2]
                 elseif type==10 then --전문화+직업
-                    text=keyword.." "..v[1]
+                    text=keyword.." "..v[2]
                 end                
                 return "|cff"..color..(text or "?").."|r"       
             end        
