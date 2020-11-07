@@ -135,9 +135,9 @@ function filterVALUES(VALUES)
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
-        callTypeT=VALUES["callTypeT"]
         level=VALUES["level"]
-        level2=VALUES["level2"] 
+        level2=VALUES["level2"]        
+        callTypeT=VALUES["callTypeT"]     
         onlyMe=VALUES["onlyMe"]
         onlyYou=VALUES["onlyYou"]
         for i=1,#callTypeT do
@@ -150,7 +150,8 @@ function filterVALUES(VALUES)
         end   
         CharName=VALUES["CharName"]               
         
-    end 
+    end     
+    
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=meGame then
         return
@@ -195,8 +196,13 @@ function filterVALUES(VALUES)
                         range=" 쐐기돌을 " 
                     end      
                     message=" 님에게 "..MDRcolor(getFullDungeonName(callTypeT[1][2]),-2)..range.."요청합니다."
-                else 
-                    message=" 님에게 "..MDRcolor(callTypeT[1][2],-2).." 정보를 요청합니다."
+                else
+                    local cmdLines,space="",", "
+                    for i=1,#callTypeT do
+                        if i==#callTypeT then space="" end
+                        cmdLines=cmdLines..MDRcolor(keyword[callTypeB[i]],-2)..space
+                    end                    
+                    message=" 님에게 "..cmdLines.." 정보를 요청합니다."
                 end                 
                 print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
             end            
@@ -274,7 +280,6 @@ function filterVALUES(VALUES)
     
     if #callTypeB>1 and (callType["item"] or callType["trinket"] or callType["stat"] or callType["spec"] or callType["class"] or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면 
         
-        --print("여기")
         --무기 사용 가능 여부 체크
         if ((callType["spec"] or callType["class"])  and callType["specificitem"]) then 
             
@@ -337,7 +342,7 @@ function filterVALUES(VALUES)
             if keyword["role"]=="힐러"then 
                 if not tips[1] or tips[1]<warns then
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
-                        print("|cFF00ff00▶|r"..MDRcolor("힐러",-1).." [수양/신성, "..MDRcolor("운무",0)..", "..MDRcolor("회복",0)..", "..MDRcolor("징벌",0,"신기")..", "..MDRcolor("복원",0).."] 로 획득 가능한 모든 장신구를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("!힐러",-1).."|cff8787ED!던전이름|r으로 검색해보세요.")
+                        print("|cFF00ff00▶|r"..MDRcolor("힐러",-1).." [수양/신성, "..MDRcolor("운무",0)..", "..MDRcolor("회복",0)..", "..MDRcolor("징벌",0,"신기")..", "..MDRcolor("복원",0).."] 로 획득 가능한 모든 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("!힐러",-1).."|cff8787ED!던전이름|r으로 검색해보세요.")
                     end
                     tips[1]=(tips[1] or 0)+1
                 end
@@ -346,7 +351,7 @@ function filterVALUES(VALUES)
                 if keyword2["role"]=="힘/민첩" and not keyword["stat"]  then
                     if not tips[2] or tips[2]<warns then                        
                         if who==meGame and callType["trinket"] and not callType["dungeon"] then
-                            print("|cFF00ff00▶|r"..MDRcolor("탱커 전용",-1).." 장신구를 검색합니다. "..MDRcolor("탱커",-1).."로 사용 가능한 "..MDRcolor("모든 장신구",-2).."를 검색하시려면 "..MDRcolor("도적",0,"힘").."이나 "..MDRcolor("도적",0,"민첩").."과 함께 검색해보세요. |cFF33FF99ex)|r "..MDRcolor("!힘탱",-1).."!장신구, "..MDRcolor("!탱커",-1).."!장신구"..MDRcolor("도적",0,"!민첩"))     
+                            print("|cFF00ff00▶|r"..MDRcolor("탱커 전용",-1).." |cff00ff00장신구|r를 검색합니다. "..MDRcolor("탱커",-1).."로 사용 가능한 "..MDRcolor("모든 장신구",-2).."를 검색하시려면 "..MDRcolor("도적",0,"힘").."이나 "..MDRcolor("도적",0,"민첩").."과 함께 검색해보세요. |cFF33FF99ex)|r "..MDRcolor("!힘탱",-1).."|cff00ff00!장신구|r, "..MDRcolor("!탱커",-1).."|cff00ff00!장신구|r"..MDRcolor("도적",0,"!민첩"))     
                         end
                         tips[2]=(tips[2] or 0)+1
                     end
@@ -360,7 +365,7 @@ function filterVALUES(VALUES)
                             else
                                 role=MDRcolor("수호",0)..", "..MDRcolor("양조",0)..", "..MDRcolor("복수",0)                            
                             end                        
-                            message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat).."을 사용하는 "..MDRcolor("탱커",-1).." ["..role.."] 로 획득 가능한 장신구를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..stat..keyword["role"]).."|cff8787ED!던전이름|r으로 검색해보세요."
+                            message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat).."을 사용하는 "..MDRcolor("탱커",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..stat..keyword["role"]).."|cff8787ED!던전이름|r으로 검색해보세요."
                             print(message) 
                         end 
                         tips[3]=(tips[3] or 0)+1
@@ -370,7 +375,7 @@ function filterVALUES(VALUES)
             elseif not callType["stat"] then 
                 if not tips[4] or tips[4]<warns then
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
-                        print("|cFFff0000▶|r"..MDRcolor("딜러",-1).." 장신구를 검색하려면 "..MDRcolor("도적",0,"능력치").."를 지정해야합니다. |cFF33FF99ex)|r "..MDRcolor("도적",0,"!민첩").."!장신구") 
+                        print("|cFFff0000▶|r"..MDRcolor("딜러",-1).." |cff00ff00장신구|r를 검색하려면 "..MDRcolor("도적",0,"능력치").."를 지정해야합니다. |cFF33FF99ex)|r "..MDRcolor("도적",0,"!민첩").."|cff00ff00!장신구|r") 
                     end  
                     tips[4]=(tips[4] or 0)+1
                 end                
@@ -387,7 +392,7 @@ function filterVALUES(VALUES)
                         elseif keyword["stat"]=="민첩" then                           
                             role=MDRcolor("도적")..", "..MDRcolor("사냥꾼")..", "..MDRcolor("풍운",0)..", "..MDRcolor("야성",0)..", "..MDRcolor("고양",0)..", "..MDRcolor("파멸",0)
                         end                          
-                        message="|cFF00ff00▶|r"..MDRcolor("도적",0,keyword["stat"]).."을 사용하는 "..MDRcolor("딜러",-1).." ["..role.."] 로 획득 가능한 장신구를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..keyword["stat"]).."|cff8787ED!던전이름|r으로 검색해보세요."
+                        message="|cFF00ff00▶|r"..MDRcolor("도적",0,keyword["stat"]).."을 사용하는 "..MDRcolor("딜러",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..keyword["stat"]).."|cff8787ED!던전이름|r으로 검색해보세요."
                         print(message) 
                     end 
                     tips[5]=(tips[5] or 0)+1
@@ -710,6 +715,11 @@ function findCharAllKey(VALUES)
         chars=filterCharsByFilter(chars,callType,keyword,nil)         
     end    
     
+    --레벨을 지정한 경우 레벨로 한번더 필터링
+    if level then 
+        chars=filterCharsByFilter(chars,"level",level,level2)        
+    end   
+    
     --캐릭터이름을 지정한 경우 필터링
     if CharName then
         chars=filterCharsByFilter(chars,"CharName",CharName,nil)
@@ -729,12 +739,7 @@ function findCharAllKey(VALUES)
                 end)
             end 
         end        
-    end    
-    
-    --레벨을 지정한 경우 레벨로 한번더 필터링
-    if level then 
-        chars=filterCharsByFilter(chars,"level",level,level2)        
-    end    
+    end        
     
     if forceToShort==1 then        
         doShortReport(chars,channel,who,callType)  

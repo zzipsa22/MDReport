@@ -133,10 +133,8 @@ function doShortReport(chars,channel,who,callType)
                 message=skull[class]..havekey.."("..classStatus..")"
             end
             
-            if sameCheck then
-                local before=MDRsplit(messageLines[sameCheck],"▶")[1]                
-                local after=gsub(messageLines[sameCheck],before,"")
-                messageLines[sameCheck]=before..message..after
+            if sameCheck then                 
+                messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
             else
                 messageLines[mNum]=message
                 mNum=mNum+1
@@ -275,10 +273,8 @@ function doFullReport(chars,channel,who,callType)
             else
                 message=headStar..classStatus..": "..havekey..online
             end
-            if sameCheck then
-                local before=MDRsplit(messageLines[sameCheck],"▶")[1]                
-                local after=gsub(messageLines[sameCheck],before,"")
-                messageLines[sameCheck]=before..message..after
+            if sameCheck then                 
+                messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
             else
                 messageLines[mNum]=message
                 mNum=mNum+1

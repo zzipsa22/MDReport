@@ -301,33 +301,33 @@ function MDRCommands(msg, editbox)
         messageLines[#messageLines+1]="▷이하 모든 명령어는 |cFF40ff40길드말|r과 |cFFaaaaff파티말|r, |cFFff80ff귓속말|r에 입력했을 때만 반응합니다."
         messageLines[#messageLines+1]="▷기본 명령어: |cffC79C6E!돌|r, |cff8787ED!주차|r, |cff40C7EB!던전명|r, |cffFF7D0A!직업명|r, |cffA9D271!닉네임|r, |cffC41F3B!속성|r, |cFFaaaaaa!무기|r, |cFF00ff00!장신구|r"
         messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 사용법을 보시려면 |cffffff00/쐐|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
-        messageLines[#messageLines+1]="▷|cFF33FF99[1.5.0]|r+ |cffA9D271!{닉네임}|r 을 이용해 명령어에 반응할 '사람'을 지정할 수 있습니다." 
+        messageLines[#messageLines+1]="▷|cFF33FF99[1.5.0]|r+ |cffA9D271!{닉네임}|r 을 이용해 캐릭터를 검색할 수 있습니다. ▷|cffffff00/쐐|r |cffA9D271이름|r" 
         -- messageLines[#messageLines+1]="▷|cFF33FF99ex)|r |cffC79C6E!돌|r|c"..classColor.."!"..playerName.."|r, |cff8787ED!주차|r|c"..classColor.."!"..playerName.."|r: '|c"..classColor..playerName.."|r'라는 캐릭터를 소유한 '사람'의 출력을 유도." 
-        messageLines[#messageLines+1]="▷|cFF33FF99[1.6.3]|r+ |cFF00ff00!장신구|r 로 장신구 드랍 던전을 검색할 수 있습니다."
+        messageLines[#messageLines+1]="▷|cFF33FF99[1.6.3]|r+ |cFF00ff00!장신구|r 로 장신구 드랍 던전을 검색할 수 있습니다. ▷|cffffff00/쐐|r |cff00ff00장신구|r"
         
         --messageLines[4]="▶보다 자세한 사용법은 |cffffff00트위치|r나 |cffffff00Curse|r에서 |cFF33FF99MDReport|r 페이지에 방문하여 확인해보세요."
     elseif msg=="돌" then     
         
-        messageLines[#messageLines+1]="▶|cffC79C6E!돌|r : 소유한 모든 돌 정보를 요청합니다. 이하 대부분의 명령어들은 '|cff0070DE내|r'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r |cffC79C6E!돌 !|r|cff0070DE내|r|cffC79C6E돌 !|r|cffF58CBA지금|r|cffC79C6E돌 !돌|r|cffffff0015~18|r |cffC79C6E!돌|r|cffffff0025+|r"
+        messageLines[#messageLines+1]="|cffC79C6E▶!돌|r : 소유한 모든 돌 정보를 요청합니다. 이하 대부분의 명령어들은 '|cff0070DE내|r'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r |cffC79C6E!돌 !|r|cff0070DE내|r|cffC79C6E돌 !|r|cffF58CBA지금|r|cffC79C6E돌 !돌|r|cffffff0015~18|r |cffC79C6E!돌|r|cffffff0025+|r"
         
     elseif msg=="던전"or msg=="던전명" then
-        messageLines[#messageLines+1]="▶|cff40C7EB!{던전명}|r : 던전 이름으로 검색을 시도합니다. |cFF33FF99ex)|r |cff40C7EB!아탈|r |cff40C7EB!아탈|r|cffffff0018|r |cff40C7EB!|r|cffF58CBA지금|r|cff40C7EB아탈|r"
+        messageLines[#messageLines+1]="|cff40C7EB▶!{던전명}|r : 던전 이름으로 |cffC79C6E쐐기돌|r 검색을 시도합니다. |cFF33FF99ex)|r |cff40C7EB!아탈다자르|r |cff40C7EB!아탈|r|cffffff0018|r |cff40C7EB!|r|cffF58CBA지금|r|cff40C7EB아탈|r"
         
     elseif msg=="직업" or msg=="직업명" then
         
-        messageLines[#messageLines+1]="▶|cffFF7D0A!{직업명}|r : 직업 이름으로 검색을 시도합니다. |cFF33FF99ex)|r |cffFF7D0A!드루 !드루|r|cffffff0015-|r |cffFF7D0A!|r|cff0070DE내|r|cffFF7D0A드루|r"
+        messageLines[#messageLines+1]="|cffFF7D0A▶!{직업명}|r : 직업 이름으로 |cffC79C6E쐐기돌|r 검색을 시도합니다. |cFF33FF99ex)|r |cffFF7D0A!드루 !드루|r|cffffff0015-|r |cffFF7D0A!|r|cff0070DE내|r|cffFF7D0A드루|r"
     elseif msg=="주차" then
         
-        messageLines[#messageLines+1]="▶|cff8787ED!주차|r : 주차정보를 요청합니다. 주차를 못했거나 최대 보상을 받을 수 있는 단수(격아4시즌 기준 15단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r |cff8787ED!주차 !|r|cff0070DE내|r|cff8787ED주차 !주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함"
+        messageLines[#messageLines+1]="|cff8787ED▶!주차|r : 주차정보를 요청합니다. 주차를 못했거나 최대 보상을 받을 수 있는 단수(격아4시즌 기준 15단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r |cff8787ED!주차 !|r|cff0070DE내|r|cff8787ED주차 !주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함"
         
     elseif msg=="닉네임" or msg=="이름" then
-            local length=MDR["textLength"]
-			local kLength=math.floor((length-1)/3+1)
-        messageLines[#messageLines+1]="▶|cffA9D271!{닉네임}|r : 닉네임으로 단일 '캐릭터' 검색을 시도합니다. 일치하는 캐릭터가 있을 경우 모두 출력합니다. 한글은 최소 |cFFFFF569"..kLength.."|r글자 이상, 영문은 |cFFFFF569"..length.."|r자 이상 입력해야합니다. |cFF33FF99ex)|r 캐릭명이 '|c"..classColor..playerName.."|r' 일 경우 "..m1        
-        messageLines[#messageLines+1]="▷|cffA9D271!{닉네임}|r을 |cffC79C6E!돌|r 이나 |cff8787ED!주차|r와 조합하면 명령어에 반응할 '사람'을 지정할 수 있습니다. |cFF33FF99ex)|r |cffC79C6E!돌|r"..MDRcolor(krClass,0,"!"..n1)..", "..MDRcolor(krClass,0,"!"..n2).."|cff8787ED!주차|r. 부캐 이름으로도 가능합니다."        
-        messageLines[#messageLines+1]="▷|cffA9D271!{닉네임}|r과 |cffFF7D0A!{직업명}|r 을 조합하면 캐릭터 이름을 몰라도 특정 |cffFF7D0A직업|r을 검색할 수 있습니다. |cFF33FF99ex)|r |cffFFF569!도적|r"..MDRcolor(krClass,0,"!"..n1)..": 닉네임에 '"..MDRcolor(krClass,0,n1).."'을/를 포함하는 캐릭터를 소유한 사람의 |cffFFF569도적|r 캐릭터를 검색."
+        local length=MDR["textLength"]
+        local kLength=math.floor((length-1)/3+1)
+        messageLines[#messageLines+1]="|cffA9D271▶!{닉네임}|r : |cffA9D271닉네임|r을 단독으로 입력하는 경우 |c"..classColor.."'캐릭터'|r 검색을 시도합니다. 일치하는 캐릭터가 있을 경우 모두 출력합니다. 한글은 최소 |cFFFFF569"..kLength.."|r글자 이상, 영문은 |cFFFFF569"..length.."|r자 이상 입력해야합니다. |cFF33FF99ex)|r 캐릭명이 '|c"..classColor..playerName.."|r' 일 경우 "..m1        
+        messageLines[#messageLines+1]="|cffA9D271▷!{닉네임}|r을 |cffC79C6E!돌|r 이나 |cff8787ED!주차|r와 조합하면 명령어에 반응할 "..MDRcolor("초록",0,"'사람'").."을 지정할 수 있습니다. |cFF33FF99ex)|r |cffC79C6E!돌|r"..MDRcolor(krClass,0,"!"..n1)..", "..MDRcolor(krClass,0,"!"..n2).."|cff8787ED!주차|r. 부캐 이름으로도 가능합니다."        
+        messageLines[#messageLines+1]="|cffA9D271▷!{닉네임}|r과 |cffFF7D0A!{직업명}|r 을 조합하면 캐릭터 이름을 몰라도 특정 |cffFF7D0A직업|r을 검색할 수 있습니다. |cFF33FF99ex)|r |cffFFF569!도적|r"..MDRcolor(krClass,0,"!"..n1)..": 닉네임에 '"..MDRcolor(krClass,0,n1).."'을/를 포함하는 캐릭터를 소유한 사람의 |cffFFF569도적|r 캐릭터를 검색."
     elseif msg=="속성"  then          
-        messageLines[#messageLines+1]="▶|cffC41F3B!속성|r : 이번주 쐐기 속성을 출력. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r |cffC41F3B!속성 !|r지난주|cffC41F3B속성 !|r다다음주|cffC41F3B속성|r"
+        messageLines[#messageLines+1]="|cffC41F3B▶!속성|r : 이번주 쐐기 속성을 출력합니다. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r |cffC41F3B!속성 !|r지난주|cffC41F3B속성 !|r다다음주|cffC41F3B속성|r"
         
     elseif msg=="무기"  then          
         messageLines[#messageLines+1]="▶|cFF80e7EB!전문화|r, |cFFFFF569!능력치|r와 |cFFaaaaaa!무기|r, |cFFF5aCdA!무기범주|r, |cffC79C6E!무기종류|r, |cff8787ED!던전이름|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!회드|r|cFFaaaaaa!무기|r, |cFFFFF569!지능|r|cffC79C6E!단검|r, |cffC79C6E!방패|r, |cFFFFF569!민첩|r|cFFF5aCdA!원거리|r, |cFFFFF569!힘|r|cFFF5aCdA!한손|r, |cFF80e7EB!고술|r|cff8787ED!아탈|r, |cFF80e7EB!양조|r|cffC79C6E!장창|r"
