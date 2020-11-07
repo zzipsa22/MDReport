@@ -17,7 +17,14 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         end   
         
         --애드온에 의해 출력된 메시지는 무시
-        if strfind(msg,"▶") or strfind(msg,"▷")then return end
+        if strfind(msg,"▶") or strfind(msg,"▷")then
+            if strsub(msg,1,3)=="MDR" then
+                --print("MDR임")
+                MDR["diceAlert"]=1
+            else                
+                return
+            end
+        end
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
@@ -94,7 +101,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 
                 --숫자만 입력했으면
                 if num1~=nil and num2~=nil then
-                    k[i]="아무"
+                    k[i]="아무"                       
                     level1=num1
                     level2=num2
                     
@@ -128,7 +135,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 
                 --숫자만 입력한 경우
             elseif keyIsNumber then
-                k[i]="아무"           
+                k[i]="아무"                   
                 level1=keyIsNumber
                 --숫자와 단어의 조합이면
             elseif tonumber(LOCT) then

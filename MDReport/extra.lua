@@ -205,10 +205,12 @@ end
 
 function MDRmakeDice(channel,who,k)
     C_Timer.After(2, function()             
-            MDR["running"]=0            
+            MDR["running"]=0  
+            MDR["diceAlert"]=0            
     end)    
     dices={}
     dicesB={}
+    MDR["diceAlert"]=0    
     if #k<3 then return end
     local num=1
     for i=1,#k do
@@ -236,21 +238,26 @@ function MDRmakeDice(channel,who,k)
         channel="print"
     end 
     diceReportChannel=channel
+    local message="MDR ▶ "
+    local messageLines={}    
+    for i=1,#dices do
+        local space=", "
+        --print(dices[i])            
+        if i==#dices then space="" end
+        message=message..diceNums[i].." "..dices[i]..space
+    end
+    message=message.." : /주사위 "..#dices..""
+    messageLines[1]=message
     
-    if who==meGame then
-        local message="MDR ▶ "
-        local messageLines={}        
-        for i=1,#dices do
-            local space=", "
-            print(dices[i])
-            
-            if i==#dices then space="" end
-            message=message..diceNums[i].." "..dices[i]..space
-        end
-        message=message.." : /주사위 "..#dices..""
-        messageLines[1]=message
+    if who==meGame then    
         reportMessageLines(messageLines,diceReportChannel,who,"dice")        
-    end   
+    end 
+    C_Timer.After(0.5, function() 
+            --print("check")
+            if MDR["diceAlert"]==0 and MDR["master"]==1 then
+                reportMessageLines(messageLines,diceReportChannel,who,"dice")                
+            end          
+    end)     
     C_Timer.After(1, function()               
             diceWait=1
             RandomRoll(1,#dices)
