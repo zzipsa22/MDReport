@@ -80,7 +80,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         end
         
         for i=1,#k do  
-            if strfind(k[i],"주사위") then
+            if strfind(k[i],"주사위") and             MDR["diceWait"]==0 then
                 MDRmakeDice(channel,who,k)
                 MDR["running"]=1            
                 return            

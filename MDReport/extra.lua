@@ -4,7 +4,7 @@ local playerName = UnitName("player")
 local dices={}
 local diceReportChannel
 local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
-local diceWait=0
+MDR["diceWait"]=0
 
 C_Timer.After(10, function()        
         local x = GetLocale()
@@ -250,7 +250,8 @@ function MDRmakeDice(channel,who,k)
     messageLines[1]=message
     
     if who==meGame then    
-        reportMessageLines(messageLines,diceReportChannel,who,"dice")        
+        reportMessageLines(messageLines,diceReportChannel,who,"dice")
+        MDR["diceAlert"]=1        
     end 
     C_Timer.After(0.5, function() 
             --print("check")
@@ -258,8 +259,8 @@ function MDRmakeDice(channel,who,k)
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")                
             end          
     end)     
-    C_Timer.After(1, function()               
-            diceWait=1
+    C_Timer.After(1, function()
+            MDR["diceWait"]=1            
             RandomRoll(1,#dices)
             MDR["running"]=0  
     end)    
@@ -281,7 +282,7 @@ function MDRdice(msg)
         messageLines[1]=diceNums[resultNum].." "..(dices[resultNum] or "알 수 없음")
         C_Timer.After(1.5, function()    
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")
-                diceWait=0
+                MDR["diceWait"]=0
         end) 
     else
         return        
