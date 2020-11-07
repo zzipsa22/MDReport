@@ -739,7 +739,7 @@ function findCharAllKey(VALUES)
     if onlyOnline==1 then
         chars=filterCharsByFilter(chars,"name",nil,nil)
         --이캐릭 돌이 없으면 바로 보고하고 마무리, 길드면 생략
-        if not chars and channel~="GUILD"then
+        if not chars and channel~="GUILD" and callType["all"] then
             local messageLines={}
             messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
             reportMessageLines(messageLines,channel,who,callType)

@@ -255,13 +255,13 @@ function MDRmakeDice(channel,who,k)
         MDR["diceAlert"]=1        
     end 
     C_Timer.After(0.9, function() 
-            --print("check")
-            if MDR["diceAlert"]==0 and MDR["master"]==1 then
+            if MDR["diceAlert"]~=1 and MDR["master"]==1 then
+                --print("check")                
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")                
             end          
-    end)     
-    C_Timer.After(1, function()
-            MDR["diceWait"]=1            
+    end) 
+    MDR["diceWait"]=1 
+    C_Timer.After(1, function()            
             RandomRoll(1,#dices)
             MDR["running"]=0  
     end)    
@@ -269,7 +269,7 @@ end
 
 
 function MDRdice(msg)
-    if diceWait==0 then return end
+    if MDR["diceWait"]==0 then return end
     local resultNum
     local messageLines={}
     if playerName==strsub(msg,1,strlen(playerName)) then
