@@ -103,7 +103,7 @@ local RealmMap= {
     ["노르간논"] = 2,
     ["세나리우스"] = 2,
     
-    ["듀로탄"] = 1,
+    ["듀로탄"] = 3,
     ["불타는 군단"] = 3,
     ["스톰레이지"] = 3,
     
@@ -207,8 +207,10 @@ function filterVALUES(VALUES)
                     if callTypeT[i][1]=="class" then
                         type=1
                     elseif callTypeT[i][1]=="dungeon" then
-                        word=getFullDungeonName(word)
-                    end                    
+                        word=getFullDungeonName(word)                        
+                    elseif callTypeT[i][1]=="spec" then
+                        type=10
+                    end    
                     if not callTypes[callTypeB[i]] then
                         if (callTypeT[i][1]=="all" and not callType["dungeon"]) or
                         callTypeT[i][1]~="all" then
@@ -699,10 +701,10 @@ function findCharAllKey(VALUES)
     
     if callType["class"] then
         type="hard"
-    elseif callType["charname"] then
+    elseif CharName then
         type="superhard"
     else type="haveKeyOnly"
-    end    
+    end   
     local chars=GetHaveKeyCharInfo(type)    
     local forceToShort=0    
     

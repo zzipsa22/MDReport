@@ -254,7 +254,7 @@ function MDRmakeDice(channel,who,k)
         reportMessageLines(messageLines,diceReportChannel,who,"dice")
         MDR["diceAlert"]=1        
     end 
-    C_Timer.After(0.5, function() 
+    C_Timer.After(0.9, function() 
             --print("check")
             if MDR["diceAlert"]==0 and MDR["master"]==1 then
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")                
