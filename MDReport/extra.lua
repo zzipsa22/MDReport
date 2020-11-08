@@ -296,7 +296,7 @@ function MDRmakeDice(channel,who,k)
                 end
                 result=newResult2
                 local message=(MDR["question"] or "결과").." ▶ "
-                print(#result)
+                --print(#result)
                 --if i+1>#result then  break  end  
                 for i=1,#result do
                     message=message..result[i]["subject"].." ("..result[i]["vote"].."표)"
@@ -322,7 +322,7 @@ function MDRcollectDices(msg)
     for i=1,#MDR["diceResult"] do
         if MDR["diceResult"][i]["subject"]==msg then
             MDR["diceResult"][i]["vote"]=(MDR["diceResult"][i]["vote"] or 0)+1
-            print(msg.."+1")
+            --print(msg.."+1")
         end 
         --print(MDR["dices"][i])
     end    
