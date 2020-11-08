@@ -798,11 +798,11 @@ function findCharNeedParking(channel,who,callType,keyword,level)
     if chars~=nil then       
         
         for i=1,#chars do   
-            local best=chars[i]["best"] or 0
+            local best=chars[i]["best"] 
             if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
                 findChars[parknum]=chars[i]                
                 parknum=parknum+1
-            else
+            else                
                 bestLevels[bestnum]=best
                 bestnum=bestnum+1
             end
