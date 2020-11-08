@@ -127,7 +127,7 @@ function MDRgetClassName(keyword)
     for k,v in pairs(classInfo) do
         for i=1,#v do
             if keyword==v[i]  or keyword==k then
-                return v[1]
+                return v[2]
             end        
         end        
     end   

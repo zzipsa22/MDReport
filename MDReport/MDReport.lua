@@ -1,4 +1,6 @@
-MDR={}
+if not MDR then
+    MDR={}
+end
 MDR["version"]="@project-version@"
 MDR["lastUpdate"]="@project-date-iso@"
 MDR["guide"]=0
@@ -6,29 +8,30 @@ MDR["cooltime"]=2
 MDR["meGame"]=UnitName("player").."-"..GetRealmName()    
 MDR["meAddon"]=UnitName("player").." - "..GetRealmName()  
 MDR["krClass"],MDR["className"]=UnitClass("player")
-MDR["lastSeen"]=14515200 --24주
+MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
+MDR["maxParking"]=15 --격아 4시즌
+MDR["SCL"]=50 -- 현 확팩 만렙
 local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
 local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
-local SCL=50 -- 현 확팩 만렙
 
 local DIL={ --단수별 허용레벨 / 드랍템 레벨
-    [2]=30,--435,
-    [3]=30,--435,
-    [4]=40,--440,
-    [5]=45,--445,
-    [6]=50,--445,
-    [7]=55,--450,
-    [8]=60,--455,
-    [9]=65,--455,
-    [10]=70,--455,
-    [11]=75,--460,
-    [12]=80,--460,
+    [2]=50,--435,
+    [3]=50,--435,
+    [4]=65,--440,
+    [5]=65,--445,
+    [6]=65,--445,
+    [7]=75,--450,
+    [8]=75,--455,
+    [9]=75,--455,
+    [10]=80,--455,
+    [11]=80,--460,
+    [12]=85,--460,
     [13]=85,--460,
     [14]=90,--465,
     [15]=95,--465,
@@ -120,7 +123,7 @@ local shieldClass={"전사","기사","술사"}
 function filterVALUES(VALUES)     
     
     --SavedInstance 체크
-    if not SavedInstancesDB then
+    if not SavedInstancesDB and VALUES["callTypeT"][1][1]~="affix" then
         doWarningReport(channel,who,"warning") 
         return
     end    
@@ -611,14 +614,14 @@ function GetHaveKeyCharInfo(type,level)
     if type=="hard" then level=2
     elseif type=="soft" then level=level-5
         if level<2 then level=2 end        
-    elseif level==nil then level=15 end    
+    elseif level==nil then level=MDR["maxParking"] end    
     local t=SavedInstancesDB.Toons
     local num=1
     local chars={}
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
     local L=level
-    if L>15 or L==nil then L=15;elseif L<2 then L=2;end
+    if L>MDR["maxParking"] or L==nil then L=MDR["maxParking"];elseif L<2 then L=2;end
     local minLevel=DIL[L]  
     
     for k,v in pairs(t) do
@@ -635,18 +638,16 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL
                 chars[num]["lastSeen"]=t[k].LastSeen
+                chars[num]["charLevel"]=t[k].Level                    
                 num=num+1                
-            elseif (type~="haveKeyOnly" and ((t[k].Level==SCL and (t[k].IL>=minLevel or type=="hard")) or type=="superhard")) then                           
+            elseif (type~="haveKeyOnly" and ((t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="hard")) or type=="superhard")) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")                
-                chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
-                if t[k].Level==SCL then
-                    chars[num]["itemLevel"]=t[k].IL
-                else
-                    chars[num]["charLevel"]=t[k].Level                
-                end               
+                chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]                
+                chars[num]["itemLevel"]=t[k].IL
+                chars[num]["charLevel"]=t[k].Level               
                 chars[num]["keyLevel"]=0
                 chars[num]["lastSeen"]=t[k].LastSeen                
                 num=num+1
@@ -797,8 +798,8 @@ end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
 function findCharNeedParking(channel,who,callType,keyword,level)
-    if level==nil then level=15 end
-    local chars=GetHaveKeyCharInfo(keyword,level)
+    if level==nil then level=MDR["maxParking"] end
+    local chars=GetHaveKeyCharInfo("superhard",level)
     
     if channel==nil then channel="print" end   
     
@@ -808,19 +809,26 @@ function findCharNeedParking(channel,who,callType,keyword,level)
     local bestLevels={}
     local lowestLevel=0
     local highstLevel=0
-    local parkingLevel=level--15단주차
-    
+    local parkingLevel=level
+    local bestCharLevel=0
+    local bestCharName,bestCharClass="",""
+    local minLevel=DIL[level]      
     if chars~=nil then       
         
         for i=1,#chars do   
-            local best=chars[i]["best"]
-            if (best==nil) or (best<parkingLevel) then
+            local best=chars[i]["best"] or 0
+            if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
                 findChars[parknum]=chars[i]                
                 parknum=parknum+1
             else
                 bestLevels[bestnum]=best
                 bestnum=bestnum+1
             end
+            if chars[i]["charLevel"]>bestCharLevel then
+                bestCharLevel=chars[i]["charLevel"]
+                bestCharName=chars[i]["cutName"]
+                bestCharClass=MDRgetClassName(chars[i]["shortClass"])
+            end            
         end
         
         --쐐기를 한번이라도 갔으면
@@ -833,18 +841,20 @@ function findCharNeedParking(channel,who,callType,keyword,level)
     end   
     
     --주차안한 캐릭이 없으면 보고서 없이 한줄 출력으로 마무리
-    if parknum==1 then
+    if #findChars==0 then
         
         --!주차를 내가 보낸 경우 리턴
         if (channel=="WHISPER_OUT") then return end
         
         local messageLines={}
         local message=""
-        if (chars~=nil) and (#chars>0) then            
+        if bestCharLevel==MDR["SCL"] then            
             message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
-        else
-            message="▶저는 주차는 고사하고 현재 갖고 있는 돌이 하나도 없습니다!"             
-        end    
+        elseif bestCharLevel<MDR["SCL"] then
+            message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨 캐릭터: "..bestCharLevel.."렙 "..bestCharClass..", "..bestCharName.."]"
+        else       
+            message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!"  
+        end
         
         messageLines[1]=message
         reportMessageLines(messageLines,channel,who,callType)       
@@ -969,11 +979,11 @@ function filterCharsByFilter(chars,filter,f1,f2)
             end             
         else 
             if filter=="level" then                
-                target=chars[i]["keyLevel"]                  
+                target=chars[i]["keyLevel"]
             elseif filter=="class" then                
-                target=chars[i]["shortClass"]   
+                target=chars[i]["shortClass"]
             elseif filter=="dungeon" then
-                target=chars[i]["keyName"]     
+                target=chars[i]["keyName"]
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
             elseif filter=="CharName" then
