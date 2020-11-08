@@ -6,8 +6,8 @@ MDR["cooltime"]=2
 MDR["meGame"]=UnitName("player").."-"..GetRealmName()    
 MDR["meAddon"]=UnitName("player").." - "..GetRealmName()  
 MDR["krClass"],MDR["className"]=UnitClass("player")
-MDR["lastSeen"]=4838400 --8주
-MDR["maxChar"]=2
+MDR["lastSeen"]=14515200 --24주
+MDR["maxChar"]=3
 MDR["textLength"]=3
 local tips={}
 local warns=100
@@ -646,7 +646,7 @@ function GetHaveKeyCharInfo(type,level)
                     chars[num]["itemLevel"]=t[k].IL
                 else
                     chars[num]["charLevel"]=t[k].Level                
-                end                
+                end               
                 chars[num]["keyLevel"]=0
                 chars[num]["lastSeen"]=t[k].LastSeen                
                 num=num+1
@@ -657,7 +657,13 @@ function GetHaveKeyCharInfo(type,level)
     local newChars2={}
     local charsNum=1
     for i=1,#chars do
-        newChars[chars[i]]=chars[i]["keyLevel"]        
+        if chars[i]["keyLevel"] >0 then
+            newChars[chars[i]]=chars[i]["keyLevel"]*10000
+        elseif chars[i]["itemLevel"] then
+            newChars[chars[i]]=chars[i]["itemLevel"]*10
+        else
+            newChars[chars[i]]=chars[i]["charLevel"]
+        end        
     end    
     for k,v in MDRspairs(newChars, function(t,a,b) return t[b] < t[a] end) do
         newChars2[charsNum]=k
@@ -769,7 +775,7 @@ function findCharAllKey(VALUES)
             local charsNum=#chars
             if #chars>maxChar then            
                 for i=1,#chars do
-                    if i>maxChar then
+                    if i>(maxChar-1) then
                         chars[i]=nil 
                     end                
                 end  
