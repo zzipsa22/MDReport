@@ -9,7 +9,7 @@ MDR["diceWait"]=0
 C_Timer.After(10, function()        
         local x = GetLocale()
         if x ~= "koKR" then -- XXX temp, Options/Locales needs updated
-            print("|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
+            print("▶|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
         else
             if not  SavedInstancesDB then
                 doWarningReport(channel,who,"warning") 
@@ -114,8 +114,8 @@ local classInfo={
     ["빨강"]={"ff0000" },
     ["노랑"]={"ffff00"},   
     ["초록"]={"00ff00"},   
-    ["파랑"]={"0000ff"},   
-    ["보라"]={"00ffff"},       
+    ["파랑"]={"4444ff"},   
+    ["보라"]={"aa33ff"},       
     [""]={}
 }
 

@@ -1,4 +1,6 @@
 local meGame,meAddon=MDR["meGame"],MDR["meAddon"]
+local warns={}
+local warning=3
 
 local skull={
     ["술사"]="{rt6}",--네모(파랑)
@@ -23,6 +25,16 @@ function doCheckVersion(channel,who,callType)
     reportMessageLines(messageLines,channel,who,callType)   
 end
 
+function doWarningReport(channel,who,callType) 
+    local messageLines={}
+    if not warns[1] or warns[1] < warning then
+        messageLines[1]="▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: SavedInstances 애드온이 설치되어 있지 않아 쐐기돌 관련 기능이 제한됩니다."
+        messageLines[2]="▶"..MDRcolor("노랑",0,"Curseforge")..", "..MDRcolor("보라",0,"Twitch")..", "..MDRcolor("초록",0,"인벤")..", "..MDRcolor("파랑",0,"루리웹").." 등에서 SavedInstances 애드온을 다운받아 설치해주세요."       
+        warns[1]=(warns[1] or 0)+1
+        channel="print"
+    else return end  
+    reportMessageLines(messageLines,channel,who,callType)
+end
 
 function doOnlyAffixReport(keyword,channel,who,callType)  
     
@@ -284,18 +296,6 @@ function doFullReport(chars,channel,who,callType)
     
     --메세지 출력
     reportMessageLines(messageLines,channel,who,callType)    
-end
-
-local warning=1
-
-function doWarningReport(channel,who,callType) 
-    local messageLines={}
-    if warning<=#MDRwarnMessage then
-        messageLines[#messageLines+1]=MDRwarnMessage[warning]
-        warning=warning+1
-        channel="print"
-    else return end  
-    reportMessageLines(messageLines,channel,who,callType)
 end
 
 --메세지 출력
