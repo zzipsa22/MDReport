@@ -1,7 +1,7 @@
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
 local  _,_,_,classColor=GetClassColor(className)  
 local playerName = UnitName("player")
-local dices={}
+--MDR["dices"]={}
 local diceReportChannel
 local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 MDR["diceWait"]=0
@@ -207,11 +207,14 @@ end
 function MDRmakeDice(channel,who,k)
     C_Timer.After(2, function()             
             MDR["running"]=0  
-            MDR["diceAlert"]=0            
+            MDR["diceAlert"]=0             
     end)    
-    dices={}
-    dicesB={}
-    MDR["diceAlert"]=0    
+    MDR["dices"]={}
+    MDR["dicesB"]={}
+    MDR["diceAlert"]=0 
+    MDR["youMakeDice"]=nil
+    MDR["diceResult"]={}
+    local question
     if #k<3 then return end
     local num=1
     for i=1,#k do
@@ -224,35 +227,45 @@ function MDRmakeDice(channel,who,k)
             end            
             subject=(subject or "")..space..subT[j]
         end
-        if subject~="주사위"  then
+        if strsub(subject,-1)=="?" then
+            question=subject
+        end        
+        if subject~="주사위" and subject~= question then
             subject=getFullDungeonName(subject) or subject           
-            dices[num]=subject
-            dicesB[num]=k[i]          
+            MDR["dices"][num]=diceNums[num].." "..subject
+            MDR["diceResult"][num]={}
+            MDR["diceResult"][num]["subject"]=diceNums[num].." "..subject
+            MDR["dicesB"][num]=k[i]            
             num=num+1            
         end
-    end    
+    end        
     
-    if channel=="WHISPER_OUT" or #dices<2 then return end
+    MDR["question"]=question
+    
+    if question then question=question.." " end    
+    
+    if channel=="WHISPER_OUT" or #MDR["dices"]<2 then return end
     
     --나에게서 귓말이 들어오는 경우 프린트로 변경
     if (channel=="WHISPER_IN") and who==meGame then
         channel="print"
     end 
     diceReportChannel=channel
-    local message="MDR ▶ "
+    local message="MDR ▶ "..(question or "")
     local messageLines={}    
-    for i=1,#dices do
+    for i=1,#MDR["dices"] do
         local space=", "
         --print(dices[i])            
-        if i==#dices then space="" end
-        message=message..diceNums[i].." "..dices[i]..space
+        if i==#MDR["dices"] then space="" end
+        message=message..MDR["dices"][i]..space
     end
-    message=message.." : /주사위 "..#dices..""
+    message=message.." : /주사위 "..#MDR["dices"]..""
     messageLines[1]=message
     
     if who==meGame then    
         reportMessageLines(messageLines,diceReportChannel,who,"dice")
-        MDR["diceAlert"]=1        
+        MDR["diceAlert"]=1 
+        MDR["youMakeDice"]=meGame        
     end 
     C_Timer.After(0.9, function() 
             if MDR["diceAlert"]~=1 and MDR["master"]==1 then
@@ -260,16 +273,64 @@ function MDRmakeDice(channel,who,k)
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")                
             end          
     end) 
+    
     MDR["diceWait"]=1 
     C_Timer.After(1, function()            
-            RandomRoll(1,#dices)
+            RandomRoll(1,#MDR["dices"])
             MDR["running"]=0  
     end)    
+    
+    if MDR["youMakeDice"]==meGame or (MDR["diceAlert"]~=1 and MDR["master"]==1) then
+        C_Timer.After(5, function()  
+                
+                local result=MDR["diceResult"]
+                local newResult={}
+                local newResult2={}
+                local resultNum=1
+                for i=1,#result do                    
+                    newResult[result[i]]=result[i]["vote"]
+                end    
+                for k,v in MDRspairs(newResult, function(t,a,b) return t[b] < t[a] end) do
+                    newResult2[resultNum]=k
+                    resultNum=resultNum+1
+                end
+                result=newResult2
+                local message=(MDR["question"] or "결과").." ▶ "
+                print(#result)
+                --if i+1>#result then  break  end  
+                for i=1,#result do
+                    message=message..result[i]["subject"].." ("..result[i]["vote"].."표)"
+                    if i~=#result then
+                        message=message..", "
+                    end                    
+                end
+                
+                --[[
+                if #result==1 or result[1]["vote"]>result[2]["vote"] then
+                    message=(MDR["question"] or "결과").."▶"..result[1]["subject"].." ("..result[1]["vote"].."표)"
+                else
+                    return
+                end]] 
+                local messageLines={}
+                messageLines[1]=message                
+                reportMessageLines(messageLines,diceReportChannel,who,"dice")                
+        end) 
+    end 
 end
 
+function MDRcollectDices(msg)
+    for i=1,#MDR["diceResult"] do
+        if MDR["diceResult"][i]["subject"]==msg then
+            MDR["diceResult"][i]["vote"]=(MDR["diceResult"][i]["vote"] or 0)+1
+            print(msg.."+1")
+        end 
+        --print(MDR["dices"][i])
+    end    
+end
 
 function MDRdice(msg)
     if MDR["diceWait"]==0 then return end
+    
     local resultNum
     local messageLines={}
     if playerName==strsub(msg,1,strlen(playerName)) then
@@ -280,11 +341,15 @@ function MDRdice(msg)
         else
             resultNum=n1     
         end 
-        messageLines[1]=diceNums[resultNum].." "..(dices[resultNum] or "알 수 없음")
+        messageLines[1]=(MDR["dices"][resultNum] or "알 수 없음")
         C_Timer.After(1.5, function()    
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")
+        end)         
+        C_Timer.After(6, function()    
                 MDR["diceWait"]=0
-        end) 
+                MDR["youMakeDice"]=nil
+                MDR["diceResult"]={}
+        end)         
     else
         return        
     end       

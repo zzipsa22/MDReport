@@ -16,6 +16,11 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             return
         end   
         
+        if (MDR["youMakeDice"] or MDR["master"]) and MDR["dices"] then
+            MDRcollectDices(msg)
+            
+        end               
+        
         --애드온에 의해 출력된 메시지는 무시
         if strfind(msg,"▶") or strfind(msg,"▷")then
             if strsub(msg,1,3)=="MDR" then
@@ -31,7 +36,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             if  strfind(msg,"!") and strsub(msg, -1)~="!"then
                 --말머리가 붙은경우 말머리 지우기
                 msg=gsub(msg,MDRsplit(msg,"!")[1],"")
-            else 
+            else                 
             return end 
         end--!가 없으면 리턴
         
@@ -82,7 +87,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         end
         
         for i=1,#k do  
-            if strfind(k[i],"주사위") and             MDR["diceWait"]~=1 then
+            if strfind(k[i],"주사위") or strfind(k[i],"?")and             MDR["diceWait"]~=1 then
                 MDRmakeDice(channel,who,k)
                 MDR["running"]=1   
                 return            
