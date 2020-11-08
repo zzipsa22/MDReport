@@ -224,7 +224,7 @@ function MDRmakeDice(channel,who,k)
             end            
             subject=(subject or "")..space..subT[j]
         end
-        if not strfind(k[i],"주사위") then
+        if subject~="주사위"  then
             subject=getFullDungeonName(subject) or subject           
             dices[num]=subject
             dicesB[num]=k[i]          
