@@ -173,34 +173,15 @@ function filterVALUES(VALUES)
                 local message,range="",""
                 --print((level or"").."~"..(level2 or""))                
                 if level==2 and level2 then
-                    range=", "..MDRcolor("도적",0,level2.."단 이하").." 돌"                 
+                    range=", "..MDRcolor("도적",0,level2.."단 이하")              
                 elseif level and level2==99 then
-                    range=", "..MDRcolor("도적",0,level.."단 이상").." 돌"
+                    range=", "..MDRcolor("도적",0,level.."단 이상")
                 elseif level and not level2 then
-                    range=", "..MDRcolor("도적",0,level.."단").." 돌"
+                    range=", "..MDRcolor("도적",0,level.."단")
                 elseif level and level2 then
-                    range=", "..MDRcolor("도적",0,level.."~"..level2.."단").." 돌"
+                    range=", "..MDRcolor("도적",0,level.."~"..level2.."단")
                 end
                 
-                --[[if callTypeT[1][1]=="all" then
-                    if not level then
-                        range="의 쐐기돌을 " 
-                    end         
-                    message=" 님에게 "..MDRcolor("전사",0,callTypeT[1][2])..range.."요청합니다."
-                elseif callTypeT[1][1]=="class" then
-                    if not level then
-                        range=" 캐릭터 정보를 " 
-                    end                    
-                    message=" 님에게 "..MDRcolor(callTypeT[1][2])..range.."요청합니다."
-                elseif callTypeT[1][1]=="parking" then
-                    message=" 님에게 "..MDRcolor("흑마",0,callTypeT[1][2]).." 정보를 요청합니다."
-                elseif callTypeT[1][1]=="dungeon" then
-                    if not level then
-                        range=" 쐐기돌을 " 
-                    end      
-                    message=" 님에게 "..MDRcolor(getFullDungeonName(callTypeT[1][2]),-2)..range.."요청합니다."
-                else
-]]
                 local cmdLines,space="",", "
                 local callTypes={}
                 
@@ -212,7 +193,7 @@ function filterVALUES(VALUES)
                     elseif callTypeT[i][1]=="dungeon" then
                         word=getFullDungeonName(word)                        
                     elseif callTypeT[i][1]=="spec" then
-                        type=10
+                        type=10                        
                     end    
                     if not callTypes[callTypeB[i]] then
                         if (callTypeT[i][1]=="all" and not callType["dungeon"]) or
@@ -225,6 +206,7 @@ function filterVALUES(VALUES)
                 if strsub(cmdLines,strlen(space)*-1)==space then
                     cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
                 end
+                
                 cmdLines=cmdLines..range
                 local CL=gsub(cmdLines,"|r","")
                 local eul=MDRko(CL,"을")                
@@ -610,19 +592,17 @@ end
 
 --보유한 모든 돌 불러오기
 function GetHaveKeyCharInfo(type,level)   
-    if not SavedInstancesDB then  return end   
+    if not SavedInstancesDB then  return end 
     if type=="hard" then level=2
     elseif type=="soft" then level=level-5
-        if level<2 then level=2 end        
-    elseif level==nil then level=MDR["maxParking"] end    
+    elseif level==nil then level=MDR["maxParking"] end  
+    if level<2 then level=2 end  
     local t=SavedInstancesDB.Toons
     local num=1
     local chars={}
     local faction=UnitFactionGroup("player")
-    local realm=gsub(GetRealmName()," ","")
-    local L=level
-    if L>MDR["maxParking"] or L==nil then L=MDR["maxParking"];elseif L<2 then L=2;end
-    local minLevel=DIL[L]  
+    local realm=gsub(GetRealmName()," ","")    
+    local minLevel=DIL[level] or DIL[MDR["maxParking"]]
     
     for k,v in pairs(t) do
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
@@ -798,9 +778,9 @@ end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
 function findCharNeedParking(channel,who,callType,keyword,level)
-    if level==nil then level=MDR["maxParking"] end
+    if level==nil then level=MDR["maxParking"] 
+    elseif level<2 then level=2 end
     local chars=GetHaveKeyCharInfo("superhard",level)
-    
     if channel==nil then channel="print" end   
     
     local findChars={}
@@ -812,7 +792,9 @@ function findCharNeedParking(channel,who,callType,keyword,level)
     local parkingLevel=level
     local bestCharLevel=0
     local bestCharName,bestCharClass="",""
-    local minLevel=DIL[level]      
+    
+    local minLevel=DIL[level] or DIL[MDR["maxParking"]]
+    
     if chars~=nil then       
         
         for i=1,#chars do   
@@ -979,11 +961,11 @@ function filterCharsByFilter(chars,filter,f1,f2)
             end             
         else 
             if filter=="level" then                
-                target=chars[i]["keyLevel"]
+                target=chars[i]["keyLevel"]                  
             elseif filter=="class" then                
-                target=chars[i]["shortClass"]
+                target=chars[i]["shortClass"]   
             elseif filter=="dungeon" then
-                target=chars[i]["keyName"]
+                target=chars[i]["keyName"]     
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
             elseif filter=="CharName" then
