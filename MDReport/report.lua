@@ -237,7 +237,7 @@ function doFullReport(chars,channel,who,callType)
                     havekey=keyLink
                 end                
             else
-                if not charLevel then
+                if charLevel==MDR["SCL"] then
                     havekey="[{rt7}쐐기돌 없음: 템렙"..math.floor(itemLevel).."]"
                 else
                     havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
