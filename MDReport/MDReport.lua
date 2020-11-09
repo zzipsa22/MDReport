@@ -620,7 +620,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["lastSeen"]=t[k].LastSeen
                 chars[num]["charLevel"]=t[k].Level                    
                 num=num+1                
-            elseif (type~="haveKeyOnly" and ((t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="hard")) or type=="superhard")) then                           
+            elseif (type~="haveKeyOnly" and ((t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="hard")) or (type=="superhard" and t[k].Level<=MDR["SCL"]))) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
