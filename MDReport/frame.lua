@@ -33,9 +33,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
-            if  strfind(msg,"!") and strsub(msg, -1)~="!"then
+            if  strfind(msg,"!") and strsub(msg, -1)~="!" then
                 --말머리가 붙은경우 말머리 지우기
-                msg=gsub(msg,MDRsplit(msg,"!")[1],"")
+                local header=MDRsplit(msg,"!")[1]
+                if not strfind(header,"?") then
+                    msg=gsub(msg,header,"")
+                end                
             else                 
             return end 
         end--!가 없으면 리턴
@@ -162,9 +165,9 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             end            
         end        
         
-        if callTypeT[1] and k[2]~="" and not getCallTypeTable(k[2]) then        
+        if callTypeT[1] and k[2]~="" and k[2]~="?" and not getCallTypeTable(k[2]) then        
             onlyYou=k[2] 
-        elseif callTypeT[1] and k[1]~="" and not getCallTypeTable(k[1]) then            
+        elseif callTypeT[1] and k[1]~="" and k[1]~="?" and not getCallTypeTable(k[1]) then            
             onlyYou=k[1]            
         end        
         

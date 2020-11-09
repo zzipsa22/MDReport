@@ -238,11 +238,17 @@ function MDRmakeDice(channel,who,k)
             MDR["dicesB"][num]=k[i]            
             num=num+1            
         end
-    end        
+    end
+    local h1
+    if question and question~="?" then
+        MDR["question"]=question
+        h1=question.." "
+    else
+        MDR["question"]="결과"
+        h1=""
+    end
     
-    MDR["question"]=question
-    
-    if question then question=question.." " end    
+    --if question then question=question.." " end    
     
     if channel=="WHISPER_OUT" or #MDR["dices"]<2 then return end
     
@@ -251,7 +257,7 @@ function MDRmakeDice(channel,who,k)
         channel="print"
     end 
     diceReportChannel=channel
-    local message="MDR ▶ "..(question or "")
+    local message="MDR ▶ "..(h1 or "")
     local messageLines={}    
     for i=1,#MDR["dices"] do
         local space=", "
@@ -294,8 +300,8 @@ function MDRmakeDice(channel,who,k)
                     newResult2[resultNum]=k
                     resultNum=resultNum+1
                 end
-                result=newResult2
-                local message=(MDR["question"] or "결과").." ▶ "
+                result=newResult2                
+                local message=(MDR["question"] or "").." ▶ "
                 --print(#result)
                 --if i+1>#result then  break  end  
                 for i=1,#result do
