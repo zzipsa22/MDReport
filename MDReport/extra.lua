@@ -341,7 +341,7 @@ end
 
 function MDRcollectDices(msg)
     for i=1,#MDR["diceResult"] do
-        if MDR["diceResult"][i]["subject"]==msg then
+        if strfind(msg,MDR["diceResult"][i]["subject"]) then
             MDR["diceResult"][i]["vote"]=(MDR["diceResult"][i]["vote"] or 0)+1
             --print(msg.."+1")
         end 
