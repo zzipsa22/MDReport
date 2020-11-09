@@ -187,7 +187,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             end
             callTypeT[1]=getCallTypeTable(k[1])
             --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-            if ((not callTypeT[1]) and name~="") then
+            if ((not callTypeT[1]) and name~=""  and name~="?") then
                 callTypeT[1]=getCallTypeTable("아무")
                 CharName=name                
             end

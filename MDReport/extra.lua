@@ -16,8 +16,8 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |c"..classColor.."!{닉네임}|r과 조합하여 (|cFF33FF99ex.|r"..MDRcolor(krClass,0,"!"..playerName)..") 명령어에 반응할 사람을 지정하거나 |cFF00ff00!장신구|r, |cFFaaaaaa!무기|r로도 쐐기돌을 검색할 수 있습니다.")                 
-                print("▷도움말이 필요한 경우: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 "..MDRcolor("하늘",0,"'?'").."와 조합하여 주사위를 자동으로 굴릴 수 있습니다. ▷도움말: |cffffff00/쐐|r "..MDRcolor("하늘",0,"주사위"))               
+                print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
             end
         end
@@ -208,7 +208,8 @@ function MDRmakeDice(channel,who,k)
     C_Timer.After(2, function()             
             MDR["running"]=0  
             --MDR["diceAlert"]=0             
-    end)    
+    end)
+    if MDR["diceWait"]==1 then return end
     MDR["dices"]={}
     MDR["dicesB"]={}
     MDR["diceAlert"]=0 
@@ -332,7 +333,8 @@ function MDRmakeDice(channel,who,k)
                 
                 local messageLines={}
                 messageLines[1]=message                
-                reportMessageLines(messageLines,diceReportChannel,who,"dice")     
+                reportMessageLines(messageLines,diceReportChannel,who,"dice") 
+                MDR["diceWait"]=0                
             end 
     end)     
 end
@@ -388,17 +390,18 @@ function MDRCommands(msg, editbox)
         n1=playerName
         n2=playerName
         m1=MDRcolor(krClass,0,"!"..playerName).." 입력."
-    end   
+    end
+    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, |cFFaaaaaa무기|r, |cFF00ff00장신구|r, "..MDRcolor("하늘",0,"주사위")
     if not msg or msg=="" or msg=="도움말" or msg=="help"  then
         messageLines[#messageLines+1]="[  |cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r 기본 명령어 목록  ]"
         messageLines[#messageLines+1]="▷이하 모든 명령어는 |cFF40ff40길드말|r과 |cFFaaaaff파티말|r, |cFFff80ff귓속말|r에 입력했을 때만 반응합니다."
-        messageLines[#messageLines+1]="▷기본 명령어: |cffC79C6E!돌|r, |cff8787ED!주차|r, |cff40C7EB!던전명|r, |cffFF7D0A!직업명|r, |cffA9D271!닉네임|r, |cffC41F3B!속성|r, |cFFaaaaaa!무기|r, |cFF00ff00!장신구|r"
-        messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 사용법을 보시려면 |cffffff00/쐐|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
+        messageLines[#messageLines+1]="▷도움말 목록: "..cmdList
+        messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/쐐|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
         messageLines[#messageLines+1]="▷|cFF33FF99[1.5.0]|r+ |cffA9D271!{닉네임}|r 을 이용해 캐릭터를 검색할 수 있습니다. ▷|cffffff00/쐐|r |cffA9D271이름|r" 
-        -- messageLines[#messageLines+1]="▷|cFF33FF99ex)|r |cffC79C6E!돌|r|c"..classColor.."!"..playerName.."|r, |cff8787ED!주차|r|c"..classColor.."!"..playerName.."|r: '|c"..classColor..playerName.."|r'라는 캐릭터를 소유한 '사람'의 출력을 유도." 
+        
         messageLines[#messageLines+1]="▷|cFF33FF99[1.6.3]|r+ |cFF00ff00!장신구|r 로 장신구 드랍 던전을 검색할 수 있습니다. ▷|cffffff00/쐐|r |cff00ff00장신구|r"
         
-        --messageLines[4]="▶보다 자세한 사용법은 |cffffff00트위치|r나 |cffffff00Curse|r에서 |cFF33FF99MDReport|r 페이지에 방문하여 확인해보세요."
+        messageLines[#messageLines+1]="▷|cFF33FF99[1.7.0]|r+ "..MDRcolor("하늘",0,"'?'").." 를 이용하여 주사위를 자동으로 굴릴 수 있습니다. ▷|cffffff00/쐐|r "..MDRcolor("하늘",0,"주사위")
     elseif msg=="돌" then     
         
         messageLines[#messageLines+1]="|cffC79C6E▶!돌|r : 소유한 모든 돌 정보를 요청합니다. 이하 대부분의 명령어들은 '|cff0070DE내|r'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r |cffC79C6E!돌 !|r|cff0070DE내|r|cffC79C6E돌 !|r|cffF58CBA지금|r|cffC79C6E돌 !돌|r|cffffff0015~18|r |cffC79C6E!돌|r|cffffff0025+|r"
@@ -428,12 +431,18 @@ function MDRCommands(msg, editbox)
     elseif msg=="장신구"  then   
         messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r와 |cFF80e7EB!역할|r, |cFFFFF569!능력치|r를 조합하면 특정 장신구를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!힐러|r|cFF00ff00!장신구|r, |cFFFFF569!민첩|r|cFF00ff00!장신구|r"
         messageLines[#messageLines+1]="▷|cFFaaaaaa!무기|r는 "..MDRcolor(krClass,0,"!".."전문화").."와, |cFF00ff00!장신구|r는 |cFF80e7EB!역할|r과 조합 한다고 생각하시면 기억하기 쉽습니다."
+        
+    elseif msg=="?"  or msg=="주사위" then      
+        messageLines[#messageLines+1]="▶"..MDRcolor("하늘",0,"'?'").."뒤에 '!'와 주사위 굴릴 항목들을 2개 이상 입력하면 |cFF33FF99MDReport|r 에서 자동으로 주사위를 굴려주고 결과 또한 채팅으로 알려줍니다."
+        messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 입력한 내용이 있을 경우 주사위의 제목으로 인식합니다."
+        messageLines[#messageLines+1]="▷|cFF33FF99ex|r) "..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 앞에 내용 없이 "..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."
+        messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."가 직관적이지 않다면, "..MDRcolor("하늘",0,"!주사위").."를 사용해도 됩니다. 다만 이 경우엔 주사위의 제목을 설정할 수는 없습니다. |cFF33FF99ex|r) "..MDRcolor("하늘",0,"!주사위!군단!드군!판다!격아")
     else
         return
     end
     
     if msg~="" then
-        messageLines[#messageLines+1]="▷기타 명령어: |cffC79C6E!돌|r, |cff8787ED!주차|r, |cff40C7EB!던전명|r, |cffFF7D0A!직업명|r, |cffA9D271!닉네임|r, |cffC41F3B!속성|r, |cFFaaaaaa!무기|r, |cFF00ff00!장신구|r"
+        messageLines[#messageLines+1]="▷기타 명령어: "..cmdList
         --messageLines[#messageLines+1]="▷항목별 도움말: |cffffff00/쐐|r |cffC79C6E명령어|r 입력 |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
     end    
     
