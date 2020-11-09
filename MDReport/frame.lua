@@ -9,7 +9,11 @@ MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
-        local msg=select(1, ...)      
+        local msg=select(1, ...)    
+        local who=select(2, ...)
+        
+        --느낌표 스팸이면 무시
+        if strfind(msg,"!!") then return end
         
         if (event=="CHAT_MSG_SYSTEM") then 
             MDRdice(msg)
@@ -17,13 +21,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         end   
         
         if (MDR["youMakeDice"] or MDR["master"]) and MDR["dices"] then
-            MDRcollectDices(msg)
-            
+            MDRcollectDices(msg)            
         end               
         
         --애드온에 의해 출력된 메시지는 무시
         if strfind(msg,"▶") or strfind(msg,"▷")then
-            if strsub(msg,1,3)=="MDR" then
+            if strsub(msg,1,3)=="MDR" and MDR["meGame"]~=who then
                 --print("MDR임")
                 MDR["diceAlert"]=1
             else                
@@ -57,7 +60,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             channel="WHISPER_IN"            
         else return end
         
-        local who=select(2, ...)
+        
         
         if MDR["running"]==1 then 
             if MDR["meGame"]==who and channel~="WHISPER_OUT" then

@@ -207,7 +207,7 @@ end
 function MDRmakeDice(channel,who,k)
     C_Timer.After(2, function()             
             MDR["running"]=0  
-            MDR["diceAlert"]=0             
+            --MDR["diceAlert"]=0             
     end)    
     MDR["dices"]={}
     MDR["dicesB"]={}
@@ -240,6 +240,9 @@ function MDRmakeDice(channel,who,k)
         end
     end
     local h1
+    if question then
+        question=gsub(question,"?","").."?"    
+    end
     if question and question~="?" then
         MDR["question"]=question
         h1=question.." "
@@ -268,11 +271,14 @@ function MDRmakeDice(channel,who,k)
     message=message.." : /주사위 "..#MDR["dices"]..""
     messageLines[1]=message
     
+    --내가 입력한 주사위면 시작멘트
     if who==meGame then    
         reportMessageLines(messageLines,diceReportChannel,who,"dice")
         MDR["diceAlert"]=1 
         MDR["youMakeDice"]=meGame        
-    end 
+    end
+    
+    --애드온미설치자가 입력한거면 대신 시작멘트
     C_Timer.After(0.9, function() 
             if MDR["diceAlert"]~=1 and MDR["master"]==1 then
                 --print("check")                
@@ -280,15 +286,17 @@ function MDRmakeDice(channel,who,k)
             end          
     end) 
     
+    --주사위 굴림
     MDR["diceWait"]=1 
     C_Timer.After(1, function()            
             RandomRoll(1,#MDR["dices"])
             MDR["running"]=0  
     end)    
     
-    if MDR["youMakeDice"]==meGame or (MDR["diceAlert"]~=1 and MDR["master"]==1) then
-        C_Timer.After(5, function()  
-                
+    --결과 보고하기
+    
+    C_Timer.After(5, function()  
+            if MDR["youMakeDice"]==meGame or (MDR["diceAlert"]~=1 and MDR["master"]==1) then                
                 local result=MDR["diceResult"]
                 local newResult={}
                 local newResult2={}
@@ -302,26 +310,31 @@ function MDRmakeDice(channel,who,k)
                 end
                 result=newResult2                
                 local message=(MDR["question"] or "").." ▶ "
-                --print(#result)
-                --if i+1>#result then  break  end  
+                local medals={"{rt1}","{rt5}","{rt2}"} --메달
+                local first,second,third,medal
                 for i=1,#result do
-                    message=message..result[i]["subject"].." ("..result[i]["vote"].."표)"
+                    if i==1 then
+                        first=result[i]["vote"]
+                    end                    
+                    if result[i]["vote"]==first then medal=medals[1] 
+                    elseif not second or result[i]["vote"]==second then
+                        second=result[i]["vote"]
+                        medal=medals[2]
+                    elseif not third  or result[i]["vote"]==third then
+                        third=result[i]["vote"]
+                        medal=medals[3]
+                    end                    
+                    message=message..result[i]["subject"].." ("..medal..","..result[i]["vote"].."표)"
                     if i~=#result then
                         message=message..", "
                     end                    
-                end
+                end                
                 
-                --[[
-                if #result==1 or result[1]["vote"]>result[2]["vote"] then
-                    message=(MDR["question"] or "결과").."▶"..result[1]["subject"].." ("..result[1]["vote"].."표)"
-                else
-                    return
-                end]] 
                 local messageLines={}
                 messageLines[1]=message                
-                reportMessageLines(messageLines,diceReportChannel,who,"dice")                
-        end) 
-    end 
+                reportMessageLines(messageLines,diceReportChannel,who,"dice")     
+            end 
+    end)     
 end
 
 function MDRcollectDices(msg)
