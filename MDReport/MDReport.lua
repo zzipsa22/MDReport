@@ -761,7 +761,7 @@ function findCharAllKey(VALUES)
                     end                
                 end  
                 local messageLines={}
-                messageLines[1]="▶["..CharName.."]: 검색결과가 너무 많아 일부만 출력합니다. (일치하는 검색 결과 : "..charsNum.."개) 캐릭터를 특정하려면 !{직업}과 함께 검색해보세요." 
+                messageLines[1]="▶["..CharName.."]: 일치하는 검색결과 [ 총"..charsNum.."개 ] 캐릭터를 특정하려면 !{직업}과 함께 검색해보세요." 
                 C_Timer.After(#chars*0.5, function()
                         reportMessageLines(messageLines,channel,who,callType)
                 end)
