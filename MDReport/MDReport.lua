@@ -833,7 +833,7 @@ function findCharNeedParking(channel,who,callType,keyword,level)
         if bestCharLevel==MDR["SCL"] then            
             message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
         elseif bestCharLevel<MDR["SCL"] then
-            message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨 캐릭터: "..bestCharLevel.."렙 "..bestCharClass..", "..bestCharName.."]"
+            message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 "..bestCharLevel.."레벨 "..bestCharClass.." : "..bestCharName.."]"
         else       
             message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!"  
         end

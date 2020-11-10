@@ -433,9 +433,9 @@ function MDRCommands(msg, editbox)
         messageLines[#messageLines+1]="▷|cFFaaaaaa!무기|r는 "..MDRcolor(krClass,0,"!".."전문화").."와, |cFF00ff00!장신구|r는 |cFF80e7EB!역할|r과 조합 한다고 생각하시면 기억하기 쉽습니다."
         
     elseif msg=="?"  or msg=="주사위" then      
-        messageLines[#messageLines+1]="▶"..MDRcolor("하늘",0,"'?'").."뒤에 '!'와 주사위 굴릴 항목들을 2개 이상 입력하면 |cFF33FF99MDReport|r 에서 자동으로 주사위를 굴려주고 결과 또한 채팅으로 알려줍니다."
-        messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 입력한 내용이 있을 경우 주사위의 제목으로 인식합니다."
-        messageLines[#messageLines+1]="▷|cFF33FF99ex|r) "..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 앞에 내용 없이 "..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."
+        messageLines[#messageLines+1]="▶"..MDRcolor("하늘",0,"'?'").."뒤에 '!'와 주사위 굴릴 항목들을 2개 이상 입력하면 |cFF33FF99MDReport|r 에서 자동으로 주사위를 굴려주고 결과 또한 채팅으로 알려줍니다. "
+        messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 내용을 입력하면 주사위의 제목으로 인식합니다. |cFF33FF99ex|r) "..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 만 단독으로 "..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."
+        messageLines[#messageLines+1]="▷ "..MDRcolor("빨강",0,"중요!").." 말머리 애드온을 사용중인 경우 "..MDRcolor("하늘",0,"'?'").."앞에도 "..MDRcolor("빨강",0,"'!'").."을 붙여 말머리 내용과 구분해주어야 정확히 인식됩니다. |cFF33FF99ex|r) "..MDRcolor("빨강",0,"!")..MDRcolor("하늘",0,"뭘키울까?!기사!악사!전사")
         messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."가 직관적이지 않다면, "..MDRcolor("하늘",0,"!주사위").."를 사용해도 됩니다. 다만 이 경우엔 주사위의 제목을 설정할 수는 없습니다. |cFF33FF99ex|r) "..MDRcolor("하늘",0,"!주사위!군단!드군!판다!격아")
     else
         return

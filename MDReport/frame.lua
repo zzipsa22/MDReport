@@ -24,23 +24,38 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             MDRcollectDices(msg)            
         end               
         
-        --애드온에 의해 출력된 메시지는 무시
+        --주사위 안내말이 뜨는지 체크
+        if strfind(msg,"MDR ▶") and MDR["meGame"]~=who then
+            --print("MDR임")
+            MDR["diceAlert"]=1
+        end
+        
+        --말머리로 추정되면 삭제
+        local filters={
+            "★","☆","♥","♡",
+            "[]]",">",")",":"         
+        }
+        
+        for i=1,#filters do
+            if strfind(msg,filters[i]) then
+                local f,l=strfind(msg,filters[i])
+                msg=strsub(msg,l+1,-1)                
+            end            
+        end
+        
+        --애드온에 의해 출력된 메시지는 무시        
         if strfind(msg,"▶") or strfind(msg,"▷")then
-            if strsub(msg,1,3)=="MDR" and MDR["meGame"]~=who then
-                --print("MDR임")
-                MDR["diceAlert"]=1
-            else                
-                return
-            end
+            return
         end
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
             if  strfind(msg,"!") and strsub(msg, -1)~="!" then
-                --말머리가 붙은경우 말머리 지우기
+                --특수문자가 없는 말머리 제거
                 local header=MDRsplit(msg,"!")[1]
                 if not strfind(header,"?") then
-                    msg=gsub(msg,header,"")
+                    local length=strlen(header)
+                    msg=strsub(msg,length+1,-1)
                 end                
             else                 
             return end 
@@ -59,7 +74,6 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         elseif (event=="CHAT_MSG_WHISPER") then
             channel="WHISPER_IN"            
         else return end
-        
         
         
         if MDR["running"]==1 then 
@@ -90,7 +104,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         --명령어가 이중인지 체크        
         if strfind(msg,"!") then
             k=MDRsplit(msg,"!")     
-        end
+        end        
         
         for i=1,#k do  
             if strfind(k[i],"주사위") or strfind(k[i],"?")and             MDR["diceWait"]~=1 then
@@ -201,7 +215,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 level1=level2
                 level2=level3
             end            
-        end               
+        end    
         --print((level1 or"").."~"..(level2 or""))
         if callTypeT[1] then
             VALUES["callTypeT"]=callTypeT
