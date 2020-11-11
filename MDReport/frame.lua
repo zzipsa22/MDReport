@@ -24,10 +24,15 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             MDRcollectDices(msg)            
         end               
         
-        --주사위 안내말이 뜨는지 체크
-        if strfind(msg,"MDR ▶") and MDR["meGame"]~=who then
-            --print("MDR임")
-            MDR["diceAlert"]=1
+        --애드온에 의해 출력된 메시지는 무시        
+        if strfind(msg,"▶") or strfind(msg,"▷")then
+            --주사위 안내말이 뜨는지 체크
+            if strfind(msg,"MDR ▶") and MDR["meGame"]~=who then
+                --print("MDR임")
+                MDR["diceAlert"]=1
+            else
+                return 
+            end            
         end
         
         --말머리로 추정되면 삭제
@@ -41,12 +46,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 local f,l=strfind(msg,filters[i])
                 msg=strsub(msg,l+1,-1)                
             end            
-        end
-        
-        --애드온에 의해 출력된 메시지는 무시        
-        if strfind(msg,"▶") or strfind(msg,"▷")then
-            return
-        end
+        end        
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
