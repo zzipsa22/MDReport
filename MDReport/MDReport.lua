@@ -500,8 +500,9 @@ function filterVALUES(VALUES)
         elseif (callType["version"] or callType["forceversion"]) and #callTypeB==1 then        
             doCheckVersion(channel,who,callType)    
         elseif callType["affix"] and #callTypeB==1 then        
-            doOnlyAffixReport(keyword["affix"],channel,who,"affix") 
-            
+            doOnlyAffixReport(keyword["affix"],channel,who,"affix")             
+        elseif callType["invite"] and (checkCallMe(onlyYou) or chennel=="WHISPER_IN")then        
+            MDRrequestInvite(channel,who)
         elseif callType["specificitem"] then 
             --!주스탯이 고정인 무기종류는 검색통과
             if keyword["specificitem"]=="보조장비" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁" or keyword["specificitem"]=="활" or keyword["specificitem"]=="총" or keyword["specificitem"]=="전투검" or keyword["specificitem"]=="방패" then

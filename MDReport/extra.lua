@@ -119,6 +119,10 @@ local classInfo={
     [""]={}
 }
 
+function MDRrequestInvite(channel,who)
+    print("테스트 중인 기능입니다.")
+end
+
 function MDRgetClassInfo(keyword)    
     return classInfo[keyword]
 end
@@ -172,7 +176,7 @@ function MDRko(keyword,type)
 end
 
 function MDRcolor(keyword,type,keyword2)
-    local text,color    
+    local text,color
     for k,v in pairs(classInfo) do
         for i=1,#v do            
             if strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2 then

@@ -153,12 +153,13 @@ function doShortReport(chars,channel,who,callType)
             end     
             
         end        
-        -- 한줄로 줄이기
+        -- 한줄로 줄이기        
         local oneLineMessage={}
         local num=1
-        local maxNum=9
-        local lineNum=math.floor((#messageLines-1)/maxNum)+1
-        local charPerLine=math.floor(#messageLines/lineNum)+1        
+        local maxNum=8
+        local lineNum=math.ceil(#messageLines/maxNum)
+        local charPerLine=math.ceil(#messageLines/lineNum)    
+        --print("총"..#messageLines.."캐릭/한줄당 "..charPerLine.."개/총 "..lineNum.."줄")
         for i=1,#messageLines do
             local space=""
             if i<#messageLines then
