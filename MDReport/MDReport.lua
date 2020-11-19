@@ -1,6 +1,7 @@
 if not MDR then
     MDR={}
 end
+
 MDR["version"]="@project-version@"
 MDR["lastUpdate"]="@project-date-iso@"
 MDR["guide"]=0
@@ -12,7 +13,21 @@ MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
 MDR["maxParking"]=15 --격아 4시즌
-MDR["SCL"]=50 -- 현 확팩 만렙
+
+local releaseDay={ --어둠땅 출시일
+    ["year"]=2020,
+    ["month"]=11,
+    ["day"]=24,
+    ["hour"]=8,
+}
+
+if (time(releaseDay)-time())<0 then
+    MDR["SCL"]=60 --어둠땅 만렙
+else
+    MDR["SCL"]=50--격아 만렙
+end
+
+MDR["SCL"]=50 
 local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
@@ -21,20 +36,20 @@ local comb,onlyOnline,onlyMe,onlyYou,CharName
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 
 local DIL={ --단수별 허용레벨 / 드랍템 레벨
-    [2]=50,--435,
-    [3]=50,--435,
-    [4]=65,--440,
-    [5]=65,--445,
-    [6]=65,--445,
-    [7]=75,--450,
-    [8]=75,--455,
-    [9]=75,--455,
-    [10]=80,--455,
-    [11]=80,--460,
-    [12]=85,--460,
-    [13]=85,--460,
-    [14]=90,--465,
-    [15]=95,--465,
+    [2]=65,--435,
+    [3]=65,--435,
+    [4]=80,--440,
+    [5]=80,--445,
+    [6]=80,--445,
+    [7]=90,--450,
+    [8]=90,--455,
+    [9]=90,--455,
+    [10]=95,--455,
+    [11]=95,--460,
+    [12]=100,--460,
+    [13]=100,--460,
+    [14]=105,--465,
+    [15]=110,--465,
 }
 
 local hasteClass={
@@ -831,10 +846,10 @@ function findCharNeedParking(channel,who,callType,keyword,level)
         
         local messageLines={}
         local message=""
-        if bestCharLevel==MDR["SCL"] then            
+        if bestCharLevel==MDR["SCL"] and parknum>1 then            
             message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
         elseif bestCharLevel<MDR["SCL"] then
-            message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 "..bestCharLevel.."레벨 "..bestCharClass.." : "..bestCharName.."]"
+            message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
         else       
             message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!"  
         end
