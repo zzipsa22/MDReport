@@ -814,27 +814,28 @@ function findCharNeedParking(channel,who,callType,keyword,level)
     if chars~=nil then       
         
         for i=1,#chars do   
-            local best=chars[i]["best"] 
-            if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
-                findChars[parknum]=chars[i]                
-                parknum=parknum+1
-            else                
-                bestLevels[bestnum]=best
-                bestnum=bestnum+1
-            end
-            if chars[i]["charLevel"]>bestCharLevel then
-                bestCharLevel=chars[i]["charLevel"]
-                bestCharName=chars[i]["cutName"]
-                bestCharClass=MDRgetClassName(chars[i]["shortClass"])
+            if chars[i]["charLevel"]<=MDR["SCL"] then --확팩만렙보다 고레벨은 무시
+                local best=chars[i]["best"] 
+                if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
+                    findChars[parknum]=chars[i]                
+                    parknum=parknum+1
+                elseif best and best>=parkingLevel then                
+                    bestLevels[bestnum]=best
+                    bestnum=bestnum+1
+                end
+                if chars[i]["charLevel"]>bestCharLevel then
+                    bestCharLevel=chars[i]["charLevel"]
+                    bestCharName=chars[i]["cutName"]
+                    bestCharClass=MDRgetClassName(chars[i]["shortClass"])
+                end  
             end            
         end
         
-        --쐐기를 한번이라도 갔으면
+        --요청 단수이상 주차한 캐릭이 있으면
         if bestnum>1 then
             table.sort(bestLevels)
             lowestLevel=bestLevels[1]
-            highstLevel=bestLevels[#bestLevels]         
-            
+            highstLevel=bestLevels[#bestLevels]                     
         end        
     end   
     
@@ -846,7 +847,7 @@ function findCharNeedParking(channel,who,callType,keyword,level)
         
         local messageLines={}
         local message=""
-        if bestCharLevel==MDR["SCL"] and parknum>1 then            
+        if bestnum>1 then            
             message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
         elseif bestCharLevel<MDR["SCL"] then
             message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
