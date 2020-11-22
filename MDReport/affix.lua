@@ -36,6 +36,11 @@ function GetAffixNamesTable()
         [117] ="수확",
         [119] ="미혹",
         [120] ="각성",
+        [121] =GetSpellLink(340880)..GetSpellLink(340407), --"교만",
+        [122] =GetSpellLink(343502), --고취
+        [123] ="원한",
+        [124] =GetSpellLink(343520),--"폭풍",
+        
     }--격아 4시즌
     return affixNames
 end

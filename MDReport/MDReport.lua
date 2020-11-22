@@ -27,7 +27,6 @@ else
     MDR["SCL"]=50--격아 만렙
 end
 
-MDR["SCL"]=50 
 local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
