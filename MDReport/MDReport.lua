@@ -27,7 +27,7 @@ DIL.max=219  --15단
 DIL.base=135 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
-	DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
+    DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
 end
 
 local hasteClass={
@@ -663,7 +663,8 @@ function findCharAllKey(VALUES)
         
         --callType=callTypeT[1][1]
         --keyword=callTypeT[1][2]
-        onlyOnline=VALUES["onlyOnline"]   
+        onlyOnline=VALUES["onlyOnline"] 
+        onlyYou=VALUES["onlyYou"]  
         CharName=VALUES["CharName"]
         
         for i=1,#callTypeT do
@@ -680,10 +681,10 @@ function findCharAllKey(VALUES)
     
     if (CharName and CharName~="" ) then callType="charname" end   
     
-    if callType["class"] then
-        type="hard"
-    elseif CharName then
+    if CharName or (callType["class"] and checkCallMe(onlyYou)) then
         type="superhard"
+    elseif callType["class"]  then
+        type="hard"        
     else type="haveKeyOnly"
     end   
     local chars=GetHaveKeyCharInfo(type)    
@@ -980,4 +981,3 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
-
