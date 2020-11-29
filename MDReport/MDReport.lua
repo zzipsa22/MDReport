@@ -13,19 +13,7 @@ MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
 MDR["maxParking"]=15 --격아 4시즌
-
-local releaseDay={ --어둠땅 출시일
-    ["year"]=2020,
-    ["month"]=11,
-    ["day"]=24,
-    ["hour"]=8,
-}
-
-if (time(releaseDay)-time())<0 then
-    MDR["SCL"]=60 --어둠땅 만렙
-else
-    MDR["SCL"]=50--격아 만렙
-end
+MDR["SCL"]=60--어둠땅 만렙
 
 local tips={}
 local warns=100
@@ -33,23 +21,14 @@ local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass
 local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
-
-local DIL={ --단수별 허용레벨 / 드랍템 레벨
-    [2]=65,--435,
-    [3]=65,--435,
-    [4]=80,--440,
-    [5]=80,--445,
-    [6]=80,--445,
-    [7]=90,--450,
-    [8]=90,--455,
-    [9]=90,--455,
-    [10]=95,--455,
-    [11]=95,--460,
-    [12]=100,--460,
-    [13]=100,--460,
-    [14]=105,--465,
-    [15]=110,--465,
-}
+local DIL={}
+DIL.min=184  --깡신
+DIL.max=219  --15단
+DIL.base=135 --기준템렙
+DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
+for i=1,MDR["maxParking"] do
+	DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
+end
 
 local hasteClass={
     {"술사",GetSpellLink(32182)},
@@ -1001,3 +980,4 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
+
