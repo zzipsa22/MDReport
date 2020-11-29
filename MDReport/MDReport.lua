@@ -587,7 +587,7 @@ end
 --보유한 모든 돌 불러오기
 function GetHaveKeyCharInfo(type,level)   
     if not SavedInstancesDB then  return end 
-    if type=="hard" then level=2
+    if type=="만렙만" then level=2
     elseif type=="soft" then level=level-5
     elseif level==nil then level=MDR["maxParking"] end  
     if level<2 then level=2 end  
@@ -614,7 +614,11 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["lastSeen"]=t[k].LastSeen
                 chars[num]["charLevel"]=t[k].Level                    
                 num=num+1                
-            elseif (type~="haveKeyOnly" and ((t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="hard")) or (type=="superhard" and t[k].Level<=MDR["SCL"]))) then                           
+            elseif (type~="쐐기돌보유자만" and (
+			(t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="만렙만")) or 
+			(type=="레벨제한없음" and t[k].Level<=MDR["SCL"]) or 
+			(type=="50렙이상만" and t[k].Level>=50)
+			)) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
@@ -664,7 +668,8 @@ function findCharAllKey(VALUES)
         --callType=callTypeT[1][1]
         --keyword=callTypeT[1][2]
         onlyOnline=VALUES["onlyOnline"] 
-        onlyYou=VALUES["onlyYou"]  
+        onlyYou=VALUES["onlyYou"]
+		onlyMe=VALUES["onlyMe"]		
         CharName=VALUES["CharName"]
         
         for i=1,#callTypeT do
@@ -681,11 +686,13 @@ function findCharAllKey(VALUES)
     
     if (CharName and CharName~="" ) then callType="charname" end   
     
-    if CharName or (callType["class"] and checkCallMe(onlyYou)) then
-        type="superhard"
+    if CharName then
+	    type="레벨제한없음"
+	elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
+        type="50렙이상만"
     elseif callType["class"]  then
-        type="hard"        
-    else type="haveKeyOnly"
+        type="만렙만"        
+    else type="쐐기돌보유자만"
     end   
     local chars=GetHaveKeyCharInfo(type)    
     local forceToShort=0    
@@ -775,7 +782,7 @@ end
 function findCharNeedParking(channel,who,callType,keyword,level)
     if level==nil then level=MDR["maxParking"] 
     elseif level<2 then level=2 end
-    local chars=GetHaveKeyCharInfo("superhard",level)
+    local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if channel==nil then channel="print" end   
     
     local findChars={}
