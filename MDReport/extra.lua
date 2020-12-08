@@ -16,7 +16,7 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 "..MDRcolor("하늘",0,"'?'").."와 조합하여 주사위를 자동으로 굴릴 수 있습니다. ▷도움말: |cffffff00/쐐|r "..MDRcolor("하늘",0,"주사위"))               
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 어둠땅 던전이 추가되었습니다. 이제 속성 정보를 "..MDRcolor("!속성이름").." 으로 검색할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("!교만")..", "..MDRcolor("!폭풍")..", "..MDRcolor("!고취")..", "..MDRcolor("!원한"))               
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
             end
@@ -428,7 +428,7 @@ function MDRCommands(msg, editbox)
         messageLines[#messageLines+1]="|cffA9D271▷!{닉네임}|r과 |cffFF7D0A!{직업명}|r 을 조합하면 캐릭터 이름을 몰라도 특정 |cffFF7D0A직업|r을 검색할 수 있습니다. |cFF33FF99ex)|r |cffFFF569!도적|r"..MDRcolor(krClass,0,"!"..n1)..": 닉네임에 '"..MDRcolor(krClass,0,n1).."'을/를 포함하는 캐릭터를 소유한 사람의 |cffFFF569도적|r 캐릭터를 검색."
     elseif msg=="속성"  then          
         messageLines[#messageLines+1]="|cffC41F3B▶!속성|r : 이번주 쐐기 속성을 출력합니다. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r |cffC41F3B!속성 !|r지난주|cffC41F3B속성 !|r다다음주|cffC41F3B속성|r"
-        
+        messageLines[#messageLines+1]="|cffC41F3B▶!다음속성|r : 다가올 4주 동안의 쐐기 속성을 출력합니다."
     elseif msg=="무기"  then          
         messageLines[#messageLines+1]="▶|cFF80e7EB!전문화|r, |cFFFFF569!능력치|r와 |cFFaaaaaa!무기|r, |cFFF5aCdA!무기범주|r, |cffC79C6E!무기종류|r, |cff8787ED!던전이름|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!회드|r|cFFaaaaaa!무기|r, |cFFFFF569!지능|r|cffC79C6E!단검|r, |cffC79C6E!방패|r, |cFFFFF569!민첩|r|cFFF5aCdA!원거리|r, |cFFFFF569!힘|r|cFFF5aCdA!한손|r, |cFF80e7EB!고술|r|cff8787ED!아탈|r, |cFF80e7EB!양조|r|cffC79C6E!장창|r"
         

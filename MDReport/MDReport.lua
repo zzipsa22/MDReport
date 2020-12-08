@@ -12,7 +12,7 @@ MDR["krClass"],MDR["className"]=UnitClass("player")
 MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
-MDR["maxParking"]=15 --격아 4시즌
+MDR["maxParking"]=14 --어둠땅 1시즌
 MDR["SCL"]=60--어둠땅 만렙
 
 local tips={}
@@ -615,10 +615,10 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["charLevel"]=t[k].Level                    
                 num=num+1                
             elseif (type~="쐐기돌보유자만" and (
-			(t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="만렙만")) or 
-			(type=="레벨제한없음" and t[k].Level<=MDR["SCL"]) or 
-			(type=="50렙이상만" and t[k].Level>=50)
-			)) then                           
+                    (t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="만렙만")) or 
+                    (type=="레벨제한없음" and t[k].Level<=MDR["SCL"]) or 
+                    (type=="50렙이상만" and t[k].Level>=50)
+            )) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
@@ -669,7 +669,7 @@ function findCharAllKey(VALUES)
         --keyword=callTypeT[1][2]
         onlyOnline=VALUES["onlyOnline"] 
         onlyYou=VALUES["onlyYou"]
-		onlyMe=VALUES["onlyMe"]		
+        onlyMe=VALUES["onlyMe"]        
         CharName=VALUES["CharName"]
         
         for i=1,#callTypeT do
@@ -687,8 +687,8 @@ function findCharAllKey(VALUES)
     if (CharName and CharName~="" ) then callType="charname" end   
     
     if CharName then
-	    type="레벨제한없음"
-	elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
+        type="레벨제한없음"
+    elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
         type="50렙이상만"
     elseif callType["class"]  then
         type="만렙만"        

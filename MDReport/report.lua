@@ -37,28 +37,35 @@ function doWarningReport(channel,who,callType)
 end
 
 function doOnlyAffixReport(keyword,channel,who,callType)  
-    
-    local week=keyword
-    local messageLines={}       
-    local weekTitle=""
-    local affixText=GetAnyWeeksAffix(week)
-    if affixText==nil then return end
-    if (week==0)then   
-        weekTitle="이번주"
-    elseif (week==1)then
-        weekTitle="다음주" 
-    elseif (week==-1)then 
-        weekTitle="지난주"
-    elseif (week<-1)then 
-        weekTitle=week.."주전"
-    elseif (week>1)then 
-        weekTitle=week.."주뒤"        
-    end         
-    
-    messageLines[1]="▶"..weekTitle.." 속성: "..affixText 
-    
+    local messageLines={}      
+    if tonumber(keyword) then
+        local week=keyword       
+        local weekTitle=""
+        local affixText=GetAnyWeeksAffix(week)
+        if affixText==nil then return end
+        if (week==0)then   
+            weekTitle="이번주"
+        elseif (week==1)then
+            weekTitle="다음주" 
+        elseif (week==-1)then 
+            weekTitle="지난주"
+        elseif (week<-1)then 
+            weekTitle=week.."주전"
+        elseif (week>1)then 
+            weekTitle=week.."주뒤"        
+        end         
+        messageLines[1]="▶"..weekTitle.." 속성: "..affixText         
+    elseif keyword=="all"then
+        messageLines[1]="▶다음주 속성: "..GetAnyWeeksAffix(1) 
+        messageLines[2]="▷2주뒤 속성: "..GetAnyWeeksAffix(2)
+        messageLines[3]="▷3주뒤 속성: "..GetAnyWeeksAffix(3)
+        messageLines[4]="▷4주뒤 속성: "..GetAnyWeeksAffix(4)        
+    else        
+        messageLines=GetAffixFullDescription(keyword)
+    end  
     reportMessageLines(messageLines,channel,who,callType)    
 end
+
 
 function doShortReport(chars,channel,who,callType)
     local messageLines={} 
