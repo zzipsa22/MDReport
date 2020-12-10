@@ -23,7 +23,7 @@ local comb,onlyOnline,onlyMe,onlyYou,CharName
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 DIL.min=184  --깡신
-DIL.max=219  --15단
+DIL.max=210  --15단
 DIL.base=135 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
@@ -607,7 +607,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["keyLink"]=t[k].MythicKey.link
-                chars[num]["best"]=t[k].MythicKeyBest.level
+                chars[num]["best"]=t[k].MythicKeyBest[1] or 0
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL
