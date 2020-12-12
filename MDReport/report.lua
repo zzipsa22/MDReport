@@ -95,6 +95,7 @@ function doShortReport(chars,channel,who,callType)
 			local best4=chars[i]["best4"]
 			local best10=chars[i]["best10"]
             local itemLevel=chars[i]["itemLevel"]            
+			local equipLevel=chars[i]["equipLevel"]
             local online=""
             local classStatus=""            
             local cutName=gsub(charName, "%s%-.+","")
@@ -132,7 +133,7 @@ function doShortReport(chars,channel,who,callType)
             if keyLink~=nil then
                 havekey=keyName..level
             else                
-                havekey="템렙"..math.floor(itemLevel)
+                havekey="템렙"..math.floor(equipLevel).."/"..math.floor(itemLevel)
             end
             local message=""          
             local sameCheck
@@ -222,6 +223,7 @@ function doFullReport(chars,channel,who,callType)
 			local best4=chars[i]["best4"]
 			local best10=chars[i]["best10"]			
             local itemLevel=chars[i]["itemLevel"]
+			local equipLevel=chars[i]["equipLevel"]
             local charLevel=chars[i]["charLevel"]
             local online=""            
             local classStatus=""
@@ -250,7 +252,7 @@ function doFullReport(chars,channel,who,callType)
                 end                
             else
                 if charLevel==MDR["SCL"] then
-                    havekey="[{rt7}쐐기돌 없음: 템렙"..math.floor(itemLevel).."]"
+                    havekey="[{rt7}쐐기돌 없음: 템렙"..math.floor(equipLevel).."/"..math.floor(itemLevel).."]"
                 else
                     havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
                 end                

@@ -607,12 +607,13 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["keyLink"]=t[k].MythicKey.link
-                chars[num]["best"]=t[k].MythicKeyBest[1] or 0				
-				chars[num]["best4"]=t[k].MythicKeyBest[2] or 0
-				chars[num]["best10"]=t[k].MythicKeyBest[3] or 0
+                chars[num]["best"]=t[k].MythicKeyBest[1] or 0                
+                chars[num]["best4"]=t[k].MythicKeyBest[2] or 0
+                chars[num]["best10"]=t[k].MythicKeyBest[3] or 0
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL
+                chars[num]["equipLevel"]=t[k].ILe                    
                 chars[num]["lastSeen"]=t[k].LastSeen
                 chars[num]["charLevel"]=t[k].Level                    
                 num=num+1                
@@ -627,6 +628,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")                
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]                
                 chars[num]["itemLevel"]=t[k].IL
+                chars[num]["equipLevel"]=t[k].ILe                
                 chars[num]["charLevel"]=t[k].Level               
                 chars[num]["keyLevel"]=0
                 chars[num]["lastSeen"]=t[k].LastSeen                
@@ -782,7 +784,7 @@ end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
 function findCharNeedParking(channel,who,callType,keyword,level)
-    if level==nil then level=MDR["maxParking"] 
+    if level==nil then level=99
     elseif level<2 then level=2 end
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if channel==nil then channel="print" end   
@@ -804,7 +806,7 @@ function findCharNeedParking(channel,who,callType,keyword,level)
         for i=1,#chars do   
             if chars[i]["charLevel"]<=MDR["SCL"] then --확팩만렙보다 고레벨은 무시
                 local best=chars[i]["best"]
-				if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
+                if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
                     findChars[parknum]=chars[i]                
                     parknum=parknum+1
                 elseif best and best>=parkingLevel then                
@@ -836,7 +838,7 @@ function findCharNeedParking(channel,who,callType,keyword,level)
         local messageLines={}
         local message=""
         if bestnum>1 then            
-            message="▶저는 이번주 주차 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
+            message="▶저는 이번주 "..parkingLevel.."단 주차는 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
         elseif bestCharLevel<MDR["SCL"] then
             message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
         else       
@@ -990,3 +992,4 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
+
