@@ -16,7 +16,7 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 어둠땅 던전이 추가되었습니다. 이제 속성 정보를 "..MDRcolor("!속성이름").." 으로 검색할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("!교만")..", "..MDRcolor("!폭풍")..", "..MDRcolor("!고취")..", "..MDRcolor("!원한"))               
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cff8787ED!주차|r로 위대한 금고의 쐐기 보상 정보를 불러올 수 있지만, 현재 SavedInstance 에서 시간을 초과한 기록은 인식하지 못하고 있어 부정확할 수 있습니다. (조만간 수정될 예정)")               
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
             end
