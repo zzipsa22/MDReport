@@ -92,6 +92,8 @@ function doShortReport(chars,channel,who,callType)
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
             local best=chars[i]["best"]
+			local best4=chars[i]["best4"]
+			local best10=chars[i]["best10"]
             local itemLevel=chars[i]["itemLevel"]            
             local online=""
             local classStatus=""            
@@ -115,9 +117,9 @@ function doShortReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""  
             if best and best ~=0 then 
                 if callType=="parking" then
-                    parkingstar=":"..best.."완"                    
+                    parkingstar=":"..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 else  
-                    parkingstar=","..best             
+                    parkingstar=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 end                   
             else 
                 if callType=="parking" then
@@ -216,7 +218,9 @@ function doFullReport(chars,channel,who,callType)
             local keyLink=chars[i]["keyLink"]
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
-            local best=chars[i]["best"]                      
+            local best=chars[i]["best"]
+			local best4=chars[i]["best4"]
+			local best10=chars[i]["best10"]			
             local itemLevel=chars[i]["itemLevel"]
             local charLevel=chars[i]["charLevel"]
             local online=""            
@@ -253,7 +257,7 @@ function doFullReport(chars,channel,who,callType)
             end
             
             if best and best ~=0 then
-                parking=","..best.."완"
+                parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 parkingstar="▶"
             else
                 if not charLevel then

@@ -607,7 +607,9 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["keyLink"]=t[k].MythicKey.link
-                chars[num]["best"]=t[k].MythicKeyBest[1] or 0
+                chars[num]["best"]=t[k].MythicKeyBest[1] or 0				
+				chars[num]["best4"]=t[k].MythicKeyBest[2] or 0
+				chars[num]["best10"]=t[k].MythicKeyBest[3] or 0
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL
@@ -801,8 +803,8 @@ function findCharNeedParking(channel,who,callType,keyword,level)
         
         for i=1,#chars do   
             if chars[i]["charLevel"]<=MDR["SCL"] then --확팩만렙보다 고레벨은 무시
-                local best=chars[i]["best"] 
-                if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
+                local best=chars[i]["best"]
+				if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
                     findChars[parknum]=chars[i]                
                     parknum=parknum+1
                 elseif best and best>=parkingLevel then                
