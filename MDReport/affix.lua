@@ -1,7 +1,7 @@
 function GetAffixWeeksTable()
     local affixWeeks = {    
         [1] =  {[1]=11,[2]=3,[3]=10,[4]=121}, -->>파열,화산,경화 (5)
-        [2] =  {[1]=123,[2]=12,[3]=9,[4]=121},-->>원한,치명상,폭군(6)
+        [2] =  {[1]=7,[2]=124,[3]=9,[4]=121},-->>폭풍,강화,폭군(6)
         [3] =  {[1]=7,[2]=124,[3]=10,[4]=121},-->강화,폭풍,경화(7)
         [4] =  {[1]=122,[2]=4,[3]=9,[4]=121},-->>고취,괴저,폭군(8)
         [5] =  {[1]=8,[2]=14,[3]=10,[4]=121},-->>피웅,전율,경화(9)
@@ -37,7 +37,7 @@ function GetAffixNamesTable()
         [117] ={"수확",10,"{rt3}","우두머리가 아닌 적이 브원삼디에 의해 강화되어, 주기적으로 무덤 밖으로 나와 복수의 대상을 찾습니다..."},
         [119] ={"미혹",10,"{rt3}","던전 전역에서 아즈샤라의 사절이 출현합니다."},
         [120] ={"각성",10,"{rt3}","던전 구석구석 배치된 방첨탑을 통해 나이알로사로 들어가 느조스의 강력한 하수인과 맞서야 합니다. 하수인을 처리하지 않으면 최종 우두머리와 전투를 벌일 때 상대해야 합니다."},
-        [121] ={"교만",10,"{rt3}","우두머리가 아닌 적을 처치하면 플레이어가 교만으로 넘쳐나 끝내 교만의 현신을 형성시킵니다. 이 현신을 처치하면 플레이어가 크게 강화됩니다." ,GetSpellLink(340880),GetSpellLink(342332),GetSpellLink(340407)}, 
+        [121] ={"교만",10,"{rt3}","우두머리가 아닌 적을 처치하면 플레이어가 교만으로 넘쳐나 끝내 교만의 현신을 형성시킵니다. 이 현신을 처치하면 플레이어가 크게 강화됩니다." ,GetSpellLink(340880),GetSpellLink(342332),GetSpellLink(342494)}, 
         [122] ={"고취",4,"{rt2}","일부 우두머리가 아닌 적이 아군을 강화하는 고무적인 기운을 발산합니다.",[5]="고취: "..GetSpellLink(343502)}, 
         [123] ={"원한",4,"{rt8}","우두머리가 아닌 적의 시체에서 마귀가 나타나 무작위 플레이어를 추적합니다."},
         [124] ={"폭풍",7,"{rt1}","전투 중에 적이 주기적으로 피해를 입히는 돌개바람을 소환합니다." ,[5]=GetSpellLink(343520)},
@@ -96,23 +96,32 @@ end
 function GetAnyWeeksAffix(week)
     
     local thisWeek=GetThisWeek()
-    if thisWeek==nil then
-        print("▶MDReport: 적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하세요.")
-        return
-    end
     local calledWeek=thisWeek
     local affixWeeks=GetAffixWeeksTable()
     local howManyWeeks=#affixWeeks
-    if week~=nil then         
-        calledWeek=thisWeek+week
-        if calledWeek<1 then calledWeek=calledWeek+howManyWeeks 
-        elseif calledWeek>howManyWeeks then calledWeek=calledWeek-howManyWeeks
+    local calledWeekFullTex,calledWeekAffix="",{}
+    
+    if week~=0 then --이번주가 아니면
+        if thisWeek==nil then
+            print("▶MDReport: 적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하세요.")
+            return
         end        
+        
+        if week~=nil then         
+            calledWeek=thisWeek+week
+            if calledWeek<1 then calledWeek=calledWeek+howManyWeeks 
+            elseif calledWeek>howManyWeeks then calledWeek=calledWeek-howManyWeeks
+            end        
+        end                 
+        calledWeekAffix=affixWeeks[calledWeek]       
+    else
+        local thisWeeksAffix=C_MythicPlus.GetCurrentAffixes()
+        calledWeekAffix[1]=thisWeeksAffix[2]["id"]        
+        calledWeekAffix[2]=thisWeeksAffix[3]["id"]        
+        calledWeekAffix[3]=thisWeeksAffix[1]["id"]        
+        calledWeekAffix[4]=thisWeeksAffix[4]["id"]                
     end 
-    
-    local calledWeekAffix=affixWeeks[calledWeek]    
-    
-    local calledWeekFullText=GetAffixFullText(calledWeekAffix)
+    calledWeekFullText=GetAffixFullText(calledWeekAffix)
     
     return calledWeekFullText    
     
