@@ -16,7 +16,7 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cff8787ED!주차|r로 위대한 금고의 쐐기 보상 정보를 불러올 수 있습니다. 쐐기 속성이 예정과 달라 당분간은 다가올 주간의 |cffC41F3B!속성|r 정보가 부정확 할 수 있습니다. |cFF33FF99ex|r) |cffC41F3B!다음주|r, |cffC41F3B!다다음주|r")               
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cff8787ED!주차|r로 위대한 금고의 쐐기 보상 정보를 불러올 수 있습니다.")               
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
             end
