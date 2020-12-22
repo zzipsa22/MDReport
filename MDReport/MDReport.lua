@@ -487,7 +487,7 @@ function filterVALUES(VALUES)
             
             findCharAllKey(VALUES)            
         elseif callType["parking"] then        
-            findCharNeedParking(channel,who,"parking",keyword["parking"],level)             
+            findCharNeedParking(channel,who,"parking",keyword["parking"],level,onlyMe)             
         elseif callType["spell"] and #callTypeB==1 then        
             findCharSpell(keyword["spell"],channel,who,"spell")     
         elseif (callType["version"] or callType["forceversion"]) and #callTypeB==1 then        
@@ -789,9 +789,12 @@ function findCharAllKey(VALUES)
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
-function findCharNeedParking(channel,who,callType,keyword,level)
+function findCharNeedParking(channel,who,callType,keyword,level,onlyMe)
     if level==nil then level=99
     elseif level<2 then level=2 end
+    if onlyMe==1 then 
+        LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
+    end
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if channel==nil then channel="print" end   
     
