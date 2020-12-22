@@ -16,7 +16,8 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 입력시 기존 채팅알림에 추가로 현재 캐릭터의 위대한 금고 UI를 엽니다.")               
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cff8787ED!주차|r 를 본인에게 |cFFff80ff귓속말|r로 보내거나, |cFFaaaaff파티|r/|cFF40ff40길드|r 채널로 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 입력시 기존 채팅알림에 추가로 현재 캐릭터의 |cffffcc44위대한 금고|r UI를 엽니다.") 
+                print("▷|cFF33FF99MDR|r의 어떤 명령어든 채널 출력 없이 혼자 확인하고자 할 경우 본인에게 |cFFff80ff귓속말|r을 해보세요. |cFF33FF99ex)|r |cFFff80ff/w|r "..MDRcolor(krClass,0,playerName).." |cff8787ED!주차|r")                
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
             end
@@ -399,7 +400,6 @@ function MDRCommands(msg, editbox)
     if not msg or msg=="" or msg=="도움말" or msg=="help"  then
         messageLines[#messageLines+1]="[  |cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r 기본 명령어 목록  ]"
         messageLines[#messageLines+1]="▷이하 모든 명령어는 |cFF40ff40길드말|r과 |cFFaaaaff파티말|r, |cFFff80ff귓속말|r에 입력했을 때만 반응합니다."
-        messageLines[#messageLines+1]="▷채팅 알림 없이 확인하고자 할 경우 본인에게 |cFFff80ff귓속말|r. |cFF33FF99ex)|r |cFFff80ff/w|r "..MDRcolor(krClass,0,playerName).." |cffC79C6E!돌|r"
         messageLines[#messageLines+1]="▷도움말 목록: "..cmdList
         messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/쐐|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
         messageLines[#messageLines+1]="▷|cFF33FF99[1.5.0]|r+ |cffA9D271!{닉네임}|r 을 이용해 캐릭터를 검색할 수 있습니다. ▷|cffffff00/쐐|r |cffA9D271이름|r" 
@@ -519,4 +519,3 @@ end
 function MDRtitleLower( first, rest )
     return first:lower()..rest:lower()
 end
-
