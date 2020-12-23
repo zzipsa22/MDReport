@@ -17,7 +17,7 @@ C_Timer.After(10, function()
             end 
             if MDR["guide"]<5 then
                 print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cffffff00/금고|r, |cffffff00/주차|r, 또는 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 로 |cffffcc44위대한 금고|r UI를 열 수 있습니다.")                 
-                print("▷|cFF33FF99MDR|r의 어떤 명령어든 채널 출력 없이 혼자 확인하고자 할 경우 본인에게 |cFFff80ff귓속말|r을 해보세요. |cFF33FF99ex)|r |cFFff80ff/w|r "..MDRcolor(krClass,0,playerName).." |cff8787ED!주차|r")                
+                print("▷개인 확인용으로 자주 사용되는 기능 몇가지를 슬래시 (/) 명령어로 추가하였습니다: |cffffff00/돌|r, |cffffff00/주차|r, |cffffff00/금고|r ▷ 영타도 가능합니다: |cFF33FF99ex)|r /ehf, /wnck, /rmarh")                
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
             end
@@ -381,8 +381,17 @@ function MDRdice(msg)
     end       
 end
 
+function MDRParking()
+    LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
+    findCharNeedParking()    
+end
+
 function MDRVault ()
     LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()    
+end
+
+function MDRMykey()
+    findCharAllKey()
 end
 
 function MDRCommands(msg, editbox)   
@@ -405,11 +414,11 @@ function MDRCommands(msg, editbox)
         messageLines[#messageLines+1]="▷이하 모든 명령어는 |cFF40ff40길드말|r과 |cFFaaaaff파티말|r, |cFFff80ff귓속말|r에 입력했을 때만 반응합니다."
         messageLines[#messageLines+1]="▷도움말 목록: "..cmdList
         messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/쐐|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
-        messageLines[#messageLines+1]="▷|cFF33FF99[1.5.0]|r+ |cffA9D271!{닉네임}|r 을 이용해 캐릭터를 검색할 수 있습니다. ▷|cffffff00/쐐|r |cffA9D271이름|r" 
-        
-        messageLines[#messageLines+1]="▷|cFF33FF99[1.6.3]|r+ |cFF00ff00!장신구|r 로 장신구 드랍 던전을 검색할 수 있습니다. ▷|cffffff00/쐐|r |cff00ff00장신구|r"
+        messageLines[#messageLines+1]="▷|cFF33FF99[1.5.0]|r+ |cffA9D271!{닉네임}|r 을 이용해 캐릭터를 검색할 수 있습니다. ▷|cffffff00/쐐|r |cffA9D271이름|r"         
         
         messageLines[#messageLines+1]="▷|cFF33FF99[1.7.0]|r+ "..MDRcolor("하늘",0,"'?'").." 를 이용하여 주사위를 자동으로 굴릴 수 있습니다. ▷|cffffff00/쐐|r "..MDRcolor("하늘",0,"주사위")
+        
+        messageLines[#messageLines+1]="▷|cFF33FF99[1.9.0]|r+ 개인 확인용으로 자주 사용되는 기능 몇가지를 슬래시 (/) 명령어로 추가하였습니다. ▷|cffffff00/돌|r, |cffffff00/주차|r, |cffffff00/금고|r  "
     elseif msg=="돌" then     
         
         messageLines[#messageLines+1]="|cffC79C6E▶!돌|r : 소유한 모든 돌 정보를 요청합니다. 이하 대부분의 명령어들은 '|cff0070DE내|r'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r |cffC79C6E!돌 !|r|cff0070DE내|r|cffC79C6E돌 !|r|cffF58CBA지금|r|cffC79C6E돌 !돌|r|cffffff0015~18|r |cffC79C6E!돌|r|cffffff0025+|r"
@@ -460,9 +469,13 @@ end
 
 --명령어 등록
 SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/Tho','/쐐'
-SLASH_MDRVault1,SLASH_MDRVault2="/금고","/주차"
+SLASH_MDRVault1,SLASH_MDRVault2="/금고","/rmarh"
+SLASH_MDRParking1,SLASH_MDRParking2="/주차","/wnck"
+SLASH_MDRMykey1,SLASH_MDRMykey2,SLASH_MDRMykey3,SLASH_MDRMykey4="/돌","/내돌","/ehf","/soehf"
 SlashCmdList["MDReport"] = MDRCommands 
 SlashCmdList["MDRVault"] = MDRVault
+SlashCmdList["MDRParking"] = MDRParking
+SlashCmdList["MDRMykey"] = MDRMykey
 
 function MDRsplit (inputstr, sep)
     if sep == nil then
