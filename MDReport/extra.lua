@@ -16,7 +16,7 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cff8787ED!주차|r 를 본인에게 |cFFff80ff귓속말|r로 보내거나, |cFFaaaaff파티|r/|cFF40ff40길드|r 채널로 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 입력시 기존 채팅알림에 추가로 현재 캐릭터의 |cffffcc44위대한 금고|r UI를 엽니다.") 
+                print("▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cffffff00/금고|r, |cffffff00/주차|r, 또는 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 로 |cffffcc44위대한 금고|r UI를 열 수 있습니다.")                 
                 print("▷|cFF33FF99MDR|r의 어떤 명령어든 채널 출력 없이 혼자 확인하고자 할 경우 본인에게 |cFFff80ff귓속말|r을 해보세요. |cFF33FF99ex)|r |cFFff80ff/w|r "..MDRcolor(krClass,0,playerName).." |cff8787ED!주차|r")                
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
                 MDR["guide"]=MDR["guide"]+1
@@ -381,6 +381,9 @@ function MDRdice(msg)
     end       
 end
 
+function MDRVault ()
+    LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()    
+end
 
 function MDRCommands(msg, editbox)   
     local messageLines={}
@@ -457,7 +460,9 @@ end
 
 --명령어 등록
 SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3 = '/mdr', '/Tho','/쐐'
+SLASH_MDRVault1,SLASH_MDRVault2="/금고","/주차"
 SlashCmdList["MDReport"] = MDRCommands 
+SlashCmdList["MDRVault"] = MDRVault
 
 function MDRsplit (inputstr, sep)
     if sep == nil then
