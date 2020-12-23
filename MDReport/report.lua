@@ -17,6 +17,11 @@ local skull={
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
 
+local skullP={}
+for i=1,8 do
+    skullP["rt"..i]="\124TInterface/TargetingFrame/UI-RaidTargetingIcon_"..i..":12\124t"
+end
+
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
@@ -92,10 +97,10 @@ function doShortReport(chars,channel,who,callType)
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
             local best=chars[i]["best"]
-			local best4=chars[i]["best4"]
-			local best10=chars[i]["best10"]
+            local best4=chars[i]["best4"]
+            local best10=chars[i]["best10"]
             local itemLevel=chars[i]["itemLevel"]            
-			local equipLevel=chars[i]["equipLevel"]
+            local equipLevel=chars[i]["equipLevel"]
             local online=""
             local classStatus=""            
             local cutName=gsub(charName, "%s%-.+","")
@@ -220,10 +225,10 @@ function doFullReport(chars,channel,who,callType)
             local keyName=chars[i]["keyName"]
             local level=chars[i]["keyLevel"]
             local best=chars[i]["best"]
-			local best4=chars[i]["best4"]
-			local best10=chars[i]["best10"]			
+            local best4=chars[i]["best4"]
+            local best10=chars[i]["best10"]            
             local itemLevel=chars[i]["itemLevel"]
-			local equipLevel=chars[i]["equipLevel"]
+            local equipLevel=chars[i]["equipLevel"]
             local charLevel=chars[i]["charLevel"]
             local online=""            
             local classStatus=""
@@ -280,7 +285,7 @@ function doFullReport(chars,channel,who,callType)
             
             if forceprint==1 then
                 channel="print"
-                headStar=parkingstar
+                headStar=skull[class] 
             else
                 headStar=skull[class]                
             end             
@@ -323,7 +328,10 @@ function reportMessageLines(messageLines,channel,who,callType)
     end       
     
     for i=1,#messageLines do 
-        if channel=="print"then
+        if channel=="print"then            
+            for j=1,8 do
+                messageLines[i]=gsub(messageLines[i],"{rt"..j.."}",skullP["rt"..j])
+            end
             C_Timer.After(0.2*(i-1), function()
                     if messageLines[i]~="" then
                         print(messageLines[i])

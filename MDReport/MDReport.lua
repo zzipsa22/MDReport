@@ -610,14 +610,6 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["best"]=t[k].MythicKeyBest[1] or 0                
                 chars[num]["best4"]=t[k].MythicKeyBest[2] or 0
                 chars[num]["best10"]=t[k].MythicKeyBest[3] or 0
-                --[[
-                if chars[num]["fullName"]==meAddon then 
-                    local h=C_WeeklyRewards.GetActivities()                    
-                    chars[num]["best"]=h[1]["level"]
-                    chars[num]["best4"]=h[2]["level"]
-                    chars[num]["best10"]=h[3]["level"]                    
-                end   
-                ]]  
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL

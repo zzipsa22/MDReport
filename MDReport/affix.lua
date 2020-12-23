@@ -45,12 +45,6 @@ function GetAffixNamesTable()
     }--격아 4시즌
     return affixNames
 end
-local affixAddedLevel={
-    [1]="{rt6}",
-    [2]="{rt2}",
-    [3]="{rt3}",
-    [4]="{rt8}",--해골    
-}
 
 function GetAffixFullText(AffixTable)
     if AffixTable[1]==0 then
