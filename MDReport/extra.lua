@@ -138,6 +138,23 @@ function MDRgetClassName(keyword)
     end   
 end
 
+function MDRbackupMythicKey(type)    
+    if not MDR.myMythicKey then
+        MDR.myMythicKey={}
+    end 
+    local chars=GetHaveKeyCharInfo();
+    chars=filterCharsByFilter(chars,"name",nil,nil);
+    if type=="start" then        
+        MDR.myMythicKey.start={}        
+        MDR.myMythicKey.start.level=chars[1]["keyLevel"]
+        MDR.myMythicKey.start.name=chars[1]["keyName"]        
+    else
+        MDR.myMythicKey.finish={}
+        MDR.myMythicKey.finish.level=chars[1]["keyLevel"]
+        MDR.myMythicKey.finish.name=chars[1]["keyName"]
+    end       
+end
+
 function MDRko(keyword,type)    
     if not keyword then return "" end
     local LC=strsub(gsub(keyword,"!",""),-3)

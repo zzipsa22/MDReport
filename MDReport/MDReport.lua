@@ -699,7 +699,19 @@ function findCharAllKey(VALUES)
     else type="쐐기돌보유자만"
     end   
     local chars=GetHaveKeyCharInfo(type)    
-    local forceToShort=0    
+    local forceToShort=0
+    
+    if callType["currentmykey"] then
+        if not MDR.myMythicKey then return end
+        local start=MDR.myMythicKey.start
+        local finish=MDR.myMythicKey.finish
+        if start==nil or finish==nil then return end
+        if start.level==finish.level and start.name==finish.name then
+            return
+        else
+            onlyOnline=1            
+        end        
+    end        
     
     if callType["levelrange"] then
         level2=keyword
@@ -711,7 +723,7 @@ function findCharAllKey(VALUES)
     (channel=="GUILD" or channel=="PARTY") then
         forceToShort=1
     end 
-    if callType["currentall"] or callType["currentmykey"] then
+    if callType["currentall"] then
         onlyOnline=1
     end    
     

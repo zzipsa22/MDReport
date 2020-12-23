@@ -7,7 +7,8 @@ local callTypeTable={
     ["아무"]={"all", "모든 던전"},    
     ["모든돌"]={"all", "모든 던전"},
     
-    ["무슨돌"]={"currentmykey", "현재 내 돌"},
+    ["무슨돌"]={"currentmykey", "새 돌"},
+    ["새돌"]={"currentmykey", "새 돌"},
     
     ["현재돌"]={"currentall", "지금 소유한 돌"},
     ["돌내놔"]={"currentall", "지금 소유한 돌"},   
