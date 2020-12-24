@@ -143,16 +143,29 @@ function MDRbackupMythicKey(type)
     if not MDR.myMythicKey then
         MDR.myMythicKey={}
     end 
-    local chars=GetHaveKeyCharInfo();
-    chars=filterCharsByFilter(chars,"name",nil,nil);
-    if type=="start" then        
-        MDR.myMythicKey.start={}        
-        MDR.myMythicKey.start.level=chars[1]["keyLevel"]
-        MDR.myMythicKey.start.name=chars[1]["keyName"]        
-    else
+    local chars=GetHaveKeyCharInfo()
+    local name,level
+    for bagID = 0, 4 do
+        for invID = 1, GetContainerNumSlots(bagID) do
+            local itemID = GetContainerItemID(bagID, invID)
+            if itemID and itemID == 180653 then
+                local keyLink = GetContainerItemLink(bagID, invID)
+                local KeyInfo = {strsplit(':', keyLink)}
+                local mapID = tonumber(KeyInfo[3])
+                local mapLevel = tonumber(KeyInfo[4])
+                name = C_ChallengeMode.GetMapUIInfo(mapID)
+                level = mapLevel
+            end
+        end
+    end
+    if type=="finish" then               
         MDR.myMythicKey.finish={}
-        MDR.myMythicKey.finish.level=chars[1]["keyLevel"]
-        MDR.myMythicKey.finish.name=chars[1]["keyName"]
+        MDR.myMythicKey.finish.level=level
+        MDR.myMythicKey.finish.name=name         
+    else       
+        MDR.myMythicKey.start={}        
+        MDR.myMythicKey.start.level=level
+        MDR.myMythicKey.start.name=name        
     end       
 end
 

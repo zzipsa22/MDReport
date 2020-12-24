@@ -1,5 +1,8 @@
 local MDRF = CreateFrame("Frame")
 
+
+MDRF:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+MDRF:RegisterEvent("CHALLENGE_MODE_START")
 MDRF:RegisterEvent("CHAT_MSG_PARTY")
 MDRF:RegisterEvent("CHAT_MSG_PARTY_LEADER") 
 MDRF:RegisterEvent("CHAT_MSG_GUILD")
@@ -9,6 +12,19 @@ MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
+		 -- 쐐기 완료시  
+        if (event=="CHALLENGE_MODE_COMPLETED") then     
+            C_Timer.After(3, function()  
+                    MDRbackupMythicKey("finish")     
+            end)            
+            return
+            
+            -- 쐐기 시작시            
+        elseif (event=="CHALLENGE_MODE_START")  then            
+            MDRbackupMythicKey("start") 
+            return           
+        end		
+		
         local msg=select(1, ...)    
         local who=select(2, ...)
         

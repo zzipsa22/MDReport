@@ -30,6 +30,13 @@ for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
 end
 
+C_Timer.After(3, function()  
+        if MDR.myMythicKey==nil then
+            MDR.myMythicKey={}
+        end    
+        MDRbackupMythicKey("start")     
+end)  
+
 local hasteClass={
     {"술사",GetSpellLink(32182)},
     {"법사",GetSpellLink(80353)},
