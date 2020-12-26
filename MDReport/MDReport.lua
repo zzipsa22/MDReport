@@ -667,7 +667,7 @@ end
 function findCharAllKey(VALUES)    
     
     callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
-    
+    channel="print"
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
@@ -692,7 +692,6 @@ function findCharAllKey(VALUES)
             keyword3[callTypeT[i][1]]=callTypeT[i][4]              
         end           
     end
-    
     local type=nil    
     
     if (CharName and CharName~="" ) then callType="charname" end   
