@@ -260,12 +260,12 @@ function filterVALUES(VALUES)
     end      
     
     --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
-    if (callType["mykey"] or callType["currentmykey"]) and who~=meGame and channel~="WHISPER_OUT" then 
+    if callType["mykey"] and who~=meGame and channel~="WHISPER_OUT" then 
         return 
     end       
     
     --내가 보낸 귓말이고, 나한테 보냈거나 !내돌/!지금내돌을 요청한게 아니면 리턴
-    if (channel=="WHISPER_OUT") and ((who==meGame) or (callType["mykey"]~=1 or callType["currentmykey"]~=1) )  then
+    if (channel=="WHISPER_OUT") and (who==meGame or callType["mykey"]~=1 )  then
         return       
     end        
     
