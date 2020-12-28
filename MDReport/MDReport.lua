@@ -488,8 +488,9 @@ function filterVALUES(VALUES)
             callType["levelrange"] or 
             callType["dungeon"] or 
             callType["class"] or 
-            callType["currentmykey"] or 
-            callType["currentall"] or         
+            callType["newkey"] or 
+            callType["currentall"] or 
+            callType["currentdungeon"] or 
             callType["charname"] )  then           
             
             findCharAllKey(VALUES)            
@@ -707,7 +708,7 @@ function findCharAllKey(VALUES)
     local chars=GetHaveKeyCharInfo(type)    
     local forceToShort=0
     
-    if callType["currentmykey"] then
+    if callType["newkey"] then
         if not MDR.myMythicKey then return end
         local start=MDR.myMythicKey.start
         local finish=MDR.myMythicKey.finish
@@ -717,7 +718,13 @@ function findCharAllKey(VALUES)
         else
             onlyOnline=1            
         end        
-    end        
+    end 
+    
+    if callType["currentdungeon"] then
+        local here,_=GetInstanceInfo()
+        callType["dungeon"]=1
+        keyword["dungeon"]=getShortDungeonName(here)
+    end    
     
     if callType["levelrange"] then
         level2=keyword

@@ -16,7 +16,7 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<5 then
-                print(MDRcolor("수도",0,"▶").."[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cffffff00/금고|r, |cffffff00/주차|r, 또는 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 로 |cffffcc44위대한 금고|r UI를 열 수 있습니다. "..MDRcolor("수도",0,"▶").."개인 확인용으로 자주 사용되는 기능 몇가지를 슬래시 (/) 명령어로 추가하였습니다: |cffffff00/돌|r, |cffffff00/주차|r, |cffffff00/금고|r "..MDRcolor("수도",0,"▶").."이제 쐐기 종료 후 |cffC79C6E!무슨돌|r 을 입력하면 새로 받은 쐐기돌을 요청/출력할 수 있습니다.")                 
+                print(MDRcolor("수도",0,"▶").."[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cffffff00/금고|r, |cffffff00/주차|r, 또는 |cff8787ED!|r|cffF58CBA내|r|cff8787ED주차|r 로 |cffffcc44위대한 금고|r UI를 열 수 있습니다. "..MDRcolor("수도",0,"▶").."슬래시 (/) 명령어 추가: |cffffff00/돌|r, |cffffff00/주차|r, |cffffff00/금고|r (개인 확인용) "..MDRcolor("수도",0,"▶").."돌 꼽기 전 |cffC79C6E!누구돌|r (석주 찾기) 기능과 쐐기 완료 후 |cffC79C6E!무슨돌|r (새돌 찾기) 기능을 추가하였습니다.")                 
                 --print("")                
                 --print("")                
                 print("▷전체 도움말: |cffffff00/mdr|r 또는 |cffffff00/쐐|r, |cffffff00/Tho|r")
