@@ -12,9 +12,9 @@ MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
-		 -- 쐐기 완료시  
+        -- 쐐기 완료시  
         if (event=="CHALLENGE_MODE_COMPLETED") then     
-            C_Timer.After(3, function()  
+            C_Timer.After(7, function()  
                     MDRbackupMythicKey("finish")     
             end)            
             return
@@ -23,10 +23,10 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         elseif (event=="CHALLENGE_MODE_START")  then            
             MDRbackupMythicKey("start") 
             return           
-        end		
-		
+        end        
+        
         local msg=select(1, ...)    
-        local who=select(2, ...)
+        local who=select(2, ...)     
         
         --느낌표 스팸이면 무시
         if strfind(msg,"!!") then return end

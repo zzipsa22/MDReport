@@ -7,8 +7,11 @@ local callTypeTable={
     ["아무"]={"all", "모든 던전"},    
     ["모든돌"]={"all", "모든 던전"},
     
-    ["무슨돌"]={"currentmykey", "새 돌"},
-    ["새돌"]={"currentmykey", "새 돌"},
+    ["무슨돌"]={"newkey", "새 돌"},
+    ["새돌"]={"newkey", "새 돌"},
+    
+    ["누구돌"]={"currentdungeon", "석주"},
+    ["석주"]={"currentdungeon", "석주"},    
     
     ["현재돌"]={"currentall", "지금 소유한 돌"},
     ["돌내놔"]={"currentall", "지금 소유한 돌"},   
@@ -273,10 +276,10 @@ local callTypeTable={
     ["사이드"]={"dungeon", "티르너"},
     ["티사안"]={"dungeon", "티르너"},
     
-    ["핏빛심연"]={"dungeon", "심연"},
-    ["핏심"]={"dungeon", "심연"},
-    ["심연"]={"dungeon", "심연"},
-    ["핏빛"]={"dungeon", "심연"},
+    ["핏빛심연"]={"dungeon", "핏심"},
+    ["핏심"]={"dungeon", "핏심"},
+    ["심연"]={"dungeon", "핏심"},
+    ["핏빛"]={"dungeon", "핏심"},
     
     ["버전"]={"version", nil},
     ["버젼"]={"version", nil},
