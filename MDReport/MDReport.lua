@@ -722,8 +722,9 @@ function findCharAllKey(VALUES)
     
     if callType["currentdungeon"] then
         local here,_=GetInstanceInfo()
-        callType["dungeon"]=1
+        callType["dungeon"]=1        
         keyword["dungeon"]=getShortDungeonName(here)
+        onlyOnline=1
     end    
     
     if callType["levelrange"] then
@@ -740,8 +741,8 @@ function findCharAllKey(VALUES)
         onlyOnline=1
     end    
     
-    --!내돌을 길드로 요청한 경우우 짧게 보고
-    if callType["mykey"] and (channel=="GUILD") then
+    --!내돌을 길드로 요청한 경우 짧게 보고
+    if (callType["mykey"] or callType["dungeon"]) and (channel=="GUILD") then
         forceToShort=1
     end 
     

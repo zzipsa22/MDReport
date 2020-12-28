@@ -196,7 +196,6 @@ end
 function doFullReport(chars,channel,who,callType)          
     
     local messageLines={} 
-    
     if chars~=nil then      
         local charName,class=nil,nil
         
@@ -263,7 +262,7 @@ function doFullReport(chars,channel,who,callType)
                 end                
             end
             
-            if best and best ~=0 then
+            if best and best~=0 then
                 parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 parkingstar="▶"
             else
@@ -292,16 +291,30 @@ function doFullReport(chars,channel,who,callType)
             
             local message=""
             local sameCheck
-            if callType=="spell" and chars[i]["extraLink"] then
+            if callType["spell"] and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
-            elseif callType=="item" and chars[i]["extraLink"] then                
+            elseif callType["item"] and chars[i]["extraLink"] then                
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   
                     message=","..headStar..havekey
                 else      
                     message=headStar..havekey.."▶"..chars[i]["extraLink"] 
                 end 
-            else
+            elseif callType["newkey"] then
+                local s=MDR.myMythicKey.start
+                local f=MDR.myMythicKey.finish
+                local up=""
+                if f.level=="nil" or s.level=="nil" then return end
+                if f.level > s.level then
+                    up="△"..(f.level-s.level).."상"
+                else
+                    up="▽시간초과"
+                end                
+                message=headStar.."새 돌: ["..getShortDungeonName(s.name)..s.level.."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..f.link
+                
+            elseif callType["currentdungeon"] then    
+                message=headStar..keyName..level..": "..s.link
+            else                
                 message=headStar..classStatus..": "..havekey..online
             end
             if sameCheck then                 

@@ -144,7 +144,7 @@ function MDRbackupMythicKey(type)
         MDR.myMythicKey={}
     end 
     local chars=GetHaveKeyCharInfo()
-    local name,level
+    local name,level,link
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
             local itemID = GetContainerItemID(bagID, invID)
@@ -155,17 +155,28 @@ function MDRbackupMythicKey(type)
                 local mapLevel = tonumber(KeyInfo[4])
                 name = C_ChallengeMode.GetMapUIInfo(mapID)
                 level = mapLevel
+                link = keyLink
             end
         end
     end
     if type=="finish" then               
         MDR.myMythicKey.finish={}
         MDR.myMythicKey.finish.level=level
-        MDR.myMythicKey.finish.name=name         
+        MDR.myMythicKey.finish.name=name
+        MDR.myMythicKey.finish.link=link
+        local VALUES={}
+        local callTypeT={}
+        C_Timer.After(3, function()  
+                callTypeT[1]=getCallTypeTable("무슨돌")
+                VALUES["callTypeT"]=callTypeT        
+                VALUES["channel"]="PARTY"        
+                filterVALUES(VALUES)
+        end)        
     else       
         MDR.myMythicKey.start={}        
         MDR.myMythicKey.start.level=level
-        MDR.myMythicKey.start.name=name        
+        MDR.myMythicKey.start.name=name
+        MDR.myMythicKey.start.link=link        
     end       
 end
 
