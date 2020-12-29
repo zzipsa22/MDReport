@@ -291,6 +291,10 @@ function doFullReport(chars,channel,who,callType)
             
             local message=""
             local sameCheck
+            
+            local s=MDR.myMythicKey.start
+            local f=MDR.myMythicKey.finish
+            
             if callType["spell"] and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
             elseif callType["item"] and chars[i]["extraLink"] then                
@@ -300,9 +304,7 @@ function doFullReport(chars,channel,who,callType)
                 else      
                     message=headStar..havekey.."▶"..chars[i]["extraLink"] 
                 end 
-            elseif callType["newkey"] then
-                local s=MDR.myMythicKey.start
-                local f=MDR.myMythicKey.finish
+            elseif callType["newkey"] then                
                 local up=""
                 if f.level=="nil" or s.level=="nil" then return end
                 if f.level > s.level then
@@ -310,10 +312,10 @@ function doFullReport(chars,channel,who,callType)
                 else
                     up="▽시간초과"
                 end                
-                message=headStar.."새 돌: ["..getShortDungeonName(s.name)..s.level.."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..f.link
+                message=headStar.."새 돌: ["..getShortDungeonName(s.name)..s.level.."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
                 
             elseif callType["currentdungeon"] then    
-                message=headStar..keyName..level..": "..s.link
+                message=headStar..getShortDungeonName(keyName)..level..": "..(s and s.link or keyLink)
             else                
                 message=headStar..classStatus..": "..havekey..online
             end
