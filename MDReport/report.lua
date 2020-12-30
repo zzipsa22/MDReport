@@ -308,14 +308,14 @@ function doFullReport(chars,channel,who,callType)
                 local up=""
                 if f.level=="nil" or s.level=="nil" then return end
                 if f.level > s.level then
-                    up="△"..(f.level-s.level).."상"
+                    up="△"..(f.level-(s.level+1)).."상"
                 else
                     up="▽시간초과"
                 end                
-                message=headStar.."새 돌: ["..getShortDungeonName(s.name)..s.level.."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
+                message=headStar.."새 돌: ["..getShortDungeonName(s.name)..(s.level+1).."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
                 
             elseif callType["currentdungeon"] then    
-                message=headStar..getShortDungeonName(keyName)..level..": "..(s and s.link or keyLink)
+                message=headStar..getShortDungeonName(keyName)..level..": "..keyLink
             else                
                 message=headStar..classStatus..": "..havekey..online
             end

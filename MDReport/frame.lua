@@ -14,7 +14,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         -- 쐐기 완료시  
         if (event=="CHALLENGE_MODE_COMPLETED") then     
-            C_Timer.After(7, function()  
+            C_Timer.After(5, function()  
                     MDRbackupMythicKey("finish")     
             end)            
             return
