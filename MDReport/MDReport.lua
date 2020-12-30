@@ -19,7 +19,7 @@ local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
 local who,channel,level,level2,callTypeT
-local comb,onlyOnline,onlyMe,onlyYou,CharName
+local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 DIL.min=184  --깡신
@@ -681,7 +681,8 @@ function findCharAllKey(VALUES)
         --keyword=callTypeT[1][2]
         onlyOnline=VALUES["onlyOnline"] 
         onlyYou=VALUES["onlyYou"]
-        onlyMe=VALUES["onlyMe"]        
+        onlyMe=VALUES["onlyMe"]
+        except=VALUES["except"]
         CharName=VALUES["CharName"]
         
         for i=1,#callTypeT do
@@ -767,8 +768,12 @@ function findCharAllKey(VALUES)
     end
     
     --던전이나 직업으로 필터링
-    if callType["dungeon"] then
-        chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)         
+    if callType["dungeon"]  then
+        if except==1 then
+            chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil)  
+        else            
+            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)         
+        end        
     end    
     
     if  callType["class"] then
@@ -981,7 +986,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
         if f1 and f2 and f1>f2 then
             local big=f1; f1=f2;f2=big
         end        
-    elseif filter=="dungeon" then
+    elseif filter=="dungeon" or filter=="except" then        
         f1=getFullDungeonName(f1) 
     elseif filter=="name" then
         f1=meAddon   
@@ -1000,7 +1005,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 target=chars[i]["keyLevel"]                  
             elseif filter=="class" then                
                 target=chars[i]["shortClass"]   
-            elseif filter=="dungeon" then
+            elseif filter=="dungeon" or filter=="except" then
                 target=chars[i]["keyName"]     
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
@@ -1008,7 +1013,9 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 target=string.gsub(chars[i]["fullName"], "(%a)([%w_']*)", MDRtitleLower)
                 f1=string.gsub(f1, "(%a)([%w_']*)", MDRtitleLower)
             end
-            if f1==target or (filter=="CharName" and strfind(target,f1) and lastSeen<MDR["lastSeen"]) then
+            if (filter=="CharName" and strfind(target,f1) and lastSeen<MDR["lastSeen"]) or 
+            (filter~="except" and f1==target) or 
+            (filter=="except" and f1~=target) then
                 findChars[num]=chars[i]
                 num=num+1
             end

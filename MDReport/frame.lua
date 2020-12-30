@@ -34,7 +34,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if (event=="CHAT_MSG_SYSTEM") then 
             MDRdice(msg)
             return
-        end   
+        end       
         
         if (MDR["youMakeDice"] or MDR["master"]) and MDR["dices"] then
             MDRcollectDices(msg)            
@@ -62,10 +62,11 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 local f,l=strfind(msg,filters[i])
                 msg=strsub(msg,l+1,-1)                
             end            
-        end        
+        end 
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
+            
             if  strfind(msg,"!") and strsub(msg, -1)~="!" then
                 --특수문자가 없는 말머리 제거
                 local header=MDRsplit(msg,"!")[1]
@@ -73,7 +74,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                     local length=strlen(header)
                     msg=strsub(msg,length+1,-1)
                 end                
-            else                 
+            else                   
             return end 
         end--!가 없으면 리턴
         
@@ -110,19 +111,20 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         --local keyword=gsub(msg," ","")        
         
         local level1,level2
-        local onlyMe,onlyOnline,CharName,onlyYou
+        local onlyMe,onlyOnline,CharName,onlyYou,except
         local VALUES={} 
         
         local k={} 
         local callTypeT={}
         --k[1]=keyword          
         
-        --명령어가 이중인지 체크        
+        --명령어가 이중인지 체크
+        
         if strfind(msg,"!") then
             k=MDRsplit(msg,"!")     
         end        
         
-        for i=1,#k do  
+        for i=1,#k do
             if strfind(k[i],"주사위") or strfind(k[i],"?")and             MDR["diceWait"]~=1 then
                 MDRmakeDice(channel,who,k)
                 MDR["running"]=1   
@@ -215,6 +217,10 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 k[1]=gsub(k[1],"지금","")
                 onlyOnline=1                
             end
+            if strfind(k[1],"노") then
+                k[1]=gsub(k[1],"노","")
+                except=1                
+            end
             callTypeT[1]=getCallTypeTable(k[1])
             --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
             if ((not callTypeT[1]) and name~=""  and name~="?") then
@@ -241,6 +247,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             VALUES["who"]=who   
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyYou"]=onlyYou
+            VALUES["except"]=except            
             VALUES["onlyOnline"]=onlyOnline           
             VALUES["CharName"]=CharName
             
@@ -250,4 +257,3 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
-
