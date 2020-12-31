@@ -124,7 +124,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             k=MDRsplit(msg,"!")     
         end        
         
-        for i=1,#k do
+        for i=1,#k do           
+            
             if strfind(k[i],"주사위") or strfind(k[i],"?")and             MDR["diceWait"]~=1 then
                 MDRmakeDice(channel,who,k)
                 MDR["running"]=1   
@@ -197,39 +198,41 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             if getCallTypeTable(k[i]) then
                 callTypeT[ct]=getCallTypeTable(k[i])
                 ct=ct+1
+            end 
+            
+            --명령어가 발견이 안되면
+            if k[i] and not callTypeT[i] then
+                local name=k[i]
+                if strfind(k[i],"내") then             
+                    k[i]=gsub(k[i],"내","")
+                    onlyMe=1
+                end            
+                if strfind(k[i],"지금") then
+                    k[i]=gsub(k[i],"지금","")
+                    onlyOnline=1                
+                end
+                if strfind(k[i],"노") then
+                    k[i]=gsub(k[i],"노","")
+                    except=1                
+                end                
+                
+                callTypeT[ct]=getCallTypeTable(k[i])
+                ct=ct+1
+                
+                --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
+                if ((not callTypeT[i]) and name~=""  and name~="?") then
+                    callTypeT[i]=getCallTypeTable("아무")
+                    CharName=name
+                end            
             end            
-        end        
+        end       
         
         if callTypeT[1] and k[2]~="" and k[2]~="?" and not getCallTypeTable(k[2]) then        
             onlyYou=k[2] 
         elseif callTypeT[1] and k[1]~="" and k[1]~="?" and not getCallTypeTable(k[1]) then            
             onlyYou=k[1]            
-        end        
-        
-        --명령어가 발견이 안되면
-        if k[1] and not callTypeT[1] then
-            local name=k[1]
-            if strfind(k[1],"내") then             
-                k[1]=gsub(k[1],"내","")
-                onlyMe=1
-            end            
-            if strfind(k[1],"지금") then
-                k[1]=gsub(k[1],"지금","")
-                onlyOnline=1                
-            end
-            if strfind(k[1],"노") then
-                k[1]=gsub(k[1],"노","")
-                except=1                
-            end
-            callTypeT[1]=getCallTypeTable(k[1])
-            --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-            if ((not callTypeT[1]) and name~=""  and name~="?") then
-                callTypeT[1]=getCallTypeTable("아무")
-                CharName=name                
-            end
-            
-        end
-        
+        end      
+
         --작은수가 먼저오게 조절
         if level1 and level2 then
             if level2<level1 then
@@ -249,7 +252,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             VALUES["onlyYou"]=onlyYou
             VALUES["except"]=except            
             VALUES["onlyOnline"]=onlyOnline           
-            VALUES["CharName"]=CharName
+            VALUES["CharName"]=CharName            
             
             filterVALUES(VALUES)
             MDR["who"]=who

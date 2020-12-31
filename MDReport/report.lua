@@ -295,9 +295,9 @@ function doFullReport(chars,channel,who,callType)
             local s=MDR.myMythicKey.start
             local f=MDR.myMythicKey.finish
             
-            if callType["spell"] and chars[i]["extraLink"] then
+            if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
-            elseif callType["item"] and chars[i]["extraLink"] then                
+            elseif callType=="item" and chars[i]["extraLink"] then                
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   
                     message=","..headStar..havekey

@@ -431,7 +431,7 @@ function checkDungeonHasItem(VALUES)
         end         
         
         --장신구를 찾는 경우
-    elseif filter=="trinket" then        
+    elseif filter=="trinket" then 
         for j=1,#dropTable do
             if dropTable[j][2]=="장신구" and (
                 (strfind(dropTable[j][1],stat) and strfind(dropTable[j][4],role)) 
@@ -494,7 +494,17 @@ function findCharAllItem(VALUES)
         for i=1,#callTypeT do
             callTypeB[i]=callTypeT[i][1]
             callType[callTypeT[i][1]]=1
-            keyword[callTypeT[i][1]]=callTypeT[i][2]
+            
+            if callTypeT[i][1]=="dungeon" then 
+                if not keyword["dungeon"] then
+                    keyword["dungeon"]={}
+                end
+                tinsert(keyword["dungeon"],callTypeT[i][2])
+            else
+                keyword[callTypeT[i][1]]=callTypeT[i][2]
+            end
+            
+            --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]  
             keyword3[callTypeT[i][1]]=callTypeT[i][4]
         end   

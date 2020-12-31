@@ -147,7 +147,17 @@ function filterVALUES(VALUES)
             callTypeB[i]=callTypeT[i][1]
             --print(i..":"..callTypeT[i][1])
             callType[callTypeT[i][1]]=1
-            keyword[callTypeT[i][1]]=callTypeT[i][2]
+            if callTypeT[i][1]=="dungeon" then 
+                if not keyword["dungeon"] then
+                    keyword["dungeon"]={}
+                end
+                tinsert(keyword["dungeon"],callTypeT[i][2])
+                --print(callTypeT[i][2])
+            else
+                keyword[callTypeT[i][1]]=callTypeT[i][2]
+            end
+            
+            --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]
             keyword3[callTypeT[i][1]]=callTypeT[i][4]              
         end   
@@ -164,7 +174,7 @@ function filterVALUES(VALUES)
     local kLength=math.floor((length-1)/3+1)
     
     -- 찾는 사람을 지정한 경우
-    if onlyYou then        
+    if onlyYou then 
         if who==meGame then  
             if strlen(onlyYou)<length then               
                 print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
@@ -191,7 +201,7 @@ function filterVALUES(VALUES)
                     if callTypeT[i][1]=="class" then
                         type=1
                     elseif callTypeT[i][1]=="dungeon" then
-                        word=getFullDungeonName(word)                        
+                        word=getFullDungeonName(word[1])                        
                     elseif callTypeT[i][1]=="spec" then
                         type=10                        
                     end    
@@ -689,7 +699,17 @@ function findCharAllKey(VALUES)
             callTypeB[i]=callTypeT[i][1]
             --print(i..":"..callTypeT[i][1])
             callType[callTypeT[i][1]]=1
-            keyword[callTypeT[i][1]]=callTypeT[i][2]
+            
+            if callTypeT[i][1]=="dungeon" then 
+                if not keyword["dungeon"] then
+                    keyword["dungeon"]={}
+                end
+                tinsert(keyword["dungeon"],callTypeT[i][2])
+            else
+                keyword[callTypeT[i][1]]=callTypeT[i][2]
+            end
+            
+            --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]
             keyword3[callTypeT[i][1]]=callTypeT[i][4]              
         end           
@@ -772,7 +792,7 @@ function findCharAllKey(VALUES)
         if except==1 then
             chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil)  
         else            
-            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)         
+            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)   
         end        
     end    
     
@@ -987,7 +1007,8 @@ function filterCharsByFilter(chars,filter,f1,f2)
             local big=f1; f1=f2;f2=big
         end        
     elseif filter=="dungeon" or filter=="except" then        
-        f1=getFullDungeonName(f1) 
+        --f1=f1[1]
+        --print(f1)
     elseif filter=="name" then
         f1=meAddon   
     end   
@@ -1006,7 +1027,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
             elseif filter=="class" then                
                 target=chars[i]["shortClass"]   
             elseif filter=="dungeon" or filter=="except" then
-                target=chars[i]["keyName"]     
+                target=getShortDungeonName(chars[i]["keyName"])                
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
             elseif filter=="CharName" then
@@ -1014,13 +1035,33 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 f1=string.gsub(f1, "(%a)([%w_']*)", MDRtitleLower)
             end
             if (filter=="CharName" and strfind(target,f1) and lastSeen<MDR["lastSeen"]) or 
-            (filter~="except" and f1==target) or 
-            (filter=="except" and f1~=target) then
+            ((filter~="except" and filter~="dungeon") and f1==target) then
                 findChars[num]=chars[i]
                 num=num+1
-            end
+            elseif (filter=="dungeon" or filter=="except") then                
+                
+                for j=1,#f1 do
+                    if filter~="except" then
+                        if f1[j]==target then
+                            findChars[num]=chars[i]
+                            num=num+1                            
+                        end 
+                    else
+                        if f1[j]==target then
+                            chars[i]=nil                            
+                        end 
+                    end     
+                end                 
+            end            
         end
     end     
+    
+    if filter=="except" then
+        for k,v in pairs(chars) do
+            findChars[num]=v
+            num=num+1    
+        end                    
+    end
     
     if #findChars>0 then
         return findChars
