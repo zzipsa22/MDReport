@@ -743,8 +743,9 @@ function findCharAllKey(VALUES)
     
     if callType["currentdungeon"] then
         local here,_=GetInstanceInfo()
-        callType["dungeon"]=1        
-        keyword["dungeon"]=getShortDungeonName(here)
+        callType["dungeon"]=1
+        keyword["dungeon"]={}
+        keyword["dungeon"][1]=getShortDungeonName(here)
         onlyOnline=1
     end    
     
