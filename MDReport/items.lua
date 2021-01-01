@@ -200,12 +200,14 @@ function getCategoryTable(category)
 end
 
 function getFullDungeonName(dungeon)
+    local ct=getCallTypeTable(dungeon) 
+    local name=ct[2] or dungeon
     for k,v in pairs(dungeonTable) do
-        if dungeon==k then
+        if name==k then
             return v[1]
         end        
     end
-    return dungeon
+    return name
 end
 
 function getShortDungeonName(dungeon)

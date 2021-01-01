@@ -266,7 +266,7 @@ function doFullReport(chars,channel,who,callType)
                 parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 parkingstar="▶"
             else
-                if not charLevel then
+                if charLevel==MDR["SCL"] then
                     parking=",Χ"                    
                 else
                     parking=""                    
