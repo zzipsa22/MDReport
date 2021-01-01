@@ -194,7 +194,7 @@ end
 
 --자세한 보고서 작성 및 출력
 function doFullReport(chars,channel,who,callType)          
-    
+
     local messageLines={} 
     if chars~=nil then      
         local charName,class=nil,nil
@@ -304,7 +304,7 @@ function doFullReport(chars,channel,who,callType)
                 else      
                     message=headStar..havekey.."▶"..chars[i]["extraLink"] 
                 end 
-            elseif callType["newkey"] then                
+            elseif callType and callType["newkey"] then                
                 local up=""
                 if f.level=="nil" or s.level=="nil" then return end
                 if f.level > s.level then
@@ -314,7 +314,7 @@ function doFullReport(chars,channel,who,callType)
                 end                
                 message=headStar.."새 돌: ["..getShortDungeonName(s.name)..(s.level+1).."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
                 
-            elseif callType["currentdungeon"] then    
+            elseif callType and callType["currentdungeon"] then    
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink
             else                
                 message=headStar..classStatus..": "..havekey..online

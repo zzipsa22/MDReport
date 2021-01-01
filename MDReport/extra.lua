@@ -425,7 +425,8 @@ end
 
 function MDRParking()
     LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
-    findCharNeedParking()    
+    findCharNeedParking(nil,nil,"parking","주차")   
+    --findCharNeedParking()    
 end
 
 function MDRVault ()
