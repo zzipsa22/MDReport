@@ -214,25 +214,31 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 if strfind(k[i],"노") then
                     k[i]=gsub(k[i],"노","")
                     except=1                
-                end                
+                end
                 
-                callTypeT[ct]=getCallTypeTable(k[i])
-                ct=ct+1
-                
-                --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-                if ((not callTypeT[i]) and name~=""  and name~="?") then
-                    callTypeT[i]=getCallTypeTable("아무")
-                    CharName=name
+                if getCallTypeTable(k[i]) then
+                    callTypeT[ct]=getCallTypeTable(k[i])
+                    ct=ct+1
+                    
+                    --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
+                elseif (not getCallTypeTable(k[i]) and name~=""  and name~="?") then
+                    if #k==1 then
+                        callTypeT[ct]=getCallTypeTable("아무")
+                        ct=ct+1                        
+                        CharName=name
+                    else
+                        onlyYou=name  
+                    end                    
                 end            
             end            
-        end       
-        
+        end
+        --[[
         if callTypeT[1] and k[2]~="" and k[2]~="?" and not getCallTypeTable(k[2]) then        
             onlyYou=k[2] 
         elseif callTypeT[1] and k[1]~="" and k[1]~="?" and not getCallTypeTable(k[1]) then            
             onlyYou=k[1]            
         end      
-
+        ]]
         --작은수가 먼저오게 조절
         if level1 and level2 then
             if level2<level1 then
@@ -242,7 +248,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             end            
         end    
         --print((level1 or"").."~"..(level2 or""))
-        if callTypeT[1] then
+        if ct>1 then
             VALUES["callTypeT"]=callTypeT
             VALUES["level"]=level1
             VALUES["level2"]=level2     

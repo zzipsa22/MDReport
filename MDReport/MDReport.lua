@@ -121,7 +121,7 @@ local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
 function filterVALUES(VALUES)     
-    
+
     --SavedInstance 체크
     if not SavedInstancesDB and VALUES["callTypeT"][1][1]~="affix" then
         doWarningReport(channel,who,"warning") 
@@ -152,11 +152,12 @@ function filterVALUES(VALUES)
                     keyword["dungeon"]={}
                 end
                 tinsert(keyword["dungeon"],callTypeT[i][2])
-                --print(callTypeT[i][2])
+                
             else
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
             end
             
+            --print(callTypeT[i][2])
             --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]
             keyword3[callTypeT[i][1]]=callTypeT[i][4]              
@@ -206,7 +207,7 @@ function filterVALUES(VALUES)
                         type=10                        
                     end    
                     if not callTypes[callTypeB[i]] then
-                        if (callTypeT[i][1]=="all" and not callType["dungeon"]) or
+                        if (callTypeT[i][1]=="all" and not callType["dungeon"] and not callType["parking"]) or
                         callTypeT[i][1]~="all" then
                             cmdLines=cmdLines..MDRcolor(word,type)..space
                             callTypes[callTypeB[i]]=1 
@@ -676,7 +677,7 @@ end
 
 --보유한 모든 돌 보고하기
 function findCharAllKey(VALUES)    
-    
+
     callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
     channel="print"
     if VALUES~=nil then
@@ -715,7 +716,7 @@ function findCharAllKey(VALUES)
         end           
     end
     local type=nil    
-    
+
     if (CharName and CharName~="" ) then callType="charname" end   
     
     if CharName then
