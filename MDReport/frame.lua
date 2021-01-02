@@ -9,6 +9,8 @@ MDRF:RegisterEvent("CHAT_MSG_GUILD")
 MDRF:RegisterEvent("CHAT_MSG_WHISPER")
 MDRF:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
+MDRF:RegisterEvent("CHAT_MSG_ADDON")
+MDRF:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
