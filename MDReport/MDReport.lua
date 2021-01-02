@@ -2,6 +2,8 @@ if not MDR then
     MDR={}
 end
 
+C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
+
 MDR["version"]="@project-version@"
 MDR["lastUpdate"]="@project-date-iso@"
 MDR["guide"]=0
@@ -15,6 +17,7 @@ MDR["textLength"]=3
 MDR["maxParking"]=14 --어둠땅 1시즌
 MDR["SCL"]=60--어둠땅 만렙
 
+local guildWarn=0
 local tips={}
 local warns=100
 local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass"],MDR["className"]
@@ -120,8 +123,8 @@ local mailClass={"냥꾼","술사"}
 local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
-function filterVALUES(VALUES)     
-
+function filterVALUES(VALUES)         
+    
     --SavedInstance 체크
     if not SavedInstancesDB and VALUES["callTypeT"][1][1]~="affix" then
         doWarningReport(channel,who,"warning") 
@@ -143,17 +146,20 @@ function filterVALUES(VALUES)
         callTypeT=VALUES["callTypeT"]     
         onlyMe=VALUES["onlyMe"]
         onlyYou=VALUES["onlyYou"]
+        except=VALUES["except"]
         for i=1,#callTypeT do
-            callTypeB[i]=callTypeT[i][1]
+            callTypeB[i]=callTypeT[i][1]              
             --print(i..":"..callTypeT[i][1])
             callType[callTypeT[i][1]]=1
             if callTypeT[i][1]=="dungeon" then 
                 if not keyword["dungeon"] then
                     keyword["dungeon"]={}
                 end
-                tinsert(keyword["dungeon"],callTypeT[i][2])
-                
+                if not tContains(keyword["dungeon"],callTypeT[i][2]) then
+                    tinsert(keyword["dungeon"],callTypeT[i][2])                     
+                end              
             else
+                
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
             end
             
@@ -164,12 +170,7 @@ function filterVALUES(VALUES)
         end   
         CharName=VALUES["CharName"]               
         
-    end     
-    
-    -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
-    if onlyMe==1 and who~=meGame then
-        return
-    end
+    end         
     
     local length=MDR["textLength"]
     local kLength=math.floor((length-1)/3+1)
@@ -199,26 +200,42 @@ function filterVALUES(VALUES)
                 for i=1,#callTypeT do 
                     local type=0
                     local word=keyword[callTypeB[i]]
+                    local what
                     if callTypeT[i][1]=="class" then
                         type=1
-                    elseif callTypeT[i][1]=="dungeon" then
-                        word=getFullDungeonName(word[1])                        
+                        what=MDRcolor(word,type)
+                    elseif callTypeT[i][1]=="dungeon" then                
+                        word=getFullDungeonName(callTypeT[i][2])
+                        what=MDRcolor("노랑",0,word)
                     elseif callTypeT[i][1]=="spec" then
-                        type=10                        
+                        type=10
+                        what=MDRcolor(word,type)
+                    elseif CharName then
+                        word=CharName
+                        what=MDRcolor(word,type)
+                    else
+                        what=MDRcolor(word,type)
                     end    
-                    if not callTypes[callTypeB[i]] then
+                    if (not callTypes[callTypeB[i]] or callTypeT[i][1]=="dungeon") then
                         if (callTypeT[i][1]=="all" and not callType["dungeon"] and not callType["parking"]) or
-                        callTypeT[i][1]~="all" then
-                            cmdLines=cmdLines..MDRcolor(word,type)..space
-                            callTypes[callTypeB[i]]=1 
+                        callTypeT[i][1]~="all" then  
+                            if not strfind(cmdLines,word) then
+                                cmdLines=cmdLines..what..space
+                                callTypes[callTypeB[i]]=1
+                            end                    
                         end
                     end                        
-                end   
+                end
                 if strsub(cmdLines,strlen(space)*-1)==space then
                     cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
                 end
                 
-                cmdLines=cmdLines..range
+                local exc                
+                if callTypes["dungeon"] and except==1 then
+                    exc=MDRcolor("죽기",0," '제외'")
+                end
+                
+                cmdLines=cmdLines..range..(exc or"")
                 local CL=gsub(cmdLines,"|r","")
                 local eul=MDRko(CL,"을")                
                 
@@ -258,7 +275,19 @@ function filterVALUES(VALUES)
     --내가 아닌 사람이 !속성을 요청하는 경우 리턴
     if who~=meGame and callType["affix"] then
         return        
-    end   
+    end
+    
+    --내가 길드로 요청하는 경우
+    if who==meGame and channel=="GUILD" then
+        if guildWarn<2 then
+            local msg=VALUES["msg"]
+            if strfind(strsub(msg,1,2),"!") then
+                msg=strsub(msg,2,-1)
+            end            
+            print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
+            guildWarn=guildWarn+1
+        end        
+    end    
     
     --버전요청을 한 사람이 나일 경우 리턴
     if callType["forceversion"] and who==meGame then
@@ -297,6 +326,83 @@ function filterVALUES(VALUES)
     
     --조절값 입력
     VALUES["channel"]=channel    
+    
+    if channel=="ADDON" then       
+        
+        local name=MDRsplit(who,"-")[1]
+        local message,range="",""
+        
+        if level==2 and level2 then
+            range=", "..MDRcolor("도적",0,level2.."단 이하")              
+        elseif level and level2==99 then
+            range=", "..MDRcolor("도적",0,level.."단 이상")
+        elseif level and not level2 then
+            range=", "..MDRcolor("도적",0,level.."단")
+        elseif level and level2 then
+            range=", "..MDRcolor("도적",0,level.."~"..level2.."단")
+        end
+        
+        local cmdLines,space="",", "
+        local callTypes={}
+        
+        for i=1,#callTypeT do 
+            local type=0
+            local word=keyword[callTypeB[i]]
+            local what
+            if callTypeT[i][1]=="class" then
+                type=1
+                what=MDRcolor(word,type)
+            elseif callTypeT[i][1]=="dungeon" then                
+                word=getFullDungeonName(callTypeT[i][2])
+                what=MDRcolor("노랑",0,word)
+            elseif callTypeT[i][1]=="spec" then
+                type=10
+                what=MDRcolor(word,type)
+            elseif CharName then
+                word=CharName
+                what=MDRcolor(word,type)
+            else
+                what=MDRcolor(word,type)
+            end    
+            if (not callTypes[callTypeB[i]] or callTypeT[i][1]=="dungeon") then
+                if (callTypeT[i][1]=="all" and not callType["dungeon"] and not callType["parking"]) or
+                callTypeT[i][1]~="all" then  
+                    if not strfind(cmdLines,word) then
+                        cmdLines=cmdLines..what..space
+                        callTypes[callTypeB[i]]=1
+                    end                    
+                end
+            end                        
+        end
+        local exc
+        if callTypes["dungeon"] and except==1 then
+            exc=MDRcolor("죽기",0," '제외'")
+        end
+        
+        if strsub(cmdLines,strlen(space)*-1)==space then
+            cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
+        end
+        
+        cmdLines=cmdLines..range        
+        
+        local message
+        if onlyMe==1 and not CharName then
+            if callTypes["dungeon"] then
+                message=MDRcolor("핑크",0,"▶["..name.."]").." 님이 소유한 "..cmdLines..(exc or "").." 입니다."
+            else
+                message=MDRcolor("핑크",0,"▶["..name.."]").." 님의 "..cmdLines..(exc or "").." 정보입니다."
+            end
+        else
+            message=MDRcolor("▶["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines..(exc or "")
+            
+        end       
+        print("|cFF33FF99MDR|r"..message)
+    end   
+    
+    -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
+    if onlyMe==1 and who~=meGame then
+        return
+    end    
     
     if #callTypeB>1 and not callType["all"] and not callType["parking"] and (callType["item"] or callType["trinket"] or callType["stat"] or callType["spec"] or callType["class"] or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면         
         
@@ -677,7 +783,7 @@ end
 
 --보유한 모든 돌 보고하기
 function findCharAllKey(VALUES)    
-
+    
     callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
     channel="print"
     if VALUES~=nil then
@@ -705,8 +811,11 @@ function findCharAllKey(VALUES)
                 if not keyword["dungeon"] then
                     keyword["dungeon"]={}
                 end
-                tinsert(keyword["dungeon"],callTypeT[i][2])
+                if not tContains(keyword["dungeon"],callTypeT[i][2]) then
+                    tinsert(keyword["dungeon"],callTypeT[i][2])                     
+                end              
             else
+                
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
             end
             
@@ -716,7 +825,7 @@ function findCharAllKey(VALUES)
         end           
     end
     local type=nil    
-
+    
     if (CharName and CharName~="" ) then callType="charname" end   
     
     if CharName then
@@ -757,7 +866,7 @@ function findCharAllKey(VALUES)
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
     if (callType["all"] or callType["levelrange"])  and 
     (not callType["class"] and not callType["dungeon"]) and
-    (channel=="GUILD" or channel=="PARTY") then
+    (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON") then
         forceToShort=1
     end 
     if callType["currentall"] then
@@ -765,12 +874,12 @@ function findCharAllKey(VALUES)
     end    
     
     --!내돌을 길드로 요청한 경우 짧게 보고
-    if (callType["mykey"] or callType["dungeon"]) and (channel=="GUILD") then
+    if (callType["mykey"] or callType["dungeon"]) and (channel=="GUILD" or channel=="ADDON") then
         forceToShort=1
     end 
     
     --!돌이고 레벨을 지정하지 않았으며 길드가 아닌 곳에서 요청했는데 키가 하나도 없을 경우
-    if callType["all"] and (channel~="GUILD")  and (#chars==0) and (level==nil) then
+    if callType["all"] and (channel~="GUILD") and (#chars==0) and (level==nil) then
         local messageLines={}
         messageLines[1]="▶저는 현재 갖고 있는 돌이 하나도 없습니다!" 
         reportMessageLines(messageLines,channel,who,callType)
@@ -781,7 +890,7 @@ function findCharAllKey(VALUES)
     if onlyOnline==1 then
         chars=filterCharsByFilter(chars,"name",nil,nil)
         --이캐릭 돌이 없으면 바로 보고하고 마무리, 길드면 생략
-        if not chars and channel~="GUILD" and callType["all"] then
+        if not chars and channel~="GUILD" and channel~="ADDON" and callType["all"] then
             local messageLines={}
             messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
             reportMessageLines(messageLines,channel,who,callType)
@@ -908,7 +1017,7 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe)
     end       
     
     --!주차를 길드엔 짧게 보고
-    if channel=="GUILD" or channel=="PARTY" then                
+    if channel=="GUILD" or channel=="PARTY"  or channel=="ADDON"then                
         doShortReport(findChars,channel,who,callType)                  
     else                
         doFullReport(findChars,channel,who,callType)            
@@ -988,7 +1097,7 @@ function findCharSpell(class,channel,who,callType)
         doFullReport(findChars,channel,who,callType)  
     else
         --나머지는 길드엔 숏, 나머진 풀 리포트
-        if channel=="GUILD" or channel=="PARTY" then
+        if channel=="GUILD" or channel=="PARTY" or channel=="ADDON" then
             doShortReport(findChars,channel,who,callType)  
         else
             doFullReport(findChars,channel,who,callType)     

@@ -12,8 +12,23 @@ MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
-        -- 쐐기 완료시  
-        if (event=="CHALLENGE_MODE_COMPLETED") then     
+        if event == "CHAT_MSG_ADDON" then
+            local prefix=select(1, ...)
+            local message=select(2,...)
+            if prefix=="MDReport" and not strfind(strsub(message,0,1),"!") then
+                MDRprintAddonMessage(...)
+                return                
+            end         
+            
+        elseif event == "PLAYER_ENTERING_WORLD" then
+            local isInitialLogin, isReloadingUi = ...
+            if isInitialLogin or isReloadingUi then                
+                C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
+                return
+            end       
+            
+            -- 쐐기 완료시  
+        elseif (event=="CHALLENGE_MODE_COMPLETED") then     
             C_Timer.After(5, function()  
                     MDRbackupMythicKey("finish")     
             end)            
@@ -25,8 +40,15 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             return           
         end        
         
-        local msg=select(1, ...)    
-        local who=select(2, ...)     
+        local msg,who   
+        
+        if event == "CHAT_MSG_ADDON" then
+            msg=select(2, ...)    
+            who=select(4, ...)   
+        else
+            msg=select(1, ...)    
+            who=select(2, ...)   
+        end      
         
         --느낌표 스팸이면 무시
         if strfind(msg,"!!") then return end
@@ -82,6 +104,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         if (event== "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
             channel="PARTY"
+        elseif (event== "CHAT_MSG_ADDON") then
+            channel="ADDON"            
         elseif (event== "CHAT_MSG_GUILD") then
             channel="GUILD"
         elseif (event=="CHAT_MSG_OFFICER") then
@@ -259,6 +283,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             VALUES["except"]=except            
             VALUES["onlyOnline"]=onlyOnline           
             VALUES["CharName"]=CharName            
+            VALUES["msg"]=msg
             
             filterVALUES(VALUES)
             MDR["who"]=who

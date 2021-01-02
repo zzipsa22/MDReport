@@ -22,6 +22,10 @@ for i=1,8 do
     skullP["rt"..i]="\124TInterface/TargetingFrame/UI-RaidTargetingIcon_"..i..":12\124t"
 end
 
+local classNames={
+    "술사","법사","수도","냥꾼","도적","드루","전사","악사","흑마","기사","사제","죽기",
+}
+
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
@@ -69,6 +73,54 @@ function doOnlyAffixReport(keyword,channel,who,callType)
         messageLines=GetAffixFullDescription(keyword)
     end  
     reportMessageLines(messageLines,channel,who,callType)    
+end
+
+function reportAddonMessage(messageLines,channel,who,callType)
+    for i=1,#messageLines do 
+        if channel=="print"then            
+            for j=1,8 do
+                messageLines[i]=gsub(messageLines[i],"{rt"..j.."}",skullP["rt"..j])
+            end
+            C_Timer.After(0.2*(i-1), function()
+                    if messageLines[i]~="" then
+                        print(messageLines[i])
+                    end
+            end)  
+        else
+            C_Timer.After(0.2*(i-1), function()
+                    if channel=="ADDON" then channel="GUILD" end 
+                    C_ChatInfo.SendAddonMessage("MDReport", messageLines[i], channel, who)
+            end)               
+        end 
+    end 
+end
+
+function MDRsendAddonMessage(args,channel,who)
+    C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
+end
+
+function MDRprintAddonMessage(...)   
+    local message=select(2,...)
+    local channel=select(3,...)    
+    local who=select(4,...)
+    local channelColor={
+        ["GUILD"]="|cFF40ff40",
+        ["PARTY"]="|cFFaaaaff",
+        ["WHISPER"]="|cFFff80ff",
+    }    
+    who=strsub(MDRsplit(who, "-")[1],1,6)
+    
+    if strfind(message,"!") then
+        
+    end
+    
+    for j=1,8 do
+        message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
+    end
+    for i=1,#classNames do
+        message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
+    end
+    print(channelColor[channel].."["..who.."]:|r "..message)
 end
 
 
@@ -188,13 +240,18 @@ function doShortReport(chars,channel,who,callType)
         --메세지라인 리셋셋
         messageLines=oneLineMessage
     end    
-    
-    reportMessageLines(messageLines,channel,who,callType)       
+    --메세지 출력
+    if channel=="ADDON" or channel=="GUILD" then
+        reportAddonMessage(messageLines,channel,who,callType)
+    else
+        --reportAddonMessage(messageLines,channel,who,callType)
+        reportMessageLines(messageLines,channel,who,callType)    
+    end        
 end
 
 --자세한 보고서 작성 및 출력
 function doFullReport(chars,channel,who,callType)          
-
+    
     local messageLines={} 
     if chars~=nil then      
         local charName,class=nil,nil
@@ -329,23 +386,36 @@ function doFullReport(chars,channel,who,callType)
     end      
     
     --메세지 출력
-    reportMessageLines(messageLines,channel,who,callType)    
+    if channel=="ADDON" or channel=="GUILD" then
+        reportAddonMessage(messageLines,channel,who,callType)
+    else        
+        reportMessageLines(messageLines,channel,who,callType)    
+    end    
 end
 
 --메세지 출력
 function reportMessageLines(messageLines,channel,who,callType)   
+    
+    -- 애드온 메세지는 애드온 채널로 전송
+    if channel=="ADDON" then
+        reportAddonMessage(messageLines,channel,who,callType)
+        return
+    end   
     
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
     
     --최종적으로 귓말채널 반환
     if (channel=="WHISPER_IN") or (channel=="WHISPER_OUT")  then
         channel="WHISPER"
-    end       
+    end    
     
     for i=1,#messageLines do 
         if channel=="print"then            
             for j=1,8 do
                 messageLines[i]=gsub(messageLines[i],"{rt"..j.."}",skullP["rt"..j])
+            end
+            for j=1,#classNames do
+                messageLines[i]=gsub(messageLines[i],classNames[j],MDRcolor(classNames[j],0))
             end
             C_Timer.After(0.2*(i-1), function()
                     if messageLines[i]~="" then

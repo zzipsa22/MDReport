@@ -501,8 +501,11 @@ function findCharAllItem(VALUES)
                 if not keyword["dungeon"] then
                     keyword["dungeon"]={}
                 end
-                tinsert(keyword["dungeon"],callTypeT[i][2])
+                if not tContains(keyword["dungeon"],callTypeT[i][2]) then
+                    tinsert(keyword["dungeon"],callTypeT[i][2])                     
+                end              
             else
+                
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
             end
             
