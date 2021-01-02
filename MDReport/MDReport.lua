@@ -360,6 +360,9 @@ function filterVALUES(VALUES)
                 word=CharName
                 what=MDRcolor(word,type)
             else
+                if callTypeT[i][1]=="affix" then
+                    word=VALUES["msg"]
+                end                
                 what=MDRcolor(word,type)
             end    
             if (not callTypes[callTypeB[i]] or callTypeT[i][1]=="dungeon") then
@@ -792,7 +795,7 @@ end
 
 --보유한 모든 돌 보고하기
 function findCharAllKey(VALUES)    
-
+    
     callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
     channel="print"
     if VALUES~=nil then
