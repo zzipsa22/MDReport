@@ -29,7 +29,6 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 return
             end       
             return
-			
             -- 쐐기 완료시  
         elseif (event=="CHALLENGE_MODE_COMPLETED") then     
             C_Timer.After(5, function()  
@@ -48,6 +47,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if event == "CHAT_MSG_ADDON" then
             msg=select(2, ...)    
             who=select(4, ...)   
+		elseif event == "PLAYER_ENTERING_WORLD" then
+			return 
         else
             msg=select(1, ...)    
             who=select(2, ...)   

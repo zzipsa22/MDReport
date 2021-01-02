@@ -26,6 +26,12 @@ local classNames={
     "술사","법사","수도","냥꾼","도적","드루","전사","악사","흑마","기사","사제","죽기",
 }
 
+local dungeonNames={}
+
+for k,v in pairs(MDR.dungeonTable) do
+    tinsert(dungeonNames,k)
+end
+
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
@@ -104,15 +110,11 @@ function MDRprintAddonMessage(...)
     local channel=select(3,...)    
     local who=select(4,...)
     local channelColor={
-        ["GUILD"]="|cFF40ff40",
+        ["GUILD"]="|cFF88ff88",
         ["PARTY"]="|cFFaaaaff",
         ["WHISPER"]="|cFFff80ff",
     }    
     who=strsub(MDRsplit(who, "-")[1],1,6)
-    
-    if strfind(message,"!") then
-        
-    end
     
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
@@ -120,6 +122,9 @@ function MDRprintAddonMessage(...)
     for i=1,#classNames do
         message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
     end
+    for i=1,#dungeonNames do
+        message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
+    end    
     print(channelColor[channel].."["..who.."]:|r "..message)
 end
 
