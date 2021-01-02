@@ -90,7 +90,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
             C_Timer.After(0.2*(i-1), function()
                     if channel=="ADDON" then channel="GUILD" end 
                     
-                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6)..messageLines[i], channel, who)
+                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..messageLines[i], channel, who)
             end)               
         end 
     end 
@@ -111,8 +111,13 @@ function MDRprintAddonMessage(...)
     }    
     who=strsub(MDRsplit(who, "-")[1],1,9)
     
-    local class=strsub(message,1,6)
-    message=strsub(message,7,-1)
+    local class
+    for i=1,#classNames do
+        if strfind(strsub(message,1,6),classNames[i]) then           
+            class=MDRsplit(message,"_")[1]
+            message=MDRsplit(message,"_")[2]
+        end
+    end
     
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
@@ -126,9 +131,12 @@ function MDRprintAddonMessage(...)
         for i=1,#dungeonNames do
             message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
         end  
+    end 
+    if class then
+        print(" "..MDRcolor(class,0,"["..who.."]")..": "..message)
+    else
+        print(" "..channelColor[channel].."["..who.."]:|r "..message)
     end    
-    print(" "..MDRcolor(class,0,"["..who.."]")..": "..message)
-    --print(channelColor[channel].."["..who.."]:|r "..message)
 end
 
 
@@ -437,3 +445,4 @@ function reportMessageLines(messageLines,channel,who,callType)
         end 
     end 
 end
+
