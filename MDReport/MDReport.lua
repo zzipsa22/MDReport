@@ -146,6 +146,7 @@ function filterVALUES(VALUES)
         callTypeT=VALUES["callTypeT"]     
         onlyMe=VALUES["onlyMe"]
         onlyYou=VALUES["onlyYou"]
+        onlyOnline=VALUES["onlyOnline"]        
         except=VALUES["except"]
         for i=1,#callTypeT do
             callTypeB[i]=callTypeT[i][1]              
@@ -400,7 +401,12 @@ function filterVALUES(VALUES)
             local eul=MDRko(CL,"을")             
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."
         else
-            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines
+            local now=""
+            if onlyOnline then
+                now=", "..MDRcolor("핑크",0,"현재 접속중")
+            end
+            
+            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines..now
             
         end       
         print("|cFF33FF99MDR▶|r"..message)

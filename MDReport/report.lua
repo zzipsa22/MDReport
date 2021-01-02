@@ -89,8 +89,8 @@ function reportAddonMessage(messageLines,channel,who,callType)
         else
             C_Timer.After(0.2*(i-1), function()
                     if channel=="ADDON" then channel="GUILD" end 
-                    
-                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..messageLines[i], channel, who)
+                    if callType=="affix" then channel="WHISPER" end
+                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..messageLines[i], channel,who)
             end)               
         end 
     end 
@@ -445,4 +445,3 @@ function reportMessageLines(messageLines,channel,who,callType)
         end 
     end 
 end
-

@@ -246,6 +246,8 @@ function MDRcolor(keyword,type,keyword2)
                     text=v[5] or v[4]
                 elseif type==5 then --색깔없이 직업만 출력                  
                     return v[2]
+                elseif type==6 then --색깔없이 짧은직업만 출력                  
+                    return k
                 elseif type==10 then --전문화+직업
                     text=keyword.." "..v[2]                    
                 end               
@@ -391,6 +393,7 @@ function MDRmakeDice(channel,who,k)
 end
 
 function MDRcollectDices(msg)
+    
     for i=1,#MDR["diceResult"] do
         if not strfind(msg,"MDR") and strfind(msg,MDR["diceResult"][i]["subject"]) then
             MDR["diceResult"][i]["vote"]=(MDR["diceResult"][i]["vote"] or 0)+1
@@ -414,7 +417,7 @@ function MDRdice(msg)
             resultNum=n1     
         end 
         messageLines[1]=(MDR["dices"][resultNum] or "알 수 없음")
-        C_Timer.After(1.5, function()    
+        C_Timer.After(1.5, function()
                 reportMessageLines(messageLines,diceReportChannel,who,"dice")
         end)         
         C_Timer.After(6, function()    
