@@ -29,8 +29,10 @@ local classNames={
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
-    messageLines[1]="▶[쐐기돌 보고서] Ver."..MDR["version"].." (Update: "..MDR["lastUpdate"]..")"    
-    
+    messageLines[1]="▶[쐐기돌 보고서] Ver."..MDR["version"].." (Update: "..MDR["lastUpdate"]..")"  
+    if callType["forceversion"]==1 then
+        channel="ADDON"
+    end
     reportMessageLines(messageLines,channel,who,callType)   
 end
 
@@ -89,7 +91,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
         else
             C_Timer.After(0.2*(i-1), function()
                     if channel=="ADDON" then channel="GUILD" end 
-                    if callType=="affix" then channel="WHISPER" end
+                    if callType["forceversion"] then channel="WHISPER" end
                     C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..messageLines[i], channel,who)
             end)               
         end 

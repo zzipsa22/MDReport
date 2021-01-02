@@ -320,7 +320,7 @@ function filterVALUES(VALUES)
     if callType["version"] then
         channel="print"
     elseif callType["forceversion"] then
-        channel="WHISPER"        
+        --channel="WHISPER"        
     end 
     
     --조절값 입력
@@ -405,8 +405,14 @@ function filterVALUES(VALUES)
             if onlyOnline then
                 now=", "..MDRcolor("핑크",0,"현재 접속중")
             end
+            local request=""
+            if callType["affix"] then
+                request=MDRcolor("핑크",0,"메세지")
+            else
+                request=MDRcolor("회색",0,"요청")
+            end
             
-            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines..now
+            message=MDRcolor("["..name.."]",-1).." 님의 "..request.."입니다: "..cmdLines..now
             
         end       
         print("|cFF33FF99MDR▶|r"..message)
