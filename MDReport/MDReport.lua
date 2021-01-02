@@ -243,10 +243,8 @@ function filterVALUES(VALUES)
                 --end                 
                 print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
             end            
-        end  
+        end         
         
-        --지정한 사람이 내가 아니면 리턴
-        if not checkCallMe(onlyYou) then return end 
     end    
     
     if CharName then
@@ -383,21 +381,30 @@ function filterVALUES(VALUES)
             cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
         end
         
-        cmdLines=cmdLines..range        
+        cmdLines=cmdLines..range..(exc or "")      
+        
+        local CL=gsub(cmdLines,"|r","")
+        local eul=MDRko(CL,"을")    
         
         local message
         if onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
-                message=MDRcolor("핑크",0,"▶["..name.."]").." 님이 소유한 "..cmdLines..(exc or "").." 입니다."
+                message=MDRcolor("핑크",0,"▶["..name.."]").." 님이 소유한 "..cmdLines.." 입니다."
             else
-                message=MDRcolor("핑크",0,"▶["..name.."]").." 님의 "..cmdLines..(exc or "").." 정보입니다."
+                message=MDRcolor("핑크",0,"▶["..name.."]").." 님의 "..cmdLines.." 정보입니다."
             end
+        elseif onlyYou then
+            local eul=MDRko(CL,"을")             
+            message=MDRcolor("▶["..name.."]",-1).." 님이 "..MDRcolor("▶["..onlyYou.."]",-1).." 님에게 "..cmdLines..eul.." 요청합니다."
         else
-            message=MDRcolor("▶["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines..(exc or "")
+            message=MDRcolor("▶["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines
             
         end       
         print("|cFF33FF99MDR|r"..message)
     end   
+    
+    --지정한 사람이 내가 아니면 리턴
+    if onlyYou and not checkCallMe(onlyYou) then return end 
     
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=meGame then
