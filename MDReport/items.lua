@@ -206,7 +206,13 @@ end
 
 function getFullDungeonName(dungeon)
     local ct=getCallTypeTable(dungeon) 
-    local name=ct[2] or dungeon
+    local name
+    if ct then 
+        name=ct[2]
+    else
+        name=dungeon
+    end
+    
     for k,v in pairs(dungeonTable) do
         if name==k then
             return v[1]
