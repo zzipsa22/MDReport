@@ -281,10 +281,10 @@ local callTypeTable={
     ["심연"]={"dungeon", "핏심"},
     ["핏빛"]={"dungeon", "핏심"},
     
-    ["버전"]={"version", nil},
-    ["버젼"]={"version", nil},
+    ["버전"]={"version", "버전체크"},
+    ["버젼"]={"version", "버전체크"},
     
-    ["MDReport_VC"]={"forceversion", nil},
+    ["MDReport_VC"]={"forceversion", "버전보고"},
     
     ["속성"]={"affix", 0},
     ["다음속성"]={"affix", "all"},    

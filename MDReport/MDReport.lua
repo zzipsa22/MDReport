@@ -359,7 +359,7 @@ function filterVALUES(VALUES)
                 what=MDRcolor(word,type)
             elseif CharName then
                 word=CharName
-                what=MDRcolor(word,type)
+                what=MDRcolor(word,type)                
             else
                 if callTypeT[i][1]=="affix" then
                     word=VALUES["msg"]
@@ -414,8 +414,11 @@ function filterVALUES(VALUES)
             
             message=MDRcolor("["..name.."]",-1).." 님의 "..request.."입니다: "..cmdLines..now
             
-        end       
-        print("|cFF33FF99MDR▶|r"..message)
+        end 
+        if not callType["forceversion"] then
+            print("|cFF33FF99MDR▶|r"..message)
+        end
+        
     end   
     
     --지정한 사람이 내가 아니면 리턴
