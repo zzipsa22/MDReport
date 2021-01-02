@@ -17,6 +17,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
+			            if prefix~="MDReport" then return end
+						
             if prefix=="MDReport" and not strfind(strsub(message,0,1),"!") then
                 MDRprintAddonMessage(...)
                 return                
