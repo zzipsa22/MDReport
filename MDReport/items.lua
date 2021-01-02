@@ -121,6 +121,11 @@ local dungeonTable={
     
 }
 
+MDR.dungeonNames={}
+for k,v in pairs(dungeonTable) do
+    tinsert(MDR.dungeonNames,k)
+end
+
 local specTable={
     ["기사"]={{"힘","지능"},{"한손도끼","양손도끼","한손둔기","양손둔기","장창","한손도검","양손도검","방패"}},
     ["보호"]={{"힘"},{"한손도끼","한손둔기","한손도검","방패"}},

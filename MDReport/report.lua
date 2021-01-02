@@ -1,4 +1,4 @@
-local meGame,meAddon=MDR["meGame"],MDR["meAddon"]
+local meGame,meAddon,krClass=MDR["meGame"],MDR["meAddon"],MDR["krClass"]
 local warns={}
 local warning=3
 
@@ -25,12 +25,6 @@ end
 local classNames={
     "술사","법사","수도","냥꾼","도적","드루","전사","악사","흑마","기사","사제","죽기",
 }
-
-local dungeonNames={}
-
-for k,v in pairs(MDR.dungeonTable) do
-    tinsert(dungeonNames,k)
-end
 
 function doCheckVersion(channel,who,callType)
     
@@ -95,7 +89,8 @@ function reportAddonMessage(messageLines,channel,who,callType)
         else
             C_Timer.After(0.2*(i-1), function()
                     if channel=="ADDON" then channel="GUILD" end 
-                    C_ChatInfo.SendAddonMessage("MDReport", messageLines[i], channel, who)
+                    
+                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6)..messageLines[i], channel, who)
             end)               
         end 
     end 
@@ -114,7 +109,10 @@ function MDRprintAddonMessage(...)
         ["PARTY"]="|cFFaaaaff",
         ["WHISPER"]="|cFFff80ff",
     }    
-    who=strsub(MDRsplit(who, "-")[1],1,6)
+    who=strsub(MDRsplit(who, "-")[1],1,9)
+    
+    local class=strsub(message,1,6)
+    message=strsub(message,7,-1)
     
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
@@ -122,10 +120,15 @@ function MDRprintAddonMessage(...)
     for i=1,#classNames do
         message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
     end
-    for i=1,#dungeonNames do
-        message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
+    
+    local dungeonNames=MDR.dungeonNames
+    if not strfind(message,"쐐기돌") then
+        for i=1,#dungeonNames do
+            message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
+        end  
     end    
-    print(channelColor[channel].."["..who.."]:|r "..message)
+    print(" "..MDRcolor(class,0,"["..who.."]")..": "..message)
+    --print(channelColor[channel].."["..who.."]:|r "..message)
 end
 
 
