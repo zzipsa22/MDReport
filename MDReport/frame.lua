@@ -221,13 +221,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         local ct=1
         for i=1,#k do
+            
             if getCallTypeTable(k[i]) then
+                --print(k[i],"명령어 찾음")
                 callTypeT[ct]=getCallTypeTable(k[i])
                 ct=ct+1
-            end 
-            
-            --명령어가 발견이 안되면
-            if k[i] and not callTypeT[i] then
+            else
                 local name=k[i]
                 if strfind(k[i],"내") then             
                     k[i]=gsub(k[i],"내","")
@@ -257,7 +256,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                     end                    
                 end            
             end            
-        end
+        end        
+        
         --[[
         if callTypeT[1] and k[2]~="" and k[2]~="?" and not getCallTypeTable(k[2]) then        
             onlyYou=k[2] 

@@ -177,7 +177,7 @@ function filterVALUES(VALUES)
     
     -- 찾는 사람을 지정한 경우
     if onlyYou then 
-        if who==meGame then  
+        if who==meGame and channel~="ADDON" then  
             if strlen(onlyYou)<length then               
                 print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
                 return --검색어가 짧으면 무시
@@ -389,22 +389,24 @@ function filterVALUES(VALUES)
         local message
         if onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
-                message=MDRcolor("핑크",0,"▶["..name.."]").." 님이 소유한 "..cmdLines.." 입니다."
+                message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 "..cmdLines.." 입니다."
             else
-                message=MDRcolor("핑크",0,"▶["..name.."]").." 님의 "..cmdLines.." 정보입니다."
+                message=MDRcolor("핑크",0,"["..name.."]").." 님의 "..cmdLines.." 정보입니다."
             end
         elseif onlyYou then
             local eul=MDRko(CL,"을")             
-            message=MDRcolor("▶["..name.."]",-1).." 님이 "..MDRcolor("▶["..onlyYou.."]",-1).." 님에게 "..cmdLines..eul.." 요청합니다."
+            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."
         else
-            message=MDRcolor("▶["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines
+            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("회색",0,"요청").."입니다: "..cmdLines
             
         end       
-        print("|cFF33FF99MDR|r"..message)
+        print("|cFF33FF99MDR▶|r"..message)
     end   
     
     --지정한 사람이 내가 아니면 리턴
-    if onlyYou and not checkCallMe(onlyYou) then return end 
+    if onlyYou and not checkCallMe(onlyYou) then 
+        return 
+    end 
     
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=meGame then
@@ -790,7 +792,7 @@ end
 
 --보유한 모든 돌 보고하기
 function findCharAllKey(VALUES)    
-    
+
     callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
     channel="print"
     if VALUES~=nil then
