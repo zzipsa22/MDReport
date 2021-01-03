@@ -305,7 +305,9 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             
             filterVALUES(VALUES)
             MDR["who"]=who
-            MDR["running"]=1
+            if channel~="GUILD" then
+                MDR["running"]=1
+            end      
             --일치하는 명령어가 없으면 리턴
         else return end
 end)

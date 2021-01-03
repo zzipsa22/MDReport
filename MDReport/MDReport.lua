@@ -277,14 +277,21 @@ function filterVALUES(VALUES)
     end
     
     --내가 길드로 요청하는 경우
-    if who==meGame and channel=="GUILD" then
-        if guildWarn<2 then
-            local msg=VALUES["msg"]
-            if strfind(strsub(msg,1,2),"!") then
-                msg=strsub(msg,2,-1)
-            end            
-            print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
-            guildWarn=guildWarn+1
+    if channel=="GUILD" then
+        
+        if who==meGame then
+            if guildWarn<2 then
+                local msg=VALUES["msg"]
+                if strfind(strsub(msg,1,2),"!") then
+                    msg=strsub(msg,2,-1)
+                end            
+                print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
+                guildWarn=guildWarn+1
+            end       
+            MDRsendAddonMessage(VALUES["msg"],"GUILD",meGame)            
+            return
+        else --길드요청을 내가보낸게 아니면 리턴
+            return
         end        
     end    
     
