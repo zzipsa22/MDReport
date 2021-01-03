@@ -20,7 +20,7 @@ C_Timer.After(10, function()
                 print(MDRcolor("수도",0,"▶").."[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cFF40ff40길드|r로 보내는 메세지는 애드온 사용자간 전용 채널로 주고 받게 되며, 채널 송출 없이 기본 채팅창에 출력됩니다. ")               
                 print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cFF40ff40/g|r |cffC79C6E!돌|r  = |cffffff00/!|r |cffC79C6E돌|r) ")  
                 
-                print(MDRcolor("수도",0,"▶").."이제 여러 던전을 한번에 검색, 혹은 "..MDRcolor("죽기",0,"제외").."할 수 있습니다. |cFF33FF99ex)|r |cff40C7EB!티르!속죄|r, |cff40C7EB!|r"..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!"..MDRcolor("죽기",0,"노").."역몰|r ") 
+                print(MDRcolor("수도",0,"▶").."이제 여러 던전을 한번에 검색, 혹은 "..MDRcolor("죽기",0,"제외").."할 수 있습니다. |cFF33FF99ex)|r |cff40C7EB!티르!속죄|r, |cff40C7EB!|r"..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")) 
                 
                 print("▷전체 도움말: |cffffff00/! 도움말|r 또는 |cffffff00/쐐 도움말|r")
                 
