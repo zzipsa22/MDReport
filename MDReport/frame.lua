@@ -14,7 +14,7 @@ MDRF:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
-        if event == "CHAT_MSG_ADDON" then
+         if event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
             if prefix~="MDReport" then return end
@@ -116,6 +116,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             channel=select(3, ...)
             if channel=="PARTY" then
                 channel="ADDON_PARTY"            
+            elseif channel=="WHISPER" then
+                channel="ADDON_WHISPER" 
             else
                 channel="ADDON_GUILD"            
             end           
@@ -307,7 +309,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             MDR["who"]=who
             if channel~="GUILD" then
                 MDR["running"]=1
-            end      
+            end            
             --일치하는 명령어가 없으면 리턴
         else return end
 end)

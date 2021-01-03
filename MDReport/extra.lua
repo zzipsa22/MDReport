@@ -18,9 +18,9 @@ C_Timer.After(10, function()
             end 
             if MDR["guide"]<50 then
                 print(MDRcolor("수도",0,"▶").."[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cFF40ff40길드|r로 보내는 메세지는 애드온 사용자간 전용 채널로 주고 받게 되며, 채널 송출 없이 기본 채팅창에 출력됩니다. ")               
-                print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cFF40ff40/g|r |cffC79C6E!돌|r  = |cffffff00/!|r |cffC79C6E돌|r) ")  
+                print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cffffff00/!|r |cffC79C6E돌|r = |cFF40ff40/g|r |cffC79C6E!돌|r) ")  
                 
-                print(MDRcolor("수도",0,"▶").."|cffffff00'/!!'|r 로 |cFFaaaaff파티채널|r 명령어 전송을 대신할 수 있습니다. (|cFFaaaaff/p|r |cffC79C6E!돌|r  = |cffffff00/!!|r |cffC79C6E돌|r) ")
+                print(MDRcolor("수도",0,"▶").."|cffffff00'/!!'|r 로 |cFFaaaaff파티|r중일 땐 |cFFaaaaff파티채널|r 전송을, |cffF5aCdA혼자|r일 땐 |cffF5aCdA본인|r에게 전송을 대신 할 수 있습니다. (|cffffff00/!!|r |cffC79C6E돌|r = |cFFaaaaff/p|r |cffC79C6E!돌|r, |cFFff80ff/w |r"..MDRcolor(krClass,0,playerName).." |cffC79C6E!돌|r) ")
                 
                 
                 --print(MDRcolor("수도",0,"▶").."이제 여러 던전을 한번에 검색, 혹은 "..MDRcolor("죽기",0,"제외").."할 수 있습니다. |cFF33FF99ex)|r |cff40C7EB!티르!속죄|r, |cff40C7EB!|r"..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")) 
@@ -461,8 +461,11 @@ function MDRCommandsParty(msg, editbox)
     if strfind(strsub(cmd,1,1),"!") then
         cmd=strsub(cmd,2,-1)
     end        
-    
-    MDRsendAddonMessage("!"..cmd,"PARTY",meGame)        
+    if IsInGroup() then
+        MDRsendAddonMessage("!"..cmd,"PARTY",meGame)        
+    else
+        MDRsendAddonMessage("!"..cmd,"WHISPER",meGame)
+    end    
     return         
 end
 

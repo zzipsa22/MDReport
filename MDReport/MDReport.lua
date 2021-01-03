@@ -333,10 +333,11 @@ function filterVALUES(VALUES)
     --조절값 입력
     VALUES["channel"]=channel    
     
-    if channel=="ADDON_PARTY" or channel=="ADDON_GUILD" then       
+    if channel=="ADDON_PARTY" or channel=="ADDON_GUILD"  or channel=="ADDON_WHISPER" then       
         local mdrcolor={
             ["ADDON_PARTY"]="|cFFaaaaffMDR▶|r",
             ["ADDON_GUILD"]="|cFF33FF99MDR▶|r",
+            ["ADDON_WHISPER"]="|cFFF5aCdAMDR▶|r",
         }
         
         local name=MDRsplit(who,"-")[1]
@@ -404,8 +405,10 @@ function filterVALUES(VALUES)
             if strfind(strsub(msg,1,1),"!") then
                 if channel=="ADDON_PARTY" then
                     sur=MDRcolor("파티",0,"/!! ")
+                elseif channel=="ADDON_GUILD" then
+                    sur=MDRcolor("길드",0,"/! ")  
                 else
-                    sur=MDRcolor("길드",0,"/! ")                        
+                    sur=MDRcolor("핑크",0,"/!! ")                        
                 end                
                 msg=strsub(msg,2,-1)
             end            
@@ -424,7 +427,12 @@ function filterVALUES(VALUES)
         local eul=MDRko(CL,"을")         
         
         local message
-        if onlyMe==1 and not CharName then
+        if channel=="ADDON_WHISPER" and who==meGame then
+            message="["..cmdLines.."]"..msg
+            if VALUES["msg"]=="!금고" then
+                MDRVault ()                               
+            end            
+        elseif onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
                 message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."..msg
             else
