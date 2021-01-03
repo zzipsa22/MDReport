@@ -406,9 +406,9 @@ function filterVALUES(VALUES)
         local message
         if onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
-                message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 "..cmdLines.." 입니다."
+                message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."
             else
-                message=MDRcolor("핑크",0,"["..name.."]").." 님의 "..cmdLines.." 정보입니다."
+                message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] 정보입니다."
             end
         elseif onlyYou then           
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
@@ -985,7 +985,7 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe)
     if level==nil then level=99
     elseif level<2 then level=2 end
     if onlyMe==1 or channel=="print" then 
-        LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
+        --LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
     end
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if channel==nil then channel="print" end   
