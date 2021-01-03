@@ -4,6 +4,7 @@ local playerName = UnitName("player")
 --MDR["dices"]={}
 local diceReportChannel
 local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
+MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
 C_Timer.After(10, function()        
@@ -194,6 +195,7 @@ function MDRko(keyword,type)
         "돌","단","원","상","전","장","택","굴","산", --격아던전
         "연","당","탑","편","흔", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
+        "중",
     }
     local Batchim=0
     for i=1,#LCtable do

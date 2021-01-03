@@ -244,8 +244,13 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 if strfind(k[i],"노") then
                     k[i]=gsub(k[i],"노","")
                     except=1                
+                end                
+
+                if strfind(k[i],"제외") then
+                    k[i]=gsub(k[i],"제외","")
+                    except=1                
                 end
-                
+				
                 if getCallTypeTable(k[i]) then
                     callTypeT[ct]=getCallTypeTable(k[i])
                     ct=ct+1

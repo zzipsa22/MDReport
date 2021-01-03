@@ -385,10 +385,23 @@ function filterVALUES(VALUES)
             cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
         end
         
-        cmdLines=cmdLines..range..(exc or "")      
+        cmdLines=cmdLines..range..(exc or "")     
         
-        local CL=gsub(cmdLines,"|r","")
-        local eul=MDRko(CL,"을")    
+        local msg=VALUES["msg"]        
+        if msg and not CharName then
+            msg=" ("..msg..")"
+        else
+            msg=""
+        end
+        
+        local now=""
+        if onlyOnline then
+            now=", "..MDRcolor("핑크",0,"현재 접속중")
+        end
+        
+        cmdLines=cmdLines..now
+        local CL=strsub(cmdLines,-5,-3)
+        local eul=MDRko(CL,"을")         
         
         local message
         if onlyMe==1 and not CharName then
@@ -397,23 +410,19 @@ function filterVALUES(VALUES)
             else
                 message=MDRcolor("핑크",0,"["..name.."]").." 님의 "..cmdLines.." 정보입니다."
             end
-        elseif onlyYou then
-            local eul=MDRko(CL,"을")             
-            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."
-        else
-            local now=""
-            if onlyOnline then
-                now=", "..MDRcolor("핑크",0,"현재 접속중")
-            end
-            local request=""
-            if callType["affix"] then
-                request=MDRcolor("핑크",0,"메세지")
-            else
-                request=MDRcolor("회색",0,"요청")
-            end
+        elseif onlyYou then           
+            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
             
-            message=MDRcolor("["..name.."]",-1).." 님의 "..request.."입니다: "..cmdLines..now
+        elseif callType["affix"] then            
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg
             
+        elseif callType["parking"] then
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 요청합니다."..msg            
+            
+        elseif CharName then           
+            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..cmdLines
+        else            
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg
         end 
         if not callType["forceversion"] then
             print("|cFF33FF99MDR▶|r"..message)
