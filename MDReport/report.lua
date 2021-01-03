@@ -29,7 +29,7 @@ local classNames={
 function doCheckVersion(channel,who,callType)
     
     local messageLines={}   
-    messageLines[1]="▶[쐐기돌 보고서] Ver."..MDR["version"].." (Update: "..MDR["lastUpdate"]..")"  
+    messageLines[1]="▶[쐐기돌 보고서] "..MDR["version"].." (Update: "..MDR["lastUpdate"]..")"  
     if callType["forceversion"]==1 then
         channel="ADDON_GUILD"
     end
