@@ -31,7 +31,7 @@ function doCheckVersion(channel,who,callType)
     local messageLines={}   
     messageLines[1]="▶[쐐기돌 보고서] Ver."..MDR["version"].." (Update: "..MDR["lastUpdate"]..")"  
     if callType["forceversion"]==1 then
-        channel="ADDON"
+        channel="ADDON_GUILD"
     end
     reportMessageLines(messageLines,channel,who,callType)   
 end
@@ -73,11 +73,18 @@ function doOnlyAffixReport(keyword,channel,who,callType)
         messageLines[4]="▷4주뒤 속성: "..GetAnyWeeksAffix(4)        
     else        
         messageLines=GetAffixFullDescription(keyword)
-    end  
+    end
     reportMessageLines(messageLines,channel,who,callType)    
 end
 
 function reportAddonMessage(messageLines,channel,who,callType)
+    
+    if channel=="ADDON_PARTY" then
+        channel="PARTY"
+    elseif channel=="ADDON_GUILD" then
+        channel="GUILD"
+    end
+    
     for i=1,#messageLines do 
         if channel=="print"then            
             for j=1,8 do
@@ -90,7 +97,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
             end)  
         else
             C_Timer.After(0.2*(i-1), function()
-                    if channel=="ADDON" then channel="GUILD" end 
+                    --if channel=="ADDON" then channel="GUILD" end 
                     if callType["forceversion"] then channel="WHISPER" end
                     C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..messageLines[i], channel,who)
             end)               
@@ -112,6 +119,15 @@ function MDRprintAddonMessage(...)
         ["WHISPER"]="|cFFff80ff",
     }    
     who=strsub(MDRsplit(who, "-")[1],1,9)
+    
+    local ch
+    if channel=="GUILD" then
+        ch=channelColor[channel].."G"
+    elseif channel=="PARTY" then
+        ch=channelColor[channel].."P"
+    else
+        ch="○"
+    end    
     
     local class
     for i=1,#classNames do
@@ -164,9 +180,9 @@ function MDRprintAddonMessage(...)
         end  
     end 
     if class then
-        print(" "..MDRcolor(class,0,"["..who.."]")..": "..message)
+        print(ch..MDRcolor(class,0,"["..who.."]")..": "..message)
     else
-        print(" "..channelColor[channel].."["..who.."]:|r "..message)
+        print(ch..channelColor[channel].."["..who.."]:|r "..message)
     end    
 end
 
@@ -288,7 +304,7 @@ function doShortReport(chars,channel,who,callType)
         messageLines=oneLineMessage
     end    
     --메세지 출력
-    if channel=="ADDON" or channel=="GUILD" then
+    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY"  or channel=="GUILD" then
         reportAddonMessage(messageLines,channel,who,callType)
     else
         --reportAddonMessage(messageLines,channel,who,callType)
@@ -433,7 +449,7 @@ function doFullReport(chars,channel,who,callType)
     end      
     
     --메세지 출력
-    if channel=="ADDON" or channel=="GUILD" then
+    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="GUILD" then
         reportAddonMessage(messageLines,channel,who,callType)
     else        
         reportMessageLines(messageLines,channel,who,callType)    
@@ -444,10 +460,13 @@ end
 function reportMessageLines(messageLines,channel,who,callType)   
     
     -- 애드온 메세지는 애드온 채널로 전송
-    if channel=="ADDON" then
-        reportAddonMessage(messageLines,channel,who,callType)
+    if channel=="ADDON_PARTY" then
+        reportAddonMessage(messageLines,"PARTY",who,callType)
         return
-    end   
+    elseif channel=="ADDON_GUILD" then
+        reportAddonMessage(messageLines,"GUILD",who,callType)
+        return
+    end       
     
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
     

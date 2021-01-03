@@ -20,7 +20,10 @@ C_Timer.After(10, function()
                 print(MDRcolor("수도",0,"▶").."[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: 이제 |cFF40ff40길드|r로 보내는 메세지는 애드온 사용자간 전용 채널로 주고 받게 되며, 채널 송출 없이 기본 채팅창에 출력됩니다. ")               
                 print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cFF40ff40/g|r |cffC79C6E!돌|r  = |cffffff00/!|r |cffC79C6E돌|r) ")  
                 
-                print(MDRcolor("수도",0,"▶").."이제 여러 던전을 한번에 검색, 혹은 "..MDRcolor("죽기",0,"제외").."할 수 있습니다. |cFF33FF99ex)|r |cff40C7EB!티르!속죄|r, |cff40C7EB!|r"..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")) 
+                print(MDRcolor("수도",0,"▶").."|cffffff00'/!!'|r 로 |cFFaaaaff파티채널|r 명령어 전송을 대신할 수 있습니다. (|cFFaaaaff/p|r |cffC79C6E!돌|r  = |cffffff00/!!|r |cffC79C6E돌|r) ")
+                
+                
+                --print(MDRcolor("수도",0,"▶").."이제 여러 던전을 한번에 검색, 혹은 "..MDRcolor("죽기",0,"제외").."할 수 있습니다. |cFF33FF99ex)|r |cff40C7EB!티르!속죄|r, |cff40C7EB!|r"..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")) 
                 
                 print("▷전체 도움말: |cffffff00/! 도움말|r 또는 |cffffff00/쐐 도움말|r")
                 
@@ -121,7 +124,9 @@ local classInfo={
     ["노랑"]={"ffff00"},   
     ["초록"]={"00ff00","장신구"},   
     ["파랑"]={"4444ff"},   
-    ["보라"]={"aa33ff"},       
+    ["보라"]={"aa33ff"},
+    ["파티"]={"aaaaff"},
+    ["길드"]={"80ff80"},
     [""]={}
 }
 
@@ -314,8 +319,9 @@ function MDRmakeDice(channel,who,k)
     --나에게서 귓말이 들어오는 경우 프린트로 변경
     if (channel=="WHISPER_IN") and who==meGame then
         channel="print"
-    end 
+    end     
     diceReportChannel=channel
+    
     local message="MDR ▶ "..(h1 or "")
     local messageLines={}    
     for i=1,#MDR["dices"] do
@@ -326,6 +332,7 @@ function MDRmakeDice(channel,who,k)
     end
     message=message.." : /주사위 "..#MDR["dices"]..""
     messageLines[1]=message
+    
     
     --내가 입력한 주사위면 시작멘트
     if who==meGame then    
@@ -446,6 +453,19 @@ function MDRMykey()
     findCharAllKey()
 end
 
+function MDRCommandsParty(msg, editbox)   
+    local messageLines={}
+    local cmd, args= MDRsplit(msg," ")[1],MDRsplit(msg," ")[2]
+    if not cmd then return end
+    messageLines[1]=" "
+    if strfind(strsub(cmd,1,1),"!") then
+        cmd=strsub(cmd,2,-1)
+    end        
+    
+    MDRsendAddonMessage("!"..cmd,"PARTY",meGame)        
+    return         
+end
+
 function MDRCommands(msg, editbox)   
     local messageLines={}
     -- msg=gsub(msg,"!","")
@@ -525,13 +545,16 @@ function MDRCommands(msg, editbox)
         return           
     end
     
-    
     --messageLines[#messageLines+1]=" "
     reportMessageLines(messageLines,"print","","help")
 end
 
+
+
+
 --명령어 등록
 SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3, SLASH_MDReport4 = '/mdr', '/Tho','/쐐',"/!"
+SLASH_MDRparty1="/!!"
 SLASH_MDRVault1,SLASH_MDRVault2="/금고","/rmarh"
 SLASH_MDRParking1,SLASH_MDRParking2="/주차","/wnck"
 SLASH_MDRMykey1,SLASH_MDRMykey2,SLASH_MDRMykey3,SLASH_MDRMykey4="/돌","/내돌","/ehf","/soehf"
@@ -539,6 +562,7 @@ SlashCmdList["MDReport"] = MDRCommands
 SlashCmdList["MDRVault"] = MDRVault
 SlashCmdList["MDRParking"] = MDRParking
 SlashCmdList["MDRMykey"] = MDRMykey
+SlashCmdList["MDRparty"] = MDRCommandsParty
 
 function MDRsplit (inputstr, sep)
     if sep == nil then

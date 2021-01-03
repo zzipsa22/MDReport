@@ -17,11 +17,10 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
-			            if prefix~="MDReport" then return end
-						
+            if prefix~="MDReport" then return end
             if prefix=="MDReport" and not strfind(strsub(message,0,1),"!") then
                 MDRprintAddonMessage(...)
-                return                
+                --return                
             end         
             
         elseif event == "PLAYER_ENTERING_WORLD" then
@@ -49,12 +48,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if event == "CHAT_MSG_ADDON" then
             msg=select(2, ...)    
             who=select(4, ...)   
-		elseif event == "PLAYER_ENTERING_WORLD" then
-			return 
+        elseif event == "PLAYER_ENTERING_WORLD" then
+            return 
         else
             msg=select(1, ...)    
             who=select(2, ...)   
-        end      
+        end       
         
         --느낌표 스팸이면 무시
         if strfind(msg,"!!") then return end
@@ -92,6 +91,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             end            
         end 
         
+        local headerRemoved=0
+        
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
             
@@ -101,6 +102,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 if not strfind(header,"?") then
                     local length=strlen(header)
                     msg=strsub(msg,length+1,-1)
+                    headerRemoved=1
                 end                
             else                   
             return end 
@@ -111,7 +113,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         if (event== "CHAT_MSG_PARTY") or (event == "CHAT_MSG_PARTY_LEADER") then
             channel="PARTY"
         elseif (event== "CHAT_MSG_ADDON") then
-            channel="ADDON"            
+            channel=select(3, ...)
+            if channel=="PARTY" then
+                channel="ADDON_PARTY"            
+            else
+                channel="ADDON_GUILD"            
+            end           
         elseif (event== "CHAT_MSG_GUILD") then
             channel="GUILD"
         elseif (event=="CHAT_MSG_OFFICER") then
@@ -225,13 +232,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         local ct=1
         for i=1,#k do
+            
             if getCallTypeTable(k[i]) then
+                --print(k[i],"명령어 찾음")
                 callTypeT[ct]=getCallTypeTable(k[i])
                 ct=ct+1
-            end 
-            
-            --명령어가 발견이 안되면
-            if k[i] and not callTypeT[i] then
+            else
                 local name=k[i]
                 if strfind(k[i],"내") then             
                     k[i]=gsub(k[i],"내","")
@@ -244,13 +250,13 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 if strfind(k[i],"노") then
                     k[i]=gsub(k[i],"노","")
                     except=1                
-                end                
-
+                end
+                
                 if strfind(k[i],"제외") then
                     k[i]=gsub(k[i],"제외","")
                     except=1                
                 end
-				
+                
                 if getCallTypeTable(k[i]) then
                     callTypeT[ct]=getCallTypeTable(k[i])
                     ct=ct+1
@@ -266,7 +272,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                     end                    
                 end            
             end            
-        end
+        end        
+        if headerRemoved==1 and #k==1 and not getCallTypeTable(k[1])then return end
         --[[
         if callTypeT[1] and k[2]~="" and k[2]~="?" and not getCallTypeTable(k[2]) then        
             onlyYou=k[2] 
@@ -302,3 +309,4 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
+

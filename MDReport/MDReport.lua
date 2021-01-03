@@ -178,7 +178,7 @@ function filterVALUES(VALUES)
     
     -- 찾는 사람을 지정한 경우
     if onlyYou then 
-        if who==meGame and channel~="ADDON" then  
+        if who==meGame and channel~="ADDON_GUILD" and channel~="ADDON_PARTY" then  
             if strlen(onlyYou)<length then               
                 print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
                 return --검색어가 짧으면 무시
@@ -326,7 +326,11 @@ function filterVALUES(VALUES)
     --조절값 입력
     VALUES["channel"]=channel    
     
-    if channel=="ADDON" then       
+    if channel=="ADDON_PARTY" or channel=="ADDON_GUILD" then       
+        local mdrcolor={
+            ["ADDON_PARTY"]="|cFFaaaaffMDR▶|r",
+            ["ADDON_GUILD"]="|cFF33FF99MDR▶|r",
+        }
         
         local name=MDRsplit(who,"-")[1]
         local message,range="",""
@@ -391,7 +395,11 @@ function filterVALUES(VALUES)
         if msg and not CharName then
             local sur=""
             if strfind(strsub(msg,1,1),"!") then
-                sur=MDRcolor("노랑",0,"/! ")                
+                if channel=="ADDON_PARTY" then
+                    sur=MDRcolor("파티",0,"/!! ")
+                else
+                    sur=MDRcolor("길드",0,"/! ")                        
+                end                
                 msg=strsub(msg,2,-1)
             end            
             msg="|cffaaaaaa ☞"..sur..msg.."|r"
@@ -430,7 +438,7 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg
         end 
         if not callType["forceversion"] then
-            print("|cFF33FF99MDR▶|r"..message)
+            print(mdrcolor[channel]..message)
         end
         
     end   
@@ -907,7 +915,7 @@ function findCharAllKey(VALUES)
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
     if (callType["all"] or callType["levelrange"])  and 
     (not callType["class"] and not callType["dungeon"]) and
-    (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON") then
+    (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY") then
         forceToShort=1
     end 
     if callType["currentall"] then
@@ -915,7 +923,7 @@ function findCharAllKey(VALUES)
     end    
     
     --!내돌을 길드로 요청한 경우 짧게 보고
-    if (callType["mykey"] or callType["dungeon"]) and (channel=="GUILD" or channel=="ADDON") then
+    if (callType["mykey"] or callType["dungeon"]) and (channel=="GUILD" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY") then
         forceToShort=1
     end 
     
@@ -931,7 +939,7 @@ function findCharAllKey(VALUES)
     if onlyOnline==1 then
         chars=filterCharsByFilter(chars,"name",nil,nil)
         --이캐릭 돌이 없으면 바로 보고하고 마무리, 길드면 생략
-        if not chars and channel~="GUILD" and channel~="ADDON" and callType["all"] then
+        if not chars and channel~="GUILD" and channel~="ADDON_GUILD" and channel~="ADDON_PARTY" and callType["all"] then
             local messageLines={}
             messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
             reportMessageLines(messageLines,channel,who,callType)
@@ -1058,7 +1066,7 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe)
     end       
     
     --!주차를 길드엔 짧게 보고
-    if channel=="GUILD" or channel=="PARTY"  or channel=="ADDON"then                
+    if channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY"then                
         doShortReport(findChars,channel,who,callType)                  
     else                
         doFullReport(findChars,channel,who,callType)            
@@ -1131,19 +1139,15 @@ function findCharSpell(class,channel,who,callType)
                 num=num+1 
             end        
         end
+    end      
+    
+    --나머지는 길드엔 숏, 나머진 풀 리포트
+    if channel=="GUILD" or channel=="PARTY" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY"then
+        doShortReport(findChars,channel,who,callType)  
+    else
+        doFullReport(findChars,channel,who,callType)     
     end       
     
-    --웅심,전부는 채널에 상관없이 풀리포트
-    if doFullGuildReport==1 then        
-        doFullReport(findChars,channel,who,callType)  
-    else
-        --나머지는 길드엔 숏, 나머진 풀 리포트
-        if channel=="GUILD" or channel=="PARTY" or channel=="ADDON" then
-            doShortReport(findChars,channel,who,callType)  
-        else
-            doFullReport(findChars,channel,who,callType)     
-        end       
-    end    
 end
 
 function filterCharsByFilter(chars,filter,f1,f2)
