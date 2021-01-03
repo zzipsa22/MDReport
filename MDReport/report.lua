@@ -124,9 +124,38 @@ function MDRprintAddonMessage(...)
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
     end
-    for i=1,#classNames do
+    for i=1,#classNames do        
         message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
     end
+    
+    --주사위 색입히기
+    message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
+    message=gsub(message,"결과 ▶","|cFF33FF99결과 ▶|r")
+    local diceNums=MDR.diceNums
+    for k,v in pairs(diceNums) do
+        message=gsub(message,v,MDRcolor("노랑",0,v))
+        
+    end         
+    
+    --주차단수 색입히기
+    local park1={}
+    local park4={}
+    local park10={}
+    for i=1,20 do
+        tinsert(park1,(i-1).."/")
+        tinsert(park4,"/"..(i-1).."/")
+        tinsert(park10,"/"..(i-1))
+    end
+    message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ"))    
+    for i=1,#park1 do
+        local c1,c4,c10="초록","핑크","하늘"
+        if i==1 then 
+            c1,c4,c10="회색","회색","회색"            
+        end
+        message=gsub(message,park4[i],"/"..MDRcolor(c4,0,gsub(park1[i],"/","")).."/")
+        message=gsub(message,park10[i],"/"..MDRcolor(c10,0,gsub(park1[i],"/","")))       
+        message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")        
+    end    
     
     local dungeonNames=MDR.dungeonNames
     if not strfind(message,"쐐기돌") then
