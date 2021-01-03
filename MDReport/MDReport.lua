@@ -389,7 +389,12 @@ function filterVALUES(VALUES)
         
         local msg=VALUES["msg"]        
         if msg and not CharName then
-            msg=" ("..msg..")"
+            local sur=""
+            if strfind(strsub(msg,1,1),"!") then
+                sur=MDRcolor("노랑",0,"/! ")                
+                msg=strsub(msg,2,-1)
+            end            
+            msg="|cffaaaaaa ☞"..sur..msg.."|r"
         else
             msg=""
         end
@@ -406,9 +411,9 @@ function filterVALUES(VALUES)
         local message
         if onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
-                message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."
+                message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."..msg
             else
-                message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] 정보입니다."
+                message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] 정보입니다."..msg
             end
         elseif onlyYou then           
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
