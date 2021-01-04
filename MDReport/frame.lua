@@ -14,7 +14,7 @@ MDRF:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 MDRF:SetScript("OnEvent", function(self, event, ...)
         
-         if event == "CHAT_MSG_ADDON" then
+        if event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
             if prefix~="MDReport" then return end
@@ -85,7 +85,7 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         }
         
         for i=1,#filters do
-            if strfind(msg,filters[i]) then
+            if strfind(msg,filters[i]) and event ~= "CHAT_MSG_ADDON"then
                 local f,l=strfind(msg,filters[i])
                 msg=strsub(msg,l+1,-1)                
             end            
@@ -165,11 +165,12 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
         
         for i=1,#k do           
             
-            if strfind(k[i],"주사위") or strfind(k[i],"?")and             MDR["diceWait"]~=1 then
+            if strfind(k[i],"주사위") or strfind(k[i],"?") and             MDR["diceWait"]~=1 and not strfind(k[#k],"?") then
                 MDRmakeDice(channel,who,k)
                 MDR["running"]=1   
                 return            
-            end             
+            end
+            
             k[i]=gsub(k[i]," ","") 
             
             local keyIsNumber=tonumber(k[i])

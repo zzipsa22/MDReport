@@ -207,7 +207,11 @@ function filterVALUES(VALUES)
                         what=MDRcolor(word,type)
                     elseif callTypeT[i][1]=="dungeon" then                
                         word=getFullDungeonName(callTypeT[i][2])
-                        what=MDRcolor("노랑",0,word)
+                        if except==1 then
+                            what=MDRcolor("회색",0,word)
+                        else
+                            what=MDRcolor("노랑",0,word)
+                        end                        
                     elseif callTypeT[i][1]=="spec" then
                         type=10
                         what=MDRcolor(word,type)
@@ -231,12 +235,13 @@ function filterVALUES(VALUES)
                     cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
                 end
                 
+                --제외 색입히기
                 local exc                
                 if callTypes["dungeon"] and except==1 then
                     exc=MDRcolor("죽기",0," '제외'")
                 end
                 
-                cmdLines=cmdLines..range..(exc or"")
+                cmdLines=cmdLines..(exc or"")..range
                 local CL=gsub(cmdLines,"|r","")
                 local eul=MDRko(CL,"을")                
                 
@@ -365,7 +370,11 @@ function filterVALUES(VALUES)
                 what=MDRcolor(word,type)
             elseif callTypeT[i][1]=="dungeon" then                
                 word=getFullDungeonName(callTypeT[i][2])
-                what=MDRcolor("노랑",0,word)
+                if except==1 then
+                    what=MDRcolor("회색",0,word)
+                else
+                    what=MDRcolor("노랑",0,word)
+                end     
             elseif callTypeT[i][1]=="spec" then
                 type=10
                 what=MDRcolor(word,type)
@@ -397,7 +406,7 @@ function filterVALUES(VALUES)
             cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
         end
         
-        cmdLines=cmdLines..range..(exc or "")     
+        cmdLines=cmdLines..(exc or "")..range     
         
         local msg=VALUES["msg"]        
         if msg and not CharName then
@@ -428,7 +437,7 @@ function filterVALUES(VALUES)
         
         local message
         if channel=="ADDON_WHISPER" and who==meGame then
-            message="["..cmdLines.."]"..msg
+            message="나만보기: ["..cmdLines.."]"..msg
             if VALUES["msg"]=="!금고" then
                 MDRVault ()                               
             end            

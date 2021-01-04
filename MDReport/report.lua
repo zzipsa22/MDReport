@@ -111,6 +111,71 @@ function MDRsendAddonMessage(args,channel,who)
     C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
 end
 
+function MDRcolorizeForPrint(message)
+    --징표
+    for j=1,8 do
+        message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
+    end
+    --직업색깔
+    for i=1,#classNames do        
+        message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
+    end
+    
+    --주사위 색입히기
+    message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
+    message=gsub(message,"결과 ▶","|cFF33FF99결과 ▶|r")
+    local diceNums=MDR.diceNums
+    for k,v in pairs(diceNums) do
+        message=gsub(message,v,MDRcolor("노랑",0,v))        
+    end         
+    
+    --주차단수 색입히기
+    local park1={}
+    local park4={}
+    local park10={}
+    local keyL={}
+    local keyL2={}
+    
+    local mL=40
+    for i=1,mL do
+        tinsert(park1,(mL-i).."/")
+        tinsert(park4,"/"..(mL-i).."/")
+        tinsert(park10,"/"..(mL-i))
+        tinsert(keyL,(mL-i).."[")
+        tinsert(keyL2,(mL-i).."]")        
+    end
+    message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ"))
+    for i=1,#park1 do
+        local c1="고급"        
+        if i==(mL-0) then 
+            c1="회색"
+        elseif i<=(mL-14) then
+            c1="유물"        
+        elseif i<=(mL-12) then
+            c1="전설"        
+        elseif i<=(mL-10) then
+            c1="영웅"           
+        elseif i<=(mL-8) then
+            c1="희귀"
+        elseif i<=(mL-6) then
+            c1="고급"
+        end         
+        message=gsub(message,park4[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")).."/")
+        message=gsub(message,park10[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")))       
+        message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")      
+    end    
+    
+    --던전 색입히기
+    local dungeonNames=MDR.dungeonNames
+    if not strfind(message,"쐐기돌") then
+        for i=1,#dungeonNames do            
+            message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
+        end  
+    end 
+    return message
+end
+
+
 function MDRprintAddonMessage(...)   
     local message=select(2,...)
     local channel=select(3,...)    
@@ -138,49 +203,8 @@ function MDRprintAddonMessage(...)
             message=MDRsplit(message,"_")[2]
         end
     end
-    
-    for j=1,8 do
-        message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
-    end
-    for i=1,#classNames do        
-        message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
-    end
-    
-    --주사위 색입히기
-    message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
-    message=gsub(message,"결과 ▶","|cFF33FF99결과 ▶|r")
-    local diceNums=MDR.diceNums
-    for k,v in pairs(diceNums) do
-        message=gsub(message,v,MDRcolor("노랑",0,v))
-        
-    end         
-    
-    --주차단수 색입히기
-    local park1={}
-    local park4={}
-    local park10={}
-    for i=1,20 do
-        tinsert(park1,(i-1).."/")
-        tinsert(park4,"/"..(i-1).."/")
-        tinsert(park10,"/"..(i-1))
-    end
-    message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ"))    
-    for i=1,#park1 do
-        local c1,c4,c10="초록","핑크","하늘"
-        if i==1 then 
-            c1,c4,c10="회색","회색","회색"            
-        end
-        message=gsub(message,park4[i],"/"..MDRcolor(c4,0,gsub(park1[i],"/","")).."/")
-        message=gsub(message,park10[i],"/"..MDRcolor(c10,0,gsub(park1[i],"/","")))       
-        message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")        
-    end    
-    
-    local dungeonNames=MDR.dungeonNames
-    if not strfind(message,"쐐기돌") then
-        for i=1,#dungeonNames do
-            message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
-        end  
-    end 
+    --색입히기
+    message=MDRcolorizeForPrint(message)    
     
     if channel=="WHISPER" and WHO==meGame then
         print(message)
@@ -309,7 +333,7 @@ function doShortReport(chars,channel,who,callType)
         messageLines=oneLineMessage
     end    
     --메세지 출력
-    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY"  or channel=="ADDON_WHISPER"  or channel=="GUILD" then
+    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="GUILD" then
         reportAddonMessage(messageLines,channel,who,callType)
     else
         --reportAddonMessage(messageLines,channel,who,callType)
@@ -454,7 +478,7 @@ function doFullReport(chars,channel,who,callType)
     end      
     
     --메세지 출력
-    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_WHISPER" or channel=="GUILD" then
+    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="GUILD" then
         reportAddonMessage(messageLines,channel,who,callType)
     else        
         reportMessageLines(messageLines,channel,who,callType)    
@@ -472,8 +496,13 @@ function reportMessageLines(messageLines,channel,who,callType)
         reportAddonMessage(messageLines,"GUILD",who,callType)
         return
     elseif channel=="ADDON_WHISPER" then
-        reportAddonMessage(messageLines,"WHISPER",who,callType)
-        return
+        if callType=="dice" then
+            who=meGame
+            reportAddonMessage(messageLines,"WHISPER",who,callType)
+            return
+        else
+            channel="print"
+        end        
     end       
     
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
@@ -484,13 +513,13 @@ function reportMessageLines(messageLines,channel,who,callType)
     end    
     
     for i=1,#messageLines do 
-        if channel=="print"then            
-            for j=1,8 do
-                messageLines[i]=gsub(messageLines[i],"{rt"..j.."}",skullP["rt"..j])
+        if channel=="print"then 
+            
+            if callType~="help" then
+                --도움말 제외 색입히기
+                messageLines[i]=MDRcolorizeForPrint(messageLines[i]) 
             end
-            for j=1,#classNames do
-                messageLines[i]=gsub(messageLines[i],classNames[j],MDRcolor(classNames[j],0))
-            end
+            
             C_Timer.After(0.2*(i-1), function()
                     if messageLines[i]~="" then
                         print(messageLines[i])
