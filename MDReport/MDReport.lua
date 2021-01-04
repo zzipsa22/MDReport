@@ -347,8 +347,9 @@ function filterVALUES(VALUES)
         
         local name=MDRsplit(who,"-")[1]
         local message,range="",""
-        
-        if level==2 and level2 then
+        if callType["parking"] and level then
+            range=MDRcolor("도적",0,level.."단").." "
+        elseif level==2 and level2 then
             range=", "..MDRcolor("도적",0,level2.."단 이하")              
         elseif level and level2==99 then
             range=", "..MDRcolor("도적",0,level.."단 이상")
@@ -406,7 +407,11 @@ function filterVALUES(VALUES)
             cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
         end
         
-        cmdLines=cmdLines..(exc or "")..range     
+        if callType["parking"]  then
+            cmdLines=range..cmdLines
+        else
+            cmdLines=cmdLines..(exc or "")..range    
+        end        
         
         local msg=VALUES["msg"]        
         if msg and not CharName then
@@ -453,8 +458,9 @@ function filterVALUES(VALUES)
         elseif callType["affix"] then            
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg
             
-        elseif callType["parking"] then
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 요청합니다."..msg            
+        elseif callType["parking"] then            
+            
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]".." 못한 캐릭터를 찾습니다."..msg            
             
         elseif CharName then           
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..cmdLines
