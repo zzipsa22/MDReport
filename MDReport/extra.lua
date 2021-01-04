@@ -447,7 +447,8 @@ end
 
 function MDRParking()
     LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
-    findCharNeedParking(nil,nil,"parking","주차")   
+    --findCharNeedParking(nil,nil,"parking","주차")   
+    MDRsendAddonMessage("!주차","WHISPER",meGame)    
     --findCharNeedParking()    
 end
 
@@ -456,7 +457,8 @@ function MDRVault ()
 end
 
 function MDRMykey()
-    findCharAllKey()
+    MDRsendAddonMessage("!돌","WHISPER",meGame)  
+    --findCharAllKey()
 end
 
 function MDRCommandsParty(msg, editbox)   
