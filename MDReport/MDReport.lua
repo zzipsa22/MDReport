@@ -780,6 +780,8 @@ function checkCallMe(onlyYou)
     for k,v in pairs(t) do
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         local name=gsub(k, "%s%-.+","") 
+		onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)
+		name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)
         if strfind(name,onlyYou) and t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
             findYou=true            
         end

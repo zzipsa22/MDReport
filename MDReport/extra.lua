@@ -237,8 +237,13 @@ end
 
 function MDRcolor(keyword,type,keyword2)
     local text,color
-    for k,v in pairs(classInfo) do
-        for i=1,#v do            
+    for k,v in pairs(classInfo) do        
+        for i=1,#v do
+            if type==6 then
+                if k==keyword or keyword==v[i] then                    
+                    return  k
+                end 
+            end            
             if strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2 then
                 color=v[1]                 
                 if not type or type==1  then
@@ -258,9 +263,7 @@ function MDRcolor(keyword,type,keyword2)
                 elseif type==4 then --전문화 출력2
                     text=v[5] or v[4]
                 elseif type==5 then --색깔없이 직업만 출력                  
-                    return v[2]
-                elseif type==6 then --색깔없이 짧은직업만 출력                  
-                    return k
+                    return v[2]                    
                 elseif type==10 then --전문화+직업
                     text=keyword.." "..v[2]                    
                 end               
