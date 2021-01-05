@@ -37,7 +37,7 @@ C_Timer.After(3, function()
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end    
-        MDRbackupMythicKey("start")     
+        MDRbackupMythicKey("onLoad")     
 end)  
 
 local hasteClass={
@@ -780,8 +780,8 @@ function checkCallMe(onlyYou)
     for k,v in pairs(t) do
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         local name=gsub(k, "%s%-.+","") 
-		onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)
-		name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)
+        onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)
+        name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)
         if strfind(name,onlyYou) and t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
             findYou=true            
         end
@@ -922,7 +922,7 @@ function findCharAllKey(VALUES)
     
     if callType["newkey"] then
         if not MDR.myMythicKey then return end
-        local start=MDR.myMythicKey.start
+        local start=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
         local finish=MDR.myMythicKey.finish
         if start==nil or finish==nil then return end
         if start.level==finish.level and start.name==finish.name then
@@ -934,6 +934,21 @@ function findCharAllKey(VALUES)
     
     if callType["currentdungeon"] then
         local here,_=GetInstanceInfo()
+        local mapID = C_ChallengeMode.GetActiveChallengeMapID()
+        local level, _ = C_ChallengeMode.GetActiveKeystoneInfo()
+        local name
+        local onLoad=MDR.myMythicKey.onLoad
+        local start=MDR.myMythicKey.start
+        
+        if mapID~=nil and mapID>0 then --쐐기중이면
+            if start==nil or onLoad==nil then return end            
+            name, _= C_ChallengeMode.GetMapUIInfo(mapID)  
+            if name==start.name and level==onLoad.level and level==start.level+1 then
+            else
+                return                
+            end            
+        else            
+        end        
         callType["dungeon"]=1
         keyword["dungeon"]={}
         keyword["dungeon"][1]=getShortDungeonName(here)
@@ -955,7 +970,7 @@ function findCharAllKey(VALUES)
     end    
     
     --!내돌을 길드로 요청한 경우 짧게 보고
-    if (callType["mykey"] or callType["dungeon"]) and (channel=="GUILD" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY") then
+    if (callType["mykey"] or callType["dungeon"]) and not callType["currentdungeon"] and (channel=="GUILD" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY") then
         forceToShort=1
     end 
     

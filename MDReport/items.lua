@@ -122,8 +122,10 @@ local dungeonTable={
 }
 
 MDR.dungeonNames={}
+MDR.dungeonNamesFull={}
 for k,v in pairs(dungeonTable) do
     tinsert(MDR.dungeonNames,k)
+    tinsert(MDR.dungeonNamesFull,v[1])
 end
 
 local specTable={

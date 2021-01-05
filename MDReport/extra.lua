@@ -174,11 +174,14 @@ function MDRbackupMythicKey(type)
             end
         end
     end
+    local t={}
+    t.level=level
+    t.name=name
+    t.link=link    
+    
     if type=="finish" then               
-        MDR.myMythicKey.finish={}
-        MDR.myMythicKey.finish.level=level
-        MDR.myMythicKey.finish.name=name
-        MDR.myMythicKey.finish.link=link
+        MDR.myMythicKey.finish=t
+        MDR.myMythicKey.onLoad=t        
         local VALUES={}
         local callTypeT={}
         C_Timer.After(3, function()  
@@ -188,10 +191,7 @@ function MDRbackupMythicKey(type)
                 filterVALUES(VALUES)
         end)        
     else       
-        MDR.myMythicKey.start={}        
-        MDR.myMythicKey.start.level=level
-        MDR.myMythicKey.start.name=name
-        MDR.myMythicKey.start.link=link        
+        MDR.myMythicKey[type]=t        
     end       
 end
 

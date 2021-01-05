@@ -126,7 +126,7 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"결과 ▶","|cFF33FF99결과 ▶|r")
     local diceNums=MDR.diceNums
     for k,v in pairs(diceNums) do
-        message=gsub(message,v,MDRcolor("노랑",0,v))        
+        message=gsub(message,v,MDRcolor("사제",0,v))        
     end         
     
     --주차단수 색입히기
@@ -167,7 +167,11 @@ function MDRcolorizeForPrint(message)
     
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
-    if not strfind(message,"쐐기돌") then
+    local dungeonNamesFull=MDR.dungeonNamesFull
+    if not strfind(message,"쐐기돌22") then
+        for i=1,#dungeonNamesFull do            
+            message=gsub(message,dungeonNamesFull[i],MDRcolor("노랑",0,dungeonNamesFull[i]))
+        end  
         for i=1,#dungeonNames do            
             message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
         end  
@@ -463,8 +467,15 @@ function doFullReport(chars,channel,who,callType)
                 end                
                 message=headStar.."새 돌: ["..getShortDungeonName(s.name)..(s.level+1).."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
                 
-            elseif callType and callType["currentdungeon"] then    
-                message=headStar..getShortDungeonName(keyName)..level..": "..keyLink
+            elseif callType and callType["currentdungeon"] then  
+                local mapID = C_ChallengeMode.GetActiveChallengeMapID()
+                local now=""
+                if mapID then
+                    now=" (진행중)"
+                else
+                    now=" (준비중)"                    
+                end                
+                message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
             else                
                 message=headStar..classStatus..": "..havekey..online
             end
