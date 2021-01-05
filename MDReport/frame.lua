@@ -118,6 +118,8 @@ MDRF:SetScript("OnEvent", function(self, event, ...)
                 channel="ADDON_PARTY"            
             elseif channel=="WHISPER" then
                 channel="ADDON_WHISPER" 
+            elseif channel=="OFFICER" then
+                channel="ADDON_OFFICER"                
             else
                 channel="ADDON_GUILD"            
             end           

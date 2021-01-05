@@ -127,6 +127,7 @@ local classInfo={
     ["보라"]={"aa33ff"},
     ["파티"]={"aaaaff"},
     ["길드"]={"80ff80"},
+    ["관리자"]={"40C040"},    
     ["고급"]={"1eff00"},
     ["희귀"]={"0070dd"},
     ["영웅"]={"a335ee"},
@@ -464,20 +465,20 @@ function MDRMykey()
     --findCharAllKey()
 end
 
-function MDRCommandsParty(msg, editbox)   
-    local messageLines={}
-    --local cmd, args= MDRsplit(msg," ")[1],MDRsplit(msg," ")[2]
-    if not msg then return end
-    messageLines[1]=" "
-    if strfind(strsub(msg,1,1),"!") then
-        cmd=strsub(msg,2,-1)
-    end        
+function MDRCommandsParty(msg, editbox)     
+    if not msg then return end        
     if IsInGroup() then
         MDRsendAddonMessage("!"..msg,"PARTY",meGame)        
     else
         MDRsendAddonMessage("!"..msg,"WHISPER",meGame)
     end    
     return         
+end
+
+function MDRCommandsOfficer(msg, editbox) 
+    if not msg then return end        
+    MDRsendAddonMessage("!"..msg,"OFFICER",meGame)            
+    return       
 end
 
 function MDRCommands(msg, editbox)   
@@ -568,12 +569,10 @@ function MDRCommands(msg, editbox)
     reportMessageLines(messageLines,"print","","help")
 end
 
-
-
-
 --명령어 등록
 SLASH_MDReport1, SLASH_MDReport2, SLASH_MDReport3, SLASH_MDReport4 = '/mdr', '/Tho','/쐐',"/!"
 SLASH_MDRparty1="/!!"
+SLASH_MDRofficer1="/@"
 SLASH_MDRVault1,SLASH_MDRVault2="/금고","/rmarh"
 SLASH_MDRParking1,SLASH_MDRParking2="/주차","/wnck"
 SLASH_MDRMykey1,SLASH_MDRMykey2,SLASH_MDRMykey3,SLASH_MDRMykey4="/돌","/내돌","/ehf","/soehf"
@@ -582,6 +581,7 @@ SlashCmdList["MDRVault"] = MDRVault
 SlashCmdList["MDRParking"] = MDRParking
 SlashCmdList["MDRMykey"] = MDRMykey
 SlashCmdList["MDRparty"] = MDRCommandsParty
+SlashCmdList["MDRofficer"] = MDRCommandsOfficer
 
 function MDRsplit (inputstr, sep)
     if sep == nil then
