@@ -37,7 +37,7 @@ C_Timer.After(3, function()
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end    
-        MDRbackupMythicKey("onLoad")     
+        MDRbackupMythicKey("onLoad")
 end)  
 
 local hasteClass={
@@ -949,16 +949,22 @@ function findCharAllKey(VALUES)
         local name
         local onLoad=MDR.myMythicKey.onLoad
         local start=MDR.myMythicKey.start
+        local headStar=MDR.skull[MDRcolor(krClass,6)]
+        local messageLines={}        
         
         if mapID~=nil and mapID>0 then --쐐기중이면
             if start==nil or onLoad==nil then return end            
             name, _= C_ChallengeMode.GetMapUIInfo(mapID)  
-            if name==start.name and level==onLoad.level and level==start.level+1 then
-            else
-                return                
+            if name==start.name and level==onLoad.level and level==start.level+1 then                
+                messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." (진행중)" 
+                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
+                    reportAddonMessage(messageLines,channel,who,callType)
+                else        
+                    reportMessageLines(messageLines,channel,who,callType)    
+                end                    
             end            
-        else            
-        end        
+            return            
+        end               
         callType["dungeon"]=1
         keyword["dungeon"]={}
         keyword["dungeon"][1]=getShortDungeonName(here)

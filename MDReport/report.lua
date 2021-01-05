@@ -17,6 +17,8 @@ local skull={
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
 
+MDR.skull=skull
+
 local skullP={}
 for i=1,8 do
     skullP["rt"..i]="\124TInterface/TargetingFrame/UI-RaidTargetingIcon_"..i..":12\124t"
