@@ -438,7 +438,7 @@ function filterVALUES(VALUES)
         if msg and not CharName then              
             msg="|cffaaaaaa ☞"..sur..msg.."|r "..chName
         else
-            msg=MDRcolor(msg).." "..chName
+            msg=MDRcolor(msg,0).." "..chName
         end
         
         local now=""

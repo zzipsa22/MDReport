@@ -119,11 +119,11 @@ local classInfo={
     },    
     ["회색"]={"9d9d9d","무기"},
     ["하늘"]={"80e7EB"},
-    ["핑크"]={"F5aCdA" },
+    ["핑크"]={"F5aCdA","분홍" },
     ["빨강"]={"ff0000" },
-    ["노랑"]={"ffff00"},   
+    ["노랑"]={"ffff00","노란"},   
     ["초록"]={"00ff00","장신구"},   
-    ["파랑"]={"4444ff"},   
+    ["파랑"]={"4444ff", "파란"},   
     ["보라"]={"aa33ff"},
     ["파티"]={"aaaaff"},
     ["길드"]={"80ff80"},
@@ -270,7 +270,8 @@ function MDRcolor(keyword,type,keyword2)
                 end               
             end            
         end        
-    end    
+    end  
+    --print(type, text)
     return "|cff"..(color or "F5aCdA")..(text or keyword or"?").."|r"        
 end
 
