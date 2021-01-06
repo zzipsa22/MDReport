@@ -458,6 +458,9 @@ function MDRParking()
 end
 
 function MDRVault ()
+    if MDRgetHistory then
+        MDRgetHistory()
+    end
     LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()    
 end
 
@@ -643,4 +646,70 @@ end
 
 function MDRtitleLower( first, rest )
     return first:lower()..rest:lower()
+end
+
+function MDRgetHistory()
+    local runHistory = C_MythicPlus.GetRunHistory(false, true);
+    local rewardLevel={ 
+        [2]=200,       
+        [3]=203,
+        [4]=207,
+        [5]=210,
+        [6]=210,
+        [7]=213,
+        [8]=216,
+        [9]=216,
+        [10]=220,
+        [11]=220,
+        [12]=223,
+        [13]=223,
+        [14]=226,
+        [15]=226,
+    }    
+    if #runHistory > 0 then        
+        local comparison = function(entry1, entry2)
+            if ( entry1.level == entry2.level ) then
+                return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+            else
+                return entry1.level > entry2.level;
+            end
+        end
+        table.sort(runHistory, comparison);
+        local class,_=UnitClass("player")
+        print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다.")
+        for i = 1, #runHistory do
+            local runInfo = runHistory[i];
+            local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
+            --name=getShortDungeonName(name)
+            local color1,color2,color3tip,reward,level
+            if i==1 or i==4 or i==10 then
+                level=runInfo.level
+                if level>15 then level=15 end
+                color1="전설"
+                color2="초록"
+                color3="노랑"
+                reward="회 보상: "..rewardLevel[level].." 레벨"
+            else
+                color1="사제"
+                color2="회색"  
+                color3="회색"  
+                reward=""              
+            end         
+            if i>10 then return end
+            message=MDRcolor(color1,0,runInfo.level).." "..MDRcolor(color2,0,name)..MDRcolor(color3,0," ["..i..reward.."]")
+            print(message)
+            
+            --GameTooltip_AddHighlightLine(GameTooltip, string.format(WEEKLY_REWARDS_MYTHIC_RUN_INFO, runInfo.level, name));
+        end
+        if #runHistory <1 then
+            tip="▶이번주 쐐기를 아직 돌지 않았습니다."
+        elseif #runHistory <4 then
+            tip="▶다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."
+        elseif #runHistory <10 then
+            tip="▶다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."
+        else
+            tip=""
+        end
+        print( tip)
+    end
 end
