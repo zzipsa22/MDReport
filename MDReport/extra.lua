@@ -695,11 +695,10 @@ function MDRgetHistory()
                 color3="회색"  
                 reward=""              
             end         
-            if i>10 then return end
-            message=MDRcolor(color1,0,runInfo.level).." "..MDRcolor(color2,0,name)..MDRcolor(color3,0," ["..i..reward.."]")
-            print(message)
-            
-            --GameTooltip_AddHighlightLine(GameTooltip, string.format(WEEKLY_REWARDS_MYTHIC_RUN_INFO, runInfo.level, name));
+            if i<=10 then 
+                message=MDRcolor(color1,0,runInfo.level).." "..MDRcolor(color2,0,name)..MDRcolor(color3,0," ["..i..reward.."]")
+                print(message)
+            end          
         end
         if #runHistory <1 then
             tip="▶이번주 쐐기를 아직 돌지 않았습니다."
@@ -708,8 +707,8 @@ function MDRgetHistory()
         elseif #runHistory <10 then
             tip="▶다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."
         else
-            tip=""
+            tip=nil
         end
-        print( tip)
+        if tip then print(tip) end
     end
 end
