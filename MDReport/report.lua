@@ -292,8 +292,15 @@ function doShortReport(chars,channel,who,callType)
             
             if keyLink~=nil then
                 havekey=keyName..level
-            else                
-                havekey="템렙"..math.floor(equipLevel).."/"..math.floor(itemLevel)
+            else
+                local E=math.floor(equipLevel)
+                local H=math.floor(itemLevel)
+                if E==H then
+                    H=""
+                else
+                    H="("..H..")"
+                end
+                havekey="템렙"..E..H
             end
             local message=""          
             local sameCheck
@@ -416,7 +423,15 @@ function doFullReport(chars,channel,who,callType)
                 end                
             else
                 if charLevel==MDR["SCL"] then
-                    havekey="[{rt7}쐐기돌 없음: 템렙"..math.floor(equipLevel).."/"..math.floor(itemLevel).."]"
+                    local E=math.floor(equipLevel)
+                    local H=math.floor(itemLevel)
+                    if E==H then
+                        H=""
+                    else
+                        H="("..H..")"
+                    end
+                    havekey="템렙"..E..H
+                    havekey="[{rt7}쐐기돌 없음: 템렙"..E..H
                 else
                     havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
                 end                
@@ -475,13 +490,7 @@ function doFullReport(chars,channel,who,callType)
                 message=headStar.."새 돌: ["..getShortDungeonName(s.name)..(s.level+1).."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
                 
             elseif callType and callType["currentdungeon"] then  
-                local mapID = C_ChallengeMode.GetActiveChallengeMapID()
-                local now=""
-                if mapID then
-                    now=" (진행중)"
-                else
-                    now=" (준비중)"                    
-                end                
+                local now=" (준비중)"                
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
             else                
                 message=headStar..classStatus..": "..havekey..online
