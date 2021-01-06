@@ -650,6 +650,7 @@ end
 
 function MDRgetHistory()
     local runHistory = C_MythicPlus.GetRunHistory(false, true);
+    local class,_=UnitClass("player")    
     local rewardLevel={ 
         [2]=200,       
         [3]=203,
@@ -675,7 +676,7 @@ function MDRgetHistory()
             end
         end
         table.sort(runHistory, comparison);
-        local class,_=UnitClass("player")
+        
         print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다.")
         for i = 1, #runHistory do
             local runInfo = runHistory[i];
@@ -700,9 +701,7 @@ function MDRgetHistory()
                 print(message)
             end          
         end
-        if #runHistory <1 then
-            tip="▶이번주 쐐기를 아직 돌지 않았습니다."
-        elseif #runHistory <4 then
+        if #runHistory <4 then
             tip="▶다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."
         elseif #runHistory <10 then
             tip="▶다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."
@@ -710,5 +709,7 @@ function MDRgetHistory()
             tip=nil
         end
         if tip then print(tip) end
+    else
+        print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님은 아직 쐐기 기록이 없습니다.") 
     end
 end
