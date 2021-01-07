@@ -178,14 +178,17 @@ function MDRbackupMythicKey(type)
     local t={}
     t.level=level
     t.name=name
-    t.link=link    
+    t.link=link 
+    
+    --쐐기 기록 저장
+    MDRgetHistory(type)
     
     if type=="finish" then               
         MDR.myMythicKey.finish=t
         MDR.myMythicKey.onLoad=t        
         local VALUES={}
         local callTypeT={}
-        C_Timer.After(3, function()  
+        C_Timer.After(1, function()  
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["callTypeT"]=callTypeT        
                 VALUES["channel"]="PARTY"        
@@ -459,7 +462,7 @@ end
 
 function MDRVault ()
     if MDRgetHistory then
-        MDRgetHistory()
+        MDRgetHistory("vault")
     end
     LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()    
 end
@@ -648,8 +651,37 @@ function MDRtitleLower( first, rest )
     return first:lower()..rest:lower()
 end
 
-function MDRgetHistory()
-    local runHistory = C_MythicPlus.GetRunHistory(false, true);
+function MDRgetHistory(type)    
+    local runHistory = C_MythicPlus.GetRunHistory(false, true);    
+    local reportComplete=0
+    if type~="vault" then
+        if not MDR.runHistory then
+            MDR.runHistory={}
+        end
+        MDR.runHistory[type]=#runHistory
+    end
+    if type=="finish" then
+        if (not MDR.runHistory.start) then
+            MDR.runHistory.start=#runHistory
+        end
+        for i=1,60 do
+            C_Timer.After(i, function()
+                    if reportComplete~=1 then
+                        runHistory = C_MythicPlus.GetRunHistory(false, true);
+                        if MDR.runHistory.start+1==#runHistory then                            
+                            MDRdoReportHistory(runHistory)
+                            reportComplete=1
+                        end 
+                    end                       
+            end)            
+        end
+    elseif type=="vault" then
+        MDRdoReportHistory(runHistory)
+    end
+end    
+
+function MDRdoReportHistory(runHistory)
+    if not runHistory then return end
     local class,_=UnitClass("player")    
     local rewardLevel={ 
         [2]=200,       
@@ -677,7 +709,7 @@ function MDRgetHistory()
         end
         table.sort(runHistory, comparison);
         
-        print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다.")
+        print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다. |cffF5aCdA[나에게만 보임]|r")
         for i = 1, #runHistory do
             local runInfo = runHistory[i];
             local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
@@ -710,6 +742,6 @@ function MDRgetHistory()
         end
         if tip then print(tip) end
     else
-        print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님은 아직 쐐기 기록이 없습니다.") 
+        print("|cFF33FF99MDR▶|r 이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님은 아직 쐐기 기록이 없습니다. |cffF5aCdA[나에게만 보임]|r") 
     end
 end

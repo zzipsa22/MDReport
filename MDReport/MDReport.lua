@@ -428,7 +428,7 @@ function filterVALUES(VALUES)
             chName=MDRcolor("관리자",0,"[관리자]")                    
         else
             sur=MDRcolor("핑크",0,"/!! ")
-            chName=MDRcolor("핑크",0,"[귓말]")                      
+            chName=MDRcolor("핑크",0,"[나에게만 보임]")            
         end   
         
         if msg and strfind(strsub(msg,1,1),"!") then            
@@ -452,7 +452,7 @@ function filterVALUES(VALUES)
         
         local message
         if channel=="ADDON_WHISPER" and who==meGame then
-            message="나만보기: ["..cmdLines.."]"..msg
+            message="["..cmdLines.."]"..msg
             if VALUES["msg"]=="!금고" then
                 MDRVault ()                               
             end            
