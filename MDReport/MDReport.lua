@@ -701,7 +701,7 @@ function filterVALUES(VALUES)
             
             findCharAllKey(VALUES)            
         elseif callType["parking"] then        
-            findCharNeedParking(channel,who,"parking",keyword["parking"],level,onlyMe)             
+            findCharNeedParking(channel,who,"parking",keyword["parking"],level,onlyMe,onlyOnline)             
         elseif callType["spell"] and #callTypeB==1 then        
             findCharSpell(keyword["spell"],channel,who,"spell")     
         elseif (callType["version"] or callType["forceversion"]) and #callTypeB==1 then        
@@ -977,7 +977,7 @@ function findCharAllKey(VALUES)
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
     if (callType["all"] or callType["levelrange"])  and 
-    (not callType["class"] and not callType["dungeon"]) and
+    (not callType["class"] and not callType["dungeon"] and onlyOnline~=1) and
     (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1
     end 
@@ -986,7 +986,7 @@ function findCharAllKey(VALUES)
     end    
     
     --!내돌을 길드로 요청한 경우 짧게 보고
-    if (callType["mykey"] or callType["dungeon"]) and not callType["currentdungeon"] and (channel=="GUILD" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
+    if (callType["mykey"] or callType["dungeon"]) and not callType["currentdungeon"] and onlyOnline~=1 and (channel=="GUILD" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1
     end 
     
@@ -1057,13 +1057,16 @@ function findCharAllKey(VALUES)
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
-function findCharNeedParking(channel,who,callType,keyword,level,onlyMe)
+function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnline)
     if level==nil then level=99
     elseif level<2 then level=2 end
     if onlyMe==1 or channel=="print" then 
         --LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
     end
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
+    if onlyOnline==1 then 
+        chars=filterCharsByFilter(chars,"name",nil,nil)
+    end
     if channel==nil then channel="print" end   
     
     local findChars={}
@@ -1114,8 +1117,12 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe)
         
         local messageLines={}
         local message=""
-        if bestnum>1 then            
-            message="▶저는 이번주 "..parkingLevel.."단 주차는 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
+        if bestnum>1 then
+            if onlyOnline==1 then
+                message="▶"..parkingLevel.."단 주차 완료 ("..highstLevel.."단)" 
+            else
+                message="▶저는 이번주 "..parkingLevel.."단 주차는 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
+            end
         elseif bestCharLevel<MDR["SCL"] then
             message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
         else       
