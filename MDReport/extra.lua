@@ -715,7 +715,7 @@ end
 
 function MDRdoReportHistory(runHistory,main,alt)
     if not runHistory then
-        runHistory=MDRconfig.Char[meAddon].runHistory        
+        runHistory = C_MythicPlus.GetRunHistory(false, true);  
     end
     local class,_=UnitClass("player")    
     local rewardLevel={ 
@@ -792,13 +792,15 @@ function MDRdoReportHistory(runHistory,main,alt)
     end    
     if alt then
         --부캐정보
-        local toons=MDRconfig.Char
+        local toons=MDRconfig.Char		
         local howManyToons=0
         for k,v in pairs( toons) do
-            howManyToons=howManyToons+1
+            if k~=meAddon and v.runHistory then			
+                howManyToons=howManyToons+1
+            end            
         end    
         if howManyToons>1 then
-            print("|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 다른 캐릭터: "..MDRcolor("핑크",0,"[총 "..(howManyToons-1).."개]") )       
+            print("|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 다른 캐릭터: "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") )       
             for k,v in pairs(toons) do
                 if k~=meAddon and v.runHistory then
                     local altName=MDRsplit(k," - ")[1]
