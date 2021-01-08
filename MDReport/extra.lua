@@ -657,12 +657,12 @@ function MDRtitleLower( first, rest )
 end
 
 function MDRgetHistory(type)    
+    if not MDR.runHistory then
+        MDR.runHistory={}
+    end
     local runHistory = C_MythicPlus.GetRunHistory(false, true);    
-    local reportComplete=0
-    if type=="start" then
-        if not MDR.runHistory then
-            MDR.runHistory={}
-        end
+    local reportComplete=0    
+    if type=="start" then        
         MDR.runHistory[type]=runHistory
         MDR.runHistory.finish=nil
     elseif type=="finish" then
@@ -682,7 +682,7 @@ function MDRgetHistory(type)
             MDRdoReportHistory(MDR.runHistory.finish)             
         end        
     elseif type=="vault" then
-        if MDR.runHistory.finish then
+        if MDR.runHistory and MDR.runHistory.finish then
             MDRdoReportHistory(MDR.runHistory.finish)
         else            
             MDRdoReportHistory(runHistory)
