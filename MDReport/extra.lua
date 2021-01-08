@@ -4,6 +4,7 @@ local playerName = UnitName("player")
 --MDR["dices"]={}
 local diceReportChannel
 local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
+local C_MythicPlus_GetRunHistory = C_MythicPlus.GetRunHistory
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
@@ -469,12 +470,10 @@ function MDRParking()
 end
 
 function MDRVault ()
-    if MDRgetHistory then
-        MDRgetHistory("vault")
-    end
     C_MythicPlus.RequestMapInfo()
     C_MythicPlus.RequestRewards()
     LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()    
+	MDRgetHistory("vault")    
 end
 
 function MDRMykey()
@@ -678,10 +677,7 @@ function MDRgetHistory(type)
     MDRconfig.Char=MDRconfig.Char or {}    
     MDRconfig.Char[meAddon]={}
 	
-	C_MythicPlus.RequestMapInfo()
-    C_MythicPlus.RequestRewards()
-	
-    local runHistory = C_MythicPlus.GetRunHistory(false, true);    
+    local runHistory = C_MythicPlus_GetRunHistory(false, true);    
 
     if type=="onLoad" then
         MDR.runHistory[type]=runHistory        
@@ -734,7 +730,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
 	end	
 
     if not runHistory then
-        runHistory = C_MythicPlus.GetRunHistory(false, true);  
+        runHistory = C_MythicPlus_GetRunHistory(false, true);  
     end
     local class,_=UnitClass("player")    
     local rewardLevel={ 
@@ -851,3 +847,8 @@ function MDRdoReportHistory(runHistory,main,alt,type)
     end
 	reportMessageLines(messageLines,nil,nil,"fast")   
 end
+  
+C_Timer.After(15, function()
+	MDRbackupMythicKey("onLoad")
+	MDRgetHistory("onLoad")
+end)  
