@@ -698,7 +698,7 @@ function MDRgetHistory(type)
         tempTable[#tempTable+1]=t        
         if t.mapChallengeModeID then
             MDR.runHistory.finish=tempTable
-            MDRdoReportHistory(MDR.runHistory.finish,true,true,type)            
+            MDRdoReportHistory(MDR.runHistory.finish,true,false,type)            
         end
     elseif type=="vault" then
 		type="onLoad"   	
