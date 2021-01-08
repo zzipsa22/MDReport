@@ -5,6 +5,7 @@
 ## Author: @project-author@
 ## Version: @project-version@
 ## X-Curse-Project-ID: 394116
+## SavedVariables: MDRconfig
 
 MDReport.lua
 

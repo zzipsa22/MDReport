@@ -38,6 +38,8 @@ C_Timer.After(3, function()
             MDR.myMythicKey={}
         end    
         MDRbackupMythicKey("onLoad")
+        C_MythicPlus.RequestMapInfo()
+        C_MythicPlus.RequestRewards()
 end)  
 
 local hasteClass={
