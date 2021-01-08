@@ -698,6 +698,7 @@ function MDRgetHistory(type)
         tempTable[#tempTable+1]=t        
         if t.mapChallengeModeID then
             MDR.runHistory.finish=tempTable
+			MDR.runHistory.onLoad=tempTable				
 			MDRconfig.Char[meAddon].runHistory=tempTable
             MDRdoReportHistory(MDR.runHistory.finish,true,false,type)
         end
@@ -709,8 +710,10 @@ function MDRgetHistory(type)
             MDRdoReportHistory(runHistory,true,true,type)
         end            
     end
-    
-    if (MDR.thisCharHasKey==1 or runHistory) and type~="finish" then
+    if MDR.runHistory.finish then 
+		MDRconfig.Char[meAddon].class=krClass  
+		MDRconfig.Char[meAddon].runHistory=MDR.runHistory.finish
+    elseif (MDR.thisCharHasKey==1 or runHistory) then
         MDRconfig.Char[meAddon].class=krClass  
         MDRconfig.Char[meAddon].runHistory=MDR.runHistory[type] or runHistory    
     end    
