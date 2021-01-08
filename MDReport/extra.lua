@@ -775,7 +775,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
                 local runInfo = runHistory[i];
                 local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
 
-                local color1,color2,color3tip,reward,level
+                local color1,color2,color3,tip,reward,level
                 if i==1 or i==4 or i==10 then
                     level=runInfo.level
                     if level>15 then level=15 end
@@ -818,32 +818,55 @@ function MDRdoReportHistory(runHistory,main,alt,type)
         --부캐정보
         local toons=MDRconfig.Char		
         local howManyToons=0
-        for k,v in pairs( toons) do
+		local newtoons={}
+        for k,v in pairs( toons) do			
             if k~=meAddon and v.runHistory then			
-                howManyToons=howManyToons+1
+				v["runs"]=#v.runHistory
+				v["name"]=k
+				tinsert(newtoons,v)
+				table.sort(newtoons, function(a,b)
+				return a.runs > b.runs or a.runs == b.runs and a.runs < b.runs
+				end)
+                howManyToons=howManyToons+1				
             end            
         end    
         if howManyToons>0 then
-			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..MDRcolor("계승",0,"[다른 캐릭터]")..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]")    
-            for k,v in pairs(toons) do
-                if k~=meAddon and v.runHistory then
-                    local altName=MDRsplit(k," - ")[1]
+			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..MDRcolor("계승",0,"[다른 캐릭터]")..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
+					
+            for _,v in pairs(newtoons) do
+                if v["name"]~=meAddon and v.runHistory then
+                    local altName=MDRsplit(v["name"]," - ")[1]
                     local class=v.class
-                    local levels=""
+                    local levels,rewards="",""
+					local comparison = function(entry1, entry2)
+						if ( entry1.level == entry2.level ) then
+							return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+						else
+							return entry1.level > entry2.level;
+						end
+					end
+					table.sort(v.runHistory, comparison);
                     for j=1,#v.runHistory do
                         if j==1 or j==4 or j==10 then
-                            levels=levels.."|cffff8000"..v.runHistory[j].level.."단|r|cffffff00(Lv."..rewardLevel[v.runHistory[j].level]..")|r, "
+                            levels=levels.."|cffff8000"..v.runHistory[j].level.."|r, "
+							rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, "							
                         else                        
-                            levels=levels.."|cff9d9d9d"..v.runHistory[j].level.."단|r, "
+                            levels=levels.."|cff9d9d9d"..v.runHistory[j].level.."|r, "
                         end                 
                     end
                     if strsub(levels,-2,-1)==", " then
                         levels=strsub(levels,1,-3)
-                    end                
+                    end 
+                    if strsub(rewards,-2,-1)==", " then
+                        rewards=strsub(rewards,1,-3)
+                    end 	
+					if rewards~="" then
+						rewards=" [보상: "..rewards.."]"
+					end					
                     if #v.runHistory==0 then 
                         levels=MDRcolor("유물",0,"이번주 기록이 없습니다.")
                     end
-					messageLines[#messageLines+1]="    "..MDRcolor("하늘",0,"["..#v.runHistory.."회]").." "..MDRcolor(class,0,"["..altName.."]")..": "..levels
+					messageLines[#messageLines+1]="    "..MDRcolor("하늘",0,"["..#v.runHistory.."회]").." "..MDRcolor(class,0,"["..altName.."]")..": "..levels..rewards
                     --print("    "..MDRcolor("하늘",0,"["..#v.runHistory.."회]"),MDRcolor(class,0,"["..altName.."]")..":",levels)
                 end               
             end 
@@ -855,4 +878,4 @@ end
 C_Timer.After(15, function()
 	MDRbackupMythicKey("onLoad")
 	MDRgetHistory("onLoad")
-end)  
+end) 
