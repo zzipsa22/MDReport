@@ -824,7 +824,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
         local howManyToons=0
 		local newtoons={}
         for k,v in pairs( toons) do			
-            if k~=meAddon and v.runHistory then			
+            if k~=meAddon and v.runHistory and v.level==MDR.SCL then			
 				v["runs"]=#v.runHistory
 				v["name"]=k
 				tinsert(newtoons,v)
