@@ -763,11 +763,11 @@ function MDRdoReportHistory(runHistory,main,alt,type)
             table.sort(runHistory, comparison);
             
 			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다."
-            --print("|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다. |cffF5aCdA[나에게만 보임]|r")
+
             for i = 1, #runHistory do
                 local runInfo = runHistory[i];
                 local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
-                --name=getShortDungeonName(name)
+
                 local color1,color2,color3tip,reward,level
                 if i==1 or i==4 or i==10 then
                     level=runInfo.level
@@ -789,23 +789,22 @@ function MDRdoReportHistory(runHistory,main,alt,type)
                     end
                     message="    "..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
 					messageLines[#messageLines+1]=message
-                    --print(message)
                 end          
             end
             if #runHistory <4 then
-                tip="▶다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."..guide
+                tip=MDRcolor("빨강",0,"▶").."다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."..guide
             elseif #runHistory <10 then
-                tip="▶다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."..guide
+                tip=MDRcolor("빨강",0,"▶").."다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."..guide
             else
                 tip=nil
             end
             if tip then 
 				messageLines[#messageLines+1]=tip
-			--print(tip) 
+
 			end
         else
 			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님은 아직 쐐기 기록이 없습니다. |cffF5aCdA[나에게만 보임]|r"
-            --print("|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..UnitName("player").."]").." 님은 아직 쐐기 기록이 없습니다. |cffF5aCdA[나에게만 보임]|r") 
+ 
         end
     end    
     if alt then
@@ -818,8 +817,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
             end            
         end    
         if howManyToons>1 then
-			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..MDRcolor("계승",0,"[다른 캐릭터]")..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]")
-            --print("|cFF33FF99MDR▶|r "..MDRcolor("계승",0,"[부캐] ")..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 다른 캐릭터: "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") )       
+			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..MDRcolor("계승",0,"[다른 캐릭터]")..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]")    
             for k,v in pairs(toons) do
                 if k~=meAddon and v.runHistory then
                     local altName=MDRsplit(k," - ")[1]
