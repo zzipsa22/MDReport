@@ -545,7 +545,7 @@ function reportMessageLines(messageLines,channel,who,callType)
     for i=1,#messageLines do 
         if channel=="print"then 
             
-            if callType~="help" and callType~="vault" then
+            if callType~="help" and callType~="vault" and callType~="onLoad" then
                 --도움말 제외 색입히기
                 messageLines[i]=MDRcolorizeForPrint(messageLines[i]) 
             end
