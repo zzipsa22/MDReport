@@ -706,9 +706,9 @@ function MDRgetHistory(type)
         end            
     end
     
-    if MDR.thisCharHasKey==1 then
+    if MDR.thisCharHasKey==1 or runHistory then
         MDRconfig.Char[meAddon].class=krClass  
-        MDRconfig.Char[meAddon].runHistory=MDR.runHistory[type]      
+        MDRconfig.Char[meAddon].runHistory=MDR.runHistory[type] or runHistory    
     end    
     
 end    
