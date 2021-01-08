@@ -175,13 +175,14 @@ function MDRbackupMythicKey(type)
             end
         end
     end
-    local t={}
+    local t={}    
+    local tempL,_= C_ChallengeMode.GetActiveKeystoneInfo()
+    t.currentMapID= C_ChallengeMode.GetActiveChallengeMapID()
+    t.currentLevel= tempL>0  and tempL   
     t.level=level
     t.name=name
-    t.link=link 
-    
-    --쐐기 기록 저장
-    MDRgetHistory(type)
+    t.link=link
+    t.mapID=mapID    
     
     if type=="finish" then               
         MDR.myMythicKey.finish=t
@@ -195,8 +196,12 @@ function MDRbackupMythicKey(type)
                 filterVALUES(VALUES)
         end)        
     else       
-        MDR.myMythicKey[type]=t        
-    end       
+        MDR.myMythicKey[type]=t 
+        MDR.myMythicKey.finish=nil        
+    end        
+    
+    --쐐기 기록 저장
+    MDRgetHistory(type)
 end
 
 function MDRko(keyword,type)    
@@ -654,29 +659,34 @@ end
 function MDRgetHistory(type)    
     local runHistory = C_MythicPlus.GetRunHistory(false, true);    
     local reportComplete=0
-    if type~="vault" then
+    if type=="start" then
         if not MDR.runHistory then
             MDR.runHistory={}
         end
-        MDR.runHistory[type]=#runHistory
-    end
-    if type=="finish" then
+        MDR.runHistory[type]=runHistory
+        MDR.runHistory.finish=nil
+    elseif type=="finish" then
         if (not MDR.runHistory.start) then
-            MDR.runHistory.start=#runHistory
-        end
-        for i=1,60 do
-            C_Timer.After(i, function()
-                    if reportComplete~=1 then
-                        runHistory = C_MythicPlus.GetRunHistory(false, true);
-                        if MDR.runHistory.start+1==#runHistory then                            
-                            MDRdoReportHistory(runHistory)
-                            reportComplete=1
-                        end 
-                    end                       
-            end)            
-        end
+            MDR.runHistory.start=MDR.runHistory.onLoad
+        end        
+        local tempL,_=C_ChallengeMode.GetActiveKeystoneInfo()
+        local t={}
+        t.completed=true
+        t.mapChallengeModeID=MDR.myMythicKey.start.currentMapID
+        t.level=MDR.myMythicKey.start.currentLevel
+        t.thisWeek=true
+        local tempTable=MDR.runHistory.start
+        tempTable[#tempTable+1]=t        
+        if t.mapChallengeModeID then
+            MDR.runHistory.finish=tempTable
+            MDRdoReportHistory(MDR.runHistory.finish)             
+        end        
     elseif type=="vault" then
-        MDRdoReportHistory(runHistory)
+        if MDR.runHistory.finish then
+            MDRdoReportHistory(MDR.runHistory.finish)
+        else            
+            MDRdoReportHistory(runHistory)
+        end        
     end
 end    
 
