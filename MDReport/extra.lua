@@ -710,8 +710,12 @@ function MDRgetHistory(type)
             MDRdoReportHistory(runHistory,true,true,type)
         end            
     end
+	
+	MDRconfig.Char[meAddon].class=krClass
+	MDRconfig.Char[meAddon].level=UnitLevel("player")
+	MDRconfig.Char[meAddon].name=meAddon
+	
     if MDR.runHistory.finish then 
-		MDRconfig.Char[meAddon].class=krClass  
 		MDRconfig.Char[meAddon].runHistory=MDR.runHistory.finish
     elseif (MDR.thisCharHasKey==1 or runHistory) then
         MDRconfig.Char[meAddon].class=krClass  
@@ -834,7 +838,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
 			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..MDRcolor("계승",0,"[다른 캐릭터]")..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
 					
             for _,v in pairs(newtoons) do
-                if v["name"]~=meAddon and v.runHistory then
+                if v["name"]~=meAddon and v.runHistory and v.level==MDR.SCL then
                     local altName=MDRsplit(v["name"]," - ")[1]
                     local class=v.class
                     local levels,rewards="",""
@@ -874,12 +878,10 @@ function MDRdoReportHistory(runHistory,main,alt,type)
     end
 	reportMessageLines(messageLines,nil,nil,"vault")   
 end
-  
-C_Timer.After(15, function()
+ 
+for i=1,4 do 
+	C_Timer.After(i*5, function()
 	MDRbackupMythicKey("onLoad")
 	MDRgetHistory("onLoad")
-end)
-
-C_Timer.After(20, function()
-	MDRgetHistory("onLoad") 
-end)
+	end)
+end
