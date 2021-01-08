@@ -878,4 +878,8 @@ end
 C_Timer.After(15, function()
 	MDRbackupMythicKey("onLoad")
 	MDRgetHistory("onLoad")
-end) 
+end)
+
+C_Timer.After(20, function()
+	MDRgetHistory("onLoad") 
+end)
