@@ -816,7 +816,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
                 howManyToons=howManyToons+1
             end            
         end    
-        if howManyToons>1 then
+        if howManyToons>0 then
 			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..MDRcolor("계승",0,"[다른 캐릭터]")..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]")    
             for k,v in pairs(toons) do
                 if k~=meAddon and v.runHistory then
