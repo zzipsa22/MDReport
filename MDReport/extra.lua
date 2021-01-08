@@ -671,11 +671,18 @@ function MDRgetHistory(type)
     if not MDR.runHistory then
         MDR.runHistory={}
     end
+	
+	local meAddon=UnitName("player").." - "..GetRealmName()
+	
     MDRconfig=MDRconfig or {}
     MDRconfig.Char=MDRconfig.Char or {}    
     MDRconfig.Char[meAddon]={}
+	
+	C_MythicPlus.RequestMapInfo()
+    C_MythicPlus.RequestRewards()
+	
     local runHistory = C_MythicPlus.GetRunHistory(false, true);    
-    local reportComplete=0    
+
     if type=="onLoad" then
         MDR.runHistory[type]=runHistory        
     elseif type=="start" then        
