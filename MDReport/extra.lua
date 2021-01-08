@@ -731,7 +731,7 @@ function MDRdoReportHistory(runHistory)
                 color1="전설"
                 color2="초록"
                 color3="노랑"
-                reward="회 보상: "..rewardLevel[level].." 레벨"
+                reward=" ▶ ["..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
             else
                 color1="사제"
                 color2="회색"  
@@ -739,7 +739,11 @@ function MDRdoReportHistory(runHistory)
                 reward=""              
             end         
             if i<=10 then 
-                message=MDRcolor(color1,0,runInfo.level).." "..MDRcolor(color2,0,name)..MDRcolor(color3,0," ["..i..reward.."]")
+                local space=""
+                if runInfo.level<10 then 
+                    space="  "
+                end
+                message=MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
                 print(message)
             end          
         end
