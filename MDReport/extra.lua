@@ -848,7 +848,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
 					table.sort(v.runHistory, comparison);
                     for j=1,#v.runHistory do
                         if j==1 or j==4 or j==10 then
-                            levels=levels.."|cffff8000"..v.runHistory[j].level.."|r, "
+                            levels=levels.."|cff00ff00"..v.runHistory[j].level.."|r, "
 							rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, "							
                         else                        
                             levels=levels.."|cff9d9d9d"..v.runHistory[j].level.."|r, "
