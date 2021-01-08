@@ -701,7 +701,7 @@ function MDRgetHistory(type)
             MDRdoReportHistory(MDR.runHistory.finish,true,true,type)            
         end
     elseif type=="vault" then
-		type="onLoad"    
+		type="onLoad"   	
         if MDR.runHistory and MDR.runHistory.finish then
             MDRdoReportHistory(MDR.runHistory.finish,true,true,type)
         else            
@@ -845,7 +845,7 @@ function MDRdoReportHistory(runHistory,main,alt,type)
             end 
         end         
     end
-	reportMessageLines(messageLines,nil,nil,"fast")   
+	reportMessageLines(messageLines,nil,nil,"vault")   
 end
   
 C_Timer.After(15, function()
