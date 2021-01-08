@@ -33,7 +33,7 @@ for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
 end
 
-C_Timer.After(3, function()  
+C_Timer.After(1, function()  
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end    
