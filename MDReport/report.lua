@@ -533,7 +533,7 @@ function reportMessageLines(messageLines,channel,who,callType)
         else
             channel="print"
         end        
-    end       
+    end
     
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
     
@@ -545,12 +545,12 @@ function reportMessageLines(messageLines,channel,who,callType)
     for i=1,#messageLines do 
         if channel=="print"then 
             
-            if callType~="help" then
+            if callType~="help" and callType~="vault" then
                 --도움말 제외 색입히기
                 messageLines[i]=MDRcolorizeForPrint(messageLines[i]) 
             end
             
-            C_Timer.After(0.2*(i-1), function()
+            C_Timer.After(0.1*(i-1), function()
                     if messageLines[i]~="" then
                         print(messageLines[i])
                     end

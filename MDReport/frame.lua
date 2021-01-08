@@ -1,20 +1,32 @@
-local MDRF = CreateFrame("Frame")
+local ADDON_NAME, MDR= ...;	
+MDR.frame = CreateFrame("Frame")
+
+MDR.frame:RegisterEvent("ADDON_LOADED")
+MDR.frame:RegisterEvent("CHALLENGE_MODE_COMPLETED")
+MDR.frame:RegisterEvent("CHALLENGE_MODE_START")
+MDR.frame:RegisterEvent("CHAT_MSG_PARTY")
+MDR.frame:RegisterEvent("CHAT_MSG_PARTY_LEADER") 
+MDR.frame:RegisterEvent("CHAT_MSG_GUILD")
+MDR.frame:RegisterEvent("CHAT_MSG_WHISPER")
+MDR.frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
+MDR.frame:RegisterEvent("CHAT_MSG_SYSTEM")
+MDR.frame:RegisterEvent("CHAT_MSG_ADDON")
+MDR.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 
 
-MDRF:RegisterEvent("CHALLENGE_MODE_COMPLETED")
-MDRF:RegisterEvent("CHALLENGE_MODE_START")
-MDRF:RegisterEvent("CHAT_MSG_PARTY")
-MDRF:RegisterEvent("CHAT_MSG_PARTY_LEADER") 
-MDRF:RegisterEvent("CHAT_MSG_GUILD")
-MDRF:RegisterEvent("CHAT_MSG_WHISPER")
-MDRF:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
-MDRF:RegisterEvent("CHAT_MSG_SYSTEM")
-MDRF:RegisterEvent("CHAT_MSG_ADDON")
-MDRF:RegisterEvent("PLAYER_ENTERING_WORLD")
+MDR.frame:SetScript("OnEvent", function(self, event, ...)
+	
+		if event== "ADDON_LOADED " then
 
-MDRF:SetScript("OnEvent", function(self, event, ...)
-        
-        if event == "CHAT_MSG_ADDON" then
+			local addonName=select(1, ...)			
+			if addonName ~= ADDON_NAME then
+				return;
+			end
+			MDR.frame:UnregisterEvent("ADDON_LOADED");	
+			MDRconfig = MDRconfig or {};
+			return    
+
+		elseif event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
             if prefix~="MDReport" then return end

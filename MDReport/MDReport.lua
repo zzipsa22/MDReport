@@ -1,3 +1,7 @@
+local ADDON_NAME, MDR= ...;	
+
+_G.MDR=MDR
+
 if not MDR then
     MDR={}
 end
