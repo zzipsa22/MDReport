@@ -459,9 +459,13 @@ function filterVALUES(VALUES)
         if channel=="ADDON_WHISPER" and who==meGame then
             message="["..cmdLines.."]"..msg
             if VALUES["msg"]=="!금고" then
-                MDRVault ()                               
-            end            
-        elseif onlyMe==1 and not CharName then
+                MDRVault ()
+				return
+			elseif VALUES["msg"]=="!주차" then				
+				MDRParking()				
+				return
+            end      				
+		elseif onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
                 message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."..msg
             else

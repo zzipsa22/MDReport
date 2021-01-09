@@ -18,10 +18,10 @@ C_Timer.After(10, function()
                 return
             end 
             if MDR["guide"]<50 then
-                print(MDRcolor("수도",0,"▶").."[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r] 전체 도움말: |cffffff00/! @|r 또는 |cffffff00/! 도움말|r")               
-                print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cffffff00/!|r |cffC79C6E돌|r = |cFF40ff40/g|r |cffC79C6E!돌|r) ")  
+                print(MDRcolor("수도",0,"▶").."|cff9d9d9d|cFF33FF99[쐐기돌 보고서 "..MDR["version"].."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r ")               
+                print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. |cff9d9d9d(|cffffff00/!|r |cffC79C6E돌|r = |cFF40ff40/g|r |cffC79C6E!돌|r) |r")  
                 
-                print(MDRcolor("수도",0,"▶").."|cffffff00'/!!'|r 로 |cFFaaaaff파티|r중일 땐 |cFFaaaaff파티채널|r 전송을, |cffF5aCdA혼자|r일 땐 |cffF5aCdA본인|r에게 전송을 대신 할 수 있습니다. (|cffffff00/!!|r |cffC79C6E돌|r = |cFFaaaaff/p|r |cffC79C6E!돌|r, |cFFff80ff/w |r"..MDRcolor(krClass,0,playerName).." |cffC79C6E!돌|r) ")
+                print(MDRcolor("수도",0,"▶").."|cffffff00'/!!'|r 로 |cFFaaaaff파티|r중일 땐 |cFFaaaaff파티채널|r 전송을, |cffF5aCdA혼자|r일 땐 |cffF5aCdA본인|r에게 전송을 대신 할 수 있습니다. |cff9d9d9d(|cffffff00/!!|r |cffC79C6E돌|r = |cFFaaaaff/p|r |cffC79C6E!돌|r, |cFFff80ff/w |r"..MDRcolor(krClass,0,playerName).." |cffC79C6E!돌|r) [전체 도움말: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
                 
                 
                 --print(MDRcolor("수도",0,"▶").."이제 여러 던전을 한번에 검색, 혹은 "..MDRcolor("죽기",0,"제외").."할 수 있습니다. |cFF33FF99ex)|r |cff40C7EB!티르!속죄|r, |cff40C7EB!|r"..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")) 
@@ -461,11 +461,12 @@ function MDRdice(msg)
 end
 
 function MDRParking()
-    C_MythicPlus.RequestMapInfo()
-    C_MythicPlus.RequestRewards()
-    LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
+    MDRgetHistory("parking")        
+    --C_MythicPlus.RequestMapInfo()
+    --C_MythicPlus.RequestRewards()
+    --LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
     --findCharNeedParking(nil,nil,"parking","주차")   
-    MDRsendAddonMessage("!주차","WHISPER",meGame)    
+    --MDRsendAddonMessage("!주차","WHISPER",meGame)    
     --findCharNeedParking()    
 end
 
@@ -711,18 +712,26 @@ function MDRgetHistory(type)
             MDRconfig.Char[meAddon].runHistory=tempTable
             MDRdoReportHistory(MDR.runHistory.finish,true,nil,nil,type)
         end
-    elseif type=="vault" then
-        type="onLoad"       
+    elseif type=="vault" or type=="parking" then
+        local main,alt,includeMain
+        if type=="vault" then
+            main,alt,includeMain=nil,true,true
+        else
+            main,alt,includeMain=true,true,nil
+        end        
+        --type="onLoad"       
         if MDR.runHistory and MDR.runHistory.finish then
-            MDRdoReportHistory(MDR.runHistory.finish,nil,true,true,type)
+            MDRdoReportHistory(MDR.runHistory.finish,main,alt,includeMain,type)
         else            
-            MDRdoReportHistory(runHistory,nil,true,true,type)
+            MDRdoReportHistory(runHistory,main,alt,includeMain,type)
         end            
     end
     
     MDRconfig.Char[meAddon].class=krClass
     MDRconfig.Char[meAddon].level=UnitLevel("player")
     MDRconfig.Char[meAddon].name=meAddon
+    local SIT=SavedInstancesDB.Toons[meAddon]    
+    MDRconfig.Char[meAddon].keyLink=SIT.MythicKey.link
     
     if MDR.runHistory.finish then 
         MDRconfig.Char[meAddon].runHistory=MDR.runHistory.finish
@@ -745,7 +754,9 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     elseif type=="alts" then
         comm=MDRcolor("계승",0,"[부캐]").." "
     elseif type=="history" then
-        comm=MDRcolor("핑크",0,"[이번주 기록]").." "
+        comm=MDRcolor("핑크",0,"[기록]").." "
+    elseif type=="parking" then
+        comm=MDRcolor("흑마",0,"[주차]").." "
     end    
     
     local class,_=UnitClass("player")
@@ -793,6 +804,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         if (k~=meAddon or (inclueMain and k==meAddon)) and v.runHistory and v.level==MDR.SCL then    
             v["runs"]=#v.runHistory
             v["name"]=k
+            local SIT=SavedInstancesDB.Toons[k]    
+            v["keyLink"]=SIT.MythicKey.link            
             tinsert(newtoons,v)
             table.sort(newtoons, function(a,b)
                     return a.runs > b.runs or a.runs == b.runs and a.runs < b.runs
@@ -872,11 +885,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         if howManyToons>0 then
             local allOrAlt=""
             if inclueMain then
-                allOrAlt=MDRcolor("유물",0,"[모든 캐릭터]")        
+                allOrAlt=MDRcolor("유물",0,"모든 캐릭터")        
             else
-                allOrAlt=MDRcolor("계승",0,"[다른 캐릭터]")        
+                allOrAlt=MDRcolor("계승",0,"다른 캐릭터")        
             end
-            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..allOrAlt..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
+            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..allOrAlt..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
             
             for _,v in pairs(newtoons) do
                 if (v["name"]~=meAddon or (inclueMain and v["name"]==meAddon)) and v.runHistory and v.level==MDR.SCL then
