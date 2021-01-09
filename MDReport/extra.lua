@@ -693,7 +693,10 @@ function MDRgetHistory(type)
     elseif type=="finish" then
         if (not MDR.runHistory.start) then
             MDR.runHistory.start=MDR.runHistory.onLoad
-        end        
+        end
+        if (not MDR.myMythicKey.start) then
+            MDR.myMythicKey.start=MDR.myMythicKey.onLoad
+        end  
         local tempL,_=C_ChallengeMode.GetActiveKeystoneInfo()
         local t={}
         t.completed=true
@@ -764,7 +767,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         runHistory=MDRconfig.Char[charName].runHistory
         class=MDRconfig.Char[charName].class
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]     
-    end    
+    end       
     
     local rewardLevel={ 
         [2]=200,       
@@ -782,6 +785,22 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         [14]=226,
         [15]=226,
     }
+    
+    local toons=MDRconfig.Char            
+    local howManyToons=0
+    local newtoons={}
+    for k,v in pairs( toons) do
+        if (k~=meAddon or (inclueMain and k==meAddon)) and v.runHistory and v.level==MDR.SCL then    
+            v["runs"]=#v.runHistory
+            v["name"]=k
+            tinsert(newtoons,v)
+            table.sort(newtoons, function(a,b)
+                    return a.runs > b.runs or a.runs == b.runs and a.runs < b.runs
+            end)
+            howManyToons=howManyToons+1                
+        end            
+    end         
+    
     local guide=""
     if type=="finish" then
         guide=" |cff9d9d9d(다른 캐릭터를 보시려면 |cffffff00'/부캐'|r 입력)|r"
@@ -834,9 +853,9 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                 end          
             end
             if #runHistory <4 then
-                tip=MDRcolor("빨강",0,"▶").."다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."..guide
+                tip=MDRcolor("빨강",0,"▶").."다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."..(howManyToons>1 and guide or "")
             elseif #runHistory <10 then
-                tip=MDRcolor("빨강",0,"▶").."다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."..guide
+                tip=MDRcolor("빨강",0,"▶").."다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."..(howManyToons>1 and guide or "")
             else
                 tip=nil
             end
@@ -849,21 +868,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         end
     end    
     if alt then
-        --부캐정보
-        local toons=MDRconfig.Char            
-        local howManyToons=0
-        local newtoons={}
-        for k,v in pairs( toons) do
-            if (k~=meAddon or (inclueMain and k==meAddon)) and v.runHistory and v.level==MDR.SCL then    
-                v["runs"]=#v.runHistory
-                v["name"]=k
-                tinsert(newtoons,v)
-                table.sort(newtoons, function(a,b)
-                        return a.runs > b.runs or a.runs == b.runs and a.runs < b.runs
-                end)
-                howManyToons=howManyToons+1                
-            end            
-        end    
+        --부캐정보        
         if howManyToons>0 then
             local allOrAlt=""
             if inclueMain then
@@ -913,8 +918,9 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         end 
         
         messageLines[#messageLines+1]=guide[1]
-        messageLines[#messageLines+1]=guide[2]        
-        
+        if howManyToons>1 then
+            messageLines[#messageLines+1]=guide[2]        
+        end
     end
     reportMessageLines(messageLines,nil,nil,"vault")   
 end
@@ -925,4 +931,3 @@ for i=1,4 do
             MDRgetHistory("onLoad")
     end)
 end
-
