@@ -809,7 +809,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     elseif not main then
         guide={}
         guide[1]="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
-        guide[2]="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명").."'|r 입력.|r"
+        guide[2]="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명(한글자 이상)").."'|r 입력.|r"
     end    
     
     if main then
