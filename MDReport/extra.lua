@@ -530,7 +530,7 @@ function MDRCommands(msg, editbox)
             
             --messageLines[#messageLines+1]="▷|cFF33FF99[1.7.0]|r+ "..MDRcolor("하늘",0,"'?'").." 를 이용하여 주사위를 자동으로 굴릴 수 있습니다. ▷|cffffff00/! @|r "..MDRcolor("하늘",0,"주사위")
             
-            messageLines[#messageLines+1]="▷|cFF33FF99[1.9.0]|r+ 개인 확인용으로 자주 사용되는 기능 몇가지를 슬래시 (/) 명령어로 추가하였습니다. ▷|cffffff00/돌|r, |cffffff00/주차|r, |cffffff00/금고|r  "
+            messageLines[#messageLines+1]="▷|cFF33FF99[1.9.0]|r+ 개인 확인용 슬래시 (/) 명령어 추가 ▷|cffffff00/돌|r, |cffffff00/주차|r, |cffffff00/금고|r  "
             messageLines[#messageLines+1]="▷|cFF33FF99[2.0.0]|r+ |cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cffffff00/!|r |cffC79C6E돌|r = |cFF40ff40/g|r |cffC79C6E!돌|r) " 
             
             messageLines[#messageLines+1]="▷|cFF33FF99[2.1.0]|r+ |cffffff00'/!!'|r 로 |cFFaaaaff파티|r중일 땐 |cFFaaaaff파티채널|r 전송을, |cffF5aCdA혼자|r일 땐 |cffF5aCdA본인|r에게 전송을 대신 할 수 있습니다. (|cffffff00/!!|r |cffC79C6E돌|r = |cFFaaaaff/p|r |cffC79C6E!돌|r, |cFFff80ff/w |r"..MDRcolor(krClass,0,playerName).." |cffC79C6E!돌|r) "
