@@ -742,7 +742,8 @@ function MDRgetHistory(type)
     
 end    
 
-function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)    
+function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName) 
+   
     local messageLines={}
     local comm=""
     if type=="finish" then
@@ -758,7 +759,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     elseif type=="parking" then
         comm=MDRcolor("흑마",0,"[주차]").." "
     end    
-    
+	
+	if MDR.runHistory and MDR.runHistory.finish then
+		runHistory=MDR.runHistory.finish
+    end   
+	    
     local class,_=UnitClass("player")
     local name=UnitName("player")
     
