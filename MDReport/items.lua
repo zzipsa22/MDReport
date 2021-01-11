@@ -711,14 +711,17 @@ function findCharAllItem(VALUES)
                         VALUES["sameDungeon"]=dun[mapName]
                     else                 
                         VALUES["sameDungeon"]=nil
-                    end                                       
+                    end
+                    
                     VALUES["dungeon"]=getShortDungeonName(mapName)
-                    local itemList=checkDungeonHasItem(VALUES)                    
+                    local itemList=checkDungeonHasItem(VALUES)                   
                     
                     if itemList then
                         chars[i]["extraLink"]=itemList
                         findChars[num]=chars[i]
-                        dun[mapName]=num
+                        if not dun[mapName] then
+                            dun[mapName]=num
+                        end                        
                         num=num+1
                     end
                 end    
