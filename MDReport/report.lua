@@ -116,11 +116,79 @@ function MDRsendAddonMessage(args,channel,who)
 end
 
 function MDRcolorizeForPrint(message)
+    local classIcon={--    Classes
+        ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:0:64|t",
+        ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:0:64|t",
+        ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:0:64|t",
+        ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:0:64|t",
+        ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:64:128|t",
+        ["술사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:64:128|t",
+        ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:64:128|t",
+        ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:64:128|t",
+        ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:128:192|t",
+        ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:128:192|t",
+        ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:128:192|t",
+        ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:128:192|t",        
+    }    
+    local classColor={
+        ["술사"]="0070DE",
+        ["법사"]="40C7EB",
+        ["수도"]="00FF96",
+        ["냥꾼"]="A9D271",
+        ["도적"]="FFF569",
+        ["드루"]="FF7D0A",
+        ["전사"]="C79C6E",
+        ["악사"]="A330C9",
+        ["흑마"]="8787ED",
+        ["기사"]="F58CBA",
+        ["사제"]="FFFFFF",
+        ["죽기"]="C41F3B",
+    }
+    
+    local m=MDRsplit(message," {")
+    local mC={}
+    local nM=""
+    local type
+    for i=1, #m do
+        for k,v in pairs (classIcon) do              
+            if strfind(m[i],"%("..k.."%)") then
+                type="돌"
+                mC[i]=k
+                m[i]=gsub(m[i],"%("..k.."%)","")
+                for j=1,8 do
+                    m[i]=gsub(m[i],"rt"..j.."}",v.."|cff"..classColor[k]..k.."▶|r[")                    
+                end
+            end            
+        end
+        nM=nM..m[i].."] "       
+    end
+    
+    if type=="돌" then message=nM end
+    
+    for k,v in pairs (classIcon) do              
+        for i=1,8 do            
+            if strfind(message,"{rt"..i.."}"..k) then
+                if strfind(message,"/") then
+                    message=gsub(message,"{rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])   
+                else
+                    message=gsub(message,"{rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])
+                    message=gsub(message,"%):"," ▶|r") 
+                end                
+                message=gsub(message,",","|r %(")   
+                message=gsub(message,"%):","%)|cff"..classColor[k].." ▶|r")                
+                message=gsub(message,"{rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")     
+            end    
+        end            
+    end         
+    if strfind(strsub(message,1,1)," ") then 
+        message=strsub(message,2,-1)
+    end
     --징표
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
     end
     --직업색깔
+    
     for i=1,#classNames do        
         message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
     end
@@ -306,13 +374,13 @@ function doShortReport(chars,channel,who,callType)
             local sameCheck
             
             if callType=="parking" then                 
-                message=skull[class]..classStatus.."["..havekey.."]"..parkingstar
+                message=skull[class]..classStatus..parkingstar
             elseif callType=="all" then
                 message=skull[class].."["..havekey.."]:"..classStatus              
             elseif chars[i]["extraLink"] and callType=="spell"then
                 message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
-                sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
+                sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))                
                 if sameCheck then                   
                     message=skull[class]..havekey
                 else                    
@@ -322,7 +390,7 @@ function doShortReport(chars,channel,who,callType)
                 message=skull[class]..havekey.."("..classStatus..")"
             end
             
-            if sameCheck then                 
+            if sameCheck and messageLines[sameCheck] then                 
                 messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
             else
                 messageLines[mNum]=message

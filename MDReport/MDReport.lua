@@ -1,7 +1,3 @@
-local ADDON_NAME, MDR= ...;	
-
-_G.MDR=MDR
-
 if not MDR then
     MDR={}
 end
@@ -42,7 +38,7 @@ C_Timer.After(3, function()
             MDR.myMythicKey={}
         end  
         C_MythicPlus.RequestMapInfo()
-        C_MythicPlus.RequestRewards()	
+        C_MythicPlus.RequestRewards()    
 end) 
 
 local hasteClass={
@@ -114,7 +110,7 @@ local RealmMap= {
     ["노르간논"] = 2,
     ["세나리우스"] = 2,
     
-    ["듀로탄"] = 3,
+    ["듀로탄"] = 1,
     ["불타는 군단"] = 3,
     ["스톰레이지"] = 3,
     
@@ -459,13 +455,9 @@ function filterVALUES(VALUES)
         if channel=="ADDON_WHISPER" and who==meGame then
             message="["..cmdLines.."]"..msg
             if VALUES["msg"]=="!금고" then
-                MDRVault ()
-				return
-			elseif VALUES["msg"]=="!주차" then				
-				MDRParking()				
-				return
-            end      				
-		elseif onlyMe==1 and not CharName then
+                MDRVault ()                               
+            end            
+        elseif onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
                 message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."..msg
             else
@@ -817,6 +809,7 @@ function GetHaveKeyCharInfo(type,level)
     elseif level==nil then level=MDR["maxParking"] end  
     if level<2 then level=2 end  
     local t=SavedInstancesDB.Toons
+    local m=MDRconfig.Char
     local num=1
     local chars={}
     local faction=UnitFactionGroup("player")
@@ -832,9 +825,9 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["keyLink"]=t[k].MythicKey.link
-                chars[num]["best"]=t[k].MythicKeyBest[1] or 0                
-                chars[num]["best4"]=t[k].MythicKeyBest[2] or 0
-                chars[num]["best10"]=t[k].MythicKeyBest[3] or 0
+                chars[num]["best"]=m[k].reward1 or t[k].MythicKeyBest[1] or 0                
+                chars[num]["best4"]=m[k].reward4 or t[k].MythicKeyBest[2] or 0
+                chars[num]["best10"]=m[k].reward10 or t[k].MythicKeyBest[3] or 0
                 chars[num]["keyLevel"]=t[k].MythicKey.level   
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL
@@ -1130,7 +1123,7 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnlin
             if onlyOnline==1 then
                 message="▶"..parkingLevel.."단 주차 완료 ("..highstLevel.."단)" 
             else
-                message="▶저는 이번주 "..parkingLevel.."단 주차는 다했어요! ("..lowestLevel.."~"..highstLevel.."단)" 
+                message="▶["..parkingLevel.."단] 주차 완료 ("..lowestLevel.."~"..highstLevel.."단)" 
             end
         elseif bestCharLevel<MDR["SCL"] then
             message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"

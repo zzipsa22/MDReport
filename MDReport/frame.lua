@@ -1,4 +1,3 @@
-local ADDON_NAME, MDR= ...;	
 MDR.frame = CreateFrame("Frame")
 
 MDR.frame:RegisterEvent("ADDON_LOADED")

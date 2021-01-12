@@ -738,12 +738,38 @@ function MDRgetHistory(type)
     elseif (MDR.thisCharHasKey==1 or runHistory) then
         MDRconfig.Char[meAddon].class=krClass  
         MDRconfig.Char[meAddon].runHistory=MDR.runHistory[type] or runHistory    
-    end    
+    end
+    local newRunHistory=MDRconfig.Char[meAddon].runHistory
+    local comparison = function(entry1, entry2)
+        if ( entry1.level == entry2.level ) then
+            return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+        else
+            return entry1.level > entry2.level;
+        end
+    end
+    table.sort(newRunHistory, comparison)
+    if newRunHistory[1] then 
+        MDRconfig.Char[meAddon].reward1=newRunHistory[1].level
+    else
+        MDRconfig.Char[meAddon].reward1=nil
+    end
+    
+    if newRunHistory[4] then 
+        MDRconfig.Char[meAddon].reward4=newRunHistory[4].level 
+    else
+        MDRconfig.Char[meAddon].reward4=nil
+    end
+    
+    if newRunHistory[10] then
+        MDRconfig.Char[meAddon].reward10=newRunHistory[10].level 
+    else
+        MDRconfig.Char[meAddon].reward10=nil
+    end
     
 end    
 
 function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName) 
-   
+    
     local messageLines={}
     local comm=""
     if type=="finish" then
@@ -759,11 +785,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     elseif type=="parking" then
         comm=MDRcolor("흑마",0,"[주차]").." "
     end    
-	
-	if MDR.runHistory and MDR.runHistory.finish then
-		runHistory=MDR.runHistory.finish
+    
+    if MDR.runHistory and MDR.runHistory.finish then
+        runHistory=MDR.runHistory.finish
     end   
-	    
+    
     local class,_=UnitClass("player")
     local name=UnitName("player")
     
@@ -912,7 +938,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     for j=1,#v.runHistory do
                         if j==1 or j==4 or j==10 then
                             levels=levels.."|cff00ff00"..v.runHistory[j].level.."|r, "
-                            rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, "                            
+                            rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, " 
+                            MDRconfig.Char[v["name"]]["reward"..j]=v.runHistory[j].level
                         else                        
                             levels=levels.."|cff9d9d9d"..v.runHistory[j].level.."|r, "
                         end                 
