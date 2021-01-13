@@ -147,40 +147,78 @@ end
 
 function MDRcolorizeForPrint(message)   
     local m=MDRsplit(message," {")
+    local m2=m    
+    --print(message)
     local mC={}
     local nM=""
-    local type
+    local type=""
     for i=1, #m do
         for k,v in pairs (classIcon) do              
-            if strfind(m[i],"%("..k.."%)") then
+            if strfind(m[i],"%("..k) then
+                local sameClass=""
                 type="돌"
-                mC[i]=k
-                m[i]=gsub(m[i],"%("..k.."%)","")
+                mC[i]=MDRsplit(strsub(strmatch(m[i], "%((.-)%)"),7,-1),",")[2]
+                m[i]=gsub(m[i],"%((.-)%)","")
+                if mC[i] and mC[i]~="" then
+                    sameClass="|cff"..classColor[k]..mC[i].."▶|r"
+                else
+                    sameClass="|cff"..classColor[k]..k.."▶|r"
+                end                
                 for j=1,8 do
-                    m[i]=gsub(m[i],"rt"..j.."}",v.."|cff"..classColor[k]..k.."▶|r[")                    
+                    m[i]=gsub(m[i],"rt"..j.."}",v..sameClass.."[")                    
                 end
             end            
         end
         nM=nM..m[i].."] "       
     end
     
-    if type=="돌" then message=nM end
+    if type=="돌" then  message=nM end
     
-    for k,v in pairs (classIcon) do              
-        for i=1,8 do            
-            if strfind(message,"{rt"..i.."}"..k) then
-                if strfind(message,"/") then
-                    message=gsub(message,"{rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])   
-                else
-                    message=gsub(message,"{rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])
-                    message=gsub(message,"%):"," ▶|r") 
+    for j=1,#m2 do        
+        for k,v in pairs (classIcon) do             
+            for i=1,8 do            
+                if strfind(m2[j],"rt"..i.."}"..k) then   
+                    type="주차"                      
+                    local name,park,class="","",""
+                    if strfind(m[j],"/") and strfind(m[j],":") then
+                        
+                        name=""
+                        park=MDRsplit(m2[j],":")[2]
+                        class=MDRsplit(m2[j],":")[1]                        
+                        if strfind(class," %(") then
+                            name=MDRsplit(class," %(")[2]
+                        end                        
+                        if name~="" then
+                            m2[j]=v.."|cff"..classColor[k]..name..":|r"..park   
+                        else
+                            m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])   
+                        end 
+                    end                     
+                else            
+                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])
+                    m2[j]=gsub(m2[j],"%):"," ▶|r") 
+                end 
+                if strfind(m2[j],"rt"..i.."}"..k.."%(") then
+                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k]) 
+                    m2[j]=gsub(m2[j],",","|r %(")                     
+                    m2[j]=gsub(m2[j]," ▶","%)|cff"..classColor[k].." ▶|r")                    
                 end                
-                message=gsub(message,",","|r %(")   
-                message=gsub(message,"%):","%)|cff"..classColor[k].." ▶|r")                
-                message=gsub(message,"{rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")     
+                m2[j]=gsub(m2[j],",","|r %(")   
+                m2[j]=gsub(m2[j],"%):","%)|cff"..classColor[k].." |r")                
+                m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")                
             end    
         end            
-    end         
+    end   
+    newMessage=""
+    for j=1,#m2 do
+        newMessage=newMessage..m2[j]
+        if j<#m2 then newMessage=newMessage.." " end        
+    end
+    
+    if type=="주차"  then 
+        message=newMessage 
+    end    
+    
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
     end
@@ -521,7 +559,7 @@ function doFullReport(chars,channel,who,callType)
             --같은 직업이 있을경우 뒤에 이름 붙이기
             if yourClass[class] and yourClass[class]>1 then
                 sameClass[class]=(sameClass[class] or 0)+1
-                classStatus=class..sameClass[class].."("..shortName..parking..")"
+                classStatus=class.."("..shortName..parking..")"
             else                
                 classStatus=class.."("..shortName..parking..")"
             end            
