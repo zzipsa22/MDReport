@@ -471,7 +471,7 @@ function filterVALUES(VALUES)
             
         elseif callType["parking"] then            
             
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]".." 캐릭터를 찾습니다."..msg            
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg            
             
         elseif CharName then           
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
