@@ -16,8 +16,38 @@ local skull={
     ["사제"]="{rt5}",--달(흰색)
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
+local classIcon={--    Classes
+    ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:0:64|t",
+    ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:0:64|t",
+    ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:0:64|t",
+    ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:0:64|t",
+    ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:64:128|t",
+    ["술사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:64:128|t",
+    ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:64:128|t",
+    ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:64:128|t",
+    ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:128:192|t",
+    ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:128:192|t",
+    ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:128:192|t",
+    ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:128:192|t",        
+}    
+local classColor={
+    ["술사"]="0070DE",
+    ["법사"]="40C7EB",
+    ["수도"]="00FF96",
+    ["냥꾼"]="A9D271",
+    ["도적"]="FFF569",
+    ["드루"]="FF7D0A",
+    ["전사"]="C79C6E",
+    ["악사"]="A330C9",
+    ["흑마"]="8787ED",
+    ["기사"]="F58CBA",
+    ["사제"]="FFFFFF",
+    ["죽기"]="C41F3B",
+}
 
 MDR.skull=skull
+MDR.classColor=classColor
+MDR.classIcon=classIcon
 
 local skullP={}
 for i=1,8 do
@@ -115,36 +145,7 @@ function MDRsendAddonMessage(args,channel,who)
     C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
 end
 
-function MDRcolorizeForPrint(message)
-    local classIcon={--    Classes
-        ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:0:64|t",
-        ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:0:64|t",
-        ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:0:64|t",
-        ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:0:64|t",
-        ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:64:128|t",
-        ["술사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:64:128|t",
-        ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:64:128|t",
-        ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:64:128|t",
-        ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:128:192|t",
-        ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:128:192|t",
-        ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:128:192|t",
-        ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:128:192|t",        
-    }    
-    local classColor={
-        ["술사"]="0070DE",
-        ["법사"]="40C7EB",
-        ["수도"]="00FF96",
-        ["냥꾼"]="A9D271",
-        ["도적"]="FFF569",
-        ["드루"]="FF7D0A",
-        ["전사"]="C79C6E",
-        ["악사"]="A330C9",
-        ["흑마"]="8787ED",
-        ["기사"]="F58CBA",
-        ["사제"]="FFFFFF",
-        ["죽기"]="C41F3B",
-    }
-    
+function MDRcolorizeForPrint(message)   
     local m=MDRsplit(message," {")
     local mC={}
     local nM=""

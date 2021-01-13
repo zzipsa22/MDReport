@@ -789,6 +789,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     if MDR.runHistory and MDR.runHistory.finish then
         runHistory=MDR.runHistory.finish
     end   
+    local classColor=MDR.classColor
+    local classIcon=MDR.classIcon
     
     local class,_=UnitClass("player")
     local name=UnitName("player")
@@ -846,13 +848,14 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     end         
     
     local guide=""
+    local mainIcon=classIcon[MDRcolor(class,6)]
     if type=="finish" then
         guide=" |cff9d9d9d(다른 캐릭터를 보시려면 |cffffff00'/부캐'|r 입력)|r"
     elseif type=="alts" then
         guide=""
     elseif not main then
         guide={}
-        guide[1]="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
+        guide[1]="|cFF33FF99▶|r |cff9d9d9d"..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
         guide[2]="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명(한글자 이상)").."'|r 입력.|r"
     end    
     
@@ -867,7 +870,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
             end
             table.sort(runHistory, comparison);
             
-            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..name.."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다."
+            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다."
             
             for i = 1, #runHistory do
                 local runInfo = runHistory[i];
@@ -880,7 +883,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     color1="전설"
                     color2="초록"
                     color3="노랑"
-                    reward=" ▶ ["..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
+                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:0|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
                 else
                     color1="사제"
                     color2="회색"  
@@ -920,13 +923,14 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
             else
                 allOrAlt=MDRcolor("계승",0,"다른 캐릭터")        
             end
-            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..allOrAlt..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
+            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..mainIcon..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..allOrAlt..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
             
             for _,v in pairs(newtoons) do
                 if (v["name"]~=meAddon or (inclueMain and v["name"]==meAddon)) and v.runHistory and v.level==MDR.SCL then
                     local altName=MDRsplit(v["name"]," - ")[1]
                     local class=v.class
                     local levels,rewards="",""
+                    local icon=classIcon[MDRcolor(class,6)]
                     local comparison = function(entry1, entry2)
                         if ( entry1.level == entry2.level ) then
                             return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
@@ -951,12 +955,12 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                         rewards=strsub(rewards,1,-3)
                     end     
                     if rewards~="" then
-                        rewards=" [보상: "..rewards.."]"
+                        rewards=" [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:0|t보상: "..rewards.."]"
                     end                    
                     if #v.runHistory==0 then 
                         levels=MDRcolor("유물",0,"이번주 기록이 없습니다.")
                     end
-                    messageLines[#messageLines+1]="    "..MDRcolor("하늘",0,"["..#v.runHistory.."회]").." "..MDRcolor(class,0,"["..altName.."]")..": "..levels..rewards
+                    messageLines[#messageLines+1]="    "..MDRcolor("하늘",0,"["..#v.runHistory.."회]").." "..icon..MDRcolor(class,0,"["..altName.."]")..": "..levels..rewards
                     --print("    "..MDRcolor("하늘",0,"["..#v.runHistory.."회]"),MDRcolor(class,0,"["..altName.."]")..":",levels)
                 end               
             end 
