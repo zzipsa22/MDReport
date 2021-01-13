@@ -84,7 +84,7 @@ function doOnlyAffixReport(keyword,channel,who,callType)
     if tonumber(keyword) then
         local week=keyword       
         local weekTitle=""
-        local affixText=GetAnyWeeksAffix(week)
+        local affixText=GetAnyWeeksAffix(week,channel)
         if affixText==nil then return end
         if (week==0)then   
             weekTitle="이번주"
@@ -99,12 +99,12 @@ function doOnlyAffixReport(keyword,channel,who,callType)
         end         
         messageLines[1]="▶"..weekTitle.." 속성: "..affixText         
     elseif keyword=="all"then
-        messageLines[1]="▶다음주 속성: "..GetAnyWeeksAffix(1) 
-        messageLines[2]="▷2주뒤 속성: "..GetAnyWeeksAffix(2)
-        messageLines[3]="▷3주뒤 속성: "..GetAnyWeeksAffix(3)
-        messageLines[4]="▷4주뒤 속성: "..GetAnyWeeksAffix(4)        
+        messageLines[1]="▶다음주 속성: "..GetAnyWeeksAffix(1,channel) 
+        messageLines[2]="▷2주뒤 속성: "..GetAnyWeeksAffix(2,channel)
+        messageLines[3]="▷3주뒤 속성: "..GetAnyWeeksAffix(3,channel)
+        messageLines[4]="▷4주뒤 속성: "..GetAnyWeeksAffix(4,channel)        
     else        
-        messageLines=GetAffixFullDescription(keyword)
+        messageLines=GetAffixFullDescription(keyword,channel)
     end
     reportMessageLines(messageLines,channel,who,callType)    
 end
@@ -189,11 +189,11 @@ function MDRcolorizeForPrint(message)
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
     end
     --직업색깔
-    
+    --[[
     for i=1,#classNames do        
         message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
     end
-    
+    ]]
     --주사위 색입히기
     message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
     message=gsub(message,"결과 ▶","|cFF33FF99결과 ▶|r")
