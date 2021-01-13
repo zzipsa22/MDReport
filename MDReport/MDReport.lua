@@ -471,7 +471,7 @@ function filterVALUES(VALUES)
             
         elseif callType["parking"] then            
             
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]".." 못한 캐릭터를 찾습니다."..msg            
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]".." 캐릭터를 찾습니다."..msg            
             
         elseif CharName then           
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
@@ -1119,12 +1119,14 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnlin
         
         local messageLines={}
         local message=""
+        local delay=0
         if bestnum>1 then
             if onlyOnline==1 then
                 message="▶"..parkingLevel.."단 주차 완료 ("..highstLevel.."단)" 
             else
                 message="▶["..parkingLevel.."단] 주차 완료 ("..lowestLevel.."~"..highstLevel.."단)" 
             end
+            delay=1
         elseif bestCharLevel<MDR["SCL"] then
             message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
         else       
@@ -1132,8 +1134,9 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnlin
         end
         
         messageLines[1]=message
-        reportMessageLines(messageLines,channel,who,callType)       
-        
+        C_Timer.After(delay, function()
+                reportMessageLines(messageLines,channel,who,callType)       
+        end)        
         return
     end       
     
