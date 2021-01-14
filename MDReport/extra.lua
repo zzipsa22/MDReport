@@ -248,6 +248,7 @@ end
 
 function MDRcolor(keyword,type,keyword2)
     local text,color
+    if not keyword then return end
     for k,v in pairs(classInfo) do        
         for i=1,#v do
             if type==6 then

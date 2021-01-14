@@ -412,6 +412,7 @@ function doShortReport(chars,channel,who,callType)
             local message=""          
             local sameCheck
             
+            
             if callType=="parking" then                 
                 message=skull[class]..classStatus..parkingstar
             elseif callType=="all" then
@@ -427,7 +428,7 @@ function doShortReport(chars,channel,who,callType)
                 end               
             else
                 message=skull[class]..havekey.."("..classStatus..")"
-            end
+            end           
             
             if sameCheck and messageLines[sameCheck] then                 
                 messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
@@ -545,8 +546,13 @@ function doFullReport(chars,channel,who,callType)
             end
             
             if best and best~=0 then
-                parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
-                parkingstar="▶"
+                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+                    parking="("..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..")"
+                else
+                    parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
+                    parkingstar="▶"
+                end
+                
             else
                 if charLevel==MDR["SCL"] then
                     parking=",Χ"                    
@@ -577,6 +583,7 @@ function doFullReport(chars,channel,who,callType)
             local s=MDR.myMythicKey.start
             local f=MDR.myMythicKey.finish
             
+            
             if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
             elseif callType=="item" and chars[i]["extraLink"] then                
@@ -599,9 +606,15 @@ function doFullReport(chars,channel,who,callType)
             elseif callType and callType["currentdungeon"] then  
                 local now=" (준비중)"                
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
-            else                
-                message=headStar..classStatus..": "..havekey..online
-            end
+            else   
+                
+                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then      
+                    message=classIcon[class].."|cff"..classColor[class]..shortName.."|r"..parking.."|cff"..classColor[class].." ▶ |r"..havekey..online
+                else
+                    message=headStar..classStatus..": "..havekey..online
+                end                
+            end           
+            
             if sameCheck then                 
                 messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
             else

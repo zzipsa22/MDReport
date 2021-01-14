@@ -608,13 +608,13 @@ function findCharAllItem(VALUES)
     end        
     
     if keyword["specificitem"]=="방패" then        
-        stat=""        
+        stat="힘/지능"        
         --only 지능
     elseif keyword["specificitem"]=="보조장비"or  keyword["specificitem"]=="마법봉"then        
-        stat=""        
+        stat="지능"        
         --only 민첩
     elseif keyword["specificitem"]=="총"or  keyword["specificitem"]=="석궁"or  keyword["specificitem"]=="활" or keyword["specificitem"]=="전투검" then        
-        stat=""        
+        stat="민첩"        
     end       
     
     local findChars={}   
@@ -648,7 +648,9 @@ function findCharAllItem(VALUES)
         if (not tips[1] or tips[1]<warns) and link~=1 and comb~="Trinket" then
             
             local message,weapon,spec,class,Class,eul,ro,LC,space,kwa
-            class=MDRcolor(keyword["class"] or keyword3["spec"],5)
+            
+            class=MDRcolor(keyword["class"] or keyword3["spec"] or stat,5)
+            
             if class=="마법사" or class=="사제" or class=="흑마법사" or class=="악마 사냥꾼" then
                 spec=""
             else
