@@ -145,7 +145,8 @@ function MDRsendAddonMessage(args,channel,who)
     C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
 end
 
-function MDRcolorizeForPrint(message)   
+function MDRcolorizeForPrint(message)
+    
     local m=MDRsplit(message," {")
     local m2=m    
     --print(message)

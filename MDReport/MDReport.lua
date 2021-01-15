@@ -37,8 +37,7 @@ C_Timer.After(3, function()
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end  
-        C_MythicPlus.RequestMapInfo()
-        C_MythicPlus.RequestRewards()    
+        tinsert(UISpecialFrames, "WeeklyRewardsFrame")
 end) 
 
 local hasteClass={
