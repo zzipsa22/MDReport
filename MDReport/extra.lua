@@ -828,7 +828,7 @@ end
 function MDRremoveCharInfo(args)
 	if args=="" or not args then 
 		print(MDRcolor("빨강",0,"▶ ").."삭제하고자 하는 캐릭터의 이름을 입력해주세요.")
-		print(MDRcolor("빨강",0,"▶ ").."|cFF33FF99ex)|r "..MDRcolor("노랑",0,"'/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("핑크",0," 캐릭터이름 (정확히 일치)"))
+		print(MDRcolor("빨강",0,"▶ ").."|cFF33FF99ex)|r "..MDRcolor("노랑",0,"/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("핑크",0," 캐릭터이름 (정확히 일치)"))
 		return
 	end
 	for k,v in pairs (MDRconfig.Char) do
@@ -896,10 +896,10 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         end
 		
 		if findChar>0 and isFullLevel==0 then
-			print(MDRcolor("빨강",0,"▶")..classIcon[altClass].."|cff"..classColor[altClass].."["..altName.."]|r".." 은/는 만렙이 아닙니다.")
+			print(MDRcolor("빨강",0,"▶ ")..classIcon[altClass].."|cff"..classColor[altClass].."["..altName.."]|r".." 은/는 만렙이 아닙니다.")
             return
         elseif not MDRconfig.Char[charName] then 
-            print(MDRcolor("빨강",0,"▶")..MDRcolor("핑크",0,"["..charName.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")
+            print(MDRcolor("빨강",0,"▶ ")..MDRcolor("핑크",0,"["..charName.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")
             return
 
         end
@@ -941,7 +941,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         end            
     end         
     
-    local guide,guideHistory,guideAlts="","",""
+    local guide=""
     local mainIcon=classIcon[MDRcolor(class,6)]
     if type=="finish" then
         guide=" |cff9d9d9d(다른 캐릭터를 보시려면 |cffffff00'/부캐'|r 입력)|r"
@@ -949,8 +949,9 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         guide=""
 	end
 	
-	guideHistory="|cFF33FF99▶|r |cff9d9d9d"..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
-    guideAlts="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명").." 또는 "..MDRcolor(class,0,"직업명").."'|r 입력.|r"
+	local guideHistory="|cFF33FF99▶|r |cff9d9d9d"..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
+    local guideAlts="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명").." 또는 "..MDRcolor(class,0,"직업명").."'|r 입력.|r"
+	local guideDelete=MDRcolor("빨강",0,"▶ ").."|cff9d9d9d"..MDRcolor("유물",0,"[기록]").." 을 "..MDRcolor("빨강",0,"삭제").."하시려면 "..MDRcolor("노랑",0,"'/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("노랑",0,"'").." 입력."
     
     if main then
         if #runHistory > 0 then        
@@ -1069,6 +1070,9 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
             messageLines[#messageLines+1]=guideAlts       
         end
     end
+	if type=="alts"  or type=="parking" then
+		messageLines[#messageLines+1]=guideDelete
+	end
     reportMessageLines(messageLines,nil,nil,"vault")   
 end
 
