@@ -207,7 +207,8 @@ function MDRcolorizeForPrint(message)
                 m2[j]=gsub(m2[j],",","|r %(")   
                 m2[j]=gsub(m2[j],"%):","%)|cff"..classColor[k].." |r")                
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")      
-                m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")				
+                m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")
+                m2[j]=gsub(m2[j],"%)%)","%)") 						
             end    
         end            
     end   
@@ -540,8 +541,7 @@ function doFullReport(chars,channel,who,callType)
                     else
                         H="("..H..")"
                     end
-                    havekey="템렙"..E..H
-                    havekey="[{rt7}쐐기돌 없음: 템렙"..E..H
+                    havekey="[{rt7}쐐기돌 없음: 템렙"..E..H.."]"
                 else
                     havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
                 end                
