@@ -777,7 +777,7 @@ end
 --찾는사람 체크
 function checkCallMe(onlyYou)    
     if not onlyYou then  return end   
-    local t=MDRconfg.Char
+    local t=MDRconfig.Char
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
     local findYou=false
