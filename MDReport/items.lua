@@ -695,7 +695,7 @@ function findCharAllItem(VALUES)
     if chars~=nil then 
         for i=1,#chars do  
             local p=chars[i]["fullName"]
-            local c=SavedInstancesDB.Toons[p]
+            local c=MDRconfig.Char[p]
             local mapName=c.MythicKey.name
             VALUES["dungeon"]=getShortDungeonName(mapName)
             local itemList=checkDungeonHasItem(VALUES)                     
@@ -707,7 +707,7 @@ function findCharAllItem(VALUES)
             if chars~=nil then 
                 for i=1,#chars do    
                     local p=chars[i]["fullName"]
-                    local c=SavedInstancesDB.Toons[p]
+                    local c=MDRconfig.Char[p]
                     local mapName=c.MythicKey.name
                     if dun[mapName] then
                         VALUES["sameDungeon"]=dun[mapName]

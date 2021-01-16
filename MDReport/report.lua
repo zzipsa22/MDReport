@@ -206,7 +206,8 @@ function MDRcolorizeForPrint(message)
                 end                
                 m2[j]=gsub(m2[j],",","|r %(")   
                 m2[j]=gsub(m2[j],"%):","%)|cff"..classColor[k].." |r")                
-                m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")                
+                m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")      
+                m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")				
             end    
         end            
     end   
@@ -586,7 +587,7 @@ function doFullReport(chars,channel,who,callType)
             
             
             if callType=="spell" and chars[i]["extraLink"] then
-                message=headStar..classStatus..chars[i]["extraLink"]..": "..havekey..online
+                message=headStar..classStatus..": "..chars[i]["extraLink"].." "..havekey..online
             elseif callType=="item" and chars[i]["extraLink"] then                
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   

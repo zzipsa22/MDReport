@@ -123,13 +123,7 @@ local mailClass={"냥꾼","술사"}
 local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
-function filterVALUES(VALUES)         
-    
-    --SavedInstance 체크
-    if not SavedInstancesDB and VALUES["callTypeT"][1][1]~="affix" then
-        doWarningReport(channel,who,"warning") 
-        return
-    end    
+function filterVALUES(VALUES)       
     
     C_Timer.After(MDR["cooltime"], function()
             MDR["running"]=0
@@ -782,8 +776,8 @@ end
 
 --찾는사람 체크
 function checkCallMe(onlyYou)    
-    if not SavedInstancesDB or not onlyYou then  return end   
-    local t=SavedInstancesDB.Toons
+    if not onlyYou then  return end   
+    local t=MDRconfg.Char
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
     local findYou=false
@@ -802,13 +796,12 @@ end
 
 --보유한 모든 돌 불러오기
 function GetHaveKeyCharInfo(type,level)   
-    if not SavedInstancesDB then  return end 
+
     if type=="만렙만" then level=2
     elseif type=="soft" then level=level-5
     elseif level==nil then level=MDR["maxParking"] end  
     if level<2 then level=2 end  
-    local t=SavedInstancesDB.Toons
-    local m=MDRconfig.Char
+    local t=MDRconfig.Char
     local num=1
     local chars={}
     local faction=UnitFactionGroup("player")
@@ -818,37 +811,39 @@ function GetHaveKeyCharInfo(type,level)
     for k,v in pairs(t) do
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         if t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
+			local level=t[k].Level or t[k].level
+			local IL=t[k].IL or 0
             if t[k].MythicKey.link then
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
                 chars[num]["keyLink"]=t[k].MythicKey.link
-                chars[num]["best"]=m[k].reward1 or t[k].MythicKeyBest[1] or 0                
-                chars[num]["best4"]=m[k].reward4 or t[k].MythicKeyBest[2] or 0
-                chars[num]["best10"]=m[k].reward10 or t[k].MythicKeyBest[3] or 0
-                chars[num]["keyLevel"]=t[k].MythicKey.level   
+                chars[num]["best"]=t[k].reward1 or 0                
+                chars[num]["best4"]=t[k].reward4 or 0
+                chars[num]["best10"]=t[k].reward10 or 0
+                chars[num]["keyLevel"]=t[k].MythicKey.level 
                 chars[num]["keyName"]=t[k].MythicKey.name            
-                chars[num]["itemLevel"]=t[k].IL
-                chars[num]["equipLevel"]=t[k].ILe                    
-                chars[num]["lastSeen"]=t[k].LastSeen
-                chars[num]["charLevel"]=t[k].Level                    
+                chars[num]["itemLevel"]=t[k].IL or 0
+                chars[num]["equipLevel"]=t[k].ILe or 0                  
+                chars[num]["lastSeen"]=t[k].LastSeen or time() 
+                chars[num]["charLevel"]=t[k].Level or MDR.SCL                     
                 num=num+1                
             elseif (type~="쐐기돌보유자만" and (
-                    (t[k].Level==MDR["SCL"] and (t[k].IL>=minLevel or type=="만렙만")) or 
-                    (type=="레벨제한없음" and t[k].Level<=MDR["SCL"]) or 
-                    (type=="50렙이상만" and t[k].Level>=50)
+                    (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
+                    (type=="레벨제한없음" and level<=MDR["SCL"]) or 
+                    (type=="50렙이상만" and level>=50)
             )) then                           
                 --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")                
                 chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]                
-                chars[num]["itemLevel"]=t[k].IL
-                chars[num]["equipLevel"]=t[k].ILe                
-                chars[num]["charLevel"]=t[k].Level               
+                chars[num]["itemLevel"]=t[k].IL or 0
+                chars[num]["equipLevel"]=t[k].ILe or 0                
+                chars[num]["charLevel"]=t[k].Level or 0                
                 chars[num]["keyLevel"]=0
-                chars[num]["lastSeen"]=t[k].LastSeen                
+                chars[num]["lastSeen"]=t[k].LastSeen or time()                
                 num=num+1
             end
         end        
