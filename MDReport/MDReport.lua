@@ -817,7 +817,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
-                chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]
+                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)
                 chars[num]["keyLink"]=t[k].MythicKey.link
                 chars[num]["best"]=t[k].reward1 or 0                
                 chars[num]["best4"]=t[k].reward4 or 0
@@ -838,7 +838,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")                
-                chars[num]["shortClass"]=getCallTypeTable(t[k].Class)[2]                
+                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)              
                 chars[num]["itemLevel"]=t[k].IL or 0
                 chars[num]["equipLevel"]=t[k].ILe or 0                
                 chars[num]["charLevel"]=t[k].Level or 0                
