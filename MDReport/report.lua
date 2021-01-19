@@ -196,19 +196,20 @@ function MDRcolorizeForPrint(message)
                         end 
                     end                     
                 else            
-                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])
+                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(", v.."|cff"..classColor[k])
                     m2[j]=gsub(m2[j],"%):"," ▶|r") 
                 end 
                 if strfind(m2[j],"rt"..i.."}"..k.."%(") then
-                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k]) 
+                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(", v.."|cff"..classColor[k]) 
                     m2[j]=gsub(m2[j],",","|r %(")                     
+                    m2[j]=gsub(m2[j],"%(","|r %(")                    
                     m2[j]=gsub(m2[j]," ▶","%)|cff"..classColor[k].." ▶|r")                    
                 end                
                 m2[j]=gsub(m2[j],",","|r %(")   
                 m2[j]=gsub(m2[j],"%):","%)|cff"..classColor[k].." |r")                
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")      
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")
-                m2[j]=gsub(m2[j],"%)%)","%)") 						
+                m2[j]=gsub(m2[j],"%)%)","%)")                         
             end    
         end            
     end   
@@ -609,12 +610,7 @@ function doFullReport(chars,channel,who,callType)
                 local now=" (준비중)"                
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
             else   
-                
-                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then      
-                    message=classIcon[class].."|cff"..classColor[class]..shortName.."|r"..parking.."|cff"..classColor[class].." ▶ |r"..havekey..online
-                else
-                    message=headStar..classStatus..": "..havekey..online
-                end                
+                message=headStar..classStatus..": "..havekey..online
             end           
             
             if sameCheck then                 

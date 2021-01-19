@@ -701,7 +701,7 @@ function MDRgetHistory(type)
     if not MDR.runHistory then
         MDR.runHistory={}
     end
-    
+
     local meAddon=UnitName("player").." - "..GetRealmName()
     
     MDRconfig=MDRconfig or {}
@@ -710,7 +710,8 @@ function MDRgetHistory(type)
     local k=MDRconfig.Char[meAddon]
 	
     local runHistory = C_MythicPlus_GetRunHistory(false, true);    
-    
+    --print("MDRgetHistory",type)
+	--print("runHistory",#runHistory)
     if type=="onLoad" then
         MDR.runHistory[type]=runHistory        
     elseif type=="start" then        

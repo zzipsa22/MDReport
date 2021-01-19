@@ -40,7 +40,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
 				C_Timer.After(15, function()
 					MDRbackupMythicKey("onLoad")
-					MDRgetHistory("onLoad")
+					--MDRgetHistory("onLoad")
 				end)
                 return
             end       
