@@ -1075,10 +1075,3 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
 	end
     reportMessageLines(messageLines,nil,nil,"vault")   
 end
-
-for i=1,4 do 
-    C_Timer.After(i*5, function()
-            MDRbackupMythicKey("onLoad")
-            MDRgetHistory("onLoad")
-    end)
-end
