@@ -11,7 +11,7 @@ MDR.frame:RegisterEvent("CHAT_MSG_WHISPER_INFORM")
 MDR.frame:RegisterEvent("CHAT_MSG_SYSTEM")
 MDR.frame:RegisterEvent("CHAT_MSG_ADDON")
 MDR.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-
+MDR.frame:RegisterEvent("BAG_UPDATE_DELAYED")
 
 MDR.frame:SetScript("OnEvent", function(self, event, ...)
 	
@@ -24,7 +24,9 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
 			MDR.frame:UnregisterEvent("ADDON_LOADED");	
 			MDRconfig = MDRconfig or {};
 			return    
-
+		elseif event=="BAG_UPDATE_DELAYED" then
+			MDRbackupMythicKey("bagupdate")
+			return
 		elseif event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
@@ -41,8 +43,15 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
 				C_Timer.After(15, function()
 					MDRbackupMythicKey("onLoad")
 					--MDRgetHistory("onLoad")
-				end)
+					for i=1,4 do
+						C_Timer.After(15*i, function()
+							MDRrefreshRunHistory()
+						end)
+					end
+				end)				
                 return
+			else
+				MDRrefreshRunHistory()
             end       
             return
             -- 쐐기 완료시  

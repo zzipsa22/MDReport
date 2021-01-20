@@ -167,9 +167,8 @@ function MDRbackupMythicKey(type)
 				v.reward10=nil
 			end
 		end	
-	end
-	
-    local chars=GetHaveKeyCharInfo()
+	end	
+
     local name,level,link	
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
@@ -214,7 +213,9 @@ function MDRbackupMythicKey(type)
                 VALUES["callTypeT"]=callTypeT        
                 VALUES["channel"]="PARTY"        
                 filterVALUES(VALUES)
-        end)        
+        end)
+	elseif type=="bagupdate" then
+		return
     else       
         MDR.myMythicKey[type]=t 
         MDR.myMythicKey.finish=nil        
