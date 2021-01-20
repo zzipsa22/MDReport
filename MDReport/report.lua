@@ -231,7 +231,7 @@ function MDRcolorizeForPrint(message)
         newMessage=gsub(newMessage,"%)","")   
     end    
     newMessage=gsub(newMessage," rt","{rt")
-    newMessage=gsub(newMessage," %(Χ","(Χ")    
+    newMessage=gsub(newMessage," %(Χ","(Χ)")    
     
     if type=="주차"  then 
         message=newMessage 
