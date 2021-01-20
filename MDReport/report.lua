@@ -146,7 +146,7 @@ function MDRsendAddonMessage(args,channel,who)
 end
 
 function MDRcolorizeForPrint(message)
-    
+    --print(message)
     local m=MDRsplit(message," {")
     local m2=m    
     --print(message)
@@ -168,6 +168,7 @@ function MDRcolorizeForPrint(message)
                 for j=1,8 do
                     m[i]=gsub(m[i],"rt"..j.."}",v..sameClass.."[")                    
                 end
+                m[i]=gsub(m[i]," ","")                
             end            
         end
         nM=nM..m[i].."] "       
@@ -178,21 +179,24 @@ function MDRcolorizeForPrint(message)
     for j=1,#m2 do        
         for k,v in pairs (classIcon) do             
             for i=1,8 do            
-                if strfind(m2[j],"rt"..i.."}"..k) then   
+                if strfind(m2[j],"rt"..i.."}"..k) then
+                    --주차정보인 경우우
                     type="주차"                      
                     local name,park,class="","",""
                     if strfind(m[j],"/") and strfind(m[j],":") then
                         
                         name=""
                         park=MDRsplit(m2[j],":")[2]
-                        class=MDRsplit(m2[j],":")[1]                        
+                        class=MDRsplit(m2[j],":")[1]
+                        
                         if strfind(class," %(") then
                             name=MDRsplit(class," %(")[2]
                         end                        
                         if name~="" then
                             m2[j]=v.."|cff"..classColor[k]..name..":|r"..park   
                         else
-                            m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])   
+                            m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])
+                            --m2[j]=gsub(m2[j],"%(","|r %(")
                         end 
                     end                     
                 else            
@@ -210,14 +214,19 @@ function MDRcolorizeForPrint(message)
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")      
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")
                 m2[j]=gsub(m2[j],"%)%)","%)")                         
+                m2[j]=gsub(m2[j],"  "," ")              
             end    
         end            
     end   
     newMessage=""
     for j=1,#m2 do
-        newMessage=newMessage..m2[j]
-        if j<#m2 then newMessage=newMessage.." " end        
+        --print(m2[j])
+        newMessage=newMessage..m2[j]  
+        if j<#m2 then newMessage=newMessage.." " end         
     end
+    newMessage=gsub(newMessage,"  "," ")          
+    newMessage=gsub(newMessage," rt","{rt")
+    newMessage=gsub(newMessage," %(Χ","(Χ")    
     
     if type=="주차"  then 
         message=newMessage 
