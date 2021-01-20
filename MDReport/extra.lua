@@ -704,8 +704,24 @@ function MDRrefreshRunHistory()
 	
 	if MDR.runHistory and MDR.runHistory.finish then
 		return
-    else            
-		MDRconfig.Char[meAddon].runHistory=C_MythicPlus_GetRunHistory(false, true); 
+    else
+		local runHistory=C_MythicPlus_GetRunHistory(false, true);
+		
+		MDRconfig.Char[meAddon].runHistory=runHistory	
+		
+		local comparison = function(entry1, entry2)
+			if ( entry1.level == entry2.level ) then
+				return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+			else
+				return entry1.level > entry2.level;
+			end
+		end
+		table.sort(runHistory, comparison)
+		
+		MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
+		MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
+		MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
+
 		--print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
     end   	
 end
@@ -819,23 +835,11 @@ function MDRgetHistory(type)
         end
     end
     table.sort(newRunHistory, comparison)
-    if newRunHistory[1] then 
-        k.reward1=newRunHistory[1].level
-    else
-        k.reward1=nil
-    end
-    
-    if newRunHistory[4] then 
-        k.reward4=newRunHistory[4].level 
-    else
-        k.reward4=nil
-    end
-    
-    if newRunHistory[10] then
-        k.reward10=newRunHistory[10].level 
-    else
-        k.reward10=nil
-    end
+	
+	k.reward1=newRunHistory[1] and newRunHistory[1].level or nil
+	k.reward4=newRunHistory[4] and newRunHistory[4].level or nil
+	k.reward10=newRunHistory[10] and newRunHistory[10].level or nil
+
     MDRconfig.Char[meAddon]=k
 end   
 
