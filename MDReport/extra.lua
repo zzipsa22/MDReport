@@ -697,6 +697,19 @@ function MDRtitleLower( first, rest )
     return first:lower()..rest:lower()
 end
 
+function MDRrefreshRunHistory()
+    MDRconfig=MDRconfig or {}
+    MDRconfig.Char=MDRconfig.Char or {}    
+    MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
+	
+	if MDR.runHistory and MDR.runHistory.finish then
+		return
+    else            
+		MDRconfig.Char[meAddon].runHistory=C_MythicPlus_GetRunHistory(false, true); 
+		--print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
+    end   	
+end
+
 function MDRgetHistory(type)    
     if not MDR.runHistory then
         MDR.runHistory={}
@@ -704,12 +717,12 @@ function MDRgetHistory(type)
 
     local meAddon=UnitName("player").." - "..GetRealmName()
     
-    MDRconfig=MDRconfig or {}
-    MDRconfig.Char=MDRconfig.Char or {}    
-    MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
+	--런히스토리 새로고침
+	MDRrefreshRunHistory()
+	
     local k=MDRconfig.Char[meAddon]
 	
-    local runHistory = C_MythicPlus_GetRunHistory(false, true);    
+    local runHistory = k.runHistory    
     --print("MDRgetHistory",type)
 	--print("runHistory",#runHistory)
     if type=="onLoad" then
@@ -875,7 +888,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     local name=UnitName("player")
     
     if not runHistory and (not charName or charName=="") then
-        runHistory = C_MythicPlus_GetRunHistory(false, true);      
+		MDRrefreshRunHistory()		
+        runHistory = MDRconfig.Char[meAddon].runHistory   
     elseif charName and charName~=""  then
         local toons=MDRconfig.Char
 		local findChar,isFullLevel=0,0
