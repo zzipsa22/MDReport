@@ -146,96 +146,47 @@ function MDRsendAddonMessage(args,channel,who)
 end
 
 function MDRcolorizeForPrint(message)
-    --print(message)
-    local m=MDRsplit(message," {")
-    local m2=m    
-    --print(message)
-    local mC={}
-    local nM=""
-    local type=""
-    for i=1, #m do
-        for k,v in pairs (classIcon) do              
-            if strfind(m[i],"%("..k) then
-                local sameClass=""
-                type="돌"
-                mC[i]=MDRsplit(strsub(strmatch(m[i], "%((.-)%)"),7,-1),",")[2]
-                m[i]=gsub(m[i],"%((.-)%)","")
-                if mC[i] and mC[i]~="" then
-                    sameClass="|cff"..classColor[k]..mC[i].."▶|r"
-                else
-                    sameClass="|cff"..classColor[k]..k.."▶|r"
-                end                
-                for j=1,8 do
-                    m[i]=gsub(m[i],"rt"..j.."}",v..sameClass.."[")                    
-                end
-                m[i]=gsub(m[i]," ","")                
+    --print(message)    
+    local icon_class={}
+    local icon={}
+    local icon_colon={} 
+    local icon_color={}
+    local icon_class_arrow={}
+    for i=1,#classNames do
+        icon_class[skull[classNames[i]]..classNames[i]]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]..classNames[i]
+        icon[skull[classNames[i]]..classNames[i]]=classIcon[classNames[i]]    
+        icon_colon[skull[classNames[i]]..classNames[i]..":"]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]..":|r"  
+        icon_color[skull[classNames[i]]..classNames[i]]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]
+        icon_class_arrow[skull[classNames[i]]..classNames[i].."▶"]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]..classNames[i].."▶|r"        
+    end 
+    --돌,직업,이름,주차
+    if strfind(message,"/") or strfind(message,"Χ") then
+        if strfind(message,"▶") then
+            for k,v in pairs(icon_color) do
+                if strfind(message,k) then
+                    message=gsub(message,k,v)
+                    message=gsub(message,"▶","|cff"..classColor[strsub(k,6,-1)].."▶|r")
+                end            
             end            
-        end
-        nM=nM..m[i].."] "       
-    end
-    
-    if type=="돌" then  message=nM end
-    
-    for j=1,#m2 do        
-        for k,v in pairs (classIcon) do             
-            for i=1,8 do            
-                if strfind(m2[j],"rt"..i.."}"..k) then
-                    --주차정보인 경우우
-                    type="주차"                      
-                    local name,park,class="","",""
-                    if strfind(m[j],"/") and strfind(m[j],":") then
-                        
-                        name=""
-                        park=MDRsplit(m2[j],":")[2]
-                        class=MDRsplit(m2[j],":")[1]
-                        
-                        if strfind(class," %(") then
-                            name=MDRsplit(class," %(")[2]
-                        end                        
-                        if name~="" then
-                            m2[j]=v.."|cff"..classColor[k]..name..":|r"..park   
-                        else
-                            m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(",v.."|cff"..classColor[k])
-                            --m2[j]=gsub(m2[j],"%(","|r %(")
-                        end 
-                    end                     
-                else            
-                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(", v.."|cff"..classColor[k])
-                    m2[j]=gsub(m2[j],"%):"," ▶|r") 
-                end 
-                if strfind(m2[j],"rt"..i.."}"..k.."%(") then
-                    m2[j]=gsub(m2[j],"rt"..i.."}"..k.."%(", v.."|cff"..classColor[k]) 
-                    m2[j]=gsub(m2[j],",","|r %(")                     
-                    m2[j]=gsub(m2[j],"%(","|r %(")                    
-                    m2[j]=gsub(m2[j]," ▶","%)|cff"..classColor[k].." ▶|r")                    
-                end                
-                m2[j]=gsub(m2[j],",","|r %(")   
-                m2[j]=gsub(m2[j],"%):","%)|cff"..classColor[k].." |r")                
-                m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")      
-                m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")
-                --m2[j]=gsub(m2[j],"%)%)","%)")                         
-                m2[j]=gsub(m2[j],"  "," ")              
-            end    
-        end            
-    end   
-    newMessage=""
-    for j=1,#m2 do
-        --print(m2[j])
-        newMessage=newMessage..m2[j]  
-        if j<#m2 then newMessage=newMessage.." " end         
-    end
-    newMessage=gsub(newMessage,"  "," ")
-    if strfind(newMessage,"%)%)") then
-        newMessage=gsub(newMessage,"%)%)","%)")   
+            local m1=strsub(message,1,strfind(message,"▶")-1)
+            local m2=strsub(message,strfind(message,"▶"),strlen(message))          
+            m1=gsub(m1,"%(","|r%(")
+            message=m1..m2
+        else
+            for k,v in pairs(icon_colon) do
+                if strfind(message,k) then
+                    message=gsub(message,k,v)
+                end            
+            end             
+        end              
+        --숏리포트면
     else
-        newMessage=gsub(newMessage,"%)","")   
-    end    
-    newMessage=gsub(newMessage," rt","{rt")
-    newMessage=gsub(newMessage," %(Χ","(Χ)")    
-    
-    if type=="주차"  then 
-        message=newMessage 
-    end    
+        for k,v in pairs(icon_class_arrow) do            
+            message=gsub(message,k,v)          
+        end
+        if strfind(message,"쐐기돌") then            
+        end        
+    end            
     
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
@@ -244,12 +195,7 @@ function MDRcolorizeForPrint(message)
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
     end
-    --직업색깔
-    --[[
-    for i=1,#classNames do        
-        message=gsub(message,classNames[i],MDRcolor(classNames[i],0))
-    end
-    ]]
+    
     --주사위 색입히기
     message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
     message=gsub(message,"결과 ▶","|cFF33FF99결과 ▶|r")
@@ -297,7 +243,7 @@ function MDRcolorizeForPrint(message)
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull
-    if not strfind(message,"쐐기돌22") then
+    if not strfind(message,"쐐기돌") then
         for i=1,#dungeonNamesFull do            
             message=gsub(message,dungeonNamesFull[i],MDRcolor("노랑",0,dungeonNamesFull[i]))
         end  
@@ -433,8 +379,8 @@ function doShortReport(chars,channel,who,callType)
             
             if callType=="parking" then                 
                 message=skull[class]..classStatus..parkingstar
-            elseif callType=="all" then
-                message=skull[class].."["..havekey.."]:"..classStatus              
+            elseif callType=="all" then                
+                message=skull[class].."["..havekey.."]:"..classStatus  
             elseif chars[i]["extraLink"] and callType=="spell"then
                 message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
@@ -445,8 +391,12 @@ function doShortReport(chars,channel,who,callType)
                     message=skull[class]..havekey.."▶["..chars[i]["extraLink"].."]"
                 end               
             else
-                message=skull[class]..havekey.."("..classStatus..")"
-            end           
+                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+                    message=skull[class]..classStatus.."▶["..havekey.."]"                         
+                else
+                    message=skull[class]..havekey.."("..classStatus..")"
+                end           
+            end
             
             if sameCheck and messageLines[sameCheck] then                 
                 messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
@@ -572,7 +522,12 @@ function doFullReport(chars,channel,who,callType)
                 
             else
                 if charLevel==MDR["SCL"] then
-                    parking=",Χ"                    
+                    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+                        parking="(Χ)"  
+                    else
+                        parking=",Χ"                    
+                    end
+                    
                 else
                     parking=""                    
                 end   
@@ -581,11 +536,16 @@ function doFullReport(chars,channel,who,callType)
             
             --같은 직업이 있을경우 뒤에 이름 붙이기
             if yourClass[class] and yourClass[class]>1 then
-                sameClass[class]=(sameClass[class] or 0)+1
-                classStatus=class.."("..shortName..parking..")"
-            else                
-                classStatus=class.."("..shortName..parking..")"
+                sameClass[class]=(sameClass[class] or 0)+1               
             end            
+            
+            if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+                classStatus=class..shortName.." "..parking               
+            else
+                classStatus=class.."("..shortName..parking..")"
+            end
+            
+            
             
             if forceprint==1 then
                 channel="print"
@@ -623,8 +583,8 @@ function doFullReport(chars,channel,who,callType)
             elseif callType and callType["currentdungeon"] then  
                 local now=" (준비중)"                
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
-            else   
-                message=headStar..classStatus..": "..havekey..online
+            else               
+                message=headStar..classStatus.." ▶ "..havekey..online
             end           
             
             if sameCheck then                 
