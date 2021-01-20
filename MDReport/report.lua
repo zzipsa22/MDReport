@@ -213,7 +213,7 @@ function MDRcolorizeForPrint(message)
                 m2[j]=gsub(m2[j],"%):","%)|cff"..classColor[k].." |r")                
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k..":"," "..v.."|cff"..classColor[k]..":|r")      
                 m2[j]=gsub(m2[j],"rt"..i.."}"..k," "..v.."|cff"..classColor[k].."|r")
-                m2[j]=gsub(m2[j],"%)%)","%)")                         
+                --m2[j]=gsub(m2[j],"%)%)","%)")                         
                 m2[j]=gsub(m2[j],"  "," ")              
             end    
         end            
@@ -224,7 +224,12 @@ function MDRcolorizeForPrint(message)
         newMessage=newMessage..m2[j]  
         if j<#m2 then newMessage=newMessage.." " end         
     end
-    newMessage=gsub(newMessage,"  "," ")          
+    newMessage=gsub(newMessage,"  "," ")
+    if strfind(newMessage,"%)%)") then
+        newMessage=gsub(newMessage,"%)%)","%)")   
+    else
+        newMessage=gsub(newMessage,"%)","")   
+    end    
     newMessage=gsub(newMessage," rt","{rt")
     newMessage=gsub(newMessage," %(Χ","(Χ")    
     
