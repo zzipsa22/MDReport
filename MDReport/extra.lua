@@ -214,7 +214,7 @@ function MDRbackupMythicKey(type)
                 VALUES["channel"]="PARTY"        
                 filterVALUES(VALUES)
         end)
-	elseif type=="bagupdate" then
+	elseif type=="bagupdate" then		
 		return
     else       
         MDR.myMythicKey[type]=t 
