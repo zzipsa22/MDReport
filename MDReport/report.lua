@@ -170,7 +170,7 @@ function MDRcolorizeForPrint(message)
             end             
         end
         --쪼렙의 경우
-    elseif strfind(message,"▶") then
+    elseif strfind(message,"아님") then
         for k,v in pairs(icon_color) do 
             if strfind(message,k) then
                 message=gsub(message,k,v)
