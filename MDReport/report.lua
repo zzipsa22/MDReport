@@ -68,17 +68,6 @@ function doCheckVersion(channel,who,callType)
     reportMessageLines(messageLines,channel,who,callType)   
 end
 
-function doWarningReport(channel,who,callType) 
-    local messageLines={}
-    if not warns[1] or warns[1] < warning then
-        messageLines[1]="▶[|cFF33FF99쐐기돌 보고서 "..MDR["version"].."|r]: SavedInstances 애드온이 설치되어 있지 않아 쐐기돌 관련 기능이 제한됩니다."
-        messageLines[2]="▶"..MDRcolor("노랑",0,"Curseforge")..", "..MDRcolor("보라",0,"Twitch")..", "..MDRcolor("초록",0,"인벤")..", "..MDRcolor("파랑",0,"루리웹").." 등에서 SavedInstances 애드온을 다운받아 설치해주세요."       
-        warns[1]=(warns[1] or 0)+1
-        channel="print"
-    else return end  
-    reportMessageLines(messageLines,channel,who,callType)
-end
-
 function doOnlyAffixReport(keyword,channel,who,callType)  
     local messageLines={}      
     if tonumber(keyword) then
@@ -300,6 +289,13 @@ end
 
 function doShortReport(chars,channel,who,callType)
     local messageLines={} 
+	local isAddonMessage
+	
+	if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+		isAddonMessage=1
+	else
+		isAddonMessage=0
+	end
     
     if chars~=nil then
         
@@ -391,7 +387,7 @@ function doShortReport(chars,channel,who,callType)
                     message=skull[class]..havekey.."▶["..chars[i]["extraLink"].."]"
                 end               
             else
-                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+                if isAddonMessage==1 then
                     message=skull[class]..classStatus.."▶["..havekey.."]"                         
                 else
                     message=skull[class]..havekey.."("..classStatus..")"
@@ -438,16 +434,17 @@ end
 --자세한 보고서 작성 및 출력
 function doFullReport(chars,channel,who,callType)          
     
-    local messageLines={} 
+    local messageLines={} 	
+	local isAddonMessage
+	
+	if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+		isAddonMessage=1
+	else
+		isAddonMessage=0
+	end
+	
     if chars~=nil then      
-        local charName,class=nil,nil
-        
-        --프린트인 경우 스컬대신 아이콘을 표기하기 위해 체크
-        local forceprint=0 
-        
-        if (channel=="print") and (who==meGame) then 
-            forceprint=1           
-        end
+        local charName,class=nil,nil       
         
         --중복직업 체크              
         local yourClass={}   
@@ -513,7 +510,7 @@ function doFullReport(chars,channel,who,callType)
             end
             
             if best and best~=0 then
-                if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+                if isAddonMessage==1 then
                     parking="("..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..")"
                 else
                     parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
@@ -522,7 +519,7 @@ function doFullReport(chars,channel,who,callType)
                 
             else
                 if charLevel==MDR["SCL"] then
-                    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+					if isAddonMessage==1 then
                         parking="(Χ)"  
                     else
                         parking=",Χ"                    
@@ -539,27 +536,19 @@ function doFullReport(chars,channel,who,callType)
                 sameClass[class]=(sameClass[class] or 0)+1               
             end            
             
-            if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+            if isAddonMessage==1 then
                 classStatus=class..shortName.." "..parking               
             else
                 classStatus=class.."("..shortName..parking..")"
             end
-            
-            
-            
-            if forceprint==1 then
-                channel="print"
-                headStar=skull[class] 
-            else
-                headStar=skull[class]                
-            end             
+			
+            headStar=skull[class]            
             
             local message=""
             local sameCheck
             
             local s=MDR.myMythicKey.start
-            local f=MDR.myMythicKey.finish
-            
+            local f=MDR.myMythicKey.finish            
             
             if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..": "..chars[i]["extraLink"].." "..havekey..online

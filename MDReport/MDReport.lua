@@ -297,12 +297,7 @@ function filterVALUES(VALUES)
     --버전요청을 한 사람이 나일 경우 리턴
     if callType["forceversion"] and who==meGame then
         return
-    end  
-    
-    --버전체크를 한 사람이 내가 아닐 경우 리턴
-    if callType["version"]  and who~=meGame then
-        return
-    end      
+    end        
     
     --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
     if callType["mykey"] and who~=meGame and channel~="WHISPER_OUT" then 
@@ -320,15 +315,8 @@ function filterVALUES(VALUES)
     --나에게서 귓말이 들어오는 경우 프린트로 변경
     if (channel=="WHISPER_IN") and who==meGame then
         channel="print"
-    end       
-    
-    --버전체크 채널 강제 조정
-    if callType["version"] then
-        channel="print"
-    elseif callType["forceversion"] then
-        --channel="WHISPER"        
-    end 
-    
+    end      
+        
     --조절값 입력
     VALUES["channel"]=channel    
     
@@ -698,7 +686,7 @@ function filterVALUES(VALUES)
             findCharNeedParking(channel,who,"parking",keyword["parking"],level,onlyMe,onlyOnline)             
         elseif callType["spell"] and #callTypeB==1 then        
             findCharSpell(keyword["spell"],channel,who,"spell")     
-        elseif (callType["version"] or callType["forceversion"]) and #callTypeB==1 then        
+        elseif callType["forceversion"] and #callTypeB==1 then        
             doCheckVersion(channel,who,callType)    
         elseif callType["affix"] and #callTypeB==1 then        
             doOnlyAffixReport(keyword["affix"],channel,who,"affix")             
@@ -1056,9 +1044,7 @@ end
 function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnline)
     if level==nil then level=99
     elseif level<2 then level=2 end
-    if onlyMe==1 or channel=="print" then 
-        --LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
-    end
+
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if onlyOnline==1 then 
         chars=filterCharsByFilter(chars,"name",nil,nil)

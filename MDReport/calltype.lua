@@ -279,10 +279,7 @@ local callTypeTable={
     ["핏빛심연"]={"dungeon", "핏심"},
     ["핏심"]={"dungeon", "핏심"},
     ["심연"]={"dungeon", "핏심"},
-    ["핏빛"]={"dungeon", "핏심"},
-    
-    --["버전"]={"version", "버전"},
-    --["버젼"]={"version", "버전"},
+    ["핏빛"]={"dungeon", "핏심"},    
     
     ["MDReport_VC"]={"forceversion", "버전보고"},
     ["버전"]={"forceversion", "버전보고"},
