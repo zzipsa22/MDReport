@@ -142,7 +142,7 @@ function MDRcolorizeForPrint(message)
     local icon_color={}
     local icon_class_arrow={}
     for i=1,#classNames do
-		local c=classNames[i]
+        local c=classNames[i]
         icon_class[skull[c]..c]=classIcon[c].."|cff"..classColor[c]..c
         icon[skull[c]..c]=classIcon[c]    
         icon_colon[skull[c]..c..":"]=classIcon[c].."|cff"..classColor[c]..":|r"  
@@ -168,7 +168,15 @@ function MDRcolorizeForPrint(message)
                     message=gsub(message,k,v)
                 end            
             end             
-        end                      
+        end
+        --쪼렙의 경우
+    elseif strfind(message,"▶") then
+        for k,v in pairs(icon_color) do 
+            if strfind(message,k) then
+                message=gsub(message,k,v)
+                message=gsub(message,"▶","▶|r")  
+            end            
+        end
     else --주차정보가 없는 경우 : 나머지 shortReport
         for k,v in pairs(icon_class_arrow) do            
             message=gsub(message,k,v)          
@@ -180,10 +188,14 @@ function MDRcolorizeForPrint(message)
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
     end
+    
     --징표
     for j=1,8 do
         message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
     end
+    
+    --혹시 모를 두칸 띄어어쓰기 줄이기
+    message=gsub(message,"  "," ")
     
     --주사위 색입히기
     message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
@@ -289,13 +301,13 @@ end
 
 function doShortReport(chars,channel,who,callType)
     local messageLines={} 
-	local isAddonMessage
-	
-	if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
-		isAddonMessage=1
-	else
-		isAddonMessage=0
-	end
+    local isAddonMessage
+    
+    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+        isAddonMessage=1
+    else
+        isAddonMessage=0
+    end
     
     if chars~=nil then
         
@@ -434,15 +446,15 @@ end
 --자세한 보고서 작성 및 출력
 function doFullReport(chars,channel,who,callType)          
     
-    local messageLines={} 	
-	local isAddonMessage
-	
-	if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
-		isAddonMessage=1
-	else
-		isAddonMessage=0
-	end
-	
+    local messageLines={}     
+    local isAddonMessage
+    
+    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="ADDON_WHISPER" or channel=="print" then
+        isAddonMessage=1
+    else
+        isAddonMessage=0
+    end
+    
     if chars~=nil then      
         local charName,class=nil,nil       
         
@@ -479,7 +491,7 @@ function doFullReport(chars,channel,who,callType)
             
             local cutName=gsub(charName, "%s%-.+","")
             local shortName
-            if callType=="charname"then
+            if (callType=="charname") or (callType and callType["class"]) then                
                 shortName=cutName
             else
                 shortName=strsub(cutName,1,9)
@@ -519,7 +531,7 @@ function doFullReport(chars,channel,who,callType)
                 
             else
                 if charLevel==MDR["SCL"] then
-					if isAddonMessage==1 then
+                    if isAddonMessage==1 then
                         parking="(Χ)"  
                     else
                         parking=",Χ"                    
@@ -541,7 +553,7 @@ function doFullReport(chars,channel,who,callType)
             else
                 classStatus=class.."("..shortName..parking..")"
             end
-			
+            
             headStar=skull[class]            
             
             local message=""
