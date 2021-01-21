@@ -153,15 +153,16 @@ function MDRcolorizeForPrint(message)
     local icon_color={}
     local icon_class_arrow={}
     for i=1,#classNames do
-        icon_class[skull[classNames[i]]..classNames[i]]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]..classNames[i]
-        icon[skull[classNames[i]]..classNames[i]]=classIcon[classNames[i]]    
-        icon_colon[skull[classNames[i]]..classNames[i]..":"]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]..":|r"  
-        icon_color[skull[classNames[i]]..classNames[i]]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]
-        icon_class_arrow[skull[classNames[i]]..classNames[i].."▶"]=classIcon[classNames[i]].."|cff"..classColor[classNames[i]]..classNames[i].."▶|r"        
+		local c=classNames[i]
+        icon_class[skull[c]..c]=classIcon[c].."|cff"..classColor[c]..c
+        icon[skull[c]..c]=classIcon[c]    
+        icon_colon[skull[c]..c..":"]=classIcon[c].."|cff"..classColor[c]..":|r"  
+        icon_color[skull[c]..c]=classIcon[c].."|cff"..classColor[c]
+        icon_class_arrow[skull[c]..c.."▶"]=classIcon[c].."|cff"..classColor[c]..c.."▶|r"        
     end 
-    --돌,직업,이름,주차
+    --주차정보를 포함하는 경우
     if strfind(message,"/") or strfind(message,"Χ") then
-        if strfind(message,"▶") then
+        if strfind(message,"▶") then -- 이름, 던전등 개별 캐릭터의 fullReport
             for k,v in pairs(icon_color) do
                 if strfind(message,k) then
                     message=gsub(message,k,v)
@@ -172,15 +173,14 @@ function MDRcolorizeForPrint(message)
             local m2=strsub(message,strfind(message,"▶"),strlen(message))          
             m1=gsub(m1,"%(","|r%(")
             message=m1..m2
-        else
+        else -- 주차 shortReport
             for k,v in pairs(icon_colon) do
                 if strfind(message,k) then
                     message=gsub(message,k,v)
                 end            
             end             
-        end              
-        --숏리포트면
-    else
+        end                      
+    else --주차정보가 없는 경우 : 나머지 shortReport
         for k,v in pairs(icon_class_arrow) do            
             message=gsub(message,k,v)          
         end

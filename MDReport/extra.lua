@@ -161,6 +161,7 @@ function MDRbackupMythicKey(type)
 	if type=="onLoad" then
 		for k, v in pairs(MDRconfig.Char) do
 			if v.MythicKey and (v.MythicKey.ResetTime or 0) < time() then
+				v.runHistory = {}
 				v.MythicKey = {}
 				v.reward1=nil
 				v.reward4=nil
