@@ -35,7 +35,10 @@ for i=1,MDR["maxParking"] do
 end
 MDRconfig=MDRconfig or {}
 
-C_Timer.After(3, function()  
+C_Timer.After(3, function()
+		C_MythicPlus.RequestMapInfo()
+		C_MythicPlus.RequestRewards()
+		LoadAddOn("Blizzard_WeeklyRewards")  
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end
