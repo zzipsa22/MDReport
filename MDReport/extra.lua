@@ -4,7 +4,7 @@ local playerName = UnitName("player")
 --MDR["dices"]={}
 local diceReportChannel
 local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
-local C_MythicPlus_GetRunHistory = C_MythicPlus.GetRunHistory
+--local C_MythicPlus_GetRunHistory = C_MythicPlus.GetRunHistory
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
@@ -158,6 +158,8 @@ function MDRbackupMythicKey(type)
     end
 	MDRconfig.Char=MDRconfig.Char or {}
 	MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
+	
+	--주간 리셋시 지난주 정보 초기화
 	if type=="onLoad" then
 		for k, v in pairs(MDRconfig.Char) do
 			if v.MythicKey and (v.MythicKey.ResetTime or 0) < time() then
@@ -167,7 +169,10 @@ function MDRbackupMythicKey(type)
 				v.reward4=nil
 				v.reward10=nil
 			end
-		end	
+		end
+		--쐐기 시작시 피니시 정보 초기화
+	elseif type=="start" then
+		MDRclearHistory()
 	end	
 
     local name,level,link	
@@ -185,7 +190,10 @@ function MDRbackupMythicKey(type)
             end
         end
     end
+	
+	--쐐기돌 정보 초기화 및 새로 입력
 	MDRconfig.Char[meAddon].MythicKey={}
+	
     if link then 
 		MDR.thisCharHasKey=1
 		MDRconfig.Char[meAddon].MythicKey.level=level
@@ -195,6 +203,7 @@ function MDRbackupMythicKey(type)
 	else 
 		MDR.thisCharHasKey=0 
 	end
+	
     local t={}    
     local tempL,_= C_ChallengeMode.GetActiveKeystoneInfo()
     t.currentMapID= C_ChallengeMode.GetActiveChallengeMapID()
@@ -482,13 +491,7 @@ function MDRdice(msg)
 end
 
 function MDRParking()
-    MDRgetHistory("parking")        
-    --C_MythicPlus.RequestMapInfo()
-    --C_MythicPlus.RequestRewards()
-    --LoadAddOn("Blizzard_WeeklyRewards"); WeeklyRewardsFrame:Show()
-    --findCharNeedParking(nil,nil,"parking","주차")   
-    --MDRsendAddonMessage("!주차","WHISPER",meGame)    
-    --findCharNeedParking()    
+    MDRgetHistory("parking")  
 end
 
 function MDRVault ()
@@ -704,10 +707,14 @@ function MDRrefreshRunHistory()
     MDRconfig.Char=MDRconfig.Char or {}    
     MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
 	
-	if MDR.runHistory and MDR.runHistory.finish then
+	local runHistory=C_MythicPlus.GetRunHistory(false, true);
+	
+	if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish > #runHistory ) or MDR.itsOKtoRefresh~=1 then
 		return
     else
-		local runHistory=C_MythicPlus_GetRunHistory(false, true);
+		if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish == #runHistory ) then
+			MDRclearHistory()
+		end
 		
 		MDRconfig.Char[meAddon].runHistory=runHistory	
 		
@@ -726,6 +733,13 @@ function MDRrefreshRunHistory()
 
 		--print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
     end   	
+end
+
+function MDRclearHistory()
+	if not MDR.runHistory then
+        MDR.runHistory={}
+    end
+    MDR.runHistory.finish=nil
 end
 
 function MDRgetHistory(type)    
@@ -747,7 +761,7 @@ function MDRgetHistory(type)
         MDR.runHistory[type]=runHistory        
     elseif type=="start" then        
         MDR.runHistory[type]=runHistory
-        MDR.runHistory.finish=nil
+		MDRclearHistory()
     elseif type=="finish" then
         if (not MDR.runHistory.start) then
             MDR.runHistory.start=MDR.runHistory.onLoad

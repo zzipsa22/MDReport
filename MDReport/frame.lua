@@ -40,11 +40,12 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             local isInitialLogin, isReloadingUi = ...
             if isInitialLogin or isReloadingUi then                
                 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
-				C_Timer.After(15, function()
+				C_Timer.After(20, function()
+					MDR.itsOKtoRefresh=1
 					MDRbackupMythicKey("onLoad")
 					--MDRgetHistory("onLoad")
-					for i=1,4 do
-						C_Timer.After(15*i, function()
+					for i=1,12 do
+						C_Timer.After(5*i, function()
 							MDRrefreshRunHistory()
 						end)
 					end
@@ -340,4 +341,3 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             --일치하는 명령어가 없으면 리턴
         else return end
 end)
-
