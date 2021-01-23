@@ -156,6 +156,7 @@ function MDRbackupMythicKey(type)
     if not MDR.myMythicKey then
         MDR.myMythicKey={}
     end
+	MDRconfig=MDRconfig or {}
 	MDRconfig.Char=MDRconfig.Char or {}
 	MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
 	
@@ -514,6 +515,14 @@ function MDRhistory(msg, editbox)
 	local cmd, args= MDRsplit(msg," ")[1],MDRsplit(msg," ")[2]
 	if cmd=="삭제" then
 		MDRremoveCharInfo(args)
+	elseif cmd=="지연시간" or cmd=="delay" then
+		if tonumber(args) then
+			MDRconfig.delay=tonumber(args)
+			print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'"..args.."초'").." 로 설정 되었습니다. (기본값: "..MDRcolor("노랑",0,MDR.DefaultDelay).."초)")
+		else
+			MDRconfig.delay=MDR.DefaultDelay
+			print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'기본값 ("..MDR.DefaultDelay.."초)'").." 으로 설정 되었습니다.")
+		end
 	else
 		MDRdoReportHistory(nil,true,nil,nil,"history",msg)    
 	end
@@ -754,7 +763,7 @@ function MDRgetHistory(type)
 	
     local k=MDRconfig.Char[meAddon]
 	
-    local runHistory = k.runHistory    
+    local runHistory = k.runHistory or {}    
     --print("MDRgetHistory",type)
 	--print("runHistory",#runHistory)
     if type=="onLoad" then

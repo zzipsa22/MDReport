@@ -40,15 +40,18 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             local isInitialLogin, isReloadingUi = ...
             if isInitialLogin or isReloadingUi then                
                 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
-				C_Timer.After(20, function()
-					MDR.itsOKtoRefresh=1
+				
+				C_Timer.After(5, function()
 					MDRbackupMythicKey("onLoad")
-					--MDRgetHistory("onLoad")
-					for i=1,12 do
-						C_Timer.After(5*i, function()
-							MDRrefreshRunHistory()
-						end)
-					end
+				end)
+
+				MDRconfig=MDRconfig or {}
+				
+				local delay = MDRconfig.delay or MDR.DefaultDelay
+				
+				C_Timer.After(delay, function()
+					MDR.itsOKtoRefresh=1
+					MDRrefreshRunHistory()
 				end)				
                 return
 			else

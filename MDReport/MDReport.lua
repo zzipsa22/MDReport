@@ -16,6 +16,7 @@ MDR["maxChar"]=3
 MDR["textLength"]=3
 MDR["maxParking"]=14 --어둠땅 1시즌
 MDR["SCL"]=60--어둠땅 만렙
+MDR.DefaultDelay=15 --지연시간 기본값
 
 local guildWarn=0
 local tips={}
@@ -32,11 +33,16 @@ DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
 end
+MDRconfig=MDRconfig or {}
 
 C_Timer.After(3, function()  
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
-        end  
+        end
+		MDRconfig=MDRconfig or {}
+		if not MDRconfig.delay then
+			MDRconfig.delay=MDR.DefaultDelay
+		end
         tinsert(UISpecialFrames, "WeeklyRewardsFrame")
 end) 
 
@@ -783,8 +789,11 @@ end
 
 
 --보유한 모든 돌 불러오기
-function GetHaveKeyCharInfo(type,level)   
+function GetHaveKeyCharInfo(type,level)
 
+	--돌 불러오기전에 새로고침 한번
+	MDRrefreshRunHistory()
+	
     if type=="만렙만" then level=2
     elseif type=="soft" then level=level-5
     elseif level==nil then level=MDR["maxParking"] end  
