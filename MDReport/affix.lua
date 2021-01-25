@@ -193,10 +193,10 @@ function GetAffixFullText(AffixTable,channel)
         if channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or  channel=="print" then
             if tempTable[i][5] then
                 _,_,icon=GetSpellInfo(tempTable[i][5])
-                icon="\124T"..icon..":0\124t"
+                icon="\124T"..icon..":0:::-4\124t"
                 spellLink=GetSpellLink(tempTable[i][5])
             else
-                icon="\124T"..tempTable[i]["icon"]..":0\124t"
+                icon="\124T"..tempTable[i]["icon"]..":0:::-4\124t"
                 spellLink=tempTable[i]["name"]
             end  
         else
@@ -224,9 +224,9 @@ function GetAffixFullDescription(keyword,channel)
             if channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or  channel=="print" then
                 if v[5] then
                     _,_,icon=GetSpellInfo(v[5])
-                    icon="\124T"..icon..":0\124t"
+                    icon="\124T"..icon..":0:::-4\124t"
                 else
-                    icon="\124T"..v["icon"]..":0\124t"
+                    icon="\124T"..v["icon"]..":0:::-4\124t"
                 end
             else
                 icon=v["rt"]
@@ -237,7 +237,7 @@ function GetAffixFullDescription(keyword,channel)
                 for i=5,7 do                
                     if v[i] then
                         local _,_,icon=GetSpellInfo(v[i])
-                        icon="\124T"..icon..":0\124t"                        
+                        icon="\124T"..icon..":0:::-4\124t"                        
                         message[2]=(message[2] or "")..icon..GetSpellLink(v[i])..", "
                     end                
                 end

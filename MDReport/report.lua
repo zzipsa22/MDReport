@@ -17,19 +17,19 @@ local skull={
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
 local classIcon={--    Classes
-    ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:0:64|t",
-    ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:0:64|t",
-    ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:0:64|t",
-    ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:0:64|t",
-    ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:64:128|t",
-    ["술사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:64:128|t",
-    ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:64:128|t",
-    ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:64:128|t",
-    ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:0:64:128:192|t",
-    ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:64:128:128:192|t",
-    ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:128:192:128:192|t",
-    ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:0:256:256:192:256:128:192|t",        
-}    
+    ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:0:64|t",
+    ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:0:64|t",
+    ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:0:64|t",
+    ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:0:64|t",
+    ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:64:128|t",
+    ["술사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:64:128|t",
+    ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:64:128|t",
+    ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:64:128|t",
+    ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:128:192|t",
+    ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:128:192|t",
+    ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:128:192|t",
+    ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:128:192|t",        
+}     
 local classColor={
     ["술사"]="0070DE",
     ["법사"]="40C7EB",
@@ -51,7 +51,7 @@ MDR.classIcon=classIcon
 
 local skullP={}
 for i=1,8 do
-    skullP["rt"..i]="\124TInterface/TargetingFrame/UI-RaidTargetingIcon_"..i..":12\124t"
+    skullP["rt"..i]="\124TInterface/TargetingFrame/UI-RaidTargetingIcon_"..i..":12:::-4\124t"
 end
 
 local classNames={
@@ -141,13 +141,15 @@ function MDRcolorizeForPrint(message)
     local icon_colon={} 
     local icon_color={}
     local icon_class_arrow={}
+    local color_class={}
     for i=1,#classNames do
         local c=classNames[i]
         icon_class[skull[c]..c]=classIcon[c].."|cff"..classColor[c]..c
         icon[skull[c]..c]=classIcon[c]    
         icon_colon[skull[c]..c..":"]=classIcon[c].."|cff"..classColor[c]..":|r"  
         icon_color[skull[c]..c]=classIcon[c].."|cff"..classColor[c]
-        icon_class_arrow[skull[c]..c.."▶"]=classIcon[c].."|cff"..classColor[c]..c.."▶|r"        
+        icon_class_arrow[skull[c]..c.."▶%["]=" ["..classIcon[c].."|cff"..classColor[c]..":|r"
+        color_class[c]="|cff"..classColor[c]..c.."|r"     
     end 
     --주차정보를 포함하는 경우
     if strfind(message,"/") or strfind(message,"Χ") then
@@ -176,14 +178,28 @@ function MDRcolorizeForPrint(message)
                 message=gsub(message,k,v)
                 message=gsub(message,"▶","▶|r")  
             end            
-        end
+        end        
     else --주차정보가 없는 경우 : 나머지 shortReport
         for k,v in pairs(icon_class_arrow) do            
             message=gsub(message,k,v)          
         end
         if strfind(message,"쐐기돌") then            
         end        
-    end            
+    end    
+    
+    --성약단
+    if strfind(message,"{c") then
+        for i=1,4 do
+            local target="{c"..i.."}"
+            if strfind(message,target) then
+                message=gsub(message,target,MDRgetCovenantIcon(i))
+            end            
+        end		
+        for k,v in pairs(color_class) do
+            message=gsub(message,k,v)
+        end        
+		message=gsub(message,"{c0}","")
+    end	
     
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
@@ -195,7 +211,9 @@ function MDRcolorizeForPrint(message)
     end
     
     --혹시 모를 두칸 띄어어쓰기 줄이기
-    message=gsub(message,"  "," ")
+    message=gsub(message,"   ","  ")
+    message=gsub(message,"  ▶"," ▶")    
+    message=gsub(message,"%] %[","%]  %[")    
     
     --주사위 색입히기
     message=gsub(message,"MDR ▶","|cFF33FF99MDR ▶|r")
@@ -249,8 +267,8 @@ function MDRcolorizeForPrint(message)
             message=gsub(message,dungeonNamesFull[i],MDRcolor("노랑",0,dungeonNamesFull[i]))
         end  
         for i=1,#dungeonNames do            
-            message=gsub(message,dungeonNames[i],MDRcolor("노랑",0,dungeonNames[i]))
-        end  
+            message=gsub(message,dungeonNames[i],MDRgetCovenantIcon(dungeonNames[i])..MDRcolor("노랑",0,dungeonNames[i]))
+        end 
     end 
     return message
 end
@@ -333,6 +351,7 @@ function doShortReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]
+            local covenant=chars[i]["covenant"]
             local itemLevel=chars[i]["itemLevel"]            
             local equipLevel=chars[i]["equipLevel"]
             local online=""
@@ -386,7 +405,7 @@ function doShortReport(chars,channel,who,callType)
             
             
             if callType=="parking" then                 
-                message=skull[class]..classStatus..parkingstar
+                message="["..skull[class]..classStatus..parkingstar.."]"
             elseif callType=="all" then                
                 message=skull[class].."["..havekey.."]:"..classStatus  
             elseif chars[i]["extraLink"] and callType=="spell"then
@@ -397,7 +416,13 @@ function doShortReport(chars,channel,who,callType)
                     message=skull[class]..havekey
                 else                    
                     message=skull[class]..havekey.."▶["..chars[i]["extraLink"].."]"
-                end               
+                end
+            elseif callType["covenant"] then
+                if isAddonMessage==1 then
+                    message="[{c"..MDRgetCovenantID(covenant).."}"..classStatus..":"..havekey.."]" 
+                else
+                    message=skull[class]..havekey.."("..classStatus..")"
+                end           
             else
                 if isAddonMessage==1 then
                     message=skull[class]..classStatus.."▶["..havekey.."]"                         
@@ -478,6 +503,7 @@ function doFullReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]            
+            local covenant=chars[i]["covenant"]   
             local itemLevel=chars[i]["itemLevel"]
             local equipLevel=chars[i]["equipLevel"]
             local charLevel=chars[i]["charLevel"]
@@ -488,6 +514,13 @@ function doFullReport(chars,channel,who,callType)
             if charName==meAddon then
                 online="◀접속중"
             end
+            
+            local covenantIcon=""
+            if covenant and covenant~="" and covenant ~=0 then
+                covenantIcon="{c"..MDRgetCovenantID(covenant).."}"
+            end 
+            
+            local dungeonIcon="{c"..MDRgetCovenantID(getShortDungeonName(keyName)).."}"
             
             local cutName=gsub(charName, "%s%-.+","")
             local shortName
@@ -584,8 +617,8 @@ function doFullReport(chars,channel,who,callType)
             elseif callType and callType["currentdungeon"] then  
                 local now=" (준비중)"                
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
-            else               
-                message=headStar..classStatus.." ▶ "..havekey..online
+            else                
+                message=covenantIcon..headStar..classStatus.." ▶ "..dungeonIcon..havekey..online
             end           
             
             if sameCheck then                 

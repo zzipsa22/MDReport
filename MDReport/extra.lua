@@ -130,7 +130,11 @@ local classInfo={
     ["영웅"]={"a335ee"},
     ["전설"]={"ff8000"},
     ["유물"]={"e6cc80"},
-    ["계승"]={"00ccff"},    
+    ["계승"]={"00ccff"},
+    ["강령군주"]={"32a478"},
+    ["나이트 페이"]={"2549ff"},
+    ["키리안"]={"8fd1d8"},
+    ["벤티르"]={"910f14"},
     [""]={}
 }
 
@@ -156,27 +160,27 @@ function MDRbackupMythicKey(type)
     if not MDR.myMythicKey then
         MDR.myMythicKey={}
     end
-	MDRconfig=MDRconfig or {}
-	MDRconfig.Char=MDRconfig.Char or {}
-	MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
-	
-	--주간 리셋시 지난주 정보 초기화
-	if type=="onLoad" then
-		for k, v in pairs(MDRconfig.Char) do
-			if v.MythicKey and (v.MythicKey.ResetTime or 0) < time() then
-				v.runHistory = {}
-				v.MythicKey = {}
-				v.reward1=nil
-				v.reward4=nil
-				v.reward10=nil
-			end
-		end
-		--쐐기 시작시 피니시 정보 초기화
-	elseif type=="start" then
-		MDRclearHistory()
-	end	
-
-    local name,level,link	
+    MDRconfig=MDRconfig or {}
+    MDRconfig.Char=MDRconfig.Char or {}
+    MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
+    
+    --주간 리셋시 지난주 정보 초기화
+    if type=="onLoad" then
+        for k, v in pairs(MDRconfig.Char) do
+            if v.MythicKey and (v.MythicKey.ResetTime or 0) < time() then
+                v.runHistory = {}
+                v.MythicKey = {}
+                v.reward1=nil
+                v.reward4=nil
+                v.reward10=nil
+            end
+        end
+        --쐐기 시작시 피니시 정보 초기화
+    elseif type=="start" then
+        MDRclearHistory()
+    end    
+    
+    local name,level,link    
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
             local itemID = GetContainerItemID(bagID, invID)
@@ -191,20 +195,20 @@ function MDRbackupMythicKey(type)
             end
         end
     end
-	
-	--쐐기돌 정보 초기화 및 새로 입력
-	MDRconfig.Char[meAddon].MythicKey={}
-	
+    
+    --쐐기돌 정보 초기화 및 새로 입력
+    MDRconfig.Char[meAddon].MythicKey={}
+    
     if link then 
-		MDR.thisCharHasKey=1
-		MDRconfig.Char[meAddon].MythicKey.level=level
-		MDRconfig.Char[meAddon].MythicKey.name=name
-		MDRconfig.Char[meAddon].MythicKey.link=link
-		MDRconfig.Char[meAddon].MythicKey.ResetTime=time() + C_DateAndTime.GetSecondsUntilWeeklyReset()		
-	else 
-		MDR.thisCharHasKey=0 
-	end
-	
+        MDR.thisCharHasKey=1
+        MDRconfig.Char[meAddon].MythicKey.level=level
+        MDRconfig.Char[meAddon].MythicKey.name=name
+        MDRconfig.Char[meAddon].MythicKey.link=link
+        MDRconfig.Char[meAddon].MythicKey.ResetTime=time() + C_DateAndTime.GetSecondsUntilWeeklyReset()        
+    else 
+        MDR.thisCharHasKey=0 
+    end
+    
     local t={}    
     local tempL,_= C_ChallengeMode.GetActiveKeystoneInfo()
     t.currentMapID= C_ChallengeMode.GetActiveChallengeMapID()
@@ -225,8 +229,8 @@ function MDRbackupMythicKey(type)
                 VALUES["channel"]="PARTY"        
                 filterVALUES(VALUES)
         end)
-	elseif type=="bagupdate" then		
-		return
+    elseif type=="bagupdate" then        
+        return
     else       
         MDR.myMythicKey[type]=t 
         MDR.myMythicKey.finish=nil        
@@ -247,7 +251,7 @@ function MDRko(keyword,type)
         "돌","단","원","상","전","장","택","굴","산", --격아던전
         "연","당","탑","편","흔", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
-        "중",
+        "중","안",
     }
     local Batchim=0
     for i=1,#LCtable do
@@ -512,20 +516,20 @@ function MDRalts()
 end
 
 function MDRhistory(msg, editbox)
-	local cmd, args= MDRsplit(msg," ")[1],MDRsplit(msg," ")[2]
-	if cmd=="삭제" then
-		MDRremoveCharInfo(args)
-	elseif cmd=="지연시간" or cmd=="delay" then
-		if tonumber(args) then
-			MDRconfig.delay=tonumber(args)
-			print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'"..args.."초'").." 로 설정 되었습니다. (기본값: "..MDRcolor("노랑",0,MDR.DefaultDelay).."초)")
-		else
-			MDRconfig.delay=MDR.DefaultDelay
-			print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'기본값 ("..MDR.DefaultDelay.."초)'").." 으로 설정 되었습니다.")
-		end
-	else
-		MDRdoReportHistory(nil,true,nil,nil,"history",msg)    
-	end
+    local cmd, args= MDRsplit(msg," ")[1],MDRsplit(msg," ")[2]
+    if cmd=="삭제" then
+        MDRremoveCharInfo(args)
+    elseif cmd=="지연시간" or cmd=="delay" then
+        if tonumber(args) then
+            MDRconfig.delay=tonumber(args)
+            print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'"..args.."초'").." 로 설정 되었습니다. (기본값: "..MDRcolor("노랑",0,MDR.DefaultDelay).."초)")
+        else
+            MDRconfig.delay=MDR.DefaultDelay
+            print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'기본값 ("..MDR.DefaultDelay.."초)'").." 으로 설정 되었습니다.")
+        end
+    else
+        MDRdoReportHistory(nil,true,nil,nil,"history",msg)    
+    end
 end
 
 function MDRCommandsParty(msg, editbox)     
@@ -715,37 +719,37 @@ function MDRrefreshRunHistory()
     MDRconfig=MDRconfig or {}
     MDRconfig.Char=MDRconfig.Char or {}    
     MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
-	
-	local runHistory=C_MythicPlus.GetRunHistory(false, true);
-	
-	if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish > #runHistory ) or MDR.itsOKtoRefresh~=1 then
-		return
+    
+    local runHistory=C_MythicPlus.GetRunHistory(false, true);
+    
+    if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish > #runHistory ) or MDR.itsOKtoRefresh~=1 then
+        return
     else
-		if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish == #runHistory ) then
-			MDRclearHistory()
-		end
-		
-		MDRconfig.Char[meAddon].runHistory=runHistory	
-		
-		local comparison = function(entry1, entry2)
-			if ( entry1.level == entry2.level ) then
-				return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
-			else
-				return entry1.level > entry2.level;
-			end
-		end
-		table.sort(runHistory, comparison)
-		
-		MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
-		MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
-		MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
-
-		--print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
-    end   	
+        if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish == #runHistory ) then
+            MDRclearHistory()
+        end
+        
+        MDRconfig.Char[meAddon].runHistory=runHistory    
+        
+        local comparison = function(entry1, entry2)
+            if ( entry1.level == entry2.level ) then
+                return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+            else
+                return entry1.level > entry2.level;
+            end
+        end
+        table.sort(runHistory, comparison)
+        
+        MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
+        MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
+        MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
+        
+        --print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
+    end       
 end
 
 function MDRclearHistory()
-	if not MDR.runHistory then
+    if not MDR.runHistory then
         MDR.runHistory={}
     end
     MDR.runHistory.finish=nil
@@ -755,22 +759,22 @@ function MDRgetHistory(type)
     if not MDR.runHistory then
         MDR.runHistory={}
     end
-
+    
     local meAddon=UnitName("player").." - "..GetRealmName()
     
-	--런히스토리 새로고침
-	MDRrefreshRunHistory()
-	
+    --런히스토리 새로고침
+    MDRrefreshRunHistory()
+    
     local k=MDRconfig.Char[meAddon]
-	
+    
     local runHistory = k.runHistory or {}    
     --print("MDRgetHistory",type)
-	--print("runHistory",#runHistory)
+    --print("runHistory",#runHistory)
     if type=="onLoad" then
         MDR.runHistory[type]=runHistory        
     elseif type=="start" then        
         MDR.runHistory[type]=runHistory
-		MDRclearHistory()
+        MDRclearHistory()
     elseif type=="finish" then
         if (not MDR.runHistory.start) then
             MDR.runHistory.start=MDR.runHistory.onLoad
@@ -807,21 +811,22 @@ function MDRgetHistory(type)
         end            
     end
     
-	k.class=nil
+    k.class=nil
     k.level=nil
     
     k.Class=krClass
-    k.Level=UnitLevel("player")	
+    k.Level=UnitLevel("player")    
     k.name=meAddon
-	k.Faction=UnitFactionGroup("player")
-	k.LastSeen = time()
-	
-	local IL,ILe = GetAverageItemLevel()
-	if IL and tonumber(IL) and tonumber(IL) > 0 then
-		k.IL, k.ILe = tonumber(IL), tonumber(ILe)
-	end
-	
-	local kName,kLevel,kLink	
+    k.Faction=UnitFactionGroup("player")
+    k.LastSeen = time()
+    k.Covenant=MDRgetCovenantName(C_Covenants.GetActiveCovenantID())
+    
+    local IL,ILe = GetAverageItemLevel()
+    if IL and tonumber(IL) and tonumber(IL) > 0 then
+        k.IL, k.ILe = tonumber(IL), tonumber(ILe)
+    end
+    
+    local kName,kLevel,kLink    
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
             local itemID = GetContainerItemID(bagID, invID)
@@ -836,14 +841,14 @@ function MDRgetHistory(type)
             end
         end
     end
-	k.MythicKey={}
-	k.MythicKey.level=kLevel
-	k.MythicKey.name=kName
-	k.MythicKey.link=kLink
-	if kLink then
-		k.MythicKey.ResetTime = time() + C_DateAndTime.GetSecondsUntilWeeklyReset()
-	end
-	
+    k.MythicKey={}
+    k.MythicKey.level=kLevel
+    k.MythicKey.name=kName
+    k.MythicKey.link=kLink
+    if kLink then
+        k.MythicKey.ResetTime = time() + C_DateAndTime.GetSecondsUntilWeeklyReset()
+    end
+    
     k.keyLink=nil
     
     if MDR.runHistory.finish then 
@@ -860,34 +865,32 @@ function MDRgetHistory(type)
         end
     end
     table.sort(newRunHistory, comparison)
-	
-	k.reward1=newRunHistory[1] and newRunHistory[1].level or nil
-	k.reward4=newRunHistory[4] and newRunHistory[4].level or nil
-	k.reward10=newRunHistory[10] and newRunHistory[10].level or nil
-
+    
+    k.reward1=newRunHistory[1] and newRunHistory[1].level or nil
+    k.reward4=newRunHistory[4] and newRunHistory[4].level or nil
+    k.reward10=newRunHistory[10] and newRunHistory[10].level or nil
+    
     MDRconfig.Char[meAddon]=k
 end   
 
 function MDRremoveCharInfo(args)
-	if args=="" or not args then 
-		print(MDRcolor("빨강",0,"▶ ").."삭제하고자 하는 캐릭터의 이름을 입력해주세요.")
-		print(MDRcolor("빨강",0,"▶ ").."|cFF33FF99ex)|r "..MDRcolor("노랑",0,"/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("핑크",0," 캐릭터이름 (정확히 일치)"))
-		return
-	end
-	for k,v in pairs (MDRconfig.Char) do
-		local name=string.gsub(MDRsplit(k," - ")[1], "(%a)([%w_']*)", MDRtitleLower)
-		local target=string.gsub(args, "(%a)([%w_']*)", MDRtitleLower)
-		if name==target then
-			MDRconfig.Char[k]=nil
-			print(MDRcolor("빨강",0,"▶ ")..MDRcolor(v.Class or v.class or "핑크",0,"["..k.."]").." 의 저장된 정보가 삭제되었습니다.")
-			return			
-		end
-	end
-	print(MDRcolor("빨강",0,"▶ ")..MDRcolor("핑크",0,"["..charName.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")           
-	return
+    if args=="" or not args then 
+        print(MDRcolor("빨강",0,"▶ ").."삭제하고자 하는 캐릭터의 이름을 입력해주세요.")
+        print(MDRcolor("빨강",0,"▶ ").."|cFF33FF99ex)|r "..MDRcolor("노랑",0,"/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("핑크",0," 캐릭터이름 (정확히 일치)"))
+        return
+    end
+    for k,v in pairs (MDRconfig.Char) do
+        local name=string.gsub(MDRsplit(k," - ")[1], "(%a)([%w_']*)", MDRtitleLower)
+        local target=string.gsub(args, "(%a)([%w_']*)", MDRtitleLower)
+        if name==target then
+            MDRconfig.Char[k]=nil
+            print(MDRcolor("빨강",0,"▶ ")..MDRcolor(v.Class or v.class or "핑크",0,"["..k.."]").." 의 저장된 정보가 삭제되었습니다.")
+            return            
+        end
+    end
+    print(MDRcolor("빨강",0,"▶ ")..MDRcolor("핑크",0,"["..charName.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")           
+    return
 end
-
- 
 
 function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName) 
     
@@ -917,35 +920,35 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
     local name=UnitName("player")
     
     if not runHistory and (not charName or charName=="") then
-		MDRrefreshRunHistory()		
+        MDRrefreshRunHistory()        
         runHistory = MDRconfig.Char[meAddon].runHistory   
     elseif charName and charName~=""  then
         local toons=MDRconfig.Char
-		local findChar,isFullLevel=0,0
-		local altName=""
+        local findChar,isFullLevel=0,0
+        local altName=""
         for k,v in pairs (toons) do
-			local class=v.Class or v.class
-			local shortClass=MDRcolor(class,6)
-			local level=v.Level or v.level
+            local class=v.Class or v.class
+            local shortClass=MDRcolor(class,6)
+            local level=v.Level or v.level
             if (strfind(k,charName) or strfind(class,charName) or strfind(shortClass,charName)) then
-				findChar=findChar+1
-				if level==MDR.SCL then
-					charName=k
-					isFullLevel=1
-				else
-					altName=MDRsplit(k," - ")[1]
-					altClass=MDRcolor(v.Class or v.class,6)
-				end
-            end			
+                findChar=findChar+1
+                if level==MDR.SCL then
+                    charName=k
+                    isFullLevel=1
+                else
+                    altName=MDRsplit(k," - ")[1]
+                    altClass=MDRcolor(v.Class or v.class,6)
+                end
+            end            
         end
-		
-		if findChar>0 and isFullLevel==0 then
-			print(MDRcolor("빨강",0,"▶ ")..classIcon[altClass].."|cff"..classColor[altClass].."["..altName.."]|r".." 은/는 만렙이 아닙니다.")
+        
+        if findChar>0 and isFullLevel==0 then
+            print(MDRcolor("빨강",0,"▶ ")..classIcon[altClass].."|cff"..classColor[altClass].."["..altName.."]|r".." 은/는 만렙이 아닙니다.")
             return
         elseif not MDRconfig.Char[charName] then 
             print(MDRcolor("빨강",0,"▶ ")..MDRcolor("핑크",0,"["..charName.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")
             return
-
+            
         end
         runHistory=MDRconfig.Char[charName].runHistory
         class=MDRconfig.Char[charName].Class or MDRconfig.Char[charName].class
@@ -976,7 +979,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         if (k~=meAddon or (inclueMain and k==meAddon)) and v.runHistory and (v.Level==MDR.SCL or v.level==MDR.SCL) then    
             v["runs"]=#v.runHistory
             v["name"]=k
-          
+            
             tinsert(newtoons,v)
             table.sort(newtoons, function(a,b)
                     return a.runs > b.runs or a.runs == b.runs and a.runs < b.runs
@@ -991,11 +994,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         guide=" |cff9d9d9d(다른 캐릭터를 보시려면 |cffffff00'/부캐'|r 입력)|r"
     elseif type=="alts" then
         guide=""
-	end
-	
-	local guideHistory="|cFF33FF99▶|r |cff9d9d9d"..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
+    end
+    
+    local guideHistory="|cFF33FF99▶|r |cff9d9d9d"..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
     local guideAlts="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명").." 또는 "..MDRcolor(class,0,"직업명").."'|r 입력.|r"
-	local guideDelete=MDRcolor("빨강",0,"▶ ").."|cff9d9d9d"..MDRcolor("유물",0,"[저장된 기록]").." 을 "..MDRcolor("빨강",0,"삭제").."하시려면 "..MDRcolor("노랑",0,"'/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("노랑",0,"'").." 입력."
+    local guideDelete=MDRcolor("빨강",0,"▶ ").."|cff9d9d9d"..MDRcolor("유물",0,"[저장된 기록]").." 을 "..MDRcolor("빨강",0,"삭제").."하시려면 "..MDRcolor("노랑",0,"'/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("노랑",0,"'").." 입력."
     
     if main then
         if #runHistory > 0 then        
@@ -1049,11 +1052,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                 
             end
         else
-			if UnitLevel("player") == MDR.SCL then
-            messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..name.."]").." 님은 아직 쐐기 기록이 없습니다. |cffF5aCdA[나에게만 보임]|r" 
-			else
-			messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..MDRcolor(class,0,"["..name.."]").." 님은 아직 만렙이 아닙니다. |cffF5aCdA[나에게만 보임]|r" 
-			end
+            if UnitLevel("player") == MDR.SCL then
+                messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..MDRcolor(class,0,"["..name.."]").." 님은 아직 쐐기 기록이 없습니다. |cffF5aCdA[나에게만 보임]|r" 
+            else
+                messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..MDRcolor(class,0,"["..name.."]").." 님은 아직 만렙이 아닙니다. |cffF5aCdA[나에게만 보임]|r" 
+            end
         end
     end    
     if alt then
@@ -1108,14 +1111,81 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
             end 
         end 
         if UnitLevel("player") == MDR.SCL and not main then
-			messageLines[#messageLines+1]=guideHistory
-		end
+            messageLines[#messageLines+1]=guideHistory
+        end
         if howManyToons>1 then
             messageLines[#messageLines+1]=guideAlts       
         end
     end
-	if type=="alts"  or type=="parking" then
-		messageLines[#messageLines+1]=guideDelete
-	end
+    if type=="alts"  or type=="parking" then
+        messageLines[#messageLines+1]=guideDelete
+    end
     reportMessageLines(messageLines,nil,nil,"vault")   
+end
+
+local dungeonCovenant={
+    ["승천"]=1,
+    ["죽상"]=1,
+    ["키리안"]=1,
+    
+    ["속죄"]=2,
+    ["핏심"]=2,
+    ["벤티르"]=2,
+    
+    ["티르너"]=3,
+    ["저편"]=3,
+    ["나이트 페이"]=3,
+    
+    ["역병"]=4,
+    ["투기장"]=4,
+    ["강령군주"]=4,                
+}
+
+function MDRgetCovenantIcon(covenantID)
+    
+    local iconSize=14
+    local covenantMap = {
+        [1] = "kyrian",
+        [2] = "venthyr",
+        [3] = "night_fae",
+        [4] = "necrolord",
+    }
+    
+    local covenant    
+    
+    if not covenantID then
+        return ""        
+    elseif tonumber(covenantID) and covenantID > 0 and covenantID < 5 then 
+        covenant=covenantMap[covenantID] 
+    elseif dungeonCovenant[covenantID] then            
+        covenant=covenantMap[dungeonCovenant[covenantID]] 
+    end      
+    return "|T".."Interface\\AddOns\\MDReport\\icon\\"..covenant..".tga:"..iconSize..":"..iconSize..":0:-5|t"       
+end
+
+function MDRgetCovenantName(covenantID)
+	local covenant = {
+        [1] = "키리안",
+        [2] = "벤티르",
+        [3] = "나이트 페이",
+        [4] = "강령군주",
+    }
+	return covenant[covenantID]
+end
+
+function MDRgetDungeonCovenant(dungeon)
+    for k,v in pairs(dungeonCovenant) do
+		if covenantID==v then
+            return k
+        end
+    end
+end
+
+function MDRgetCovenantID(keyword)
+    for k,v in pairs(dungeonCovenant) do
+        if keyword==k then
+            return v
+        end
+    end
+	return 0
 end

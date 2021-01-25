@@ -36,16 +36,16 @@ end
 MDRconfig=MDRconfig or {}
 
 C_Timer.After(3, function()
-		C_MythicPlus.RequestMapInfo()
-		C_MythicPlus.RequestRewards()
-		LoadAddOn("Blizzard_WeeklyRewards")  
+        C_MythicPlus.RequestMapInfo()
+        C_MythicPlus.RequestRewards()
+        LoadAddOn("Blizzard_WeeklyRewards")  
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end
-		MDRconfig=MDRconfig or {}
-		if not MDRconfig.delay then
-			MDRconfig.delay=MDR.DefaultDelay
-		end
+        MDRconfig=MDRconfig or {}
+        if not MDRconfig.delay then
+            MDRconfig.delay=MDR.DefaultDelay
+        end
         tinsert(UISpecialFrames, "WeeklyRewardsFrame")
 end) 
 
@@ -325,7 +325,7 @@ function filterVALUES(VALUES)
     if (channel=="WHISPER_IN") and who==meGame then
         channel="print"
     end      
-        
+    
     --조절값 입력
     VALUES["channel"]=channel    
     
@@ -357,16 +357,24 @@ function filterVALUES(VALUES)
         for i=1,#callTypeT do 
             local type=0
             local word=keyword[callTypeB[i]]
-            local what
-            if callTypeT[i][1]=="class" then
+            local what,icon
+            if callTypeT[i][1]=="all" then                
+                icon="\124T525134:0:::-4\124t"
+                what=icon..MDRcolor(word,type)
+            elseif callTypeT[i][1]=="class" then
                 type=1
-                what=MDRcolor(word,type)
+                icon=MDR.classIcon[callTypeT[i][2]]
+                what=icon..MDRcolor(word,type)
+            elseif callTypeT[i][1]=="covenant" then                
+                icon=MDRgetCovenantIcon(callTypeT[i][2])
+                what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="dungeon" then                
                 word=getFullDungeonName(callTypeT[i][2])
+                icon=MDRgetCovenantIcon(callTypeT[i][2])
                 if except==1 then
-                    what=MDRcolor("회색",0,word)
+                    what=icon..MDRcolor("회색",0,word)
                 else
-                    what=MDRcolor("노랑",0,word)
+                    what=icon..MDRcolor("노랑",0,word)
                 end     
             elseif callTypeT[i][1]=="spec" then
                 type=10
@@ -688,7 +696,8 @@ function filterVALUES(VALUES)
             callType["newkey"] or 
             callType["currentall"] or 
             callType["currentdungeon"] or 
-            callType["charname"] )  then           
+            callType["charname"] or
+            callType["covenant"] ) then            
             
             findCharAllKey(VALUES)            
         elseif callType["parking"] then        
@@ -793,10 +802,10 @@ end
 
 --보유한 모든 돌 불러오기
 function GetHaveKeyCharInfo(type,level)
-
-	--돌 불러오기전에 새로고침 한번
-	MDRrefreshRunHistory()
-	
+    
+    --돌 불러오기전에 새로고침 한번
+    MDRrefreshRunHistory()
+    
     if type=="만렙만" then level=2
     elseif type=="soft" then level=level-5
     elseif level==nil then level=MDR["maxParking"] end  
@@ -811,8 +820,8 @@ function GetHaveKeyCharInfo(type,level)
     for k,v in pairs(t) do
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         if t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
-			local level=t[k].Level or t[k].level
-			local IL=t[k].IL or 0
+            local level=t[k].Level or t[k].level
+            local IL=t[k].IL or 0
             if t[k].MythicKey.link then
                 chars[num]={}
                 chars[num]["fullName"]=k
@@ -828,6 +837,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["equipLevel"]=t[k].ILe or 0                  
                 chars[num]["lastSeen"]=t[k].LastSeen or time() 
                 chars[num]["charLevel"]=t[k].Level or MDR.SCL                     
+                chars[num]["covenant"]=t[k].Covenant or ""
                 num=num+1                
             elseif (type~="쐐기돌보유자만" and (
                     (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
@@ -843,7 +853,8 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["equipLevel"]=t[k].ILe or 0                
                 chars[num]["charLevel"]=t[k].Level or 0                
                 chars[num]["keyLevel"]=0
-                chars[num]["lastSeen"]=t[k].LastSeen or time()                
+                chars[num]["lastSeen"]=t[k].LastSeen or time()
+                chars[num]["covenant"]=t[k].Covenant or ""                
                 num=num+1
             end
         end        
@@ -919,7 +930,7 @@ function findCharAllKey(VALUES)
         type="레벨제한없음"
     elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
         type="50렙이상만"
-    elseif callType["class"]  then
+    elseif callType["class"] or callType["covenant"] then
         type="만렙만"        
     else type="쐐기돌보유자만"
     end   
@@ -972,7 +983,7 @@ function findCharAllKey(VALUES)
     end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType["all"] or callType["levelrange"])  and 
+    if (callType["all"] or callType["covenant"] or callType["levelrange"])  and 
     (not callType["class"] and not callType["dungeon"] and onlyOnline~=1) and
     (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1
@@ -1017,7 +1028,12 @@ function findCharAllKey(VALUES)
     
     if  callType["class"] then
         chars=filterCharsByFilter(chars,"class",keyword["class"],nil)         
-    end    
+    end   
+    
+    --성약단으로 필터링
+    if callType["covenant"] then
+        chars=filterCharsByFilter(chars,"covenant",keyword["covenant"],nil)                 
+    end     
     
     --레벨을 지정한 경우 레벨로 한번더 필터링
     if level then 
@@ -1056,7 +1072,7 @@ end
 function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnline)
     if level==nil then level=99
     elseif level<2 then level=2 end
-
+    
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if onlyOnline==1 then 
         chars=filterCharsByFilter(chars,"name",nil,nil)
@@ -1248,7 +1264,9 @@ function filterCharsByFilter(chars,filter,f1,f2)
             if filter=="level" then                
                 target=chars[i]["keyLevel"]                  
             elseif filter=="class" then                
-                target=chars[i]["shortClass"]   
+                target=chars[i]["shortClass"]
+            elseif filter=="covenant" then                
+                target=chars[i]["covenant"]
             elseif filter=="dungeon" or filter=="except" then
                 target=getShortDungeonName(chars[i]["keyName"])                
             elseif filter=="name" then
