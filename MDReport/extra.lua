@@ -225,8 +225,9 @@ function MDRbackupMythicKey(type)
         local callTypeT={}
         C_Timer.After(1, function()  
                 callTypeT[1]=getCallTypeTable("무슨돌")
+				VALUES["who"]=meGame
                 VALUES["callTypeT"]=callTypeT        
-                VALUES["channel"]="ADDON_PARTY"        
+                VALUES["channel"]="PARTY"        
                 filterVALUES(VALUES)
         end)
     elseif type=="bagupdate" then        

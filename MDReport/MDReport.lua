@@ -303,7 +303,8 @@ function filterVALUES(VALUES)
         end        
     end
     
-    if channel=="PARTY" then
+	--파티고 무슨돌이 아니면
+    if channel=="PARTY" and not callType["newkey"] then
         if  who==meGame then
             MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)
             return
