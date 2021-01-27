@@ -301,6 +301,15 @@ function filterVALUES(VALUES)
         else --길드요청을 내가보낸게 아니면 리턴
             return
         end        
+    end
+    
+    if channel=="PARTY" then
+        if  who==meGame then
+            MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)
+            return
+        else 
+            return
+        end
     end    
     
     --버전요청을 한 사람이 나일 경우 리턴

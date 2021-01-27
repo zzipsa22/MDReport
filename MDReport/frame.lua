@@ -338,7 +338,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             
             filterVALUES(VALUES)
             MDR["who"]=who
-            if channel~="GUILD" then
+            if channel~="GUILD" and channel~="PARTY" then
                 MDR["running"]=1
             end            
             --일치하는 명령어가 없으면 리턴
