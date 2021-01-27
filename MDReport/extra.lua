@@ -743,6 +743,7 @@ function MDRrefreshRunHistory()
         MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
         MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
         MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
+        MDRconfig.Char[meAddon].runs=#runHistory
         
         --print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
     end       
@@ -1024,7 +1025,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     color1="전설"
                     color2="초록"
                     color3="노랑"
-                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:0|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
+                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
                 else
                     color1="사제"
                     color2="회색"  
@@ -1100,7 +1101,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                         rewards=strsub(rewards,1,-3)
                     end     
                     if rewards~="" then
-                        rewards=" [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:0|t보상: "..rewards.."]"
+                        rewards=" [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t보상: "..rewards.."]"
                     end                    
                     if #v.runHistory==0 then 
                         levels=MDRcolor("유물",0,"이번주 기록이 없습니다.")
@@ -1164,18 +1165,18 @@ function MDRgetCovenantIcon(covenantID)
 end
 
 function MDRgetCovenantName(covenantID)
-	local covenant = {
+    local covenant = {
         [1] = "키리안",
         [2] = "벤티르",
         [3] = "나이트 페이",
         [4] = "강령군주",
     }
-	return covenant[covenantID]
+    return covenant[covenantID]
 end
 
 function MDRgetDungeonCovenant(dungeon)
     for k,v in pairs(dungeonCovenant) do
-		if covenantID==v then
+        if covenantID==v then
             return k
         end
     end
@@ -1187,5 +1188,5 @@ function MDRgetCovenantID(keyword)
             return v
         end
     end
-	return 0
+    return 0
 end

@@ -365,6 +365,9 @@ function filterVALUES(VALUES)
                 type=1
                 icon=MDR.classIcon[callTypeT[i][2]]
                 what=icon..MDRcolor(word,type)
+            elseif callTypeT[i][1]=="parking" then
+                icon="|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t"
+                what=icon..MDRcolor(word,type)   
             elseif callTypeT[i][1]=="covenant" then                
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 what=icon..MDRcolor(word,type)
@@ -444,6 +447,9 @@ function filterVALUES(VALUES)
         if onlyOnline then
             now=", "..MDRcolor("핑크",0,"현재 접속중")
         end
+        local whoIcon="|TInterface\\FriendsFrame\\UI-Toast-ToastIcons.tga:16:16:0:-4:128:64:2:29:34:61|t"
+        local whoIcon2="|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:14:14:0:-4|t"
+        name=whoIcon..name
         
         cmdLines=cmdLines..now
         local CL=strsub(cmdLines,-5,-3)
@@ -462,7 +468,7 @@ function filterVALUES(VALUES)
                 message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] 정보입니다."..msg
             end
         elseif onlyYou then           
-            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
+            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
             
         elseif callType["affix"] then            
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg
@@ -831,6 +837,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["best"]=t[k].reward1 or 0                
                 chars[num]["best4"]=t[k].reward4 or 0
                 chars[num]["best10"]=t[k].reward10 or 0
+                chars[num]["runs"]=t[k].runs or 0
                 chars[num]["keyLevel"]=t[k].MythicKey.level 
                 chars[num]["keyName"]=t[k].MythicKey.name            
                 chars[num]["itemLevel"]=t[k].IL or 0

@@ -194,12 +194,12 @@ function MDRcolorizeForPrint(message)
             if strfind(message,target) then
                 message=gsub(message,target,MDRgetCovenantIcon(i))
             end            
-        end		
+        end        
         for k,v in pairs(color_class) do
             message=gsub(message,k,v)
         end        
-		message=gsub(message,"{c0}","")
-    end	
+        message=gsub(message,"{c0}","")
+    end    
     
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
@@ -227,19 +227,23 @@ function MDRcolorizeForPrint(message)
     local park1={}
     local park4={}
     local park10={}
+    local parkC={}
     local keyL={}
     local keyL2={}
+    local parkN={}
     
     local mL=40
     for i=1,mL do
         tinsert(park1,(mL-i).."/")
         tinsert(park4,"/"..(mL-i).."/")
         tinsert(park10,"/"..(mL-i))
+        tinsert(parkC,(mL-i)..",")        
+        tinsert(parkN,(mL-i).."회")        
         tinsert(keyL,(mL-i).."[")
         tinsert(keyL2,(mL-i).."]")        
     end
     message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ"))
-    for i=1,#park1 do
+    for i=1,mL do
         local c1="고급"        
         if i==(mL-0) then 
             c1="회색"
@@ -257,6 +261,8 @@ function MDRcolorizeForPrint(message)
         message=gsub(message,park4[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")).."/")
         message=gsub(message,park10[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")))       
         message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")      
+        message=gsub(message,parkC[i],MDRcolor(c1,0,gsub(parkC[i],",",""))..",")        
+        --message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
     end    
     
     --던전 색입히기
@@ -351,6 +357,7 @@ function doShortReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]
+            local runs=chars[i]["runs"]            
             local covenant=chars[i]["covenant"]
             local itemLevel=chars[i]["itemLevel"]            
             local equipLevel=chars[i]["equipLevel"]
@@ -376,7 +383,7 @@ function doShortReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""  
             if best and best ~=0 then 
                 if callType=="parking" then
-                    parkingstar=":"..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
+                    parkingstar=":"..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..(runs>0 and " : |cff00ccff"..runs.."회|r" or "")                   
                 else  
                     parkingstar=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 end                   
@@ -503,6 +510,7 @@ function doFullReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]            
+            local runs=chars[i]["runs"]            
             local covenant=chars[i]["covenant"]   
             local itemLevel=chars[i]["itemLevel"]
             local equipLevel=chars[i]["equipLevel"]
@@ -556,7 +564,7 @@ function doFullReport(chars,channel,who,callType)
             
             if best and best~=0 then
                 if isAddonMessage==1 then
-                    parking="("..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..")"
+                    parking="("..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..(runs>0 and " : |cff00ccff"..runs.."회|r" or "")..")"
                 else
                     parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                     parkingstar="▶"
