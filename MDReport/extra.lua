@@ -226,7 +226,7 @@ function MDRbackupMythicKey(type)
         C_Timer.After(1, function()  
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["callTypeT"]=callTypeT        
-                VALUES["channel"]="PARTY"        
+                VALUES["channel"]="ADDON_PARTY"        
                 filterVALUES(VALUES)
         end)
     elseif type=="bagupdate" then        
@@ -795,6 +795,7 @@ function MDRgetHistory(type)
             MDR.runHistory.finish=tempTable
             MDR.runHistory.onLoad=tempTable                
             k.runHistory=tempTable
+			k.runs=#tempTable
             MDRdoReportHistory(MDR.runHistory.finish,true,nil,nil,type)
         end
     elseif type=="vault" or type=="parking" then
