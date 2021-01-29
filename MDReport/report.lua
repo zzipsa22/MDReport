@@ -416,7 +416,6 @@ function doShortReport(chars,channel,who,callType)
             local message=""          
             local sameCheck
             
-            
             if callType=="parking" then                 
                 message="["..skull[class]..classStatus..parkingstar.."]"
             elseif callType=="all" then                
@@ -436,7 +435,9 @@ function doShortReport(chars,channel,who,callType)
                 else
                     message=skull[class]..havekey.."("..classStatus..")"
                 end
-            elseif callType["covenantall"] then
+            elseif callType["covenantnow"]  then
+                message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
+            elseif callType["covenantall"] then                
                 message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
             else
                 if isAddonMessage==1 then
@@ -453,7 +454,8 @@ function doShortReport(chars,channel,who,callType)
                 mNum=mNum+1
             end     
             
-        end        
+        end       
+        
         -- 한줄로 줄이기        
         local oneLineMessage={}
         local num=1

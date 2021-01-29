@@ -336,13 +336,13 @@ function filterVALUES(VALUES)
     end 
     
     local here,_=GetInstanceInfo()
-    --here="저편" 
+
     local coveHere=MDRgetCovenantID(getShortDungeonName(here))
+    
     local coveName=MDRgetCovenantName(coveHere)
     
     --모든 성약단 찾는 경우
     if callType["covenantall"] then
-        
         local covenant=C_Covenants.GetActiveCovenantID()
         local covenantIcon="{c"..covenant.."}"
         local messageLines={}        
@@ -354,10 +354,10 @@ function filterVALUES(VALUES)
             if coveHere>0 then
                 callTypeT={}
                 callTypeT[1]=getCallTypeTable(coveName)
+                callTypeT[1][1]="covenantnow"
                 
-                VALUES[""]=callTypeT
-                
-                callType["covenant"]=1                
+                VALUES["callTypeT"]=callTypeT
+                callType["covenantnow"]=1                
                 keyword["covenantall"]=coveName
                 type="일치하는 성약단"
             else
@@ -366,7 +366,7 @@ function filterVALUES(VALUES)
         end
     end   
     
-    if callType["covenant"] and coveHere>0 and (channel=="ADDON_PARTY" or channel=="PARTY") then
+    if (callType["covenant"] or callType["covenantnow"]) and coveHere>0 and (channel=="ADDON_PARTY" or channel=="PARTY") then
         onlyOnline=1 
     end    
     
@@ -413,7 +413,7 @@ function filterVALUES(VALUES)
             elseif callTypeT[i][1]=="parking" then
                 icon="|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t"
                 what=icon..MDRcolor(word,type)   
-            elseif callTypeT[i][1]=="covenant" then                
+            elseif callTypeT[i][1]=="covenant" or callTypeT[i][1]=="covenantnow" then                
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="dungeon" then                
@@ -490,8 +490,9 @@ function filterVALUES(VALUES)
         
         local now=""
         if onlyOnline then
-            if callType["covenant"]  then
-                if coveHere>0 then
+            if callType["covenantnow"] then
+                if coveHere>0 and (channel=="ADDON_PARTY" or channel=="PARTY" ) then
+                    
                     now=MDRcolor("노랑",0,getShortDungeonName(here)).." : "
                 else
                     now=MDRcolor("핑크",0,"현재 접속중인 ")
@@ -760,6 +761,7 @@ function filterVALUES(VALUES)
             callType["currentdungeon"] or 
             callType["charname"] or
             callType["covenantall"] or
+            callType["covenantnow"] or
             callType["covenant"] ) then            
             
             findCharAllKey(VALUES)            
@@ -996,7 +998,7 @@ function findCharAllKey(VALUES)
         type="50렙이상만"
     elseif callType["class"] then
         type="만렙만"
-    elseif callType["covenant"] or callType["covenantall"] then
+    elseif callType["covenant"] or callType["covenantall"] or callType["covenantnow"] then
         type="성약단"    
     else type="쐐기돌보유자만"
     end   
@@ -1049,7 +1051,7 @@ function findCharAllKey(VALUES)
     end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType["all"] or callType["covenant"] or callType["covenantall"] or callType["levelrange"])  and 
+    if (callType["all"] or callType["covenant"] or callType["covenantall"] or  callType["covenantnow"] or callType["levelrange"])  and 
     (not callType["class"] and not callType["dungeon"] ) and
     (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1
@@ -1097,8 +1099,8 @@ function findCharAllKey(VALUES)
     end   
     
     --성약단으로 필터링
-    if callType["covenant"] then
-        chars=filterCharsByFilter(chars,"covenant",keyword["covenant"],nil)                 
+    if callType["covenant"] or callType["covenantnow"] then
+        chars=filterCharsByFilter(chars,"covenant",keyword["covenant"] or keyword["covenantnow"],nil)                 
     end     
     
     --레벨을 지정한 경우 레벨로 한번더 필터링
