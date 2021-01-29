@@ -104,39 +104,11 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             else
                 return 
             end            
-        end
-        
-        --말머리로 추정되면 삭제
-        local filters={
-            "★","☆","♥","♡",
-            "[]]",">",")",":"         
-        }
-        
-        for i=1,#filters do
-            if strfind(msg,filters[i]) and event ~= "CHAT_MSG_ADDON"then
-                local f,l=strfind(msg,filters[i])
-                msg=strsub(msg,l+1,-1)                
-            end            
-        end 
-        
-        local headerRemoved=0
-        
-        --!로시작하지않고 끝자리가 !가 아니면        
+        end        
+
         if strsub(msg, 0,1)~="!" then 
-            --[[            if  strfind(msg,"!") and strsub(msg, -1)~="!" then
-                --특수문자가 없는 말머리 제거
-                local header=MDRsplit(msg,"!")[1]
-                if not strfind(header,"?") then
-                    local length=strlen(header)
-                    msg=strsub(msg,length+1,-1)
-                    headerRemoved=1
-                end
-                
-            else                   
-            return end 
-							]]
 			return 
-        end--!가 없으면 리턴
+        end--!로 시작하지 않으면 리턴
         
         local channel
         
@@ -307,15 +279,10 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                     end                    
                 end            
             end            
-        end        
-        if headerRemoved==1 and #k==1 and not getCallTypeTable(k[1])then return end
-        --[[
-        if callTypeT[1] and k[2]~="" and k[2]~="?" and not getCallTypeTable(k[2]) then        
-            onlyYou=k[2] 
-        elseif callTypeT[1] and k[1]~="" and k[1]~="?" and not getCallTypeTable(k[1]) then            
-            onlyYou=k[1]            
-        end      
-        ]]
+        end
+        
+        --if headerRemoved==1 and #k==1 and not getCallTypeTable(k[1])then return end
+
         --작은수가 먼저오게 조절
         if level1 and level2 then
             if level2<level1 then
