@@ -264,7 +264,6 @@ function filterVALUES(VALUES)
         return end  --검색어가 짧으면 무시 
     end
     
-    
     --[[
     if  onlyYou  then        
         print("찾는사람:"..onlyYou)
@@ -303,7 +302,7 @@ function filterVALUES(VALUES)
         end        
     end
     
-	--파티고 무슨돌이 아니면
+    --파티고 무슨돌이 아니면
     if channel=="PARTY" and not callType["newkey"] then
         if  who==meGame then
             MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)
@@ -334,10 +333,46 @@ function filterVALUES(VALUES)
     --나에게서 귓말이 들어오는 경우 프린트로 변경
     if (channel=="WHISPER_IN") and who==meGame then
         channel="print"
-    end      
+    end 
+    
+    local here,_=GetInstanceInfo()
+    --here="저편" 
+    local coveHere=MDRgetCovenantID(getShortDungeonName(here))
+    local coveName=MDRgetCovenantName(coveHere)
+    
+    --모든 성약단 찾는 경우
+    if callType["covenantall"] then
+        
+        local covenant=C_Covenants.GetActiveCovenantID()
+        local covenantIcon="{c"..covenant.."}"
+        local messageLines={}        
+        
+        local type
+        if channel=="ADDON_GUILD" or channel=="ADDON_OFFICER" or channel=="GUILD" then
+            type="모든 성약단"
+        elseif channel=="ADDON_PARTY" or channel=="PARTY" then
+            if coveHere>0 then
+                callTypeT={}
+                callTypeT[1]=getCallTypeTable(coveName)
+                
+                VALUES[""]=callTypeT
+                
+                callType["covenant"]=1                
+                keyword["covenantall"]=coveName
+                type="일치하는 성약단"
+            else
+                onlyOnline=1
+            end            
+        end
+    end   
+    
+    if callType["covenant"] and coveHere>0 and (channel=="ADDON_PARTY" or channel=="PARTY") then
+        onlyOnline=1 
+    end    
     
     --조절값 입력
     VALUES["channel"]=channel    
+    VALUES["onlyOnline"]=onlyOnline
     
     if channel=="ADDON_PARTY" or channel=="ADDON_GUILD"  or channel=="ADDON_WHISPER" or channel=="ADDON_OFFICER" then       
         local mdrcolor={
@@ -455,13 +490,24 @@ function filterVALUES(VALUES)
         
         local now=""
         if onlyOnline then
-            now=", "..MDRcolor("핑크",0,"현재 접속중")
+            if callType["covenant"]  then
+                if coveHere>0 then
+                    now=MDRcolor("노랑",0,getShortDungeonName(here)).." : "
+                else
+                    now=MDRcolor("핑크",0,"현재 접속중인 ")
+                end
+                
+                cmdLines=now..cmdLines
+            else
+                now=", "..MDRcolor("핑크",0,"현재 접속중")  
+                cmdLines=cmdLines..now
+            end            
         end
         local whoIcon="|TInterface\\FriendsFrame\\UI-Toast-ToastIcons.tga:16:16:0:-4:128:64:2:29:34:61|t"
         local whoIcon2="|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:14:14:0:-4|t"
         name=whoIcon..name
         
-        cmdLines=cmdLines..now
+        
         local CL=strsub(cmdLines,-5,-3)
         local eul=MDRko(CL,"을")         
         
@@ -496,7 +542,7 @@ function filterVALUES(VALUES)
             print(mdrcolor[channel]..message)
         end
         
-    end   
+    end  
     
     --지정한 사람이 내가 아니면 리턴
     if onlyYou and not checkCallMe(onlyYou) then 
@@ -713,6 +759,7 @@ function filterVALUES(VALUES)
             callType["currentall"] or 
             callType["currentdungeon"] or 
             callType["charname"] or
+            callType["covenantall"] or
             callType["covenant"] ) then            
             
             findCharAllKey(VALUES)            
@@ -838,43 +885,43 @@ function GetHaveKeyCharInfo(type,level)
         if t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
             local level=t[k].Level or t[k].level
             local IL=t[k].IL or 0
-            if t[k].MythicKey.link then
+            local thisCharIncluded=0
+            if type=="성약단" then --만렙이면서 성약단으을 선택한 경우만 포함
+                if t[k].Covenant and t[k].Covenant~="" and level==MDR["SCL"] then
+                    thisCharIncluded=1
+                end                            
+            else                
+                if t[k].MythicKey.link then
+                    thisCharIncluded=1            
+                elseif (type~="쐐기돌보유자만" and (
+                        (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
+                        (type=="레벨제한없음" and level<=MDR["SCL"]) or 
+                        (type=="50렙이상만" and level>=50)
+                )) then                           
+                    --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
+                    thisCharIncluded=1
+                end
+            end 
+            if  thisCharIncluded==1 then
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
-                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)
-                chars[num]["keyLink"]=t[k].MythicKey.link
+                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)                
                 chars[num]["best"]=t[k].reward1 or 0                
                 chars[num]["best4"]=t[k].reward4 or 0
                 chars[num]["best10"]=t[k].reward10 or 0
                 chars[num]["runs"]=t[k].runs or 0
-                chars[num]["keyLevel"]=t[k].MythicKey.level 
-                chars[num]["keyName"]=t[k].MythicKey.name            
+                chars[num]["keyLink"]=t[k].MythicKey.link            
+                chars[num]["keyLevel"]=t[k].MythicKey.level or 0
+                chars[num]["keyName"]=t[k].MythicKey.name                
                 chars[num]["itemLevel"]=t[k].IL or 0
                 chars[num]["equipLevel"]=t[k].ILe or 0                  
                 chars[num]["lastSeen"]=t[k].LastSeen or time() 
                 chars[num]["charLevel"]=t[k].Level or MDR.SCL                     
                 chars[num]["covenant"]=t[k].Covenant or ""
-                num=num+1                
-            elseif (type~="쐐기돌보유자만" and (
-                    (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
-                    (type=="레벨제한없음" and level<=MDR["SCL"]) or 
-                    (type=="50렙이상만" and level>=50)
-            )) then                           
-                --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
-                chars[num]={}
-                chars[num]["fullName"]=k
-                chars[num]["cutName"]=gsub(k, "%s%-.+","")                
-                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)              
-                chars[num]["itemLevel"]=t[k].IL or 0
-                chars[num]["equipLevel"]=t[k].ILe or 0                
-                chars[num]["charLevel"]=t[k].Level or 0                
-                chars[num]["keyLevel"]=0
-                chars[num]["lastSeen"]=t[k].LastSeen or time()
-                chars[num]["covenant"]=t[k].Covenant or ""                
-                num=num+1
-            end
-        end        
+                num=num+1   
+            end            
+        end              
     end
     local newChars={}
     local newChars2={}
@@ -947,8 +994,10 @@ function findCharAllKey(VALUES)
         type="레벨제한없음"
     elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
         type="50렙이상만"
-    elseif callType["class"] or callType["covenant"] then
-        type="만렙만"        
+    elseif callType["class"] then
+        type="만렙만"
+    elseif callType["covenant"] or callType["covenantall"] then
+        type="성약단"    
     else type="쐐기돌보유자만"
     end   
     local chars=GetHaveKeyCharInfo(type)    
@@ -1000,8 +1049,8 @@ function findCharAllKey(VALUES)
     end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType["all"] or callType["covenant"] or callType["levelrange"])  and 
-    (not callType["class"] and not callType["dungeon"] and onlyOnline~=1) and
+    if (callType["all"] or callType["covenant"] or callType["covenantall"] or callType["levelrange"])  and 
+    (not callType["class"] and not callType["dungeon"] ) and
     (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1
     end 
@@ -1093,6 +1142,18 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnlin
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if onlyOnline==1 then 
         chars=filterCharsByFilter(chars,"name",nil,nil)
+    else
+        local newChars={}
+        local newChars2={}
+        local charsNum=1
+        for i=1,#chars do
+            newChars[chars[i]]=(chars[i]["best"] or 0)*100+(chars[i]["runs"] or 0)    
+        end    
+        for k,v in MDRspairs(newChars, function(t,a,b) return t[b] < t[a] end) do
+            newChars2[charsNum]=k
+            charsNum=charsNum+1
+        end
+        chars=newChars2
     end
     if channel==nil then channel="print" end   
     

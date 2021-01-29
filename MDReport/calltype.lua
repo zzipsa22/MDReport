@@ -11,7 +11,11 @@ local callTypeTable={
     ["새돌"]={"newkey", "새 돌"},
     
     ["누구돌"]={"currentdungeon", "석주"},
-    ["석주"]={"currentdungeon", "석주"},    
+    ["석주"]={"currentdungeon", "석주"}, 
+    
+    ["단주"]={"covenantall", "모든 성약단"}, 
+    ["성약"]={"covenantall", "모든 성약단"}, 
+    ["성약단"]={"covenantall", "모든 성약단"},     
     
     ["현재돌"]={"currentall", "지금 소유한 돌"},
     ["돌내놔"]={"currentall", "지금 소유한 돌"},   
@@ -280,19 +284,20 @@ local callTypeTable={
     ["핏심"]={"dungeon", "핏심"},
     ["심연"]={"dungeon", "핏심"},
     ["핏빛"]={"dungeon", "핏심"},    
-	
-	["나이트페이"]={"covenant", "나이트 페이"},   
-	["나페"]={"covenant", "나이트 페이"},  
-	["페이"]={"covenant", "나이트 페이"},  
-	
-	["강령"]={"covenant", "강령군주"},   
-	["강령군주"]={"covenant", "강령군주"},   
-	
-	["벤티르"]={"covenant", "벤티르"},   
-	["밴티르"]={"covenant", "벤티르"},   
-	
-	["키리안"]={"covenant", "키리안"},   
-	["키리얀"]={"covenant", "키리안"},   
+    
+    ["나이트페이"]={"covenant", "나이트 페이"},   
+    ["나이트 페이"]={"covenant", "나이트 페이"},    
+    ["나페"]={"covenant", "나이트 페이"},  
+    ["페이"]={"covenant", "나이트 페이"},  
+    
+    ["강령"]={"covenant", "강령군주"},   
+    ["강령군주"]={"covenant", "강령군주"},   
+    
+    ["벤티르"]={"covenant", "벤티르"},   
+    ["밴티르"]={"covenant", "벤티르"},   
+    
+    ["키리안"]={"covenant", "키리안"},   
+    ["키리얀"]={"covenant", "키리안"},   
     
     ["MDReport_VC"]={"forceversion", "버전보고"},
     ["버전"]={"forceversion", "버전보고"},

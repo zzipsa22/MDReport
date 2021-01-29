@@ -225,7 +225,7 @@ function MDRbackupMythicKey(type)
         local callTypeT={}
         C_Timer.After(1, function()  
                 callTypeT[1]=getCallTypeTable("무슨돌")
-				VALUES["who"]=meGame
+                VALUES["who"]=meGame
                 VALUES["callTypeT"]=callTypeT        
                 VALUES["channel"]="PARTY"        
                 filterVALUES(VALUES)
@@ -723,31 +723,34 @@ function MDRrefreshRunHistory()
     
     local runHistory=C_MythicPlus.GetRunHistory(false, true);
     
-    if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish > #runHistory ) or MDR.itsOKtoRefresh~=1 then
-        return
-    else
-        if (MDR.runHistory and MDR.runHistory.finish and #MDR.runHistory.finish == #runHistory ) then
+    if MDR.itsOKtoRefresh~=1 then return end
+    
+    if MDR.runHistory and MDR.runHistory.finish then
+        if #MDR.runHistory.finish > #runHistory then
+            runHistory=MDR.runHistory.finish
+        elseif #MDR.runHistory.finish == #runHistory then
             MDRclearHistory()
+        end    
+    end
+    
+    MDRconfig.Char[meAddon].runHistory=runHistory    
+    
+    local comparison = function(entry1, entry2)
+        if ( entry1.level == entry2.level ) then
+            return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
+        else
+            return entry1.level > entry2.level;
         end
-        
-        MDRconfig.Char[meAddon].runHistory=runHistory    
-        
-        local comparison = function(entry1, entry2)
-            if ( entry1.level == entry2.level ) then
-                return entry1.mapChallengeModeID < entry2.mapChallengeModeID;
-            else
-                return entry1.level > entry2.level;
-            end
-        end
-        table.sort(runHistory, comparison)
-        
-        MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
-        MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
-        MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
-        MDRconfig.Char[meAddon].runs=#runHistory
-        
-        --print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
-    end       
+    end
+    table.sort(runHistory, comparison)
+    
+    MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
+    MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
+    MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
+    MDRconfig.Char[meAddon].runs=#runHistory
+    
+    --print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
+    
 end
 
 function MDRclearHistory()
@@ -796,7 +799,7 @@ function MDRgetHistory(type)
             MDR.runHistory.finish=tempTable
             MDR.runHistory.onLoad=tempTable                
             k.runHistory=tempTable
-			k.runs=#tempTable
+            k.runs=#tempTable
             MDRdoReportHistory(MDR.runHistory.finish,true,nil,nil,type)
         end
     elseif type=="vault" or type=="parking" then

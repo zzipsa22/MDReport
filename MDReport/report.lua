@@ -145,7 +145,7 @@ function MDRcolorizeForPrint(message)
     for i=1,#classNames do
         local c=classNames[i]
         icon_class[skull[c]..c]=classIcon[c].."|cff"..classColor[c]..c
-        icon[skull[c]..c]=classIcon[c]    
+        icon["{"..c.."}"]=classIcon[c]    
         icon_colon[skull[c]..c..":"]=classIcon[c].."|cff"..classColor[c]..":|r"  
         icon_color[skull[c]..c]=classIcon[c].."|cff"..classColor[c]
         icon_class_arrow[skull[c]..c.."▶%["]=" ["..classIcon[c].."|cff"..classColor[c]..":|r"
@@ -185,7 +185,12 @@ function MDRcolorizeForPrint(message)
         end
         if strfind(message,"쐐기돌") then            
         end        
-    end    
+    end   
+    --직업 아이콘 반환
+    
+    for k,v in pairs(icon) do
+        message=gsub(message,k,v) 
+    end
     
     --성약단
     if strfind(message,"{c") then
@@ -359,6 +364,7 @@ function doShortReport(chars,channel,who,callType)
             local best10=chars[i]["best10"]
             local runs=chars[i]["runs"]            
             local covenant=chars[i]["covenant"]
+            local covenantID=MDRgetCovenantID(covenant)
             local itemLevel=chars[i]["itemLevel"]            
             local equipLevel=chars[i]["equipLevel"]
             local online=""
@@ -426,10 +432,12 @@ function doShortReport(chars,channel,who,callType)
                 end
             elseif callType["covenant"] then
                 if isAddonMessage==1 then
-                    message="[{c"..MDRgetCovenantID(covenant).."}"..classStatus..":"..havekey.."]" 
+                    message="[{c"..covenantID.."}"..classStatus..":"..havekey.."]" 
                 else
                     message=skull[class]..havekey.."("..classStatus..")"
-                end           
+                end
+            elseif callType["covenantall"] then
+                message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
             else
                 if isAddonMessage==1 then
                     message=skull[class]..classStatus.."▶["..havekey.."]"                         
