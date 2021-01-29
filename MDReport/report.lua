@@ -519,7 +519,8 @@ function doFullReport(chars,channel,who,callType)
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]            
             local runs=chars[i]["runs"]            
-            local covenant=chars[i]["covenant"]   
+            local covenant=chars[i]["covenant"] 
+            local covenantID=MDRgetCovenantID(covenant)            
             local itemLevel=chars[i]["itemLevel"]
             local equipLevel=chars[i]["equipLevel"]
             local charLevel=chars[i]["charLevel"]
@@ -633,6 +634,8 @@ function doFullReport(chars,channel,who,callType)
             elseif callType and callType["currentdungeon"] then  
                 local now=" (준비중)"                
                 message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
+            elseif callType["covenantall"] then
+                message=headStar..classStatus.." ▶{c"..covenantID.."}"..MDRcolor(covenant)
             else                
                 message=covenantIcon..headStar..classStatus.." ▶ "..dungeonIcon..havekey..online
             end           
