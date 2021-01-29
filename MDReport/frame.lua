@@ -123,17 +123,19 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         
         --!로시작하지않고 끝자리가 !가 아니면        
         if strsub(msg, 0,1)~="!" then 
-            
-            if  strfind(msg,"!") and strsub(msg, -1)~="!" then
+            --[[            if  strfind(msg,"!") and strsub(msg, -1)~="!" then
                 --특수문자가 없는 말머리 제거
                 local header=MDRsplit(msg,"!")[1]
                 if not strfind(header,"?") then
                     local length=strlen(header)
                     msg=strsub(msg,length+1,-1)
                     headerRemoved=1
-                end                
+                end
+                
             else                   
             return end 
+							]]
+			return 
         end--!가 없으면 리턴
         
         local channel
