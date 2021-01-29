@@ -336,7 +336,7 @@ function filterVALUES(VALUES)
     end 
     
     local here,_=GetInstanceInfo()
-
+    
     local coveHere=MDRgetCovenantID(getShortDungeonName(here))
     
     local coveName=MDRgetCovenantName(coveHere)
