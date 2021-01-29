@@ -8,7 +8,7 @@ local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
-C_Timer.After(10, function()        
+C_Timer.After(1, function()        
         local x = GetLocale()
         if x ~= "koKR" then -- XXX temp, Options/Locales needs updated
             print("▶|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
@@ -619,12 +619,10 @@ function MDRCommands(msg, editbox)
             
         elseif args=="?"  or args=="주사위" then      
             messageLines[#messageLines+1]="▶"..MDRcolor("하늘",0,"'?'").."뒤에 '!'와 주사위 굴릴 항목들을 2개 이상 입력하면 |cFF33FF99MDReport|r 에서 자동으로 주사위를 굴려주고 결과 또한 채팅으로 알려줍니다. "
-            messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 내용을 입력하면 주사위의 제목으로 인식합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 만 단독으로 "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."
-            --messageLines[#messageLines+1]="▷ "..MDRcolor("빨강",0,"중요!").." 말머리 애드온을 사용중인 경우 "..MDRcolor("하늘",0,"'?'").."앞에도 "..MDRcolor("빨강",0,"'!'").."을 붙여 말머리 내용과 구분해주어야 정확히 인식됩니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("빨강",0,"!")..MDRcolor("하늘",0,"뭘키울까?!기사!악사!전사")
-            --messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."가 직관적이지 않다면, "..MDRcolor("하늘",0,"!주사위").."를 사용해도 됩니다. 다만 이 경우엔 주사위의 제목을 설정할 수는 없습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"주사위!군단!드군!판다!격아")
+            messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 내용을 입력하면 주사위의 제목으로 인식합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 만 단독으로 "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."            
             
         elseif args=="성약"  or args=="성약단" then   
-            messageLines[#messageLines+1]="▶"..MDRcolor("성약단").."을 요청하면 상황에 맞게 "..MDRcolor("성약단",0,"성약단 정보").."를 출력해줍니다. "..MDRcolor("길드",0,"길드채널").."의 경우 "..MDRcolor("전사",0,"모든 만렙 캐릭터").."의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("파티",0,"파티채널").."의 경우 현재 "..MDRcolor("파티",0,"파티중").."인 캐릭터의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("파티",0,"파티중").."이면서 "..MDRcolor("노랑",0,"던전 내").."에서 요청하는 경우엔 현재 캐릭터가 "..MDRcolor("노랑",0,"해당던전")..MDRcolor("성약단",0,"에 필요한 성약단의 구성원일 경우").."에만 정보를 출력합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("성약")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("성약단") 
+            messageLines[#messageLines+1]="▶"..MDRcolor("성약단",0,"'성약단'").." 을 요청하면 상황에 맞게 "..MDRcolor("성약단",0,"성약단 정보").."를 출력해줍니다. ① "..MDRcolor("길드",0,"길드채널").."의 경우 "..MDRcolor("전사",0,"모든 만렙 캐릭터").."의 "..MDRcolor("성약단").." 정보를, ② "..MDRcolor("파티",0,"파티채널").."의 경우 현재 "..MDRcolor("파티",0,"파티중").."인 캐릭터의 "..MDRcolor("성약단").." 정보를, ③ "..MDRcolor("파티",0,"파티중").."이면서 "..MDRcolor("노랑",0,"던전 내").."에서 요청하는 경우엔 현재 캐릭터가 "..MDRcolor("노랑",0,"해당던전")..MDRcolor("성약단",0,"에 필요한 성약단의 구성원일 경우").."에만 정보를 출력합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("성약")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("성약단") 
             
             messageLines[#messageLines+1]="▷"..MDRgetCovenantIcon(3)..MDRcolor("나이트 페이")..", "..MDRgetCovenantIcon(1)..MDRcolor("키리안")..", "..MDRgetCovenantIcon(2)..MDRcolor("벤티르")..", "..MDRgetCovenantIcon(4)..MDRcolor("강령군주").." 등의 개별 성약단 이름으로도 검색할 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("벤티르")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("나이트 페이",0,"나페")
         else
@@ -632,7 +630,7 @@ function MDRCommands(msg, editbox)
         end        
         if args and args~="" and args~="도움말"then
             messageLines[#messageLines+1]="▷기타 명령어: |cffffff00/! @ |r"..cmdList
-            --messageLines[#messageLines+1]="▷항목별 도움말: |cffffff00/쐐|r |cffC79C6E명령어|r 입력 |cFF33FF99ex)|r |cffffff00/쐐|r |cffC79C6E돌|r"
+            
         end    
     else
         if strfind(strsub(msg,1,1),"!") then
@@ -641,7 +639,6 @@ function MDRCommands(msg, editbox)
         MDRsendAddonMessage("!"..msg,"GUILD",meGame)        
         return           
     end    
-    --messageLines[#messageLines+1]=" "
     reportMessageLines(messageLines,"print","","help")
 end
 
