@@ -1050,6 +1050,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
             for i = 1, #runHistory do
                 local runInfo = runHistory[i];
                 local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
+                local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name)))
                 local timed=runInfo.completed                
                 if timed==true then
                     timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:-4|t"
@@ -1078,7 +1079,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     if runInfo.level<10 then 
                         space="  "
                     end
-                    message="  "..timed..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
+                    message="  "..timed..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..coveIcon..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
                     messageLines[#messageLines+1]=message
                 end          
             end
