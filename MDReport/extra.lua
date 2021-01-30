@@ -8,7 +8,7 @@ local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
-C_Timer.After(1, function()        
+C_Timer.After(10, function()        
         local x = GetLocale()
         if x ~= "koKR" then -- XXX temp, Options/Locales needs updated
             print("▶|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
@@ -817,7 +817,7 @@ function MDRgetHistory(type)
         end  
         local tempL,_=C_ChallengeMode.GetActiveKeystoneInfo()
         local t={}
-        t.completed=true
+        t.completed="now"
         t.mapChallengeModeID=MDR.myMythicKey.start.currentMapID
         t.level=MDR.myMythicKey.start.currentLevel
         t.thisWeek=true
@@ -1050,6 +1050,14 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
             for i = 1, #runHistory do
                 local runInfo = runHistory[i];
                 local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
+                local timed=runInfo.completed                
+                if timed==true then
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:-4|t"
+                elseif timed=="now" then                    
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:14:14:0:-4|t"                   
+                else
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:14:14:0:-4|t"
+                end
                 
                 local color1,color2,color3,tip,reward,level
                 if i==1 or i==4 or i==10 then
@@ -1070,7 +1078,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     if runInfo.level<10 then 
                         space="  "
                     end
-                    message="    "..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
+                    message="  "..timed..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
                     messageLines[#messageLines+1]=message
                 end          
             end

@@ -237,6 +237,8 @@ function getShortDungeonName(dungeon)
         local c1=strsub(t[1],1,3)
         local c2=strsub(t[2],1,3)
         string=c1..c2
+    elseif strlen(dungeon)<=9 then
+        string=dungeon
     else
         string=strsub(dungeon,1,6)
     end       

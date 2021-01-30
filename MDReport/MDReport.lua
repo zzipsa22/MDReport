@@ -555,7 +555,10 @@ function filterVALUES(VALUES)
         return
     end    
     
-    if #callTypeB>1 and not callType["all"] and not callType["parking"] and (callType["item"] or callType["trinket"] or callType["stat"] or callType["spec"] or callType["class"] or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면         
+    if #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] and (callType["item"] or callType["trinket"] or callType["stat"] 
+        --or callType["spec"] 
+        --or callType["class"] 
+        or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면         
         
         --무기 사용 가능 여부 체크
         if ((callType["spec"] or callType["class"])  and callType["specificitem"]) then 
@@ -1051,9 +1054,9 @@ function findCharAllKey(VALUES)
     end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType["all"] or callType["covenant"] or callType["covenantall"] or  callType["covenantnow"] or callType["levelrange"])  and 
-    (not callType["class"] and not callType["dungeon"] ) and
-    (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
+    if (callType["all"] or callType["covenant"] or callType["covenantall"] or  callType["covenantnow"] or callType["levelrange"])  
+    --and (not callType["class"] and not callType["dungeon"] ) 
+    and (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1
     end 
     if callType["currentall"] then

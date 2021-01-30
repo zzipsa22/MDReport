@@ -232,7 +232,7 @@ function MDRcolorizeForPrint(message)
     local park1={}
     local park4={}
     local park10={}
-    local parkC={}
+    --local parkC={}
     local keyL={}
     local keyL2={}
     local parkN={}
@@ -242,7 +242,7 @@ function MDRcolorizeForPrint(message)
         tinsert(park1,(mL-i).."/")
         tinsert(park4,"/"..(mL-i).."/")
         tinsert(park10,"/"..(mL-i))
-        tinsert(parkC,(mL-i)..",")        
+        --tinsert(parkC,(mL-i)..",")        
         tinsert(parkN,(mL-i).."회")        
         tinsert(keyL,(mL-i).."[")
         tinsert(keyL2,(mL-i).."]")        
@@ -266,7 +266,7 @@ function MDRcolorizeForPrint(message)
         message=gsub(message,park4[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")).."/")
         message=gsub(message,park10[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")))       
         message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")      
-        message=gsub(message,parkC[i],MDRcolor(c1,0,gsub(parkC[i],",",""))..",")        
+        --message=gsub(message,parkC[i],MDRcolor(c1,0,gsub(parkC[i],",",""))..",")        
         --message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
     end    
     
@@ -437,8 +437,14 @@ function doShortReport(chars,channel,who,callType)
                 end
             elseif callType["covenantnow"]  then
                 message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
-            elseif callType["covenantall"] then                
-                message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
+            elseif callType["covenantall"] then
+                local coveName
+                if channel=="ADDON_GUILD" or channel=="GUILD" then
+                    coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
+                else
+                    coveName=MDRcolor(covenant)
+                end                
+                message="[{"..classStatus.."}:{c"..covenantID.."}"..coveName.."]"
             else
                 if isAddonMessage==1 then
                     message=skull[class]..classStatus.."▶["..havekey.."]"                         
