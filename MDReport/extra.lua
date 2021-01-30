@@ -1053,11 +1053,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                 local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name)))
                 local timed=runInfo.completed                
                 if timed==true then
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:-4|t"
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:-5|t"
                 elseif timed=="now" then                    
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:14:14:0:-4|t"                   
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:14:14:0:-5|t"                   
                 else
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:14:14:0:-4|t"
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:14:14:0:-5|t"
                 end
                 
                 local color1,color2,color3,tip,reward,level
