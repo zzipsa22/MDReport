@@ -409,7 +409,7 @@ function filterVALUES(VALUES)
             elseif callTypeT[i][1]=="emote" then              
                 if word=="얼라이언스를위하여" then
                     icon="|TInterface\\TargetingFrame\\UI-PVP-ALLIANCE:19:16:-4:-4:64:64:0:32:0:38|t"
-                    what="외칩니다 : "..icon..MDRcolor("길드",0,"<얼 라 이 언 스>").."를 위하여!"
+                    what="외칩니다 : "..icon..MDRcolor("초록",0,"<얼 라 이 언 스>").."를 위하여!"
                 else
                     what="감정표현입니다 : "..MDRcolor(word,type) 
                 end                  
