@@ -406,6 +406,13 @@ function filterVALUES(VALUES)
             if callTypeT[i][1]=="all" then                
                 icon="\124T525134:0:::-4\124t"
                 what=icon..MDRcolor(word,type)
+            elseif callTypeT[i][1]=="emote" then              
+                if word=="얼라이언스를위하여" then
+                    icon="|TInterface\\TargetingFrame\\UI-PVP-ALLIANCE:19:16:-4:-4:64:64:0:32:0:38|t"
+                    what="외칩니다 : "..icon..MDRcolor("길드",0,"<얼 라 이 언 스>").."를 위하여!"
+                else
+                    what="감정표현입니다 : "..MDRcolor(word,type) 
+                end                  
             elseif callTypeT[i][1]=="class" then
                 type=1
                 icon=MDR.classIcon[callTypeT[i][2]]
@@ -529,6 +536,9 @@ function filterVALUES(VALUES)
             
         elseif callType["affix"] then            
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg
+            
+        elseif callType["emote"] then 
+            message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
         elseif callType["parking"] then            
             
@@ -768,6 +778,8 @@ function filterVALUES(VALUES)
             callType["covenant"] ) then            
             
             findCharAllKey(VALUES)            
+        elseif callType["emote"] then        
+            MDRdoEmote(channel,who,keyword["emote"])
         elseif callType["parking"] then        
             findCharNeedParking(channel,who,"parking",keyword["parking"],level,onlyMe,onlyOnline)             
         elseif callType["spell"] and #callTypeB==1 then        
@@ -1054,7 +1066,7 @@ function findCharAllKey(VALUES)
     end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType["all"] or callType["covenant"] or callType["covenantall"] or  callType["covenantnow"] or callType["levelrange"])  
+    if (callType["all"] or callType["currentall"] or callType["covenant"] or callType["covenantall"] or  callType["covenantnow"] or callType["levelrange"])  
     --and (not callType["class"] and not callType["dungeon"] ) 
     and (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
         forceToShort=1

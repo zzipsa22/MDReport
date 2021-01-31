@@ -1232,3 +1232,18 @@ function MDRgetCovenantID(keyword)
     end
     return 0
 end
+
+function MDRdoEmote(channel,who,keyword)
+    local emote={
+        ["얼라이언스를위하여"]="forthealliance",
+    }    
+    local delay=0
+    if who~=meGame then        
+        delay=2
+    end
+    if emote[keyword] then
+        C_Timer.After(delay, function()
+                DoEmote(emote[keyword])
+        end)          
+    end    
+end

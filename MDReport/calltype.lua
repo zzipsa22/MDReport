@@ -20,6 +20,7 @@ local callTypeTable={
     ["현재돌"]={"currentall", "지금 소유한 돌"},
     ["돌내놔"]={"currentall", "지금 소유한 돌"},   
     
+    
     ["주차"]={"parking", "주차 못한 캐릭터"},
     ["단주차"]={"parking", "주차 못한 캐릭터"},
     ["합법"]={"parking", "주차 못한 캐릭터"},
@@ -298,6 +299,8 @@ local callTypeTable={
     
     ["키리안"]={"covenant", "키리안"},   
     ["키리얀"]={"covenant", "키리안"},   
+    
+    ["얼라이언스를위하여"]={"emote","얼라이언스를위하여"},
     
     ["MDReport_VC"]={"forceversion", "버전보고"},
     ["버전"]={"forceversion", "버전보고"},
