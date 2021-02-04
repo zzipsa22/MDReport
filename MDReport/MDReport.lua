@@ -264,11 +264,6 @@ function filterVALUES(VALUES)
         return end  --검색어가 짧으면 무시 
     end
     
-    --[[
-    if  onlyYou  then        
-        print("찾는사람:"..onlyYou)
-    end    
-    ]]
     if callType["levelrange"] and level2==nil then
         VALUES["level2"]=tonumber(keyword["levelrange"])        
     end    
@@ -277,11 +272,6 @@ function filterVALUES(VALUES)
     if callType["levelrange"]  and level==nil then
         return
     end  
-    
-    --내가 아닌 사람이 !속성을 요청하는 경우 리턴
-    if who~=meGame and callType["affix"] then
-        return        
-    end
     
     --내가 길드로 요청하는 경우
     if channel=="GUILD" then
@@ -559,6 +549,11 @@ function filterVALUES(VALUES)
     if onlyYou and not checkCallMe(onlyYou) then 
         return 
     end 
+		    
+    --내가 아닌 사람이 !속성을 요청하는 경우 리턴
+    if who~=meGame and callType["affix"] then
+        return        
+    end
     
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=meGame then
