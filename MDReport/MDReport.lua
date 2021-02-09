@@ -139,7 +139,9 @@ function filterVALUES(VALUES)
             MDR["who"]=nil
     end)        
     
-    callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
+    local who,channel,level,level2,callTypeT
+    local onlyMe,onlyYou,onlyOnline,except,onlyForMe
+    local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
     
     if VALUES~=nil then
         who=VALUES["who"]
@@ -151,6 +153,7 @@ function filterVALUES(VALUES)
         onlyYou=VALUES["onlyYou"]
         onlyOnline=VALUES["onlyOnline"]        
         except=VALUES["except"]
+        onlyForMe=VALUES["onlyForMe"]
         for i=1,#callTypeT do
             callTypeB[i]=callTypeT[i][1]              
             --print(i..":"..callTypeT[i][1])
@@ -358,11 +361,14 @@ function filterVALUES(VALUES)
     
     if (callType["covenant"] or callType["covenantnow"]) and coveHere>0 and (channel=="ADDON_PARTY" or channel=="PARTY") then
         onlyOnline=1 
-    end    
+    end   
     
-    --조절값 입력
-    VALUES["channel"]=channel    
-    VALUES["onlyOnline"]=onlyOnline
+    -- 귓말요청시 귓채널로 변경
+    if onlyForMe==1 
+    --and channel=="ADDON_GUILD"
+    then
+        channel="ADDON_WHISPER"
+    end
     
     if channel=="ADDON_PARTY" or channel=="ADDON_GUILD"  or channel=="ADDON_WHISPER" or channel=="ADDON_OFFICER" then       
         local mdrcolor={
@@ -371,7 +377,13 @@ function filterVALUES(VALUES)
             ["ADDON_WHISPER"]="|cFFF5aCdAMDR▶|r ",
             ["ADDON_OFFICER"]="|cFF40C040MDR▶|r ",           
         }
-        
+        local DNDicon=""
+		local doDNDalert=0
+		local DND=MDRconfig.DNDMode or 0
+		if channel=="ADDON_GUILD" and DND==1 then
+			doDNDalert=1
+			DNDicon="|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:-4|t"
+		end
         local name=MDRsplit(who,"-")[1]
         local message,range="",""
         if callType["parking"] and level then
@@ -464,12 +476,16 @@ function filterVALUES(VALUES)
         if channel=="ADDON_PARTY" then
             sur=MDRcolor("파티",0,"/!! ")
             chName=MDRcolor("파티",0,"[파티]")
-        elseif channel=="ADDON_GUILD" then
+        elseif channel=="ADDON_GUILD" then            
             sur=MDRcolor("길드",0,"/! ")
-            chName=MDRcolor("길드",0,"[길드]")
+            chName=MDRcolor("길드",0,"[길드]")            
         elseif channel=="ADDON_OFFICER" then
             sur=MDRcolor("관리자",0,"/@ ")
-            chName=MDRcolor("관리자",0,"[관리자]")                    
+            chName=MDRcolor("관리자",0,"[관리자]")   
+        elseif channel=="ADDON_WHISPER"  and onlyForMe==1 then
+			local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:14:14:-1:-5|t"
+            sur=MDRcolor("핑크",0,"/! ")
+            chName=MDRcolor("핑크",0,"["..MMicon.."매너모드]") 
         else
             sur=MDRcolor("핑크",0,"/!! ")
             chName=MDRcolor("핑크",0,"[나에게만 보임]")            
@@ -510,7 +526,7 @@ function filterVALUES(VALUES)
         local eul=MDRko(CL,"을")         
         
         local message
-        if channel=="ADDON_WHISPER" and who==meGame then
+        if channel=="ADDON_WHISPER" and who==meGame and onlyForMe~=1 then
             message="["..cmdLines.."]"..msg
             if VALUES["msg"]=="!금고" then
                 MDRVault ()                               
@@ -540,7 +556,14 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg
         end 
         if not callType["forceversion"] then
-            print(mdrcolor[channel]..message)
+            print(DNDicon..mdrcolor[channel]..message)
+			if doDNDalert==1 and MDR.DNDalert~=1 then
+				print(MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("하늘",0,"["..DNDicon.."방해 금지 모드]").." 가 "..MDRcolor("초록",0,"[활성화]").." 되어 있어 검색결과를 표시하지 않습니다. "..MDRcolor("회색",0,"[비활성화]").." 하시려면 "..MDRcolor("노랑",0,"'/! 방해금지'").." 를 입력하세요.")
+				MDR.DNDalert=1
+				C_Timer.After(300, function()
+					MDR.DNDalert=0
+				end)
+			end
         end
         
     end  
@@ -549,7 +572,7 @@ function filterVALUES(VALUES)
     if onlyYou and not checkCallMe(onlyYou) then 
         return 
     end 
-		    
+    
     --내가 아닌 사람이 !속성을 요청하는 경우 리턴
     if who~=meGame and callType["affix"] then
         return        
@@ -558,7 +581,11 @@ function filterVALUES(VALUES)
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
     if onlyMe==1 and who~=meGame then
         return
-    end    
+    end 
+    
+    --조절값 입력
+    VALUES["channel"]=channel    
+    VALUES["onlyOnline"]=onlyOnline
     
     if #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] and (callType["item"] or callType["trinket"] or callType["stat"] 
         --or callType["spec"] 
@@ -776,7 +803,7 @@ function filterVALUES(VALUES)
         elseif callType["emote"] then        
             MDRdoEmote(channel,who,keyword["emote"])
         elseif callType["parking"] then        
-            findCharNeedParking(channel,who,"parking",keyword["parking"],level,onlyMe,onlyOnline)             
+            findCharNeedParking(VALUES)          
         elseif callType["spell"] and #callTypeB==1 then        
             findCharSpell(keyword["spell"],channel,who,"spell")     
         elseif callType["forceversion"] and #callTypeB==1 then        
@@ -956,9 +983,12 @@ function GetHaveKeyCharInfo(type,level)
 end
 
 --보유한 모든 돌 보고하기
-function findCharAllKey(VALUES)    
+function findCharAllKey(VALUES)  
     
-    callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}    
+    local who,channel,level,level2,callTypeT
+    local onlyMe,onlyYou,onlyOnline,except,onlyForMe
+    local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
+    
     channel="print"
     if VALUES~=nil then
         who=VALUES["who"]
@@ -974,6 +1004,7 @@ function findCharAllKey(VALUES)
         onlyYou=VALUES["onlyYou"]
         onlyMe=VALUES["onlyMe"]
         except=VALUES["except"]
+        onlyForMe=VALUES["onlyForMe"]        
         CharName=VALUES["CharName"]
         
         for i=1,#callTypeT do
@@ -1061,19 +1092,31 @@ function findCharAllKey(VALUES)
     end        
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
-    if (callType["all"] or callType["currentall"] or callType["covenant"] or callType["covenantall"] or  callType["covenantnow"] or callType["levelrange"])  
-    --and (not callType["class"] and not callType["dungeon"] ) 
-    and (channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
+    if (
+        (callType["all"]             
+            or callType["currentall"] 
+            or callType["covenant"] 
+            or callType["covenantall"] 
+            or callType["covenantnow"] 
+            or callType["levelrange"]
+        ) or (
+            (callType["mykey"] or callType["dungeon"]) 
+            and not callType["currentdungeon"] 
+        and onlyOnline~=1)
+    ) and (
+        channel=="GUILD" 
+        or channel=="PARTY"  
+        or channel=="ADDON_GUILD" 
+        or channel=="ADDON_PARTY" 
+        or channel=="ADDON_OFFICER"
+        or (channel=="ADDON_WHISPER" and onlyForMe==1 )
+    ) then
         forceToShort=1
     end 
+    
     if callType["currentall"] then
         onlyOnline=1
-    end    
-    
-    --!내돌을 길드로 요청한 경우 짧게 보고
-    if (callType["mykey"] or callType["dungeon"]) and not callType["currentdungeon"] and onlyOnline~=1 and (channel=="GUILD" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER") then
-        forceToShort=1
-    end 
+    end        
     
     --!돌이고 레벨을 지정하지 않았으며 길드가 아닌 곳에서 요청했는데 키가 하나도 없을 경우
     if callType["all"] and (channel~="GUILD") and (#chars==0) and (level==nil) then
@@ -1147,7 +1190,19 @@ function findCharAllKey(VALUES)
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
-function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnline)
+function findCharNeedParking(VALUES)
+    local who,channel,level
+    local onlyMe,onlyOnline,onlyForMe
+    
+    if VALUES~=nil then
+        who=VALUES["who"]
+        channel=VALUES["channel"]
+        level=VALUES["level"]    
+        onlyMe=VALUES["onlyMe"]
+        onlyForMe=VALUES["onlyForMe"]
+        onlyOnline=VALUES["onlyOnline"]     
+    end        
+    
     if level==nil then level=99
     elseif level<2 then level=2 end
     
@@ -1207,7 +1262,7 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnlin
             lowestLevel=bestLevels[1]
             highstLevel=bestLevels[#bestLevels]                     
         end        
-    end   
+    end
     
     --주차안한 캐릭이 없으면 보고서 없이 한줄 출력으로 마무리
     if #findChars==0 then
@@ -1233,16 +1288,21 @@ function findCharNeedParking(channel,who,callType,keyword,level,onlyMe,onlyOnlin
         
         messageLines[1]=message
         C_Timer.After(delay, function()
-                reportMessageLines(messageLines,channel,who,callType)       
+                reportMessageLines(messageLines,channel,who,"parking")       
         end)        
         return
     end       
     
     --!주차를 길드엔 짧게 보고
-    if channel=="GUILD" or channel=="PARTY"  or channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" then                
-        doShortReport(findChars,channel,who,callType)                  
+    if channel=="GUILD" or 
+    channel=="PARTY"  or 
+    channel=="ADDON_GUILD" or 
+    channel=="ADDON_PARTY" or 
+    channel=="ADDON_OFFICER" or 
+    (channel=="ADDON_WHISPER" and onlyForMe==1) then                
+        doShortReport(findChars,channel,who,"parking")                  
     else                
-        doFullReport(findChars,channel,who,callType)            
+        doFullReport(findChars,channel,who,"parking")            
     end            
     
 end

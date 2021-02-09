@@ -649,12 +649,31 @@ function MDRCommands(msg, editbox)
         end        
         if args and args~="" and args~="도움말"then
             messageLines[#messageLines+1]="▷ 다른 도움말: |cffffff00/! @ |r"..cmdList            
-        end    
+        end
+	elseif cmd=="방해금지" or cmd=="방해" or cmd=="dnd" or cmd=="DND" then
+		if not args then
+			MDRtoggleMode(2)
+		elseif args=="끄기" or args=="off" then
+			MDRtoggleMode(2,0)
+		elseif args=="켜기" or args=="on" then
+			MDRtoggleMode(2,1)
+		end
+		return
+	elseif cmd=="매너모드" or cmd=="매너" then
+		if not args then
+			MDRtoggleMode(1)
+		elseif args=="끄기" or args=="off" then
+			MDRtoggleMode(1,0)
+		elseif args=="켜기" or args=="on" then
+			MDRtoggleMode(1,1)
+		end
+		return
     else
         if strfind(strsub(msg,1,1),"!") then
             msg=strsub(msg,2,-1)
-        end      
-        MDRsendAddonMessage("!"..msg,"GUILD",meGame)        
+        end
+		local m=MDRconfig.MannerMode		
+        MDRsendAddonMessage("!"..(m==1 and "@" or "")..msg,"GUILD",meGame)        
         return           
     end 
     for i=3,#messageLines do
@@ -1246,4 +1265,43 @@ function MDRdoEmote(channel,who,keyword)
                 DoEmote(emote[keyword])
         end)          
     end    
+end
+
+function MDRtoggleMode(mode,toggle)
+    local modeName,toggleType
+    if not mode then return end    
+    if mode==1 then
+		local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:14:14:-1:-5|t"
+        mode="MannerMode"		
+        modeName=MDRcolor("핑크",0,"["..MMicon.."매너 모드]")
+    elseif mode==2 then
+		local DNDicon="|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:-4|t"
+        mode="DNDMode" 
+        modeName=MDRcolor("하늘",0,"["..DNDicon.."방해 금지 모드]")
+    end
+    
+    MDRconfig=MDRconfig or {}
+    
+    local current=MDRconfig[mode] or 0
+    
+    local switch    
+    
+    if toggle=="on" or toggle==1 then
+        switch=1
+    elseif toggle=="off" or toggle==0 then
+        switch=0
+    else
+        if current==0 then
+            switch=1
+        else
+            switch=0
+        end        
+    end    
+    if switch==1 then
+        toggleType=MDRcolor("초록",0,"[활성화]")
+    else
+        toggleType=MDRcolor("회색",0,"[비활성화]")
+    end    
+    print(MDRcolor("수도",0,"MDR▶")..modeName.." 가 "..toggleType.." 되었습니다.")
+    MDRconfig[mode]=switch      
 end

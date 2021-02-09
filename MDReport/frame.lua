@@ -154,7 +154,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         --local keyword=gsub(msg," ","")        
         
         local level1,level2
-        local onlyMe,onlyOnline,CharName,onlyYou,except
+        local onlyMe,onlyOnline,CharName,onlyYou,except,onlyForMe
         local VALUES={} 
         
         local k={} 
@@ -263,6 +263,11 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                     k[i]=gsub(k[i],"제외","")
                     except=1                
                 end
+				
+				if strfind(k[i],"@") then
+                    k[i]=gsub(k[i],"@","")
+                    onlyForMe=1                
+                end
                 
                 if getCallTypeTable(k[i]) then
                     callTypeT[ct]=getCallTypeTable(k[i])
@@ -300,7 +305,8 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             VALUES["who"]=who   
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyYou"]=onlyYou
-            VALUES["except"]=except            
+            VALUES["except"]=except  
+			VALUES["onlyForMe"]=onlyForMe	
             VALUES["onlyOnline"]=onlyOnline           
             VALUES["CharName"]=CharName            
             VALUES["msg"]=msg

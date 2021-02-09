@@ -108,8 +108,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
         channel="OFFICER"
     elseif channel=="ADDON_WHISPER" then
         channel="WHISPER"
-    end
-    
+    end    
     for i=1,#messageLines do 
         if channel=="print"then            
             for j=1,8 do
@@ -285,7 +284,8 @@ function MDRcolorizeForPrint(message)
 end
 
 
-function MDRprintAddonMessage(...)   
+function MDRprintAddonMessage(...) 
+	local d=MDRconfig.DNDMode or 0
     local message=select(2,...)
     local channel=select(3,...)    
     local WHO=select(4,...)
@@ -296,14 +296,16 @@ function MDRprintAddonMessage(...)
         ["OFFICER"]="|cFF40C040",        
     }    
     who=strsub(MDRsplit(WHO, "-")[1],1,9)
-    
     local ch
     if channel=="GUILD" then
+		if d==1 then return end
         ch=channelColor[channel].."G"
     elseif channel=="PARTY" then
         ch=channelColor[channel].."P"
     elseif channel=="OFFICER" then
         ch=channelColor[channel].."O"
+    elseif channel=="WHISPER" then
+        ch=channelColor[channel].."W"
     else
         ch=""
     end    
@@ -318,9 +320,7 @@ function MDRprintAddonMessage(...)
     --색입히기
     message=MDRcolorizeForPrint(message)    
     
-    if channel=="WHISPER" and WHO==meGame then
-        print(message)
-    elseif class then
+    if class then
         print(ch..MDRcolor(class,0,"["..who.."]")..": "..message)
     else
         print(ch..channelColor[channel].."["..who.."]:|r "..message)
@@ -483,7 +483,7 @@ function doShortReport(chars,channel,who,callType)
         messageLines=oneLineMessage
     end    
     --메세지 출력
-    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY"  or channel=="ADDON_OFFICER" or channel=="GUILD" then
+    if isAddonMessage==1 then
         reportAddonMessage(messageLines,channel,who,callType)
     else
         --reportAddonMessage(messageLines,channel,who,callType)
@@ -658,7 +658,7 @@ function doFullReport(chars,channel,who,callType)
     end      
     
     --메세지 출력
-    if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
+    if isAddonMessage==1 then
         reportAddonMessage(messageLines,channel,who,callType)
     else        
         reportMessageLines(messageLines,channel,who,callType)    
@@ -681,11 +681,9 @@ function reportMessageLines(messageLines,channel,who,callType)
     elseif channel=="ADDON_WHISPER" then
         if callType=="dice" then
             who=meGame
-            reportAddonMessage(messageLines,"WHISPER",who,callType)
-            return
-        else
-            channel="print"
-        end        
+        end
+		reportAddonMessage(messageLines,"WHISPER",who,callType)
+		return 
     end
     
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
