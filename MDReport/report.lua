@@ -295,7 +295,7 @@ end
 
 
 function MDRprintAddonMessage(...) 
-    local d=MDRconfig.DNDMode or 0
+    local status=MDRgetCurrentStatus()
     local message=select(2,...)
     local channel=select(3,...)    
     local WHO=select(4,...)
@@ -318,7 +318,7 @@ function MDRprintAddonMessage(...)
     local ch
     local statusIcon=status
     if channel=="GUILD" then
-        if d==1 then return end
+        if status~="" then return end
         ch=channelColor[channel].."G"        
     elseif channel=="PARTY" then
         ch=channelColor[channel].."P"
