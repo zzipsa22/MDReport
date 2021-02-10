@@ -1364,14 +1364,16 @@ end
 
 function MDRgetCurrentStatus()    
     local status=""
-    local here,_=GetInstanceInfo()    
+    local here,_,_,_,_,_,_,ID=GetInstanceInfo()    
     local coveHere=MDRgetCovenantID(getShortDungeonName(here))
-    if MDRconfig.DNDMode==1 then
-        status="{DND}"
-    elseif coveHere >0 then
+    if coveHere >0 then
         status="{D}"
     elseif IsInRaid() then        
         status="{R}"
+    elseif ID==2162 then
+        status="{T}"
+    elseif MDRconfig.DNDMode==1 then
+        status="{DND}"
     end
     return status
 end

@@ -44,7 +44,14 @@ local classColor={
     ["사제"]="FFFFFF",
     ["죽기"]="C41F3B",
 }
-
+local statusIcons={
+    ["{DND}"]="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t",
+    ["{T}"]="|TInterface\\AddOns\\MDReport\\icon\\torghast.tga:16:16:-1:-5|t",
+    ["{D}"]="|TInterface\\MINIMAP\\Dungeon:16:16:-1:-4|t",
+    ["{R}"]="|TInterface\\MINIMAP\\Raid:16:16:-1:-4|t",  
+    
+} 
+MDR.statusIcons=statusIcons
 MDR.skull=skull
 MDR.classColor=classColor
 MDR.classIcon=classIcon
@@ -300,13 +307,8 @@ function MDRprintAddonMessage(...)
     }    
     who=strsub(MDRsplit(WHO, "-")[1],1,9)
     
-    local status=""
-    local statusIcons={
-        ["{DND}"]="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t",
-        ["{D}"]="|TInterface\\MINIMAP\\Dungeon:16:16:-1:-4|t",
-        ["{R}"]="|TInterface\\MINIMAP\\Raid:16:16:-1:-4|t",   
-    }       
-    for k,v in pairs(statusIcons) do
+    local status=""      
+    for k,v in pairs(MDR.statusIcons) do
         if strfind(message,k) then
             message=gsub(message,k,"")            
             status=v            

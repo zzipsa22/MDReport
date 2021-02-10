@@ -372,13 +372,15 @@ function filterVALUES(VALUES)
             ["ADDON_WHISPER"]="|cFFF5aCdAMDR▶|r ",
             ["ADDON_OFFICER"]="|cFF40C040MDR▶|r ",           
         }
-        local DNDicon=""
+        local status=MDRgetCurrentStatus()
+        local statusIcon=""
+        
         local doDNDalert=0
-        local DND=MDRconfig.DNDMode or 0
-        if channel=="ADDON_GUILD" and DND==1 then
+        if channel=="ADDON_GUILD" and status~="" then
             doDNDalert=1
-            DNDicon="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t"
+            statusIcon=MDR.statusIcons[status]
         end
+        
         local name=MDRsplit(who,"-")[1]
         local message,range="",""
         if callType["parking"] and level then
@@ -550,16 +552,28 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg
         end 
         if not callType["forceversion"] then
-            print(DNDicon..mdrcolor[channel]..message)
+            print(statusIcon..mdrcolor[channel]..message)
             if doDNDalert==1 and MDR.DNDalert~=1 then
-                print(MDRcolor("수도",0,"MDR▶").."현재 "..MDRgetModeName(2).." 가 "..MDRcolor("초록",0,"[활성화]").." 되어 있어 검색결과를 표시하지 않습니다. "..MDRcolor("회색",0,"[비활성화]").." 하려면 "..MDRcolor("노랑",0,"'/! 방해'").." 를 입력하세요.")
-                MDR.DNDalert=1
-                C_Timer.After(300, function()
-                        MDR.DNDalert=0
-                end)
+                local message=""
+                if status=="{D}" then
+                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("하늘",0,"["..statusIcon.."던전에 입장]").." 한 상태이므로 검색결과를 표시하지 않습니다."
+                elseif status=="{R}" then
+                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("관리자",0,"["..statusIcon.."공격대에 합류]").." 중이므로 검색결과를 표시하지 않습니다."
+                elseif status=="{T}" then
+                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("흑마",0,"["..statusIcon.."토르가스트에 입장]").." 한 상태이므로 검색결과를 표시하지 않습니다."
+                elseif status=="{DND}" then
+                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRgetModeName(2).." 가 "..MDRcolor("초록",0,"[활성화]").." 되어 있어 검색결과를 표시하지 않습니다. "..MDRcolor("회색",0,"[비활성화]").." 하려면 "..MDRcolor("노랑",0,"'/! 방해'").." 를 입력하세요."
+                end
+                if message~="" then
+                    print(message)
+                    
+                    MDR.DNDalert=1
+                    C_Timer.After(1800, function()
+                            MDR.DNDalert=0
+                    end)
+                end
             end
-        end
-        
+        end        
     end  
     
     --나에게서 귓말이 들어오는 경우 프린트로 변경
