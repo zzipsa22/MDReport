@@ -108,6 +108,9 @@ function reportAddonMessage(messageLines,channel,who,callType)
         channel="OFFICER"
     elseif channel=="ADDON_WHISPER" then
         channel="WHISPER"
+    elseif channel=="print" then
+        reportMessageLines(messageLines,channel,who,callType) 
+        return
     end    
     for i=1,#messageLines do 
         if channel=="print"then            
@@ -123,7 +126,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
             C_Timer.After(0.2*(i-1), function()
                     --if channel=="ADDON" then channel="GUILD" end 
                     if callType["forceversion"] then channel="WHISPER" end
-                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..messageLines[i], channel,who)
+                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..MDRgetCurrentStatus()..messageLines[i], channel,who)
             end)               
         end 
     end 
@@ -285,7 +288,7 @@ end
 
 
 function MDRprintAddonMessage(...) 
-	local d=MDRconfig.DNDMode or 0
+    local d=MDRconfig.DNDMode or 0
     local message=select(2,...)
     local channel=select(3,...)    
     local WHO=select(4,...)
@@ -296,12 +299,28 @@ function MDRprintAddonMessage(...)
         ["OFFICER"]="|cFF40C040",        
     }    
     who=strsub(MDRsplit(WHO, "-")[1],1,9)
+    
+    local status=""
+    local statusIcons={
+        ["{DND}"]="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t",
+        ["{D}"]="|TInterface\\MINIMAP\\Dungeon:16:16:-1:-4|t",
+        ["{R}"]="|TInterface\\MINIMAP\\Raid:16:16:-1:-4|t",   
+    }       
+    for k,v in pairs(statusIcons) do
+        if strfind(message,k) then
+            message=gsub(message,k,"")            
+            status=v            
+        end        
+    end
+    
     local ch
+    local statusIcon=status
     if channel=="GUILD" then
-		if d==1 then return end
-        ch=channelColor[channel].."G"
+        if d==1 then return end
+        ch=channelColor[channel].."G"        
     elseif channel=="PARTY" then
         ch=channelColor[channel].."P"
+        statusIcon=""
     elseif channel=="OFFICER" then
         ch=channelColor[channel].."O"
     elseif channel=="WHISPER" then
@@ -317,13 +336,14 @@ function MDRprintAddonMessage(...)
             message=MDRsplit(message,"_")[2]
         end
     end
+    
     --색입히기
     message=MDRcolorizeForPrint(message)    
     
     if class then
-        print(ch..MDRcolor(class,0,"["..who.."]")..": "..message)
+        print(ch..statusIcon..MDRcolor(class,0,"["..who.."]")..": "..message)
     else
-        print(ch..channelColor[channel].."["..who.."]:|r "..message)
+        print(ch..statusIcon..channelColor[channel].."["..who.."]:|r "..message)
     end    
 end
 
@@ -439,7 +459,7 @@ function doShortReport(chars,channel,who,callType)
                 message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
             elseif callType["covenantall"] then
                 local coveName
-                if channel=="ADDON_GUILD" or channel=="GUILD" then
+                if channel~="ADDON_PARTY" then
                     coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
                 else
                     coveName=MDRcolor(covenant)
@@ -667,7 +687,6 @@ end
 
 --메세지 출력
 function reportMessageLines(messageLines,channel,who,callType)   
-    
     -- 애드온 메세지는 애드온 채널로 전송
     if channel=="ADDON_PARTY" then
         reportAddonMessage(messageLines,"PARTY",who,callType)
@@ -681,9 +700,9 @@ function reportMessageLines(messageLines,channel,who,callType)
     elseif channel=="ADDON_WHISPER" then
         if callType=="dice" then
             who=meGame
-        end
-		reportAddonMessage(messageLines,"WHISPER",who,callType)
-		return 
+        end        
+        reportAddonMessage(messageLines,"WHISPER",who,callType)
+        return 
     end
     
     if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end

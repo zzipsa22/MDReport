@@ -19,8 +19,11 @@ C_Timer.After(10, function()
                 
                 print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을, |cffffff00'/!!'|r 로 |cFFaaaaff파티채널|r 전송과 |cffF5aCdA나에게 전송|r을 대신 할 수 있습니다. |cff9d9d9d [전체 도움말: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
                 
-                print(MDRcolor("수도",0,"▶")..MDRcolor("성약단").." 관련 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 성약단'|r]|r")
+                --print(MDRcolor("수도",0,"▶")..MDRcolor("성약단").." 관련 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 성약단'|r]|r")
                 
+                print(MDRcolor("수도",0,"▶")..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 모드'|r]|r")
+                
+                MDRtoggleMode()
                 
                 MDR["guide"]=MDR["guide"]+1
             end
@@ -644,35 +647,48 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]="▶"..MDRcolor("성약단",0,"'성약단'").." 을 요청하면 상황에 맞게 "..MDRcolor("성약단",0,"성약단 정보").."를 출력해줍니다. "..MDRcolor("초록",0,"① ")..MDRcolor("길드",0,"길드채널").."의 경우 "..MDRcolor("전사",0,"모든 만렙 캐릭터 (부캐 포함)").."의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("초록",0,"② ")..MDRcolor("파티",0,"파티채널").."의 경우 현재 "..MDRcolor("핑크",0,"접속중").."인 캐릭터의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("초록",0,"③ ")..MDRcolor("노랑",0,"던전 내").."에서 "..MDRcolor("파티",0,"파티채널").."로 요청하는 경우엔 "..MDRcolor("핑크",0,"현재 캐릭터").."가 "..MDRcolor("노랑",0,"해당던전").."에 필요한 "..MDRcolor("성약단",0,"성약단의 구성원일 경우").."에만 정보를 출력합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("성약")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("성약단") 
             
             messageLines[#messageLines+1]="▷"..MDRgetCovenantIcon(3)..MDRcolor("나이트 페이")..", "..MDRgetCovenantIcon(1)..MDRcolor("키리안")..", "..MDRgetCovenantIcon(2)..MDRcolor("벤티르")..", "..MDRgetCovenantIcon(4)..MDRcolor("강령군주").." 등의 개별 성약단 이름으로도 검색할 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("벤티르")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("나이트 페이",0,"나페")
+        elseif args=="모드" or args=="매너" or args=="방해" then       
+            messageLines[#messageLines+1]=helpHead..MDRcolor("핑크",0,"'모드'")..MDRcolor("길드",0," (길드채널 전용)")
+            
+            messageLines[#messageLines+1]=MDRcolor("핑크",0,"▶")..MDRgetModeName(1)..": "..MDRcolor("노랑",0,"'/! 매너'")
+            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("길드",0,"길드채널").." 출력 없이 "..MDRcolor("핑크",0,"'본인'").."만 받아볼 수 있습니다. "..MDRgetModeName(1).." 를 켜지 않고 일회성으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
+            
+            messageLines[#messageLines+1]=MDRcolor("하늘",0,"▶")..MDRgetModeName(2)..": "..MDRcolor("노랑",0,"'/! 방해'")
+            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 전송되는 "..MDRcolor("죽기",0,"모든 메세지").."를 출력하지 않습니다. 단, "..MDRgetModeName(1).."와 함께 사용 중인 경우 "..MDRcolor("핑크",0,"본인").."이 요청한 검색결과는 "..MDRcolor("핑크",0,"귓속말").."로 받게 되므로 "..MDRgetModeName(2).."가 켜져있어도 볼 수 있습니다."
+            
+            messageLines[#messageLines+1]="▶현재 "..MDRcolor("초록",0,"[활성화]").." 된 모드 확인: "..MDRcolor("노랑",0,"'/! 모드'")
         else
             return
         end        
         if args and args~="" and args~="도움말"then
             messageLines[#messageLines+1]="▷ 다른 도움말: |cffffff00/! @ |r"..cmdList            
         end
-	elseif cmd=="방해금지" or cmd=="방해" or cmd=="dnd" or cmd=="DND" then
-		if not args then
-			MDRtoggleMode(2)
-		elseif args=="끄기" or args=="off" then
-			MDRtoggleMode(2,0)
-		elseif args=="켜기" or args=="on" then
-			MDRtoggleMode(2,1)
-		end
-		return
-	elseif cmd=="매너모드" or cmd=="매너" then
-		if not args then
-			MDRtoggleMode(1)
-		elseif args=="끄기" or args=="off" then
-			MDRtoggleMode(1,0)
-		elseif args=="켜기" or args=="on" then
-			MDRtoggleMode(1,1)
-		end
-		return
+    elseif cmd=="방해금지" or cmd=="방해" or cmd=="dnd" or cmd=="DND" then
+        if not args then
+            MDRtoggleMode(2)
+        elseif args=="끄기" or args=="off" then
+            MDRtoggleMode(2,0)
+        elseif args=="켜기" or args=="on" then
+            MDRtoggleMode(2,1)
+        end
+        return
+    elseif cmd=="매너모드" or cmd=="매너" then
+        if not args then
+            MDRtoggleMode(1)
+        elseif args=="끄기" or args=="off" then
+            MDRtoggleMode(1,0)
+        elseif args=="켜기" or args=="on" then
+            MDRtoggleMode(1,1)
+        end
+        return
+    elseif cmd=="모드" then
+        MDRtoggleMode("tip")
+        return
     else
         if strfind(strsub(msg,1,1),"!") then
             msg=strsub(msg,2,-1)
         end
-		local m=MDRconfig.MannerMode		
+        local m=MDRconfig.MannerMode        
         MDRsendAddonMessage("!"..(m==1 and "@" or "")..msg,"GUILD",meGame)        
         return           
     end 
@@ -1268,19 +1284,47 @@ function MDRdoEmote(channel,who,keyword)
 end
 
 function MDRtoggleMode(mode,toggle)
-    local modeName,toggleType
-    if not mode then return end    
-    if mode==1 then
-		local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:14:14:-1:-5|t"
-        mode="MannerMode"		
-        modeName=MDRcolor("핑크",0,"["..MMicon.."매너 모드]")
-    elseif mode==2 then
-		local DNDicon="|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:-4|t"
-        mode="DNDMode" 
-        modeName=MDRcolor("하늘",0,"["..DNDicon.."방해 금지 모드]")
-    end
     
     MDRconfig=MDRconfig or {}
+    
+    local modeName,toggleType       
+    
+    local toggleOn=MDRcolor("초록",0,"[활성화]")
+    local toggleOff=MDRcolor("회색",0,"[비활성화]")
+    
+    if mode==1 then
+        mode="MannerMode"        
+        modeName=MDRgetModeName(1)
+    elseif mode==2 then
+        mode="DNDMode" 
+        modeName=MDRgetModeName(2)
+    else
+        local activeMode,message,tip="","",""
+        if MDRconfig.MannerMode==1 then 
+            activeMode=activeMode..MDRgetModeName(1)
+            tip="|cffffff00'/! 매너'|r"
+        end
+        if MDRconfig.DNDMode==1 then             
+            activeMode=activeMode..(activeMode=="" and "" or ", ")..MDRgetModeName(2)
+            tip=tip..(tip=="" and "" or ", ").."|cffffff00'/! 방해'|r"            
+        end        
+        if activeMode~="" then  
+            if mode=="tip" then                
+                tip="|cff9d9d9d [비활성화: "..tip.."]|r"          
+            else 
+                tip=""
+            end
+            message=MDRcolor("수도",0,"▶").."현재 "..activeMode.." 가 "..toggleOn.." 되어 있습니다. "..tip            
+        else
+            if mode=="tip" then                 
+                message=MDRcolor("수도",0,"MDR▶").."현재 "..toggleOn.." 된 모드가 없습니다."
+            else
+                return                
+            end             
+        end
+        print(message)
+        return
+    end
     
     local current=MDRconfig[mode] or 0
     
@@ -1298,10 +1342,36 @@ function MDRtoggleMode(mode,toggle)
         end        
     end    
     if switch==1 then
-        toggleType=MDRcolor("초록",0,"[활성화]")
+        toggleType=toggleOn
     else
-        toggleType=MDRcolor("회색",0,"[비활성화]")
+        toggleType=toggleOff
     end    
     print(MDRcolor("수도",0,"MDR▶")..modeName.." 가 "..toggleType.." 되었습니다.")
     MDRconfig[mode]=switch      
+end
+
+function MDRgetModeName(mode)
+    local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:14:14:-1:-5|t"
+    local DNDicon="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t"    
+    local DNDname=MDRcolor("하늘",0,"["..DNDicon.."방해 금지 모드]")
+    local MMname=MDRcolor("핑크",0,"["..MMicon.."매너 모드]")
+    if mode==1 then 
+        return MMname
+    else
+        return DNDname
+    end
+end
+
+function MDRgetCurrentStatus()    
+    local status=""
+    local here,_=GetInstanceInfo()    
+    local coveHere=MDRgetCovenantID(getShortDungeonName(here))
+    if MDRconfig.DNDMode==1 then
+        status="{DND}"
+    elseif coveHere >0 then
+        status="{D}"
+    elseif IsInRaid() then        
+        status="{R}"
+    end
+    return status
 end

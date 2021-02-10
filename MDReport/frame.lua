@@ -280,7 +280,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                         ct=ct+1                        
                         CharName=name
                     else
-                        onlyYou=name  
+                        onlyYou=gsub(k[i],"@","") 
                     end                    
                 end            
             end            

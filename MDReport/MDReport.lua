@@ -321,12 +321,7 @@ function filterVALUES(VALUES)
     end        
     
     --채널이 없으면 프린트로 변경
-    if channel==nil then channel="print" end  
-    
-    --나에게서 귓말이 들어오는 경우 프린트로 변경
-    if (channel=="WHISPER_IN") and who==meGame then
-        channel="print"
-    end 
+    if channel==nil then channel="print" end     
     
     local here,_=GetInstanceInfo()
     
@@ -378,12 +373,12 @@ function filterVALUES(VALUES)
             ["ADDON_OFFICER"]="|cFF40C040MDR▶|r ",           
         }
         local DNDicon=""
-		local doDNDalert=0
-		local DND=MDRconfig.DNDMode or 0
-		if channel=="ADDON_GUILD" and DND==1 then
-			doDNDalert=1
-			DNDicon="|TInterface\\Buttons\\UI-GroupLoot-Pass-Up:14:14:0:-4|t"
-		end
+        local doDNDalert=0
+        local DND=MDRconfig.DNDMode or 0
+        if channel=="ADDON_GUILD" and DND==1 then
+            doDNDalert=1
+            DNDicon="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t"
+        end
         local name=MDRsplit(who,"-")[1]
         local message,range="",""
         if callType["parking"] and level then
@@ -483,9 +478,8 @@ function filterVALUES(VALUES)
             sur=MDRcolor("관리자",0,"/@ ")
             chName=MDRcolor("관리자",0,"[관리자]")   
         elseif channel=="ADDON_WHISPER"  and onlyForMe==1 then
-			local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:14:14:-1:-5|t"
             sur=MDRcolor("핑크",0,"/! ")
-            chName=MDRcolor("핑크",0,"["..MMicon.."매너모드]") 
+            chName=MDRgetModeName(1)
         else
             sur=MDRcolor("핑크",0,"/!! ")
             chName=MDRcolor("핑크",0,"[나에게만 보임]")            
@@ -557,16 +551,21 @@ function filterVALUES(VALUES)
         end 
         if not callType["forceversion"] then
             print(DNDicon..mdrcolor[channel]..message)
-			if doDNDalert==1 and MDR.DNDalert~=1 then
-				print(MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("하늘",0,"["..DNDicon.."방해 금지 모드]").." 가 "..MDRcolor("초록",0,"[활성화]").." 되어 있어 검색결과를 표시하지 않습니다. "..MDRcolor("회색",0,"[비활성화]").." 하시려면 "..MDRcolor("노랑",0,"'/! 방해금지'").." 를 입력하세요.")
-				MDR.DNDalert=1
-				C_Timer.After(300, function()
-					MDR.DNDalert=0
-				end)
-			end
+            if doDNDalert==1 and MDR.DNDalert~=1 then
+                print(MDRcolor("수도",0,"MDR▶").."현재 "..MDRgetModeName(2).." 가 "..MDRcolor("초록",0,"[활성화]").." 되어 있어 검색결과를 표시하지 않습니다. "..MDRcolor("회색",0,"[비활성화]").." 하려면 "..MDRcolor("노랑",0,"'/! 방해'").." 를 입력하세요.")
+                MDR.DNDalert=1
+                C_Timer.After(300, function()
+                        MDR.DNDalert=0
+                end)
+            end
         end
         
     end  
+    
+    --나에게서 귓말이 들어오는 경우 프린트로 변경
+    if (channel=="WHISPER_IN" or channel=="ADDON_WHISPER") and onlyForMe~=1 and who==meGame then
+        channel="print"
+    end 
     
     --지정한 사람이 내가 아니면 리턴
     if onlyYou and not checkCallMe(onlyYou) then 
