@@ -15,19 +15,19 @@ MDR.frame:RegisterEvent("BAG_UPDATE_DELAYED")
 
 MDR.frame:SetScript("OnEvent", function(self, event, ...)
 	
-		if event== "ADDON_LOADED " then
-
-			local addonName=select(1, ...)			
-			if addonName ~= ADDON_NAME then
-				return;
-			end
-			MDR.frame:UnregisterEvent("ADDON_LOADED");	
-			MDRconfig = MDRconfig or {};
-			return    
-		elseif event=="BAG_UPDATE_DELAYED" then
-			MDRbackupMythicKey("bagupdate")
-			return
-		elseif event == "CHAT_MSG_ADDON" then
+        if event== "ADDON_LOADED " then
+            
+            local addonName=select(1, ...)            
+            if addonName ~= ADDON_NAME then
+                return;
+            end
+            MDR.frame:UnregisterEvent("ADDON_LOADED");    
+            MDRconfig = MDRconfig or {};
+            return    
+        elseif event=="BAG_UPDATE_DELAYED" then
+            MDRbackupMythicKey("bagupdate")
+            return
+        elseif event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
             if prefix~="MDReport" then return end
@@ -40,22 +40,22 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             local isInitialLogin, isReloadingUi = ...
             if isInitialLogin or isReloadingUi then                
                 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
-				
-				C_Timer.After(5, function()
-					MDRbackupMythicKey("onLoad")
-				end)
-
-				MDRconfig=MDRconfig or {}
-				
-				local delay = MDRconfig.delay or MDR.DefaultDelay
-				
-				C_Timer.After(delay, function()
-					MDR.itsOKtoRefresh=1
-					MDRrefreshRunHistory()
-				end)				
+                
+                C_Timer.After(5, function()
+                        MDRbackupMythicKey("onLoad")
+                end)
+                
+                MDRconfig=MDRconfig or {}
+                
+                local delay = MDRconfig.delay or MDR.DefaultDelay
+                
+                C_Timer.After(delay, function()
+                        MDR.itsOKtoRefresh=1
+                        MDRrefreshRunHistory()
+                end)                
                 return
-			else
-				MDRrefreshRunHistory()
+            else
+                MDRrefreshRunHistory()
             end       
             return
             -- 쐐기 완료시  
@@ -105,9 +105,9 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 return 
             end            
         end        
-
+        
         if strsub(msg, 0,1)~="!" then 
-			return 
+            return 
         end--!로 시작하지 않으면 리턴
         
         local channel
@@ -263,8 +263,8 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                     k[i]=gsub(k[i],"제외","")
                     except=1                
                 end
-				
-				if strfind(k[i],"@") then
+                
+                if strfind(k[i],"@") then
                     k[i]=gsub(k[i],"@","")
                     onlyForMe=1                
                 end
@@ -277,17 +277,17 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 elseif (not getCallTypeTable(k[i]) and name~=""  and name~="?") then
                     if #k==1 then
                         callTypeT[ct]=getCallTypeTable("아무")
-                        ct=ct+1                        
-                        CharName=name
+                        ct=ct+1                         
+                        CharName=(k[i]~="" and k[i] or nil)
                     else
-                        onlyYou=gsub(k[i],"@","") 
+                        onlyYou=(k[i]~="" and k[i] or nil)
                     end                    
                 end            
             end            
         end
         
         --if headerRemoved==1 and #k==1 and not getCallTypeTable(k[1])then return end
-
+        
         --작은수가 먼저오게 조절
         if level1 and level2 then
             if level2<level1 then
@@ -306,7 +306,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             VALUES["onlyMe"]=onlyMe
             VALUES["onlyYou"]=onlyYou
             VALUES["except"]=except  
-			VALUES["onlyForMe"]=onlyForMe	
+            VALUES["onlyForMe"]=onlyForMe    
             VALUES["onlyOnline"]=onlyOnline           
             VALUES["CharName"]=CharName            
             VALUES["msg"]=msg
