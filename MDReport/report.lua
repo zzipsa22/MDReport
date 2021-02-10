@@ -16,6 +16,7 @@ local skull={
     ["사제"]="{rt5}",--달(흰색)
     ["죽기"]="{rt7}",--엑스(빨강)          
 }
+
 local classIcon={--    Classes
     ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:0:64|t",
     ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:0:64|t",
@@ -29,7 +30,8 @@ local classIcon={--    Classes
     ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:128:192|t",
     ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:128:192|t",
     ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:128:192|t",        
-}     
+}   
+
 local classColor={
     ["술사"]="0070DE",
     ["법사"]="40C7EB",
@@ -44,6 +46,7 @@ local classColor={
     ["사제"]="FFFFFF",
     ["죽기"]="C41F3B",
 }
+
 local statusIcons={
     ["{DND}"]="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t",
     ["{T}"]="|TInterface\\AddOns\\MDReport\\icon\\torghast.tga:16:16:-1:-5|t",
@@ -51,6 +54,7 @@ local statusIcons={
     ["{R}"]="|TInterface\\MINIMAP\\Raid:16:16:-1:-4|t",  
     
 } 
+
 MDR.statusIcons=statusIcons
 MDR.skull=skull
 MDR.classColor=classColor
@@ -118,24 +122,19 @@ function reportAddonMessage(messageLines,channel,who,callType)
     elseif channel=="print" then
         reportMessageLines(messageLines,channel,who,callType) 
         return
-    end    
+    end 
+    
+    local status=MDRgetCurrentStatus()
+    local delay=0
+    if status~="" then delay=1 end
+    
     for i=1,#messageLines do 
-        if channel=="print"then            
-            for j=1,8 do
-                messageLines[i]=gsub(messageLines[i],"{rt"..j.."}",skullP["rt"..j])
-            end
-            C_Timer.After(0.2*(i-1), function()
-                    if messageLines[i]~="" then
-                        print(messageLines[i])
-                    end
-            end)  
-        else
-            C_Timer.After(0.2*(i-1), function()
-                    --if channel=="ADDON" then channel="GUILD" end 
-                    if callType["forceversion"] then channel="WHISPER" end
-                    C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..MDRgetCurrentStatus()..messageLines[i], channel,who)
-            end)               
-        end 
+        C_Timer.After(delay+0.2*(i-1), function()
+                --if channel=="ADDON" then channel="GUILD" end 
+                if callType["forceversion"] then channel="WHISPER" end
+                C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..MDRgetCurrentStatus()..messageLines[i], channel,who)
+        end)             
+        
     end 
 end
 
@@ -712,7 +711,11 @@ function reportMessageLines(messageLines,channel,who,callType)
     --최종적으로 귓말채널 반환
     if (channel=="WHISPER_IN") or (channel=="WHISPER_OUT")  then
         channel="WHISPER"
-    end    
+    end   
+    
+    local status=MDRgetCurrentStatus()
+    local delay=0
+    if status~="" then delay=1 end
     
     for i=1,#messageLines do 
         if channel=="print"then 
@@ -728,7 +731,7 @@ function reportMessageLines(messageLines,channel,who,callType)
                     end
             end)  
         else
-            C_Timer.After(0.2*(i-1), function()        
+            C_Timer.After(delay+0.2*(i-1), function()        
                     SendChatMessage(messageLines[i], channel,nil,who) 
             end)   
         end 
