@@ -575,7 +575,7 @@ function MDRCommands(msg, editbox)
         n2=playerName
         m1=MDRcolor(krClass,0,"!"..playerName).." 입력."
     end
-    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약단")
+    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")
     if not cmd or cmd=="도움말" or cmd=="!도움말" or cmd=="도움" or cmd=="!도움" or cmd=="help" or cmd=="" or cmd=="?" or cmd=="@"then
         
         if args=="" or not args or args=="도움말" then            
@@ -651,7 +651,7 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]=helpHead..MDRcolor("핑크",0,"'모드'")..MDRcolor("길드",0," (길드채널 전용)")
             
             messageLines[#messageLines+1]=MDRcolor("핑크",0,"▶")..MDRgetModeName(1)..": "..MDRcolor("노랑",0,"'/! 매너'")
-            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("길드",0,"길드채널").." 출력 없이 "..MDRcolor("핑크",0,"'본인'").."만 받아볼 수 있습니다. "..MDRgetModeName(1).." 를 켜지 않고 일회성으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
+            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("핑크",0,"본인").."이 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("핑크",0,"'귓속말'").."로 받아볼 수 있습니다. 즉, 다른 사람에겐 검색 결과가 보이지 않습니다. "..MDRgetModeName(1).." 를 켜지 않고 일회성으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
             
             messageLines[#messageLines+1]=MDRcolor("하늘",0,"▶")..MDRgetModeName(2)..": "..MDRcolor("노랑",0,"'/! 방해'")
             messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 전송되는 "..MDRcolor("죽기",0,"모든 메세지").."를 출력하지 않습니다. 단, "..MDRgetModeName(1).."와 함께 사용 중인 경우 "..MDRcolor("핑크",0,"본인").."이 요청한 검색결과는 "..MDRcolor("핑크",0,"귓속말").."로 받게 되므로 "..MDRgetModeName(2).."가 켜져있어도 볼 수 있습니다."
