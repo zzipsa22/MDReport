@@ -167,16 +167,23 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             k=MDRsplit(msg,"!")     
         end        
         
-        for i=1,#k do           
+        for i=1,#k do  
+
+			if strfind(k[i],"@") then
+                k[i]=gsub(k[i],"@","")
+				if channel=="ADDON_GUILD" or channel=="GUILD" then
+					onlyForMe=1                
+				end
+            end
             
             if strfind(k[i],"주사위") or strfind(k[i],"?") and             MDR["diceWait"]~=1 and not strfind(k[#k],"?") then
                 MDRmakeDice(channel,who,k)
                 MDR["running"]=1   
-                return            
-            end
+                return
+			end			
             
-            k[i]=gsub(k[i]," ","") 
-            
+            k[i]=gsub(k[i]," ","")             
+			
             local keyIsNumber=tonumber(k[i])
             local ELC=strsub(k[i],1,-2)        
             local LOCT=strsub(k[i],-1)
@@ -262,12 +269,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 if strfind(k[i],"제외") then
                     k[i]=gsub(k[i],"제외","")
                     except=1                
-                end
-                
-                if strfind(k[i],"@") then
-                    k[i]=gsub(k[i],"@","")
-                    onlyForMe=1                
-                end
+                end               
                 
                 if getCallTypeTable(k[i]) then
                     callTypeT[ct]=getCallTypeTable(k[i])
