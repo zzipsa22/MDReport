@@ -1094,11 +1094,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                 local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name)))
                 local timed=runInfo.completed                
                 if timed==true then
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:14:14:0:-5|t"
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t"
                 elseif timed=="now" then                    
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:14:14:0:-5|t"                   
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0:0:-5|t"                   
                 else
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:14:14:0:-5|t"
+                    timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t"
                 end
                 
                 local color1,color2,color3,tip,reward,level
@@ -1108,7 +1108,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     color1="전설"
                     color2="초록"
                     color3="노랑"
-                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
+                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
                 else
                     color1="사제"
                     color2="회색"  
@@ -1184,7 +1184,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                         rewards=strsub(rewards,1,-3)
                     end     
                     if rewards~="" then
-                        rewards=" [|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t보상: "..rewards.."]"
+                        rewards=" [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t보상: "..rewards.."]"
                     end                    
                     if #v.runHistory==0 then 
                         levels=MDRcolor("유물",0,"이번주 기록이 없습니다.")
@@ -1227,7 +1227,7 @@ local dungeonCovenant={
 
 function MDRgetCovenantIcon(covenantID)
     
-    local iconSize=14
+    local iconSize=0
     local covenantMap = {
         [1] = "kyrian",
         [2] = "venthyr",
@@ -1357,8 +1357,8 @@ function MDRtoggleMode(mode,toggle)
 end
 
 function MDRgetModeName(mode)
-    local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:14:14:-1:-5|t"
-    local DNDicon="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t"    
+    local MMicon="|TInterface\\AddOns\\MDReport\\icon\\mode_manner.tga:0:0:-1:-5|t"
+    local DNDicon="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:0:0:-1:-5|t"    
     local DNDname=MDRcolor("하늘",0,"["..DNDicon.."방해 금지 모드]")
     local MMname=MDRcolor("핑크",0,"["..MMicon.."매너 모드]")
     if mode==1 then 

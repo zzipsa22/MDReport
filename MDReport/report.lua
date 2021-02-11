@@ -18,18 +18,18 @@ local skull={
 }
 
 local classIcon={--    Classes
-    ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:0:64|t",
-    ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:0:64|t",
-    ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:0:64|t",
-    ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:0:64|t",
-    ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:64:128|t",
-    ["술사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:64:128|t",
-    ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:64:128|t",
-    ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:64:128|t",
-    ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:0:64:128:192|t",
-    ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:64:128:128:192|t",
-    ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:128:192:128:192|t",
-    ["악사"] ="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-4:256:256:192:256:128:192|t",        
+    ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:0:64|t",
+    ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:64:128:0:64|t",
+    ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:128:192:0:64|t",
+    ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:0:64|t",
+    ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:64:128|t",
+    ["술사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:64:128:64:128|t",
+    ["사제"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:128:192:64:128|t",
+    ["흑마"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:64:128|t",
+    ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:128:192|t",
+    ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:64:128:128:192|t",
+    ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:128:192:128:192|t",
+    ["악사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:128:192|t",        
 }   
 
 local classColor={
@@ -48,10 +48,10 @@ local classColor={
 }
 
 local statusIcons={
-    ["{DND}"]="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:14:14:-1:-5|t",
-    ["{T}"]="|TInterface\\AddOns\\MDReport\\icon\\torghast.tga:16:16:-1:-5|t",
-    ["{D}"]="|TInterface\\MINIMAP\\Dungeon:16:16:-1:-4|t",
-    ["{R}"]="|TInterface\\MINIMAP\\Raid:16:16:-1:-4|t",  
+    ["{DND}"]="|TInterface\\AddOns\\MDReport\\icon\\mode_DND.tga:0:0:-1:-4|t",
+    ["{T}"]="|TInterface\\AddOns\\MDReport\\icon\\torghast.tga:0:0:-1:-4|t",
+    ["{D}"]="|TInterface\\AddOns\\MDReport\\icon\\dungeon.tga:0:0:-1:-4|t",
+    ["{R}"]="|TInterface\\AddOns\\MDReport\\icon\\raid.tga:0:0:-1:-4|t",
     
 } 
 

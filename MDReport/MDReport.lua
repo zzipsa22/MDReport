@@ -420,7 +420,7 @@ function filterVALUES(VALUES)
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="emote" then              
                 if word=="얼라이언스를위하여" then
-                    icon="|TInterface\\TargetingFrame\\UI-PVP-ALLIANCE:19:16:-4:-4:64:64:0:32:0:38|t"
+                    icon="|TInterface\\TargetingFrame\\UI-PVP-ALLIANCE:0:0:-4:-4:64:64:0:32:0:38|t"
                     what="외칩니다 : "..icon..MDRcolor("초록",0,"<얼 라 이 언 스>").."를 위하여!"
                 else
                     what="감정표현입니다 : "..MDRcolor(word,type) 
@@ -430,7 +430,7 @@ function filterVALUES(VALUES)
                 icon=MDR.classIcon[callTypeT[i][2]]
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="parking" then
-                icon="|TInterface\\GroupFrame\\UI-Group-MasterLooter:14:14:0:-4|t"
+                icon="|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"
                 what=icon..MDRcolor(word,type)   
             elseif callTypeT[i][1]=="covenant" or callTypeT[i][1]=="covenantnow" then                
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
@@ -526,8 +526,8 @@ function filterVALUES(VALUES)
                 cmdLines=cmdLines..now
             end            
         end
-        local whoIcon="|TInterface\\FriendsFrame\\UI-Toast-ToastIcons.tga:16:16:0:-4:128:64:2:29:34:61|t"
-        local whoIcon2="|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:14:14:0:-4|t"
+        local whoIcon="|TInterface\\FriendsFrame\\UI-Toast-ToastIcons.tga:0:0:0:-4:128:64:2:29:34:61|t"
+        local whoIcon2="|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:0:0:0:-4|t"
         name=whoIcon..name
         
         
