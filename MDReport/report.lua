@@ -126,7 +126,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
     
     local status=MDRgetCurrentStatus()
     local delay=0
-    if status~="" then delay=1 end
+    if status~="" and channel~="PARTY" then delay=1 end
     
     for i=1,#messageLines do 
         C_Timer.After(delay+0.2*(i-1), function()
@@ -715,7 +715,7 @@ function reportMessageLines(messageLines,channel,who,callType)
     
     local status=MDRgetCurrentStatus()
     local delay=0
-    if status~="" then delay=1 end
+    if (status~="" and channel~="PARTY" and channel~="print") then delay=1 end
     
     for i=1,#messageLines do 
         if channel=="print"then 
