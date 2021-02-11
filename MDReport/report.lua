@@ -294,7 +294,7 @@ end
 
 
 function MDRprintAddonMessage(...) 
-    local status=MDRgetCurrentStatus()
+    local yourStatus=MDRgetCurrentStatus()
     local message=select(2,...)
     local channel=select(3,...)    
     local WHO=select(4,...)
@@ -317,7 +317,7 @@ function MDRprintAddonMessage(...)
     local ch
     local statusIcon=status
     if channel=="GUILD" then
-        if status~="" then return end
+        if yourStatus~="" then return end
         ch=channelColor[channel].."G"        
     elseif channel=="PARTY" then
         ch=channelColor[channel].."P"
