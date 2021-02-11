@@ -287,8 +287,21 @@ function filterVALUES(VALUES)
                 end            
                 print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
                 guildWarn=guildWarn+1
-            end       
-            MDRsendAddonMessage(VALUES["msg"],"GUILD",meGame)            
+            end
+            local msg=VALUES["msg"]
+            if strfind(strsub(msg,1,1),"!") then
+                msg=strsub(msg,2,-1)
+            end
+            local m=MDRconfig.MannerMode or 0
+            local at=""
+            if m==1 then--매너모드
+                if strfind(msg,"@") then
+                    msg=gsub(msg,"@","")                
+                else
+                    at="@"            
+                end          
+            end  
+            MDRsendAddonMessage("!"..at..msg,"GUILD",meGame)            
             return
         else --길드요청을 내가보낸게 아니면 리턴
             return
