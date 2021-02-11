@@ -292,7 +292,7 @@ function MDRcolor(keyword,type,keyword2)
                     return  k
                 end 
             end            
-            if strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2 then
+            if not strfind(keyword,"%[") and (strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2) then
                 color=v[1]                 
                 if not type or type==1  then
                     text=v[2] -- 드루이드 
