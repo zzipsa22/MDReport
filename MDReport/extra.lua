@@ -15,11 +15,8 @@ C_Timer.After(10, function()
         else
             if MDR["guide"]<50 then
                 print("|cFF33FF99▶ 쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r ")               
-                --print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. |cff9d9d9d(|cffffff00/!|r |cffC79C6E돌|r = |cFF40ff40/g|r |cffC79C6E!돌|r) |r")  
                 
                 print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을, |cffffff00'/!!'|r 로 |cFFaaaaff파티채널|r 전송과 |cffF5aCdA나에게 전송|r을 대신 할 수 있습니다. |cff9d9d9d [전체 도움말: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
-                
-                --print(MDRcolor("수도",0,"▶")..MDRcolor("성약단").." 관련 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 성약단'|r]|r")
                 
                 print(MDRcolor("수도",0,"▶")..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 모드'|r]|r")
                 
@@ -651,7 +648,7 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]=helpHead..MDRcolor("핑크",0,"'모드'")..MDRcolor("길드",0," (길드채널 전용)")
             
             messageLines[#messageLines+1]=MDRcolor("핑크",0,"▶")..MDRgetModeName(1)..": "..MDRcolor("노랑",0,"'/! 매너'")
-            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("핑크",0,"본인").."이 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("핑크",0,"'귓속말'").."로 받아볼 수 있습니다. 즉, 다른 사람에겐 검색 결과가 보이지 않습니다. "..MDRgetModeName(1).." 를 켜지 않고 일회성으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
+            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("핑크",0,"본인").."이 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("핑크",0,"'귓속말'").."로 받아볼 수 있습니다. 즉, "..MDRcolor("하늘",0,"다른 사람").."에겐 검색 결과가 "..MDRcolor("죽기",0,"보이지 않습니다. ")..MDRgetModeName(1).." 를 켜지 않고 "..MDRcolor("노랑",0,"일회성").."으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. 반대로 "..MDRgetModeName(1).." 가 "..MDRcolor("초록",0,"[활성화]").."되어 있을 때 "..MDRcolor("노랑",0,"'@'").." 을 이용하면  "..MDRgetModeName(1).."를 우회하여 "..MDRcolor("길드",0,"길드채널").."로 메세지를 전송할 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
             
             messageLines[#messageLines+1]=MDRcolor("하늘",0,"▶")..MDRgetModeName(2)..": "..MDRcolor("노랑",0,"'/! 방해'")
             messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 전송되는 "..MDRcolor("죽기",0,"모든 메세지").."를 출력하지 않습니다. 단, "..MDRgetModeName(1).."와 함께 사용 중인 경우 "..MDRcolor("핑크",0,"본인").."이 요청한 검색결과는 "..MDRcolor("핑크",0,"귓속말").."로 받게 되므로 "..MDRgetModeName(2).."가 켜져있어도 볼 수 있습니다."
@@ -688,8 +685,17 @@ function MDRCommands(msg, editbox)
         if strfind(strsub(msg,1,1),"!") then
             msg=strsub(msg,2,-1)
         end
-        local m=MDRconfig.MannerMode        
-        MDRsendAddonMessage("!"..(m==1 and "@" or "")..msg,"GUILD",meGame)        
+        local m=MDRconfig.MannerMode or 0
+        local at=""
+        if m==1 then--매너모드
+            if strfind(msg,"@") then
+                msg=gsub(msg,"@","")                
+            else
+                at="@"            
+            end          
+        end    
+        --print("!"..at..msg)
+        MDRsendAddonMessage("!"..at..msg,"GUILD",meGame)        
         return           
     end 
     for i=3,#messageLines do
