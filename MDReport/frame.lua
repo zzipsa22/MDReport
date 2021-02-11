@@ -245,7 +245,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 callTypeT[ct]=getCallTypeTable(k[i])
                 ct=ct+1
             else
-                local name=k[i]
+                local name=gsub(k[i],"@","")
                 if strfind(k[i],"내") then             
                     k[i]=gsub(k[i],"내","")
                     onlyMe=1
@@ -278,9 +278,9 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                     if #k==1 then
                         callTypeT[ct]=getCallTypeTable("아무")
                         ct=ct+1                         
-                        CharName=(k[i]~="" and k[i] or nil)
+                        CharName=name
                     else
-                        onlyYou=(k[i]~="" and k[i] or nil)
+                        onlyYou=name
                     end                    
                 end            
             end            
