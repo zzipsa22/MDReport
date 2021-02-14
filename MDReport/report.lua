@@ -126,7 +126,7 @@ function reportAddonMessage(messageLines,channel,who,callType)
     
     local status=MDRgetCurrentStatus()
     local delay=0
-    if status~="" and channel~="PARTY" then delay=1 end
+    if status~="" and channel~="PARTY" then delay=0.5 end
     
     for i=1,#messageLines do 
         C_Timer.After(delay+0.2*(i-1), function()
@@ -160,7 +160,7 @@ function MDRcolorizeForPrint(message)
         color_class[c]="|cff"..classColor[c]..c.."|r"     
     end 
     --주차정보를 포함하는 경우
-    if strfind(message,"/") or strfind(message,"Χ") then
+    if strfind(message,"#") or strfind(message,"Χ") then
         if strfind(message,"▶") then -- 이름, 던전등 개별 캐릭터의 fullReport
             for k,v in pairs(icon_color) do
                 if strfind(message,k) then
@@ -238,24 +238,21 @@ function MDRcolorizeForPrint(message)
     
     --주차단수 색입히기
     local park1={}
+    local park1b={}
     local park4={}
     local park10={}
-    --local parkC={}
-    local keyL={}
-    local keyL2={}
     local parkN={}
     
     local mL=40
     for i=1,mL do
         tinsert(park1,(mL-i).."/")
+        tinsert(park1b,"("..(mL-i).."#")
         tinsert(park4,"/"..(mL-i).."/")
-        tinsert(park10,"/"..(mL-i))
-        --tinsert(parkC,(mL-i)..",")        
-        tinsert(parkN,(mL-i).."회")        
-        tinsert(keyL,(mL-i).."[")
-        tinsert(keyL2,(mL-i).."]")        
+        tinsert(park10,"/"..(mL-i))    
+        tinsert(parkN,(mL-i).."회")   
     end
     message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ"))
+    
     for i=1,mL do
         local c1="고급"        
         if i==(mL-0) then 
@@ -270,12 +267,13 @@ function MDRcolorizeForPrint(message)
             c1="희귀"
         elseif i<=(mL-6) then
             c1="고급"
-        end         
+        end
+
+        message=gsub(message,park1b[i],MDRcolor(c1,0,(mL-i)).."#")
         message=gsub(message,park4[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")).."/")
         message=gsub(message,park10[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")))       
-        message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")      
-        --message=gsub(message,parkC[i],MDRcolor(c1,0,gsub(parkC[i],",",""))..",")        
-        --message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
+        message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")     
+		--message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
     end    
     
     --던전 색입히기
@@ -410,7 +408,7 @@ function doShortReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""  
             if best and best ~=0 then 
                 if callType=="parking" then
-                    parkingstar=":"..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..(runs>0 and " : |cff00ccff"..runs.."회|r" or "")                   
+                    parkingstar=":"..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#|cff00ccff"..runs.."회|r" or "")                   
                 else  
                     parkingstar=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 end                   
@@ -602,9 +600,9 @@ function doFullReport(chars,channel,who,callType)
             
             if best and best~=0 then
                 if isAddonMessage==1 then
-                    parking="("..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")..(runs>0 and " : |cff00ccff"..runs.."회|r" or "")..")"
+                    parking="("..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#|cff00ccff"..runs.."회|r" or "")..")"
                 else
-                    parking=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
+                    parking=","..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")
                     parkingstar="▶"
                 end
                 
@@ -715,7 +713,7 @@ function reportMessageLines(messageLines,channel,who,callType)
     
     local status=MDRgetCurrentStatus()
     local delay=0
-    if (status~="" and channel~="PARTY" and channel~="print") then delay=1 end
+    if (status~="" and channel~="PARTY" and channel~="print") then delay=0.5 end
     
     for i=1,#messageLines do 
         if channel=="print"then 
