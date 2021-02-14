@@ -160,7 +160,7 @@ function MDRcolorizeForPrint(message)
         color_class[c]="|cff"..classColor[c]..c.."|r"     
     end 
     --주차정보를 포함하는 경우
-    if strfind(message,"#") or strfind(message,"Χ") then
+    if strfind(message,"#") or strfind(message,"/") or strfind(message,"Χ") then
         if strfind(message,"▶") then -- 이름, 던전등 개별 캐릭터의 fullReport
             for k,v in pairs(icon_color) do
                 if strfind(message,k) then
