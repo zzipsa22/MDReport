@@ -964,7 +964,8 @@ function GetHaveKeyCharInfo(type,level)
                 elseif (type~="쐐기돌보유자만" and (
                         (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
                         (type=="레벨제한없음" and level<=MDR["SCL"]) or 
-                        (type=="50렙이상만" and level>=50)
+                        (type=="50렙이상만" and level>=50) or
+                        (tonumber(type) and level>=type)
                 )) then     
                     --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                     thisCharIncluded=1

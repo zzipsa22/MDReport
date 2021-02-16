@@ -393,6 +393,7 @@ function doShortReport(chars,channel,who,callType)
             local covenantID=MDRgetCovenantID(covenant)
             local itemLevel=chars[i]["itemLevel"]            
             local equipLevel=chars[i]["equipLevel"]
+			local charLevel=chars[i]["charLevel"]
             local online,onC,onR,parkC="","","",""
             local classStatus=""            
             local cutName=gsub(charName, "%s%-.+","")
@@ -438,8 +439,8 @@ function doShortReport(chars,channel,who,callType)
             end            
             
             if keyLink~=nil then
-                havekey=keyName..level
-            else
+                havekey=keyName..level			
+            elseif charLevel==MDR.SCL then
                 local E=math.floor(equipLevel)
                 local H=math.floor(itemLevel)
                 if E==H then
@@ -448,6 +449,8 @@ function doShortReport(chars,channel,who,callType)
                     H="("..H..")"
                 end
                 havekey="템렙"..E..H
+			else
+				havekey=charLevel.."레벨"
             end
             local message=""          
             local sameCheck
