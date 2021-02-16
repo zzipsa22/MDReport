@@ -214,6 +214,13 @@ function MDRcolorizeForPrint(message)
         message=gsub(message,"{c0}","")
     end    
     
+    --온라인
+    local on_green="|TInterface\\AddOns\\MDReport\\icon\\on_g.tga:0:0.5:-1:-5|t" 
+    local on_pink="|TInterface\\AddOns\\MDReport\\icon\\on_p.tga:0:0.5:-1:-5|t" 
+    message=gsub(message,"{OG}",on_green)
+    message=gsub(message,"{OP}",on_pink)
+    message=gsub(message,"접속중","|cff00ff00접속중|r")
+    
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
     end
@@ -268,12 +275,12 @@ function MDRcolorizeForPrint(message)
         elseif i<=(mL-6) then
             c1="고급"
         end
-
+        
         message=gsub(message,park1b[i],MDRcolor(c1,0,(mL-i)).."#")
         message=gsub(message,park4[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")).."/")
         message=gsub(message,park10[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")))       
         message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")     
-		--message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
+        --message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
     end    
     
     --던전 색입히기
@@ -386,7 +393,7 @@ function doShortReport(chars,channel,who,callType)
             local covenantID=MDRgetCovenantID(covenant)
             local itemLevel=chars[i]["itemLevel"]            
             local equipLevel=chars[i]["equipLevel"]
-            local online=""
+            local online,onC,onR,parkC="","","",""
             local classStatus=""            
             local cutName=gsub(charName, "%s%-.+","")
             local shortName=strsub(cutName,1,9)
@@ -397,9 +404,19 @@ function doShortReport(chars,channel,who,callType)
                 classStatus=class..sameClass[class]..","..shorterName                
             else                
                 classStatus=class                
-            end
-            if charName==meAddon then
-                online="◀접속중"
+            end            
+            if charName==meAddon then                
+                if channel=="ADDON_PARTY" then
+                    onC=" |cff48ff00"
+                    online="{OG}"
+                else
+                    onC=" |cffff00b4"
+                    online="{OP}"
+                end
+                onR="|r "
+                parkC="|cff48ff00"
+            else
+                parkC="|cff00ccff"
             end            
             
             --던전 이름 줄이기
@@ -408,7 +425,7 @@ function doShortReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""  
             if best and best ~=0 then 
                 if callType=="parking" then
-                    parkingstar=":"..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#|cff00ccff"..runs.."회|r" or "")                   
+                    parkingstar=":"..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#"..parkC..runs.."회|r" or "")                   
                 else  
                     parkingstar=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 end                   
@@ -436,39 +453,32 @@ function doShortReport(chars,channel,who,callType)
             local sameCheck
             
             if callType=="parking" then                 
-                message="["..skull[class]..classStatus..parkingstar.."]"
+                message=onC.."["..online..skull[class]..classStatus..parkingstar.."]"..onR
             elseif callType=="all" then                
-                message=skull[class].."["..havekey.."]:"..classStatus  
+                message=online..skull[class].."["..havekey.."]:"..classStatus                  
             elseif chars[i]["extraLink"] and callType=="spell"then
-                message=skull[class]..classStatus.."["..havekey.."]"..chars[i]["extraLink"]
+                message="["..online.."{"..classStatus.."}:"..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))                
                 if sameCheck then                   
-                    message=skull[class]..havekey
+                    message="["..online.."{"..classStatus.."}:"..havekey.."]"
                 else                    
-                    message=skull[class]..havekey.."▶["..chars[i]["extraLink"].."]"
-                end
-            elseif callType["covenant"] then
-                if isAddonMessage==1 then
-                    message="[{c"..covenantID.."}"..classStatus..":"..havekey.."]" 
-                else
-                    message=skull[class]..havekey.."("..classStatus..")"
-                end
-            elseif callType["covenantnow"]  then
-                message="[{"..classStatus.."}:{c"..covenantID.."}"..MDRcolor(covenant).."]"
-            elseif callType["covenantall"] then
-                local coveName
-                if channel~="ADDON_PARTY" then
-                    coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
-                else
-                    coveName=MDRcolor(covenant)
+                    message="["..online.."{"..classStatus.."}:"..havekey.."▶["..chars[i]["extraLink"].."]"
                 end                
-                message="[{"..classStatus.."}:{c"..covenantID.."}"..coveName.."]"
+            elseif callType["covenant"] or callType["covenantnow"] or callType["covenantall"] then
+                local coveName
+                if channel=="ADDON_PARTY" then
+                    coveName=MDRcolor(covenant)                    
+                else
+                    coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
+                end    
+                
+                message=onC.."["..online.."{"..classStatus.."}:{c"..covenantID.."}"..coveName.."]"..onR
             else
                 if isAddonMessage==1 then
-                    message=skull[class]..classStatus.."▶["..havekey.."]"                         
+                    message=onC.."["..online.."{"..classStatus.."}:"..havekey.."]"..onR
                 else
-                    message=skull[class]..havekey.."("..classStatus..")"
+                    message=online..skull[class]..havekey.."("..classStatus..")"
                 end           
             end
             
@@ -556,7 +566,7 @@ function doFullReport(chars,channel,who,callType)
             local headStar=""
             
             if charName==meAddon then
-                online="◀접속중"
+                online=" {OG}접속중"
             end
             
             local covenantIcon=""
