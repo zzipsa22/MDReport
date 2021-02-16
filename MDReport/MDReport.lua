@@ -536,6 +536,7 @@ function filterVALUES(VALUES)
         
         local CL=strsub(cmdLines,-5,-3)
         local eul=MDRko(CL,"을")  
+        local eun=MDRko(CL,"은")
         
         local message
         if channel=="ADDON_WHISPER" and who==meGame and onlyForMe~=1 then
@@ -543,12 +544,9 @@ function filterVALUES(VALUES)
             if VALUES["msg"]=="!금고" then
                 MDRVault ()      
             end  
-        elseif onlyMe==1 and not CharName then
-            if callTypes["dungeon"] then
-                message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."..msg
-            else
-                message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] 정보입니다."..msg
-            end
+        elseif onlyMe==1 and not CharName then            
+            message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] "..eun.." 다음과 같습니다."..msg
+            
         elseif onlyYou then   
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
             
@@ -559,15 +557,15 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
         elseif callType["parking"] then  
-            if (not level) and #callTypeB==1 then   
-                message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."]"..eul.." 요청합니다."..msg
+            if (not level) and (#callTypeB==1) and (not onlyOnline) then   
+                message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."] "..eul.." 요청합니다."..msg
             else
-                message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg 
+                message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..msg 
             end
         elseif CharName then   
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
         else  
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..msg
         end 
         if not callType["forceversion"] then
             print(statusIcon..mdrcolor[channel]..message)
