@@ -129,9 +129,9 @@ function reportAddonMessage(messageLines,channel,who,callType)
     if status~="" and channel~="PARTY" then delay=0.5 end
     
     for i=1,#messageLines do 
-        C_Timer.After(delay+0.2*(i-1), function()
-                --if channel=="ADDON" then channel="GUILD" end 
+        C_Timer.After(delay+0.2*(i-1), function()                
                 if callType["forceversion"] then channel="WHISPER" end
+                --print(strlen(messageLines[i]))
                 C_ChatInfo.SendAddonMessage("MDReport", MDRcolor(krClass,6).."_"..MDRgetCurrentStatus()..messageLines[i], channel,who)
         end)             
         
@@ -401,9 +401,9 @@ function doShortReport(chars,channel,who,callType)
             
             if yourClass[class] and yourClass[class]>1 then
                 sameClass[class]=(sameClass[class] or 0)+1                
-                classStatus=class..sameClass[class]..","..shorterName                
+                classStatus="{"..class.."}"..shorterName
             else                
-                classStatus=class                
+                classStatus="{"..class.."}"                
             end            
             if charName==meAddon then                
                 if channel=="ADDON_PARTY" then
@@ -453,17 +453,17 @@ function doShortReport(chars,channel,who,callType)
             local sameCheck
             
             if callType=="parking" then                 
-                message=onC.."["..online..skull[class]..classStatus..parkingstar.."]"..onR
+                message=onC.."["..online..classStatus..parkingstar.."]"..onR
             elseif callType=="all" then                
-                message=online..skull[class].."["..havekey.."]:"..classStatus                  
+                message=online..classStatus.."["..havekey.."]:"..classStatus                  
             elseif chars[i]["extraLink"] and callType=="spell"then
                 message="["..online.."{"..classStatus.."}:"..havekey.."]"..chars[i]["extraLink"]
             elseif chars[i]["extraLink"] and callType=="item"then
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))                
                 if sameCheck then                   
-                    message="["..online.."{"..classStatus.."}:"..havekey.."]"
+                    message="["..online..classStatus..":"..havekey.."]"
                 else                    
-                    message="["..online.."{"..classStatus.."}:"..havekey.."▶["..chars[i]["extraLink"].."]"
+                    message="["..online..classStatus..":"..havekey.."▶["..chars[i]["extraLink"].."]"
                 end                
             elseif callType["covenant"] or callType["covenantnow"] or callType["covenantall"] then
                 local coveName
@@ -473,10 +473,10 @@ function doShortReport(chars,channel,who,callType)
                     coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
                 end    
                 
-                message=onC.."["..online.."{"..classStatus.."}:{c"..covenantID.."}"..coveName.."]"..onR
+                message=onC.."["..online..classStatus..":{c"..covenantID.."}"..coveName.."]"..onR
             else
                 if isAddonMessage==1 then
-                    message=onC.."["..online.."{"..classStatus.."}:"..havekey.."]"..onR
+                    message=onC.."["..online..classStatus..":"..havekey.."]"..onR
                 else
                     message=online..skull[class]..havekey.."("..classStatus..")"
                 end           
@@ -494,7 +494,7 @@ function doShortReport(chars,channel,who,callType)
         -- 한줄로 줄이기        
         local oneLineMessage={}
         local num=1
-        local maxNum=8
+        local maxNum=6
         local lineNum=math.ceil(#messageLines/maxNum)
         local charPerLine=math.ceil(#messageLines/lineNum)    
         --print("총"..#messageLines.."캐릭/한줄당 "..charPerLine.."개/총 "..lineNum.."줄")
