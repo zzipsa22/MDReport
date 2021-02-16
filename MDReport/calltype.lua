@@ -21,10 +21,10 @@ local callTypeTable={
     ["돌내놔"]={"currentall", "지금 소유한 돌"},   
     
     
-    ["주차"]={"parking", "주차 못한 캐릭터"},
-    ["단주차"]={"parking", "주차 못한 캐릭터"},
-    ["합법"]={"parking", "주차 못한 캐릭터"},
-    ["합법주차"]={"parking", "주차 못한 캐릭터"},
+    ["주차"]={"parking", "주차 정보"},
+    ["단주차"]={"parking", "주차 정보"},
+    ["합법"]={"parking", "주차 정보"},
+    ["합법주차"]={"parking", "주차 정보"},
     ["편법"]={"parking", "soft"},
     ["편법주차"]={"parking", "soft"},
     ["불법"]={"parking", "hard"},    
