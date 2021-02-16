@@ -1102,7 +1102,7 @@ function findCharAllKey(VALUES)
             if start==nil or onLoad==nil then return end  
             name, _= C_ChallengeMode.GetMapUIInfo(mapID) 
             if name==start.name and level==onLoad.level and level==start.level+1 then   
-                messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." (진행중)" 
+                messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." {OP}진행중" 
                 if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
                     reportAddonMessage(messageLines,channel,who,callType)
                 else  

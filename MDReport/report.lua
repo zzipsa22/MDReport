@@ -219,7 +219,9 @@ function MDRcolorizeForPrint(message)
     local on_pink="|TInterface\\AddOns\\MDReport\\icon\\on_p.tga:0:0.5:-1:-5|t" 
     message=gsub(message,"{OG}",on_green)
     message=gsub(message,"{OP}",on_pink)
-    message=gsub(message,"접속중","|cff00ff00접속중|r")
+    message=gsub(message,"접속중","|cff48ff00접속중|r")
+    message=gsub(message,"준비중","|cff00ccff준비중|r")
+    message=gsub(message,"진행중","|cffff00b4진행중|r")    
     
     if strfind(strsub(message,1,1)," ") then 
         message=strsub(message,2,-1)
@@ -393,7 +395,7 @@ function doShortReport(chars,channel,who,callType)
             local covenantID=MDRgetCovenantID(covenant)
             local itemLevel=chars[i]["itemLevel"]            
             local equipLevel=chars[i]["equipLevel"]
-			local charLevel=chars[i]["charLevel"]
+            local charLevel=chars[i]["charLevel"]
             local online,onC,onR,parkC="","","",""
             local classStatus=""            
             local cutName=gsub(charName, "%s%-.+","")
@@ -439,7 +441,7 @@ function doShortReport(chars,channel,who,callType)
             end            
             
             if keyLink~=nil then
-                havekey=keyName..level			
+                havekey=keyName..level            
             elseif charLevel==MDR.SCL then
                 local E=math.floor(equipLevel)
                 local H=math.floor(itemLevel)
@@ -449,8 +451,8 @@ function doShortReport(chars,channel,who,callType)
                     H="("..H..")"
                 end
                 havekey="템렙"..E..H
-			else
-				havekey=charLevel.."레벨"
+            else
+                havekey=charLevel.."레벨"
             end
             local message=""          
             local sameCheck
@@ -650,7 +652,14 @@ function doFullReport(chars,channel,who,callType)
             local sameCheck
             
             local s=MDR.myMythicKey.start
-            local f=MDR.myMythicKey.finish            
+            local f=MDR.myMythicKey.finish   
+            
+            local on=""
+            if channel=="ADDON_PARTY" then
+                on="{OG}"
+            else
+                on="{OP}"                    
+            end  
             
             if callType=="spell" and chars[i]["extraLink"] then
                 message=headStar..classStatus..": "..chars[i]["extraLink"].." "..havekey..online
@@ -665,15 +674,22 @@ function doFullReport(chars,channel,who,callType)
                 local up=""
                 if f.level=="nil" or s.level=="nil" then return end
                 if f.level > s.level then
-                    up="△"..(f.level-(s.level+1)).."상"
+                    up="|cff48ff00▲"..(f.level-(s.level+1)).."상|r"
                 else
-                    up="▽시간초과"
-                end                
-                message=headStar.."새 돌: ["..getShortDungeonName(s.name)..(s.level+1).."] ▶ ["..getShortDungeonName(f.name)..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
+                    up="|cffff00b4▼시간초과|r"
+                end
+                local before=getShortDungeonName(s.name)
+                local after=getShortDungeonName(f.name)
+                local coveIconBefore="{c"..MDRgetCovenantID(before).."}"
+                local coveIconAfter="{c"..MDRgetCovenantID(after).."}"
                 
-            elseif callType and callType["currentdungeon"] then  
-                local now=" (준비중)"                
-                message=headStar..getShortDungeonName(keyName)..level..": "..keyLink..now
+                message="새 돌: ["..coveIconBefore..before..(s.level+1).."] ▶ ["..coveIconAfter..after..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
+                
+            elseif callType and callType["currentdungeon"] then                
+                local now=" "..on.."준비중"
+                local covenant=MDRgetCovenantID(getShortDungeonName(keyName))
+                local coveIcon="{c"..covenant.."}"
+                message=coveIcon..getShortDungeonName(keyName)..level..": "..keyLink..now
             elseif callType["covenantall"] then
                 message=headStar..classStatus.." ▶{c"..covenantID.."}"..MDRcolor(covenant)
             else                
