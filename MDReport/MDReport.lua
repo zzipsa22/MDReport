@@ -8,8 +8,8 @@ MDR["version"]="@project-version@"
 MDR["lastUpdate"]="@project-date-iso@"
 MDR["guide"]=0
 MDR["cooltime"]=2
-MDR["meGame"]=UnitName("player").."-"..GetRealmName()    
-MDR["meAddon"]=UnitName("player").." - "..GetRealmName()  
+MDR["meGame"]=UnitName("player").."-"..GetRealmName() 
+MDR["meAddon"]=UnitName("player").." - "..GetRealmName() 
 MDR["krClass"],MDR["className"]=UnitClass("player")
 MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
@@ -26,19 +26,19 @@ local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
-DIL.min=184  --깡신
-DIL.max=210  --15단
+DIL.min=184 --깡신
+DIL.max=210 --15단
 DIL.base=135 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
-    DIL[i]=DIL.base + DIL.gap*i  --단수별 허용레벨 / 드랍템 레벨
+    DIL[i]=DIL.base + DIL.gap*i --단수별 허용레벨 / 드랍템 레벨
 end
 MDRconfig=MDRconfig or {}
 
 C_Timer.After(3, function()
         C_MythicPlus.RequestMapInfo()
         C_MythicPlus.RequestRewards()
-        LoadAddOn("Blizzard_WeeklyRewards")  
+        LoadAddOn("Blizzard_WeeklyRewards") 
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end
@@ -81,14 +81,14 @@ local RealmMap= {
     {
         "렉사르", -- [1]
         "와일드해머", -- [2]
-        "윈드러너", -- [3]        
+        "윈드러너", -- [3]  
         "데스윙", -- [4]
         "알렉스트라자", -- [5]
     }, -- [1]
     {
         "가로나", -- [1]
         "굴단", -- [2]
-        "줄진", -- [3]        
+        "줄진", -- [3]  
         "노르간논", -- [4]
         "달라란", -- [5]
         "말퓨리온", -- [6]
@@ -106,13 +106,13 @@ local RealmMap= {
     ["와일드해머"] = 1,
     ["데스윙"] = 1,
     ["윈드러너"] = 1,
-    ["알렉스트라자"] = 1,    
+    ["알렉스트라자"] = 1, 
     
     ["말퓨리온"] = 2,
     ["달라란"] = 2,
     ["굴단"] = 2,
     ["줄진"] = 2,
-    ["하이잘"] = 2,    
+    ["하이잘"] = 2, 
     ["헬스크림"] = 2,
     ["가로나"] = 2,
     ["노르간논"] = 2,
@@ -132,12 +132,12 @@ local mailClass={"냥꾼","술사"}
 local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
-function filterVALUES(VALUES)       
+function filterVALUES(VALUES)  
     
     C_Timer.After(MDR["cooltime"], function()
             MDR["running"]=0
             MDR["who"]=nil
-    end)        
+    end)  
     
     local who,channel,level,level2,callTypeT
     local onlyMe,onlyYou,onlyOnline,except,onlyForMe
@@ -147,15 +147,15 @@ function filterVALUES(VALUES)
         who=VALUES["who"]
         channel=VALUES["channel"]
         level=VALUES["level"]
-        level2=VALUES["level2"]        
-        callTypeT=VALUES["callTypeT"]     
+        level2=VALUES["level2"]  
+        callTypeT=VALUES["callTypeT"]  
         onlyMe=VALUES["onlyMe"]
         onlyYou=VALUES["onlyYou"]
-        onlyOnline=VALUES["onlyOnline"]        
+        onlyOnline=VALUES["onlyOnline"]  
         except=VALUES["except"]
         onlyForMe=VALUES["onlyForMe"]
         for i=1,#callTypeT do
-            callTypeB[i]=callTypeT[i][1]              
+            callTypeB[i]=callTypeT[i][1]   
             --print(i..":"..callTypeT[i][1])
             callType[callTypeT[i][1]]=1
             if callTypeT[i][1]=="dungeon" then 
@@ -163,8 +163,8 @@ function filterVALUES(VALUES)
                     keyword["dungeon"]={}
                 end
                 if not tContains(keyword["dungeon"],callTypeT[i][2]) then
-                    tinsert(keyword["dungeon"],callTypeT[i][2])                     
-                end              
+                    tinsert(keyword["dungeon"],callTypeT[i][2])    
+                end   
             else
                 
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
@@ -173,26 +173,26 @@ function filterVALUES(VALUES)
             --print(callTypeT[i][2])
             --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]
-            keyword3[callTypeT[i][1]]=callTypeT[i][4]              
-        end   
-        CharName=VALUES["CharName"]               
+            keyword3[callTypeT[i][1]]=callTypeT[i][4]   
+        end 
+        CharName=VALUES["CharName"]   
         
-    end         
+    end  
     
     local length=MDR["textLength"]
     local kLength=math.floor((length-1)/3+1)
     
     -- 찾는 사람을 지정한 경우
     if onlyYou then 
-        if who==meGame and channel~="ADDON_GUILD" and channel~="ADDON_PARTY" and channel~="ADDON_OFFICER" then  
-            if strlen(onlyYou)<length then               
+        if who==meGame and channel~="ADDON_GUILD" and channel~="ADDON_PARTY" and channel~="ADDON_OFFICER" then 
+            if strlen(onlyYou)<length then   
                 print("|cffff0000▶|r"..MDRcolor(onlyYou,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
                 return --검색어가 짧으면 무시
             else
                 local message,range="",""
-                --print((level or"").."~"..(level2 or""))                
+                --print((level or"").."~"..(level2 or""))   
                 if level==2 and level2 then
-                    range=", "..MDRcolor("도적",0,level2.."단 이하")              
+                    range=", "..MDRcolor("도적",0,level2.."단 이하")   
                 elseif level and level2==99 then
                     range=", "..MDRcolor("도적",0,level.."단 이상")
                 elseif level and not level2 then
@@ -211,13 +211,13 @@ function filterVALUES(VALUES)
                     if callTypeT[i][1]=="class" then
                         type=1
                         what=MDRcolor(word,type)
-                    elseif callTypeT[i][1]=="dungeon" then                
+                    elseif callTypeT[i][1]=="dungeon" then   
                         word=getFullDungeonName(callTypeT[i][2])
                         if except==1 then
                             what=MDRcolor("회색",0,word)
                         else
                             what=MDRcolor("노랑",0,word)
-                        end                        
+                        end    
                     elseif callTypeT[i][1]=="spec" then
                         type=10
                         what=MDRcolor(word,type)
@@ -226,55 +226,55 @@ function filterVALUES(VALUES)
                         what=MDRcolor(word,type)
                     else
                         what=MDRcolor(word,type)
-                    end    
+                    end 
                     if (not callTypes[callTypeB[i]] or callTypeT[i][1]=="dungeon") then
                         if (callTypeT[i][1]=="all" and not callType["dungeon"] and not callType["parking"]) or
-                        callTypeT[i][1]~="all" then  
+                        callTypeT[i][1]~="all" then 
                             if not strfind(cmdLines,word) then
                                 cmdLines=cmdLines..what..space
                                 callTypes[callTypeB[i]]=1
-                            end                    
+                            end    
                         end
-                    end                        
+                    end    
                 end
                 if strsub(cmdLines,strlen(space)*-1)==space then
                     cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
                 end
                 
                 --제외 색입히기
-                local exc                
+                local exc   
                 if callTypes["dungeon"] and except==1 then
                     exc=MDRcolor("죽기",0," '제외'")
                 end
                 
                 cmdLines=cmdLines..(exc or"")..range
                 local CL=gsub(cmdLines,"|r","")
-                local eul=MDRko(CL,"을")                
+                local eul=MDRko(CL,"을")   
                 
                 message=" 님에게 "..cmdLines..eul.." 요청합니다."
-                --end                 
+                --end    
                 print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
-            end            
-        end         
+            end  
+        end  
         
-    end    
+    end 
     
     if CharName then
         if strlen(CharName)<length then
-            if who==meGame then    
+            if who==meGame then 
                 print("|cffff0000▶|r"..MDRcolor(CharName,-2)..": 입력하신 문자열 길이가 너무 짧습니다. 찾고자 하는 대상의 이름을 좀 더 길게 입력해주세요. (한글 |cFFFFF569"..kLength.."|r글자 이상, 영문 |cFFFFF569"..length.."|r자 이상)")
-            end            
-        return end  --검색어가 짧으면 무시 
+            end  
+        return end --검색어가 짧으면 무시 
     end
     
     if callType["levelrange"] and level2==nil then
-        VALUES["level2"]=tonumber(keyword["levelrange"])        
-    end    
+        VALUES["level2"]=tonumber(keyword["levelrange"])  
+    end 
     
     --범위지정인데 범위값이 없으면 리턴
-    if callType["levelrange"]  and level==nil then
+    if callType["levelrange"] and level==nil then
         return
-    end  
+    end 
     
     --내가 길드로 요청하는 경우
     if channel=="GUILD" then
@@ -284,7 +284,7 @@ function filterVALUES(VALUES)
                 local msg=VALUES["msg"]
                 if strfind(strsub(msg,1,2),"!") then
                     msg=strsub(msg,2,-1)
-                end            
+                end  
                 print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
                 guildWarn=guildWarn+1
             end
@@ -296,45 +296,45 @@ function filterVALUES(VALUES)
             local at=""
             if m==1 then--매너모드
                 if strfind(msg,"@") then
-                    msg=gsub(msg,"@","")                
+                    msg=gsub(msg,"@","")   
                 else
-                    at="@"            
-                end          
-            end  
-            MDRsendAddonMessage("!"..at..msg,"GUILD",meGame)            
+                    at="@"  
+                end  
+            end 
+            MDRsendAddonMessage("!"..at..msg,"GUILD",meGame)  
             return
         else --길드요청을 내가보낸게 아니면 리턴
             return
-        end        
+        end  
     end
     
     --파티고 무슨돌이 아니면
     if channel=="PARTY" and not callType["newkey"] then
-        if  who==meGame then
+        if who==meGame then
             MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)
             return
         else 
             return
         end
-    end    
+    end 
     
     --버전요청을 한 사람이 나일 경우 리턴
     if callType["forceversion"] and who==meGame then
         return
-    end        
+    end  
     
     --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
     if callType["mykey"] and who~=meGame and channel~="WHISPER_OUT" then 
         return 
-    end       
+    end  
     
     --내가 보낸 귓말이고, 나한테 보냈거나 !내돌/!지금내돌을 요청한게 아니면 리턴
-    if (channel=="WHISPER_OUT") and (who==meGame or callType["mykey"]~=1 )  then
-        return       
-    end        
+    if (channel=="WHISPER_OUT") and (who==meGame or callType["mykey"]~=1 ) then
+        return  
+    end  
     
     --채널이 없으면 프린트로 변경
-    if channel==nil then channel="print" end     
+    if channel==nil then channel="print" end  
     
     local here,_=GetInstanceInfo()
     
@@ -346,7 +346,7 @@ function filterVALUES(VALUES)
     if callType["covenantall"] then
         local covenant=C_Covenants.GetActiveCovenantID()
         local covenantIcon="{c"..covenant.."}"
-        local messageLines={}        
+        local messageLines={}  
         
         local type
         if channel=="ADDON_GUILD" or channel=="ADDON_OFFICER" or channel=="GUILD" then
@@ -358,18 +358,18 @@ function filterVALUES(VALUES)
                 callTypeT[1][1]="covenantnow"
                 
                 VALUES["callTypeT"]=callTypeT
-                callType["covenantnow"]=1                
+                callType["covenantnow"]=1   
                 keyword["covenantall"]=coveName
                 type="일치하는 성약단"
             else
                 onlyOnline=1
-            end            
+            end  
         end
-    end   
+    end 
     
     if (callType["covenant"] or callType["covenantnow"]) and coveHere>0 and (channel=="ADDON_PARTY" or channel=="PARTY") then
         onlyOnline=1 
-    end   
+    end 
     
     -- 귓말요청시 귓채널로 변경
     if onlyForMe==1 
@@ -378,12 +378,12 @@ function filterVALUES(VALUES)
         channel="ADDON_WHISPER"
     end
     
-    if channel=="ADDON_PARTY" or channel=="ADDON_GUILD"  or channel=="ADDON_WHISPER" or channel=="ADDON_OFFICER" then       
+    if channel=="ADDON_PARTY" or channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_OFFICER" then  
         local mdrcolor={
             ["ADDON_PARTY"]="|cFFaaaaffMDR▶|r ",
             ["ADDON_GUILD"]="|cFF33FF99MDR▶|r ",
             ["ADDON_WHISPER"]="|cFFF5aCdAMDR▶|r ",
-            ["ADDON_OFFICER"]="|cFF40C040MDR▶|r ",           
+            ["ADDON_OFFICER"]="|cFF40C040MDR▶|r ",   
         }
         local status=MDRgetCurrentStatus()
         local statusIcon=""
@@ -399,7 +399,7 @@ function filterVALUES(VALUES)
         if callType["parking"] and level then
             range=MDRcolor("도적",0,level.."단").." "
         elseif level==2 and level2 then
-            range=", "..MDRcolor("도적",0,level2.."단 이하")              
+            range=", "..MDRcolor("도적",0,level2.."단 이하")   
         elseif level and level2==99 then
             range=", "..MDRcolor("도적",0,level.."단 이상")
         elseif level and not level2 then
@@ -415,55 +415,58 @@ function filterVALUES(VALUES)
             local type=0
             local word=keyword[callTypeB[i]]
             local what,icon
-            if callTypeT[i][1]=="all" then                
+            if callTypeT[i][1]=="all" then   
                 icon="\124T525134:0:::-4\124t"
                 what=icon..MDRcolor(word,type)
-            elseif callTypeT[i][1]=="emote" then              
+            elseif callTypeT[i][1]=="emote" then   
                 if word=="얼라이언스를위하여" then
                     icon="|TInterface\\TargetingFrame\\UI-PVP-ALLIANCE:0:0:-4:-4:64:64:0:32:0:38|t"
                     what="외칩니다 : "..icon..MDRcolor("초록",0,"<얼 라 이 언 스>").."를 위하여!"
                 else
                     what="감정표현입니다 : "..MDRcolor(word,type) 
-                end                  
+                end   
             elseif callTypeT[i][1]=="class" then
                 type=1
                 icon=MDR.classIcon[callTypeT[i][2]]
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="parking" then
                 icon="|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"
-                what=icon..MDRcolor(word,type)   
-            elseif callTypeT[i][1]=="covenant" or callTypeT[i][1]=="covenantnow" then                
+                if level then    
+                    word="주차가 필요한 캐릭터"
+                end 
+                what=icon..MDRcolor(word,type) 
+            elseif callTypeT[i][1]=="covenant" or callTypeT[i][1]=="covenantnow" then   
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 what=icon..MDRcolor(word,type)
-            elseif callTypeT[i][1]=="dungeon" then                
+            elseif callTypeT[i][1]=="dungeon" then   
                 word=getFullDungeonName(callTypeT[i][2])
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 if except==1 then
                     what=icon..MDRcolor("회색",0,word)
                 else
                     what=icon..MDRcolor("노랑",0,word)
-                end     
+                end  
             elseif callTypeT[i][1]=="spec" then
                 type=10
                 what=MDRcolor(word,type)
             elseif CharName then
                 word=CharName
-                what=MDRcolor(word,type)                
+                what=MDRcolor(word,type)   
             else
                 if callTypeT[i][1]=="affix" then
                     word=VALUES["msg"]
-                end                
+                end   
                 what=MDRcolor(word,type)
-            end    
+            end 
             if (not callTypes[callTypeB[i]] or callTypeT[i][1]=="dungeon") then
                 if (callTypeT[i][1]=="all" and not callType["dungeon"] and not callType["parking"]) or
-                callTypeT[i][1]~="all" then  
+                callTypeT[i][1]~="all" then 
                     if not strfind(cmdLines,word) then
                         cmdLines=cmdLines..what..space
                         callTypes[callTypeB[i]]=1
-                    end                    
+                    end    
                 end
-            end                        
+            end    
         end
         local exc
         if callTypes["dungeon"] and except==1 then
@@ -474,37 +477,37 @@ function filterVALUES(VALUES)
             cmdLines=strsub(cmdLines,1,strlen(space)*-1-1)
         end
         
-        if callType["parking"]  then
+        if callType["parking"] then
             cmdLines=range..cmdLines
         else
-            cmdLines=cmdLines..(exc or "")..range    
-        end        
+            cmdLines=cmdLines..(exc or "")..range 
+        end  
         
-        local msg=VALUES["msg"]  
+        local msg=VALUES["msg"] 
         local sur,chName="","" 
         
         if channel=="ADDON_PARTY" then
             sur=MDRcolor("파티",0,"/!! ")
             chName=MDRcolor("파티",0,"[파티]")
-        elseif channel=="ADDON_GUILD" then            
+        elseif channel=="ADDON_GUILD" then  
             sur=MDRcolor("길드",0,"/! ")
-            chName=MDRcolor("길드",0,"[길드]")            
+            chName=MDRcolor("길드",0,"[길드]")  
         elseif channel=="ADDON_OFFICER" then
             sur=MDRcolor("관리자",0,"/@ ")
-            chName=MDRcolor("관리자",0,"[관리자]")   
-        elseif channel=="ADDON_WHISPER"  and onlyForMe==1 then
+            chName=MDRcolor("관리자",0,"[관리자]") 
+        elseif channel=="ADDON_WHISPER" and onlyForMe==1 then
             sur=MDRcolor("핑크",0,"/! ")
             chName=MDRgetModeName(1)
         else
             sur=MDRcolor("핑크",0,"/!! ")
-            chName=MDRcolor("핑크",0,"[나에게만 보임]")            
-        end   
+            chName=MDRcolor("핑크",0,"[나에게만 보임]")  
+        end 
         
-        if msg and strfind(strsub(msg,1,1),"!") then            
+        if msg and strfind(strsub(msg,1,1),"!") then  
             msg=strsub(msg,2,-1)
-        end   
+        end 
         
-        if msg and not CharName then              
+        if msg and not CharName then   
             msg="|cffaaaaaa ☞"..sur..msg.."|r "..chName
         else
             msg=MDRcolor(msg,0).." "..chName
@@ -522,9 +525,9 @@ function filterVALUES(VALUES)
                 
                 cmdLines=now..cmdLines
             else
-                now=", "..MDRcolor("핑크",0,"현재 접속중")  
+                now=", "..MDRcolor("핑크",0,"현재 접속중") 
                 cmdLines=cmdLines..now
-            end            
+            end  
         end
         local whoIcon="|TInterface\\FriendsFrame\\UI-Toast-ToastIcons.tga:0:0:0:-4:128:64:2:29:34:61|t"
         local whoIcon2="|TInterface\\ChatFrame\\UI-ChatIcon-Battlenet:0:0:0:-4|t"
@@ -532,36 +535,38 @@ function filterVALUES(VALUES)
         
         
         local CL=strsub(cmdLines,-5,-3)
-        local eul=MDRko(CL,"을")         
+        local eul=MDRko(CL,"을")  
         
         local message
         if channel=="ADDON_WHISPER" and who==meGame and onlyForMe~=1 then
             message="["..cmdLines.."]"..msg
             if VALUES["msg"]=="!금고" then
-                MDRVault ()                               
-            end            
+                MDRVault ()      
+            end  
         elseif onlyMe==1 and not CharName then
             if callTypes["dungeon"] then
                 message=MDRcolor("핑크",0,"["..name.."]").." 님이 소유한 ["..cmdLines.."] 입니다."..msg
             else
                 message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] 정보입니다."..msg
             end
-        elseif onlyYou then           
+        elseif onlyYou then   
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..msg
             
-        elseif callType["affix"] then            
+        elseif callType["affix"] then  
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg
             
         elseif callType["emote"] then 
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
-        elseif callType["parking"] then            
-            
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg            
-            
-        elseif CharName then           
+        elseif callType["parking"] then  
+            if (not level) and #callTypeB==1 then   
+                message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."]"..eul.." 요청합니다."..msg
+            else
+                message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg 
+            end
+        elseif CharName then   
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
-        else            
+        else  
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 찾습니다."..msg
         end 
         if not callType["forceversion"] then
@@ -586,8 +591,8 @@ function filterVALUES(VALUES)
                     end)
                 end
             end
-        end        
-    end  
+        end  
+    end 
     
     --나에게서 귓말이 들어오는 경우 프린트로 변경
     if (channel=="WHISPER_IN" or channel=="ADDON_WHISPER") and onlyForMe~=1 and who==meGame then
@@ -601,7 +606,7 @@ function filterVALUES(VALUES)
     
     --내가 아닌 사람이 !속성을 요청하는 경우 리턴
     if who~=meGame and callType["affix"] then
-        return        
+        return  
     end
     
     -- "내"를 붙인 명령어를 다른사람이 입력했으면 리턴
@@ -610,16 +615,16 @@ function filterVALUES(VALUES)
     end 
     
     --조절값 입력
-    VALUES["channel"]=channel    
+    VALUES["channel"]=channel 
     VALUES["onlyOnline"]=onlyOnline
     
     if #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] and (callType["item"] or callType["trinket"] or callType["stat"] 
         --or callType["spec"] 
         --or callType["class"] 
-        or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면         
+        or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면  
         
         --무기 사용 가능 여부 체크
-        if ((callType["spec"] or callType["class"])  and callType["specificitem"]) then 
+        if ((callType["spec"] or callType["class"]) and callType["specificitem"]) then 
             
             local spec=keyword["spec"]
             local class=keyword["class"] or keyword3["spec"]
@@ -628,30 +633,30 @@ function filterVALUES(VALUES)
                 specClass=MDRcolor(spec,10)
             else
                 specClass=MDRcolor(class)
-            end            
-            if  checkSpecCanUseItem(spec or class,keyword["specificitem"]) then 
+            end  
+            if checkSpecCanUseItem(spec or class,keyword["specificitem"]) then 
                 
                 VALUES["comb"]="Spec_Specificitem" 
             else 
-                if who==meGame then                    
+                if who==meGame then    
                     
                     local neun=MDRko(MDRcolor(spec or class,5),"는")
                     local eul=MDRko(keyword["specificitem"],"을")
-                    print("|cFFff0000▶|r"..specClass..neun.." "..MDRcolor(keyword["specificitem"],-2)..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")                    
-                end                
+                    print("|cFFff0000▶|r"..specClass..neun.." "..MDRcolor(keyword["specificitem"],-2)..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")    
+                end   
                 return 
-            end   
+            end 
         end
         
         --직업과 조합해서 검색시
-        if callType["class"] and (callType["item"] or  callType["category"]  or callType["specificitem"]  or  callType["dungeon"]) then           
+        if callType["class"] and (callType["item"] or callType["category"] or callType["specificitem"] or callType["dungeon"]) then   
             
             if keyword["class"]=="사제" or keyword["class"]=="흑마" or keyword["class"]=="법사" or keyword["class"]=="악사" then
                 
                 VALUES["comb"]="Class_Something" 
                 
-            else  
-                if who==meGame then                    
+            else 
+                if who==meGame then    
                     
                     local neun=MDRko(MDRcolor(keyword["class"],5),"는")
                     
@@ -659,23 +664,23 @@ function filterVALUES(VALUES)
                     
                 end
                 return
-            end                
+            end   
             
             --전문화+무기
-        elseif (callType["spec"] and callType["item"]) then            
+        elseif (callType["spec"] and callType["item"]) then  
             VALUES["comb"]="Spec_Item" 
-            --장신구와 던전 조합 거절            
+            --장신구와 던전 조합 거절  
         elseif callType["trinket"] and callType["dungeon"] and #callTypeB==2 then
             if who==meGame then
-                print("|cFFff0000▶장신구|r는 |cff8787ED!던전이름|r과 단독으로 조합할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cff8787ED!"..keyword["dungeon"].."|r or "..MDRcolor("!힐러",-1).."|cff8787ED!"..keyword["dungeon"].."|r)")                
-            end  
+                print("|cFFff0000▶장신구|r는 |cff8787ED!던전이름|r과 단독으로 조합할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cff8787ED!"..keyword["dungeon"].."|r or "..MDRcolor("!힐러",-1).."|cff8787ED!"..keyword["dungeon"].."|r)")   
+            end 
             
             --장신구 검색
         elseif (
             (callType["trinket"] and (callType["role"] or callType["stat"])) or
             (callType["stat"] and callType["dungeon"] and not callType["category"]) or
-            (callType["role"] and callType["dungeon"])            
-        )then            
+            (callType["role"] and callType["dungeon"])  
+        )then  
             
             if keyword["role"]=="힐러"then 
                 if not tips[1] or tips[1]<warns then
@@ -685,118 +690,118 @@ function filterVALUES(VALUES)
                     tips[1]=(tips[1] or 0)+1
                 end
                 
-            elseif keyword["role"]=="탱커" then                
-                if keyword2["role"]=="힘/민첩" and not keyword["stat"]  then
-                    if not tips[2] or tips[2]<warns then                        
+            elseif keyword["role"]=="탱커" then   
+                if keyword2["role"]=="힘/민첩" and not keyword["stat"] then
+                    if not tips[2] or tips[2]<warns then    
                         if who==meGame and callType["trinket"] and not callType["dungeon"] then
-                            print("|cFF00ff00▶|r"..MDRcolor("탱커 전용",-1).." |cff00ff00장신구|r를 검색합니다. "..MDRcolor("탱커",-1).."로 사용 가능한 "..MDRcolor("모든 장신구",-2).."를 검색하시려면 "..MDRcolor("도적",0,"힘").."이나 "..MDRcolor("도적",0,"민첩").."과 함께 검색해보세요. |cFF33FF99ex)|r "..MDRcolor("!힘탱",-1).."|cff00ff00!장신구|r, "..MDRcolor("!탱커",-1).."|cff00ff00!장신구|r"..MDRcolor("도적",0,"!민첩"))     
+                            print("|cFF00ff00▶|r"..MDRcolor("탱커 전용",-1).." |cff00ff00장신구|r를 검색합니다. "..MDRcolor("탱커",-1).."로 사용 가능한 "..MDRcolor("모든 장신구",-2).."를 검색하시려면 "..MDRcolor("도적",0,"힘").."이나 "..MDRcolor("도적",0,"민첩").."과 함께 검색해보세요. |cFF33FF99ex)|r "..MDRcolor("!힘탱",-1).."|cff00ff00!장신구|r, "..MDRcolor("!탱커",-1).."|cff00ff00!장신구|r"..MDRcolor("도적",0,"!민첩"))  
                         end
                         tips[2]=(tips[2] or 0)+1
                     end
                 elseif callType["stat"] or keyword2["role"]~="힘/민첩" then 
-                    if not tips[3] or tips[3]<warns then                        
-                        if who==meGame and callType["trinket"] and not callType["dungeon"]  then                    
+                    if not tips[3] or tips[3]<warns then    
+                        if who==meGame and callType["trinket"] and not callType["dungeon"] then    
                             local message,role
                             local stat=keyword["stat"] or keyword2["role"]
                             if stat=="힘" then
                                 role=MDRcolor("보호",0)..", "..MDRcolor("혈기",0)..", "..MDRcolor("방어",0)
                             else
-                                role=MDRcolor("수호",0)..", "..MDRcolor("양조",0)..", "..MDRcolor("복수",0)                            
-                            end                        
+                                role=MDRcolor("수호",0)..", "..MDRcolor("양조",0)..", "..MDRcolor("복수",0)     
+                            end    
                             message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat).."을 사용하는 "..MDRcolor("탱커",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..stat..keyword["role"]).."|cff8787ED!던전이름|r으로 검색해보세요."
                             print(message) 
                         end 
                         tips[3]=(tips[3] or 0)+1
                     end
-                end              
+                end   
                 
             elseif not callType["stat"] then 
                 if not tips[4] or tips[4]<warns then
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
                         print("|cFFff0000▶|r"..MDRcolor("딜러",-1).." |cff00ff00장신구|r를 검색하려면 "..MDRcolor("도적",0,"능력치").."를 지정해야합니다. |cFF33FF99ex)|r "..MDRcolor("도적",0,"!민첩").."|cff00ff00!장신구|r") 
-                    end  
+                    end 
                     tips[4]=(tips[4] or 0)+1
-                end                
+                end   
                 return
                 
             elseif not callType["role"] then 
-                if not tips[5] or tips[5]<warns then                        
+                if not tips[5] or tips[5]<warns then    
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
                         local message,role
                         if keyword["stat"]=="힘" then
-                            role=MDRcolor("무기",0,"무기/분노")..", "..MDRcolor("냉죽",0,"냉기/부정")..", "..MDRcolor("징벌",0)                           
-                        elseif keyword["stat"]=="지능" then                           
+                            role=MDRcolor("무기",0,"무기/분노")..", "..MDRcolor("냉죽",0,"냉기/부정")..", "..MDRcolor("징벌",0)     
+                        elseif keyword["stat"]=="지능" then     
                             role=MDRcolor("마법사")..", "..MDRcolor("흑마법사")..", "..MDRcolor("암흑",0)..", "..MDRcolor("조화",0)..", "..MDRcolor("정기",0)
-                        elseif keyword["stat"]=="민첩" then                           
+                        elseif keyword["stat"]=="민첩" then     
                             role=MDRcolor("도적")..", "..MDRcolor("사냥꾼")..", "..MDRcolor("풍운",0)..", "..MDRcolor("야성",0)..", "..MDRcolor("고양",0)..", "..MDRcolor("파멸",0)
-                        end                          
+                        end     
                         message="|cFF00ff00▶|r"..MDRcolor("도적",0,keyword["stat"]).."을 사용하는 "..MDRcolor("딜러",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..keyword["stat"]).."|cff8787ED!던전이름|r으로 검색해보세요."
                         print(message) 
                     end 
                     tips[5]=(tips[5] or 0)+1
-                end                  
+                end   
             end
             --print("검색 조건 충분")
             VALUES["comb"]="Trinket" 
             
             --던전+스펙
-        elseif (callType["spec"] and callType["dungeon"]) then  
-            VALUES["comb"]="Spec_Dungeon"    
+        elseif (callType["spec"] and callType["dungeon"]) then 
+            VALUES["comb"]="Spec_Dungeon" 
             
-            --직업+스탯            
-        elseif (callType["class"] and callType["stat"]) then  
-            local class,stat=keyword["class"],keyword["stat"]            
+            --직업+스탯  
+        elseif (callType["class"] and callType["stat"]) then 
+            local class,stat=keyword["class"],keyword["stat"]  
             if checkSpecCanUseStat(class,stat) then
-                if class=="전사" or (class=="기사" and stat=="힘")  or class=="도적" or class=="냥꾼" or class=="죽기" then
-                    if who==meGame then                    
+                if class=="전사" or (class=="기사" and stat=="힘") or class=="도적" or class=="냥꾼" or class=="죽기" then
+                    if who==meGame then    
                         
                         local neun=MDRko(MDRcolor(keyword["class"],5),"는")
                         
                         print("|cFFff0000▶|r"..MDRcolor(class)..neun.." "..MDRcolor("전문화",-1).."에 따라 착용할 수 있는 아이템이 달라 |cFFFFF569"..stat.." 능력치|r와 함께 검색할 수 없습니다. "..MDRcolor("전문화",-1).."를 지정해서 검색해보세요.")
                         
-                    end  
+                    end 
                     return
                 else 
                     VALUES["comb"]="Class_Stat"
-                end                
+                end   
             else
-                if who==meGame then                    
+                if who==meGame then    
                     
                     local neun=MDRko(MDRcolor(keyword["class"],5),"는")
                     
                     print("|cFFff0000▶|r"..MDRcolor(class)..neun.." |cFFFFF569"..keyword["stat"].."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
                     
-                end                
+                end   
                 return 
             end
             
             --전문화+스탯
-        elseif (callType["spec"] and callType["stat"]) then  
+        elseif (callType["spec"] and callType["stat"]) then 
             local spec=keyword["spec"]
             local stat=keyword["stat"]
             local class=keyword3["spec"]
             if checkSpecCanUseStat(spec,stat) then
-                VALUES["comb"]="Spec_Stat"   
+                VALUES["comb"]="Spec_Stat" 
             else
-                if who==meGame then                    
+                if who==meGame then    
                     
                     local neun=MDRko(MDRcolor(keyword["spec"],5),"는")
                     
                     print("|cFFff0000▶|r"..MDRcolor(spec,0).." "..MDRcolor(class)..neun.." |cFFFFF569"..keyword["stat"].."|r 아이템을 사용할 수 없습니다. 다른 |cFFFFF569능력치|r로 다시 시도해보세요.")
                     
-                end                
+                end   
                 return 
             end
             --스탯+무기종류
-        elseif (callType["stat"] and callType["specificitem"])then             
-            VALUES["comb"]="Stat_Specificitem"              
+        elseif (callType["stat"] and callType["specificitem"])then   
+            VALUES["comb"]="Stat_Specificitem"   
             
             --스탯+무기범주
-        elseif (callType["stat"] and callType["category"])then             
-            VALUES["comb"]="Stat_Category"  
+        elseif (callType["stat"] and callType["category"])then   
+            VALUES["comb"]="Stat_Category" 
             --전문화+범주
-        elseif (callType["spec"] and callType["category"])then             
-            VALUES["comb"]="Spec_Category"            
+        elseif (callType["spec"] and callType["category"])then   
+            VALUES["comb"]="Spec_Category"  
             --스탯+무기
         elseif (callType["stat"] and callType["item"]) then
             if who==meGame then
@@ -804,11 +809,11 @@ function filterVALUES(VALUES)
                 print("|cFFff0000▶|r|cFFFFF569능력치|r와 "..MDRcolor("무기",-2).."는 함께 검색할 수 없습니다. "..MDRcolor("무기 유형(단검,지팡이)",-2).."이나 "..MDRcolor("종류(양손,한손)",-1).."를 지정해주세요. (|cFF33FF99ex|r. |cFFFFF569!힘|r"..MDRcolor("!양손",-1).." or |cFFFFF569!지능|r"..MDRcolor("!단검",-2)..")")
                 
             end
-            return              
+            return   
         end
         if VALUES["comb"] then
-            findCharAllItem(VALUES)            
-        end        
+            findCharAllItem(VALUES)  
+        end  
         return
         
     else --!명령어가 단일일 경우
@@ -823,42 +828,42 @@ function filterVALUES(VALUES)
             callType["charname"] or
             callType["covenantall"] or
             callType["covenantnow"] or
-            callType["covenant"] ) then            
+            callType["covenant"] ) then  
             
-            findCharAllKey(VALUES)            
-        elseif callType["emote"] then        
+            findCharAllKey(VALUES)  
+        elseif callType["emote"] then  
             MDRdoEmote(channel,who,keyword["emote"])
-        elseif callType["parking"] then        
-            findCharNeedParking(VALUES)          
-        elseif callType["spell"] and #callTypeB==1 then        
-            findCharSpell(keyword["spell"],channel,who,"spell")     
-        elseif callType["forceversion"] and #callTypeB==1 then        
-            doCheckVersion(channel,who,callType)    
-        elseif callType["affix"] and #callTypeB==1 then        
-            doOnlyAffixReport(keyword["affix"],channel,who,"affix")             
-        elseif callType["invite"] and (checkCallMe(onlyYou) or chennel=="WHISPER_IN")then        
+        elseif callType["parking"] then  
+            findCharNeedParking(VALUES)  
+        elseif callType["spell"] and #callTypeB==1 then  
+            findCharSpell(keyword["spell"],channel,who,"spell")  
+        elseif callType["forceversion"] and #callTypeB==1 then  
+            doCheckVersion(channel,who,callType) 
+        elseif callType["affix"] and #callTypeB==1 then  
+            doOnlyAffixReport(keyword["affix"],channel,who,"affix")   
+        elseif callType["invite"] and (checkCallMe(onlyYou) or chennel=="WHISPER_IN")then  
             MDRrequestInvite(channel,who)
         elseif callType["specificitem"] then 
             --!주스탯이 고정인 무기종류는 검색통과
             if keyword["specificitem"]=="보조장비" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁" or keyword["specificitem"]=="활" or keyword["specificitem"]=="총" or keyword["specificitem"]=="전투검" or keyword["specificitem"]=="방패" then
-                VALUES["comb"]="Spec_Specificitem"       
-                findCharAllItem(VALUES)                
+                VALUES["comb"]="Spec_Specificitem"  
+                findCharAllItem(VALUES)   
             else
                 if who==meGame then
                     
-                    local neun=MDRko(keyword["specificitem"],"는")       
-                    print("|cFFff0000▶|r"..MDRcolor(keyword["specificitem"],-2)..neun.." 단독으로 검색할 수 없습니다. "..MDRcolor("전문화",-1).."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. "..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3)..MDRcolor("!"..keyword["specificitem"],-2)..", |cFFFFF569!힘|r"..MDRcolor("!"..keyword["specificitem"],-2)..")")                        
+                    local neun=MDRko(keyword["specificitem"],"는")  
+                    print("|cFFff0000▶|r"..MDRcolor(keyword["specificitem"],-2)..neun.." 단독으로 검색할 수 없습니다. "..MDRcolor("전문화",-1).."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. "..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3)..MDRcolor("!"..keyword["specificitem"],-2)..", |cFFFFF569!힘|r"..MDRcolor("!"..keyword["specificitem"],-2)..")")    
                     
-                end     
-            end            
+                end  
+            end  
             --!전문화만 단독 검색시 직업으로 보여주고 무기검색법 알려주기
         elseif callType["spec"] then
             if who==meGame then
-                local spec=keyword["spec"]                
+                local spec=keyword["spec"]   
                 local class=getCallTypeTable(spec)[4] or getCallTypeTable(spec)[2] 
                 local neun=MDRko(MDRcolor(class,5),"는")
                 local ga=MDRko(MDRcolor(class,5),"가")
-                local ro=MDRko(class,"로")                                 
+                local ro=MDRko(class,"로")      
                 
                 print("|cFFffff00▶|r"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 전문화 대신 "..MDRcolor(class,0,"직업").." 정보를 요청합니다. ("..MDRcolor(class,0,"!"..class)..")")
                 
@@ -867,7 +872,7 @@ function filterVALUES(VALUES)
                 
             end
             VALUES["callTypeT"][1]=getCallTypeTable(keyword3["spec"])
-            findCharAllKey(VALUES)              
+            findCharAllKey(VALUES)   
             --VALUES["comb"]="Spec_Item"
             --findCharAllItem(VALUES)
             
@@ -878,7 +883,7 @@ function filterVALUES(VALUES)
                 print("|cFFff0000▶|r|cFFaaaaaa무기|r는 단독으로 검색할 수 없습니다. 특성을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3).."|cFFaaaaaa!"..(keyword["trinket"] or keyword["item"] ).."|r)")
                 print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")
                 
-            end  
+            end 
             --!장신구만 단독검색시
         elseif callType["trinket"] then
             if who==meGame then
@@ -886,31 +891,31 @@ function filterVALUES(VALUES)
                 print("|cFFff0000▶|r|cFF00ff00장신구|r는 단독으로 검색할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요 (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cFF00ff00!장신구|r or "..MDRcolor("!힐러",-1).."|cFF00ff00!장신구|r)") 
                 print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFF00ff00장신구|r")
                 
-            end              
+            end   
             
-            --스탯만 단독검색시            
+            --스탯만 단독검색시  
         elseif callType["stat"] then
             if who==meGame then
                 
                 print("|cFFff0000▶|r|cFFFFF569능력치|r는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요. (|cFF33FF99ex|r. !|cFFFFF569"..keyword["stat"].."|r!지팡이)")
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")                
-            end   
+                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")   
+            end 
             
             --스탯지정없이 무기범주만 단독검색시
         elseif callType["category"] then
             if who==meGame then
                 
                 print("|cFFff0000▶|r"..MDRcolor("무기범주",-1).."(한손,양손,근접,원거리)는 단독으로 검색할 수 없습니다. "..MDRcolor(krClass,0,"전문화").."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. |cFFFFF569!힘|r"..MDRcolor("!"..keyword["category"],-1)..", "..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3)..MDRcolor("!석궁",-2)..")")
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")                
+                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")   
                 
-            end     
-        else return end     
-    end    
+            end  
+        else return end  
+    end 
 end
 
 --찾는사람 체크
-function checkCallMe(onlyYou)    
-    if not onlyYou then  return end   
+function checkCallMe(onlyYou) 
+    if not onlyYou then return end 
     local t=MDRconfig.Char
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
@@ -921,7 +926,7 @@ function checkCallMe(onlyYou)
         onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)
         name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)
         if strfind(name,onlyYou) and t[k].Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
-            findYou=true            
+            findYou=true  
         end
     end
     return findYou
@@ -936,13 +941,13 @@ function GetHaveKeyCharInfo(type,level)
     
     if type=="만렙만" then level=2
     elseif type=="soft" then level=level-5
-    elseif level==nil then level=MDR["maxParking"] end  
-    if level<2 then level=2 end  
+    elseif level==nil then level=MDR["maxParking"] end 
+    if level<2 then level=2 end 
     local t=MDRconfig.Char
     local num=1
     local chars={}
     local faction=UnitFactionGroup("player")
-    local realm=gsub(GetRealmName()," ","")    
+    local realm=gsub(GetRealmName()," ","") 
     local minLevel=DIL[level] or DIL[MDR["maxParking"]]
     
     for k,v in pairs(t) do
@@ -954,39 +959,39 @@ function GetHaveKeyCharInfo(type,level)
             if type=="성약단" then --만렙이면서 성약단으을 선택한 경우만 포함
                 if t[k].Covenant and t[k].Covenant~="" and level==MDR["SCL"] then
                     thisCharIncluded=1
-                end                            
-            else                
+                end     
+            else   
                 if t[k].MythicKey.link then
-                    thisCharIncluded=1            
+                    thisCharIncluded=1  
                 elseif (type~="쐐기돌보유자만" and (
                         (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
                         (type=="레벨제한없음" and level<=MDR["SCL"]) or 
                         (type=="50렙이상만" and level>=50)
-                )) then                           
+                )) then     
                     --허용가능레벨보다 높거나 force 인 경우 돌 없어도 포함
                     thisCharIncluded=1
                 end
             end 
-            if  thisCharIncluded==1 then
+            if thisCharIncluded==1 then
                 chars[num]={}
                 chars[num]["fullName"]=k
                 chars[num]["cutName"]=gsub(k, "%s%-.+","")
-                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)                
-                chars[num]["best"]=t[k].reward1 or 0                
+                chars[num]["shortClass"]=MDRcolor(t[k].Class,6)   
+                chars[num]["best"]=t[k].reward1 or 0   
                 chars[num]["best4"]=t[k].reward4 or 0
                 chars[num]["best10"]=t[k].reward10 or 0
                 chars[num]["runs"]=t[k].runs or 0
-                chars[num]["keyLink"]=t[k].MythicKey.link            
+                chars[num]["keyLink"]=t[k].MythicKey.link  
                 chars[num]["keyLevel"]=t[k].MythicKey.level or 0
-                chars[num]["keyName"]=t[k].MythicKey.name                
+                chars[num]["keyName"]=t[k].MythicKey.name   
                 chars[num]["itemLevel"]=t[k].IL or 0
-                chars[num]["equipLevel"]=t[k].ILe or 0                  
+                chars[num]["equipLevel"]=t[k].ILe or 0   
                 chars[num]["lastSeen"]=t[k].LastSeen or time() 
-                chars[num]["charLevel"]=t[k].Level or MDR.SCL                     
+                chars[num]["charLevel"]=t[k].Level or MDR.SCL    
                 chars[num]["covenant"]=t[k].Covenant or ""
-                num=num+1   
-            end            
-        end              
+                num=num+1 
+            end  
+        end   
     end
     local newChars={}
     local newChars2={}
@@ -998,8 +1003,8 @@ function GetHaveKeyCharInfo(type,level)
             newChars[chars[i]]=chars[i]["itemLevel"]*10
         else
             newChars[chars[i]]=chars[i]["charLevel"]
-        end        
-    end    
+        end  
+    end 
     for k,v in MDRspairs(newChars, function(t,a,b) return t[b] < t[a] end) do
         newChars2[charsNum]=k
         charsNum=charsNum+1
@@ -1009,7 +1014,7 @@ function GetHaveKeyCharInfo(type,level)
 end
 
 --보유한 모든 돌 보고하기
-function findCharAllKey(VALUES)  
+function findCharAllKey(VALUES) 
     
     local who,channel,level,level2,callTypeT
     local onlyMe,onlyYou,onlyOnline,except,onlyForMe
@@ -1022,7 +1027,7 @@ function findCharAllKey(VALUES)
         callTypeT=VALUES["callTypeT"]
         
         level=VALUES["level"]
-        level2=VALUES["level2"]         
+        level2=VALUES["level2"]  
         
         --callType=callTypeT[1][1]
         --keyword=callTypeT[1][2]
@@ -1030,7 +1035,7 @@ function findCharAllKey(VALUES)
         onlyYou=VALUES["onlyYou"]
         onlyMe=VALUES["onlyMe"]
         except=VALUES["except"]
-        onlyForMe=VALUES["onlyForMe"]        
+        onlyForMe=VALUES["onlyForMe"]  
         CharName=VALUES["CharName"]
         
         for i=1,#callTypeT do
@@ -1043,8 +1048,8 @@ function findCharAllKey(VALUES)
                     keyword["dungeon"]={}
                 end
                 if not tContains(keyword["dungeon"],callTypeT[i][2]) then
-                    tinsert(keyword["dungeon"],callTypeT[i][2])                     
-                end              
+                    tinsert(keyword["dungeon"],callTypeT[i][2])    
+                end   
             else
                 
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
@@ -1052,12 +1057,12 @@ function findCharAllKey(VALUES)
             
             --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]
-            keyword3[callTypeT[i][1]]=callTypeT[i][4]              
-        end           
+            keyword3[callTypeT[i][1]]=callTypeT[i][4]   
+        end   
     end
-    local type=nil    
+    local type=nil 
     
-    if (CharName and CharName~="" ) then callType="charname" end   
+    if (CharName and CharName~="" ) then callType="charname" end 
     
     if CharName then
         type="레벨제한없음"
@@ -1066,10 +1071,10 @@ function findCharAllKey(VALUES)
     elseif callType["class"] then
         type="만렙만"
     elseif callType["covenant"] or callType["covenantall"] or callType["covenantnow"] then
-        type="성약단"    
+        type="성약단" 
     else type="쐐기돌보유자만"
-    end   
-    local chars=GetHaveKeyCharInfo(type)    
+    end 
+    local chars=GetHaveKeyCharInfo(type) 
     local forceToShort=0
     
     if callType["newkey"] then
@@ -1080,8 +1085,8 @@ function findCharAllKey(VALUES)
         if start.level==finish.level and start.name==finish.name then
             return
         else
-            onlyOnline=1            
-        end        
+            onlyOnline=1  
+        end  
     end 
     
     if callType["currentdungeon"] then
@@ -1092,34 +1097,34 @@ function findCharAllKey(VALUES)
         local onLoad=MDR.myMythicKey.onLoad
         local start=MDR.myMythicKey.start
         local headStar=MDR.skull[MDRcolor(krClass,6)]
-        local messageLines={}        
+        local messageLines={}  
         
         if mapID~=nil and mapID>0 then --쐐기중이면
-            if start==nil or onLoad==nil then return end            
-            name, _= C_ChallengeMode.GetMapUIInfo(mapID)  
-            if name==start.name and level==onLoad.level and level==start.level+1 then                
+            if start==nil or onLoad==nil then return end  
+            name, _= C_ChallengeMode.GetMapUIInfo(mapID) 
+            if name==start.name and level==onLoad.level and level==start.level+1 then   
                 messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." (진행중)" 
                 if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
                     reportAddonMessage(messageLines,channel,who,callType)
-                else        
-                    reportMessageLines(messageLines,channel,who,callType)    
-                end                    
-            end            
-            return            
-        end               
+                else  
+                    reportMessageLines(messageLines,channel,who,callType) 
+                end    
+            end  
+            return  
+        end   
         callType["dungeon"]=1
         keyword["dungeon"]={}
         keyword["dungeon"][1]=getShortDungeonName(here)
         onlyOnline=1
-    end    
+    end 
     
     if callType["levelrange"] then
         level2=keyword
-    end        
+    end  
     
     --!돌이나 !레벨범위를 길드혹은 파티로 요청한 경우 짧게 보고
     if (
-        (callType["all"]             
+        (callType["all"]   
             or callType["currentall"] 
             or callType["covenant"] 
             or callType["covenantall"] 
@@ -1131,7 +1136,7 @@ function findCharAllKey(VALUES)
         and onlyOnline~=1)
     ) and (
         channel=="GUILD" 
-        or channel=="PARTY"  
+        or channel=="PARTY" 
         or channel=="ADDON_GUILD" 
         or channel=="ADDON_PARTY" 
         or channel=="ADDON_OFFICER"
@@ -1142,7 +1147,7 @@ function findCharAllKey(VALUES)
     
     if callType["currentall"] then
         onlyOnline=1
-    end        
+    end  
     
     --!돌이고 레벨을 지정하지 않았으며 길드가 아닌 곳에서 요청했는데 키가 하나도 없을 경우
     if callType["all"] and (channel~="GUILD") and (#chars==0) and (level==nil) then
@@ -1150,42 +1155,42 @@ function findCharAllKey(VALUES)
         messageLines[1]="▶저는 현재 갖고 있는 돌이 하나도 없습니다!" 
         reportMessageLines(messageLines,channel,who,callType)
         return
-    end      
+    end 
     
     -- "지금"이 붙은 경우 접속중인 캐릭터만 필터링
     if onlyOnline==1 then
         chars=filterCharsByFilter(chars,"name",nil,nil)
         --이캐릭 돌이 없으면 바로 보고하고 마무리, 길드면 생략
-        if not chars and channel~="GUILD" and channel~="ADDON_GUILD" and channel~="ADDON_PARTY"  and channel~="ADDON_OFFICER" and callType["all"] then
+        if not chars and channel~="GUILD" and channel~="ADDON_GUILD" and channel~="ADDON_PARTY" and channel~="ADDON_OFFICER" and callType["all"] then
             local messageLines={}
             messageLines[1]="▶이캐릭은 현재 갖고 있는 돌이 없습니다!" 
             reportMessageLines(messageLines,channel,who,callType)
             return
-        end        
+        end  
     end
     
     --던전이나 직업으로 필터링
-    if callType["dungeon"]  then
+    if callType["dungeon"] then
         if except==1 then
-            chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil)  
-        else            
-            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)   
-        end        
-    end    
+            chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil) 
+        else  
+            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil) 
+        end  
+    end 
     
-    if  callType["class"] then
-        chars=filterCharsByFilter(chars,"class",keyword["class"],nil)         
-    end   
+    if callType["class"] then
+        chars=filterCharsByFilter(chars,"class",keyword["class"],nil)  
+    end 
     
     --성약단으로 필터링
     if callType["covenant"] or callType["covenantnow"] then
-        chars=filterCharsByFilter(chars,"covenant",keyword["covenant"] or keyword["covenantnow"],nil)                 
-    end     
+        chars=filterCharsByFilter(chars,"covenant",keyword["covenant"] or keyword["covenantnow"],nil)    
+    end  
     
     --레벨을 지정한 경우 레벨로 한번더 필터링
     if level then 
-        chars=filterCharsByFilter(chars,"level",level,level2)        
-    end   
+        chars=filterCharsByFilter(chars,"level",level,level2)  
+    end 
     
     --캐릭터이름을 지정한 경우 필터링
     if CharName then
@@ -1193,26 +1198,26 @@ function findCharAllKey(VALUES)
         if chars then
             local maxChar=MDR["maxChar"]
             local charsNum=#chars
-            if #chars>maxChar then            
+            if #chars>maxChar then  
                 for i=1,#chars do
                     if i>(maxChar-1) then
                         chars[i]=nil 
-                    end                
-                end  
+                    end   
+                end 
                 local messageLines={}
                 messageLines[1]="▶["..CharName.."]: 일치하는 검색결과 [ 총"..charsNum.."개 ] 캐릭터를 특정하려면 !{직업}과 함께 검색해보세요." 
                 C_Timer.After(#chars*0.5, function()
                         reportMessageLines(messageLines,channel,who,callType)
                 end)
             end 
-        end        
-    end        
+        end  
+    end  
     
-    if forceToShort==1 then        
-        doShortReport(chars,channel,who,callType)  
+    if forceToShort==1 then  
+        doShortReport(chars,channel,who,callType) 
     else
         doFullReport(chars,channel,who,callType) 
-    end    
+    end 
 end
 
 --돌이 있으나 주차 못한 캐릭 보고하기
@@ -1223,11 +1228,11 @@ function findCharNeedParking(VALUES)
     if VALUES~=nil then
         who=VALUES["who"]
         channel=VALUES["channel"]
-        level=VALUES["level"]    
+        level=VALUES["level"] 
         onlyMe=VALUES["onlyMe"]
         onlyForMe=VALUES["onlyForMe"]
-        onlyOnline=VALUES["onlyOnline"]     
-    end        
+        onlyOnline=VALUES["onlyOnline"]  
+    end  
     
     if level==nil then level=99
     elseif level<2 then level=2 end
@@ -1240,15 +1245,15 @@ function findCharNeedParking(VALUES)
         local newChars2={}
         local charsNum=1
         for i=1,#chars do
-            newChars[chars[i]]=(chars[i]["best"] or 0)*100+(chars[i]["runs"] or 0)    
-        end    
+            newChars[chars[i]]=(chars[i]["best"] or 0)*100+(chars[i]["runs"] or 0) 
+        end 
         for k,v in MDRspairs(newChars, function(t,a,b) return t[b] < t[a] end) do
             newChars2[charsNum]=k
             charsNum=charsNum+1
         end
         chars=newChars2
     end
-    if channel==nil then channel="print" end   
+    if channel==nil then channel="print" end 
     
     local findChars={}
     local parknum=1
@@ -1262,15 +1267,15 @@ function findCharNeedParking(VALUES)
     
     local minLevel=DIL[level] or DIL[MDR["maxParking"]]
     
-    if chars~=nil then       
+    if chars~=nil then  
         
-        for i=1,#chars do   
+        for i=1,#chars do 
             if chars[i]["charLevel"]<=MDR["SCL"] then --확팩만렙보다 고레벨은 무시
-                local best=chars[i]["best"]                
+                local best=chars[i]["best"]   
                 if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
-                    findChars[parknum]=chars[i]                
+                    findChars[parknum]=chars[i]   
                     parknum=parknum+1
-                elseif best and best>=parkingLevel then                
+                elseif best and best>=parkingLevel then   
                     bestLevels[bestnum]=best
                     bestnum=bestnum+1
                 end
@@ -1278,16 +1283,16 @@ function findCharNeedParking(VALUES)
                     bestCharLevel=chars[i]["charLevel"]
                     bestCharName=chars[i]["cutName"]
                     bestCharClass=MDRgetClassName(chars[i]["shortClass"])
-                end  
-            end            
+                end 
+            end  
         end
         
         --요청 단수이상 주차한 캐릭이 있으면
         if bestnum>1 then
             table.sort(bestLevels)
             lowestLevel=bestLevels[1]
-            highstLevel=bestLevels[#bestLevels]                     
-        end        
+            highstLevel=bestLevels[#bestLevels]    
+        end  
     end
     
     --주차안한 캐릭이 없으면 보고서 없이 한줄 출력으로 마무리
@@ -1308,28 +1313,28 @@ function findCharNeedParking(VALUES)
             delay=1
         elseif bestCharLevel<MDR["SCL"] then
             message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
-        else       
-            message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!"  
+        else  
+            message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!" 
         end
         
         messageLines[1]=message
         C_Timer.After(delay, function()
-                reportMessageLines(messageLines,channel,who,"parking")       
-        end)        
+                reportMessageLines(messageLines,channel,who,"parking")  
+        end)  
         return
-    end       
+    end  
     
     --!주차를 길드엔 짧게 보고
     if channel=="GUILD" or 
-    channel=="PARTY"  or 
+    channel=="PARTY" or 
     channel=="ADDON_GUILD" or 
     channel=="ADDON_PARTY" or 
     channel=="ADDON_OFFICER" or 
-    (channel=="ADDON_WHISPER" and onlyForMe==1) then                
-        doShortReport(findChars,channel,who,"parking")                  
-    else                
-        doFullReport(findChars,channel,who,"parking")            
-    end            
+    (channel=="ADDON_WHISPER" and onlyForMe==1) then   
+        doShortReport(findChars,channel,who,"parking")   
+    else   
+        doFullReport(findChars,channel,who,"parking")  
+    end  
     
 end
 
@@ -1362,7 +1367,7 @@ function findCharSpell(class,channel,who,callType)
         classTable=plateClass
     elseif class=="방패" then
         classTable=shieldClass
-    elseif class=="독" then        
+    elseif class=="독" then  
         classTable=poisonClass
         hasSpellLink=1
     elseif class=="질병" then
@@ -1373,7 +1378,7 @@ function findCharSpell(class,channel,who,callType)
         hasSpellLink=1
     end
     
-    if chars~=nil then   
+    if chars~=nil then 
         
         for i=1,#chars do
             local yourClass=chars[i]["shortClass"]
@@ -1388,7 +1393,7 @@ function findCharSpell(class,channel,who,callType)
             else
                 for j=1,#classTable do
                     if yourClass==classTable[j] then
-                        thisCharHaveTheSpell=1                    
+                        thisCharHaveTheSpell=1    
                     end
                 end
             end
@@ -1396,16 +1401,16 @@ function findCharSpell(class,channel,who,callType)
             if thisCharHaveTheSpell==1 then
                 findChars[num]=chars[i]
                 num=num+1 
-            end        
+            end  
         end
-    end      
+    end 
     
     --나머지는 길드엔 숏, 나머진 풀 리포트
     if channel=="GUILD" or channel=="PARTY" or channel=="ADDON_GUILD" or channel=="ADDON_PARTY"then
-        doShortReport(findChars,channel,who,callType)  
+        doShortReport(findChars,channel,who,callType) 
     else
-        doFullReport(findChars,channel,who,callType)     
-    end       
+        doFullReport(findChars,channel,who,callType)  
+    end  
     
 end
 
@@ -1420,31 +1425,31 @@ function filterCharsByFilter(chars,filter,f1,f2)
         f2=tonumber(f2)
         if f1 and f2 and f1>f2 then
             local big=f1; f1=f2;f2=big
-        end        
-    elseif filter=="dungeon" or filter=="except" then        
+        end  
+    elseif filter=="dungeon" or filter=="except" then  
         --f1=f1[1]
         --print(f1)
     elseif filter=="name" then
-        f1=meAddon   
-    end   
+        f1=meAddon 
+    end 
     
     for i=1,#chars do
-        local lastSeen=time()-chars[i]["lastSeen"]  
-        if filter=="level"and f2~=nil  then            
-            target=chars[i]["keyLevel"] or 0              
+        local lastSeen=time()-chars[i]["lastSeen"] 
+        if filter=="level"and f2~=nil then  
+            target=chars[i]["keyLevel"] or 0   
             if f1<=target and f2>=target then
                 findChars[num]=chars[i]
-                num=num+1                
-            end             
+                num=num+1   
+            end   
         else 
-            if filter=="level" then                
-                target=chars[i]["keyLevel"]                  
-            elseif filter=="class" then                
+            if filter=="level" then   
+                target=chars[i]["keyLevel"]   
+            elseif filter=="class" then   
                 target=chars[i]["shortClass"]
-            elseif filter=="covenant" then                
+            elseif filter=="covenant" then   
                 target=chars[i]["covenant"]
             elseif filter=="dungeon" or filter=="except" then
-                target=getShortDungeonName(chars[i]["keyName"])                
+                target=getShortDungeonName(chars[i]["keyName"])   
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
             elseif filter=="CharName" then
@@ -1455,29 +1460,29 @@ function filterCharsByFilter(chars,filter,f1,f2)
             ((filter~="except" and filter~="dungeon") and f1==target) then
                 findChars[num]=chars[i]
                 num=num+1
-            elseif (filter=="dungeon" or filter=="except") then                
+            elseif (filter=="dungeon" or filter=="except") then   
                 
                 for j=1,#f1 do
                     if filter~="except" then
                         if f1[j]==target then
                             findChars[num]=chars[i]
-                            num=num+1                            
+                            num=num+1     
                         end 
                     else
                         if f1[j]==target then
-                            chars[i]=nil                            
+                            chars[i]=nil     
                         end 
-                    end     
-                end                 
-            end            
+                    end  
+                end    
+            end  
         end
-    end     
+    end  
     
     if filter=="except" then
         for k,v in pairs(chars) do
             findChars[num]=v
-            num=num+1    
-        end                    
+            num=num+1 
+        end    
     end
     
     if #findChars>0 then
