@@ -798,11 +798,12 @@ function MDRrefreshRunHistory()
         if #MDR.runHistory.finish > #runHistory then
             runHistory=MDR.runHistory.finish
         elseif #MDR.runHistory.finish == #runHistory then
-            MDRclearHistory()
+            MDRclearHistory()			
         end  
     end
     
     MDRconfig.Char[meAddon].runHistory=runHistory  
+	MDR.runHistory.onLoad=runHistory
     
     local comparison = function(entry1, entry2)
         if ( entry1.level == entry2.level ) then
