@@ -228,7 +228,7 @@ function MDRbackupMythicKey(type)
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["who"]=meGame
                 VALUES["callTypeT"]=callTypeT    
-                VALUES["channel"]="PARTY"    
+                VALUES["channel"]="ADDON_PARTY"    
                 filterVALUES(VALUES)
         end)
     elseif type=="bagupdate" then    
