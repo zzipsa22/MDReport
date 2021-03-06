@@ -113,7 +113,7 @@ local classInfo={
         "냉법",    
     },  
     ["회색"]={"9d9d9d","무기"},
-    ["하늘"]={"80e7EB"},
+    ["하늘"]={"80e7EB", "속성"},
     ["핑크"]={"F5aCdA","분홍" },
     ["빨강"]={"ff0000" },
     ["노랑"]={"ffff00","노란"},  
@@ -803,7 +803,10 @@ function MDRrefreshRunHistory()
     end
     
     MDRconfig.Char[meAddon].runHistory=runHistory  
-	MDR.runHistory.onLoad=runHistory
+	
+	if MDR.runHistory then
+		MDR.runHistory.onLoad=runHistory
+	end
     
     local comparison = function(entry1, entry2)
         if ( entry1.level == entry2.level ) then
@@ -1029,25 +1032,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         runHistory=MDRconfig.Char[charName].runHistory
         class=MDRconfig.Char[charName].Class or MDRconfig.Char[charName].class
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
-    end    
-    
-    local rewardLevel={ 
-        [2]=200,    
-        [3]=203,
-        [4]=207,
-        [5]=210,
-        [6]=210,
-        [7]=213,
-        [8]=216,
-        [9]=216,
-        [10]=220,
-        [11]=220,
-        [12]=223,
-        [13]=223,
-        [14]=226,
-        [15]=226,
-    }
-    
+    end        
+	
     local toons=MDRconfig.Char      
     local howManyToons=0
     local newtoons={}
@@ -1109,7 +1095,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     color1="전설"
                     color2="초록"
                     color3="노랑"
-                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
+                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..C_MythicPlus.GetRewardLevelFromKeystoneLevel(level).." 레벨".."]"
                 else
                     color1="사제"
                     color2="회색" 
@@ -1171,8 +1157,10 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     table.sort(v.runHistory, comparison);
                     for j=1,#v.runHistory do
                         if j==1 or j==4 or j==10 then
-                            levels=levels.."|cff00ff00"..v.runHistory[j].level.."|r, "
-                            rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, " 
+							local level=v.runHistory[j].level
+							local reward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(level)
+                            levels=levels.."|cff00ff00"..level.."|r, "
+                            rewards=rewards.."|cffffff00"..reward.."레벨|r, " 
                             MDRconfig.Char[v["name"]]["reward"..j]=v.runHistory[j].level
                         else            
                             levels=levels.."|cff9d9d9d"..v.runHistory[j].level.."|r, "

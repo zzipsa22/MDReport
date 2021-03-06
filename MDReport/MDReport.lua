@@ -378,7 +378,7 @@ function filterVALUES(VALUES)
         channel="ADDON_WHISPER"
     end
     
-    if channel=="ADDON_PARTY" or channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_OFFICER" then  
+    if (channel=="ADDON_PARTY" or channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_OFFICER") and VALUES["msg"] then  
         local mdrcolor={
             ["ADDON_PARTY"]="|cFFaaaaffMDR▶|r ",
             ["ADDON_GUILD"]="|cFF33FF99MDR▶|r ",
@@ -454,9 +454,18 @@ function filterVALUES(VALUES)
                 what=MDRcolor(word,type)   
             else
                 if callTypeT[i][1]=="affix" then
-                    word=VALUES["msg"]
+					icon="|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0:0:-5|t"
+					local week=callTypeT[i][2]
+					local weekName=gsub(gsub(VALUES["msg"],"속성",""),"!","")
+					if week==0 then
+						word="이번주 속성"
+					elseif week=="all" then
+						word="다음 4주간의 속성"
+					else
+						word=weekName.." 속성"
+					end
                 end   
-                what=MDRcolor(word,type)
+                what=(icon or "")..MDRcolor(word,type)
             end 
             if (not callTypes[callTypeB[i]] or callTypeT[i][1]=="dungeon") then
                 if (callTypeT[i][1]=="all" and not callType["dungeon"] and not callType["parking"]) or
@@ -483,7 +492,7 @@ function filterVALUES(VALUES)
             cmdLines=cmdLines..(exc or "")..range 
         end  
         
-        local msg=VALUES["msg"] 
+        local msg=VALUES["msg"]
         local sur,chName="","" 
         
         if channel=="ADDON_PARTY" then
