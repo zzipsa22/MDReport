@@ -1034,6 +1034,27 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
     end        
 	
+	local rewardLevel={ 
+        [2]=200,    
+        [3]=203,
+        [4]=207,
+        [5]=210,
+        [6]=210,
+        [7]=213,
+        [8]=216,
+        [9]=216,
+        [10]=220,
+        [11]=220,
+        [12]=223,
+        [13]=223,
+        [14]=226,
+        [15]=226,
+    }
+	
+	for i=16,99 do
+		rewardLevel[i]=rewardLevel[15]
+	end
+	
     local toons=MDRconfig.Char      
     local howManyToons=0
     local newtoons={}
@@ -1095,7 +1116,7 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     color1="전설"
                     color2="초록"
                     color3="노랑"
-                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..C_MythicPlus.GetRewardLevelFromKeystoneLevel(level).." 레벨".."]"
+                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
                 else
                     color1="사제"
                     color2="회색" 
@@ -1157,10 +1178,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
                     table.sort(v.runHistory, comparison);
                     for j=1,#v.runHistory do
                         if j==1 or j==4 or j==10 then
-							local level=v.runHistory[j].level
-							local reward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(level)
-                            levels=levels.."|cff00ff00"..level.."|r, "
-                            rewards=rewards.."|cffffff00"..reward.."레벨|r, " 
+                            levels=levels.."|cff00ff00"..v.runHistory[j].level.."|r, "
+                            rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, " 
                             MDRconfig.Char[v["name"]]["reward"..j]=v.runHistory[j].level
                         else            
                             levels=levels.."|cff9d9d9d"..v.runHistory[j].level.."|r, "
