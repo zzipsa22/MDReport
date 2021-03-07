@@ -284,11 +284,15 @@ function MDRcolorizeForPrint(message)
         message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")     
         --message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
     end    
+	
+	--완,미완 변환
+	message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
+	message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
     
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull
-    if not strfind(message,"쐐기돌") then
+    if not strfind(message,"쐐기돌") and not strfind(message,"단 ") then
         for i=1,#dungeonNamesFull do            
             message=gsub(message,dungeonNamesFull[i],MDRcolor("노랑",0,dungeonNamesFull[i]))
         end  

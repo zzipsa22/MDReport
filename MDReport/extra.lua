@@ -14,11 +14,13 @@ C_Timer.After(10, function()
             print("▶|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
         else
             if MDR["guide"]<50 then
-                print("|cFF33FF99▶ 쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r ")        
+                print("|cFF33FF99▶쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r")        
                 
-                print(MDRcolor("수도",0,"▶").."|cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을, |cffffff00'/!!'|r 로 |cFFaaaaff파티채널|r 전송과 |cffF5aCdA나에게 전송|r을 대신 할 수 있습니다. |cff9d9d9d [전체 도움말: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
+                print(MDRcolor("수도",0,"▶").."도움이 필요하신가요? |cff9d9d9d [도움말 호출: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
                 
-                print(MDRcolor("수도",0,"▶")..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 모드'|r]|r")
+                --print(MDRcolor("수도",0,"▶")..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 모드'|r]|r")
+                
+                print(MDRcolor("수도",0,"▶")..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 위업'|r]|r")
                 
                 MDRtoggleMode()
                 
@@ -253,7 +255,7 @@ function MDRko(keyword,type)
         "돌","단","원","상","전","장","택","굴","산", --격아던전
         "연","당","탑","편","흔", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
-        "중","안",
+        "중","안", "업",
     }
     local Batchim=0
     for i=1,#LCtable do
@@ -572,7 +574,7 @@ function MDRCommands(msg, editbox)
         n2=playerName
         m1=MDRcolor(krClass,0,"!"..playerName).." 입력."
     end
-    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")
+    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("돌",0,"위업")
     if not cmd or cmd=="도움말" or cmd=="!도움말" or cmd=="도움" or cmd=="!도움" or cmd=="help" or cmd=="" or cmd=="?" or cmd=="@"then
         
         if args=="" or not args or args=="도움말" then      
@@ -582,9 +584,13 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]="▷|cFF33FF99[2.0.0]|r+ |cffffff00'/!'|r 로 |cFF40ff40길드채널|r 명령어 전송을 대신할 수 있습니다. (|cffffff00/!|r |cffC79C6E돌|r = |cFF40ff40/g|r |cffC79C6E!돌|r) "       
             
             messageLines[#messageLines+1]="▷|cFF33FF99[2.1.0]|r+ |cffffff00'/!!'|r 로 |cFFaaaaff파티|r중일 땐 |cFFaaaaff파티채널|r 전송을, |cffF5aCdA혼자|r일 땐 |cffF5aCdA본인|r에게 전송을 대신 할 수 있습니다. (|cffffff00/!!|r |cffC79C6E돌|r = |cFFaaaaff/p|r |cffC79C6E!돌|r, |cFFff80ff/w |r"..MDRcolor(krClass,0,playerName).." |cffC79C6E!돌|r) "
+            
+            messageLines[#messageLines+1]="▷|cFF33FF99[2.7.0]|r+ "..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다."
+            
+            messageLines[#messageLines+1]="▷|cFF33FF99[2.8.0]|r+ "..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 확인 기능을 추가하였습니다."                      
+            
             messageLines[#messageLines+1]="|cffffffff▷도움말 목록: |r"..cmdList
             messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/! @|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/! @|r |cffC79C6E돌|r"
-            
             
         elseif args=="돌" then  
             messageLines[#messageLines+1]=helpHead..MDRcolor("돌",0,"'돌'")
@@ -654,6 +660,12 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 전송되는 "..MDRcolor("죽기",0,"모든 메세지").."를 출력하지 않습니다. 단, "..MDRgetModeName(1).."와 함께 사용 중인 경우 "..MDRcolor("핑크",0,"본인").."이 요청한 검색결과는 "..MDRcolor("핑크",0,"귓속말").."로 받게 되므로 "..MDRgetModeName(2).."가 켜져있어도 볼 수 있습니다."
             
             messageLines[#messageLines+1]="▶현재 "..MDRcolor("초록",0,"[활성화]").." 된 모드 확인: "..MDRcolor("노랑",0,"'/! 모드'")
+            
+        elseif args=="위업" then    
+            messageLines[#messageLines+1]=helpHead..MDRcolor("돌",0,"'위업'")
+            
+            messageLines[#messageLines+1]="▶"..MDRcolor("돌",0,"위업").." : "..MDRcolor("돌",0,"쐐기돌").." 위업 진행 상황을 요청합니다. 단수를 지정하지 않으면 (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor("돌",0,"위업")..") "..MDRcolor("영웅",0,"10단").."과 "..MDRcolor("전설",0,"15단").." 위업을 모두 체크하며, "..MDRcolor("노랑",0,"위업10, 위업15").." 처럼 단수를 지정할 경우 "..MDRcolor("하늘",0,"[해당 단수]").."의 위업만 체크합니다. "
+            
         else
             return
         end    
@@ -798,15 +810,15 @@ function MDRrefreshRunHistory()
         if #MDR.runHistory.finish > #runHistory then
             runHistory=MDR.runHistory.finish
         elseif #MDR.runHistory.finish == #runHistory then
-            MDRclearHistory()			
+            MDRclearHistory()            
         end  
     end
     
     MDRconfig.Char[meAddon].runHistory=runHistory  
-	
-	if MDR.runHistory then
-		MDR.runHistory.onLoad=runHistory
-	end
+    
+    if MDR.runHistory then
+        MDR.runHistory.onLoad=runHistory
+    end
     
     local comparison = function(entry1, entry2)
         if ( entry1.level == entry2.level ) then
@@ -1033,8 +1045,8 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         class=MDRconfig.Char[charName].Class or MDRconfig.Char[charName].class
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
     end        
-	
-	local rewardLevel={ 
+    
+    local rewardLevel={ 
         [2]=200,    
         [3]=203,
         [4]=207,
@@ -1050,11 +1062,11 @@ function MDRdoReportHistory(runHistory,main,alt,inclueMain,type,charName)
         [14]=226,
         [15]=226,
     }
-	
-	for i=16,99 do
-		rewardLevel[i]=rewardLevel[15]
-	end
-	
+    
+    for i=16,99 do
+        rewardLevel[i]=rewardLevel[15]
+    end
+    
     local toons=MDRconfig.Char      
     local howManyToons=0
     local newtoons={}
@@ -1390,4 +1402,121 @@ function MDRgetCurrentStatus()
         status="{DND}"
     end
     return status
+end
+
+function MDRcheckAchievement(level,channel,who)    
+    local colorTable={}
+    colorTable["전설"]="|cffff8000"
+    colorTable["영웅"]="|cffa335ee"
+    colorTable["회색"]="|cff9d9d9d"
+    colorTable[5]=colorTable["회색"]
+    colorTable[0]=colorTable["회색"]
+    
+    if level==15 then
+        colorTable[15]=colorTable["전설"]
+        colorTable[10]=colorTable["회색"]       
+        colorTable["헤더"]=colorTable["전설"]
+    elseif level==10 then
+        colorTable[15]=colorTable["영웅"]
+        colorTable[10]=colorTable["영웅"]
+        colorTable["헤더"]=colorTable["영웅"]
+    else
+        colorTable[15]=colorTable["전설"]
+        colorTable[10]=colorTable["영웅"]
+        colorTable["헤더"]=""
+    end
+    
+    local dungeonTable={
+        [1]="핏",
+        [2]="속",
+        [3]="승",
+        [4]="죽",
+        [5]="고",
+        [6]="역",
+        [7]="티",
+        [8]="저",        
+    }
+    
+    local table={}
+    
+    for crit=1,8 do 
+        local d,_,c15 = GetAchievementCriteriaInfo(14532, crit~=13 and crit or 14);
+        local d,_,c10 = GetAchievementCriteriaInfo(14531, crit~=13 and crit or 14);        
+        d=strsub(d,1,3)             
+        if c15 then    
+            table[d]=15
+        elseif c10 then
+            table[d]=10
+        else
+            table[d]=0
+        end    
+    end
+    
+    local dungeonHistory=""
+    local color=""
+    local colorB=""
+    local cleared={}
+    for i=1,#dungeonTable do
+        local d=dungeonTable[i]
+        colorB=color
+        if table[d]==15 then
+            color=colorTable[15]
+            cleared[15]=(cleared[15] or 0)+1
+            cleared[10]=(cleared[10] or 0)+1
+        elseif table[d]==10 then
+            color=colorTable[10]
+            cleared[10]=(cleared[10] or 0)+1
+        else
+            color=colorTable[0]
+        end
+        if colorB==color then            
+            color="" 
+        else
+            if d~="핏" then
+                color="|r"..color                
+            end            
+        end
+        local icon=","
+        if d=="핏" then
+            icon="{c2}"
+        elseif d=="승" then
+            icon="{c1}"
+        elseif d=="고" then
+            icon="{c4}"
+        elseif d=="티" then
+            icon="{c3}"
+        end
+        dungeonHistory=dungeonHistory..icon..color..d
+    end
+    --dungeonHistory=MDRcolorizeForPrint(dungeonHistory)
+    
+    local message=""
+    local header=""
+    if level and cleared[level] then       
+        header=colorTable["헤더"]..level.."단|r "..cleared[level].."/"..#dungeonTable.." 완료"
+    else 
+        local progress10,progress15="",""
+        if cleared[10]==#dungeonTable then
+            progress10="{완}, "
+        else
+            progress10="{미완}, "
+        end
+        if cleared[15]==#dungeonTable then
+            progress15="{완}"
+        else
+            progress15="{미완}"
+        end
+        header=colorTable["영웅"].."10단|r"..progress10..colorTable["전설"].."15단|r"..progress15
+    end
+    
+    if cleared[level]==#dungeonTable then
+        message="["..header.."{완}]"
+    elseif not level and cleared[15]==#dungeonTable then
+        message="["..header.."]"
+    else
+        message="["..header..": "..dungeonHistory.."|r]"
+    end
+    local messageLines={}
+    messageLines[1]=message
+    reportAddonMessage(messageLines,channel,who,"achievement")
 end

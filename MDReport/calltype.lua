@@ -298,6 +298,8 @@ local callTypeTable={
     
     ["키리안"]={"covenant", "키리안"},  
     ["키리얀"]={"covenant", "키리안"},  
+	
+	["위업"]={"achievement","쐐기돌 위업"},
     
     ["얼라이언스를위하여"]={"emote","얼라이언스를위하여"},
     

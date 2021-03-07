@@ -838,6 +838,9 @@ function filterVALUES(VALUES)
             callType["covenant"] ) then  
             
             findCharAllKey(VALUES)  
+			
+		elseif callType["achievement"] then
+			MDRcheckAchievement(level,channel,who)
         elseif callType["emote"] then  
             MDRdoEmote(channel,who,keyword["emote"])
         elseif callType["parking"] then  
