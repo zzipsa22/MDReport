@@ -1,4 +1,4 @@
-## Interface: 90002
+## Interface: 90005
 ## Title:|cffffe00a[|r|cffff7d0aMythicKeyReport|r|cffffe00a]|r by |cff69ccf0Neul|r
 ## Title-koKR:|cffffe00a[|r|cffff7d0a쐐기돌보고서|r|cffffe00a]|r by |cff69ccf0늘님|r
 ## DefaultState: enabled
