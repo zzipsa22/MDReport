@@ -243,51 +243,51 @@ function MDRcolorizeForPrint(message)
     local diceNums=MDR.diceNums
     for k,v in pairs(diceNums) do
         message=gsub(message,v,MDRcolor("사제",0,v))        
-    end         
-    
-    --주차단수 색입히기
-    local park1={}
-    local park1b={}
-    local park4={}
-    local park10={}
-    local parkN={}
-    
-    local mL=40
-    for i=1,mL do
-        tinsert(park1,(mL-i).."/")
-        tinsert(park1b,"("..(mL-i).."#")
-        tinsert(park4,"/"..(mL-i).."/")
-        tinsert(park10,"/"..(mL-i))    
-        tinsert(parkN,(mL-i).."회")   
-    end
-    message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ"))
-    
-    for i=1,mL do
-        local c1="고급"        
-        if i==(mL-0) then 
-            c1="회색"
-        elseif i<=(mL-14) then
-            c1="유물"        
-        elseif i<=(mL-12) then
-            c1="전설"        
-        elseif i<=(mL-10) then
-            c1="영웅"           
-        elseif i<=(mL-8) then
-            c1="희귀"
-        elseif i<=(mL-6) then
-            c1="고급"
-        end
-        
-        message=gsub(message,park1b[i],MDRcolor(c1,0,(mL-i)).."#")
-        message=gsub(message,park4[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")).."/")
-        message=gsub(message,park10[i],"/"..MDRcolor(c1,0,gsub(park1[i],"/","")))       
-        message=gsub(message,park1[i],MDRcolor(c1,0,gsub(park1[i],"/","")).."/")     
-        --message=gsub(message,parkN[i],MDRcolor("계승",0,parkN[i]))        
     end    
-	
-	--완,미완 변환
-	message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
-	message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
+    
+    --주차단수 색입히기   
+    message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ")) 
+    local colorT={}
+    for i=1,40 do
+        local c="1eff00"
+        if i>=14 then
+            c="e6cc80"        
+        elseif i>=12 then
+            c="ff8000"        
+        elseif i>=10 then
+            c="a335ee"           
+        elseif i>=8 then
+            c="0070dd"
+        elseif i>=6 then
+            c="1eff00"
+        end 
+        colorT[i]="|cff"..c..i.."|r"        
+    end
+    
+    local patternA="(%d+/*%d+/*%d+#)"
+    local patternB="(%d+/*%d+#)"
+    local patternC="(%d+#)"
+    
+    for i=1,6 do
+        local pA=strmatch(message,patternA)
+        local pB=strmatch(message,patternB)
+        local pC=strmatch(message,patternC)    
+        if not pA and not pB and not pC  then        
+            break 
+        end
+        local p=pA or pB or pC
+        local t=MDRsplit(p,"/")    
+        local repl=""
+        for i=1,#t do
+            t[i]=gsub(t[i],"#","")
+            repl=repl..(repl=="" and "" or "/")..colorT[tonumber(t[i])]      
+        end    
+        message=gsub(message,p,repl.."#")
+    end
+    message=gsub(message,"#","|cff00ccff#|r")
+    --완,미완 변환
+    message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
+    message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
     
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
