@@ -264,7 +264,7 @@ function MDRcolorizeForPrint(message)
     --주차단수 색입히기   
     message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ")) 
     
-    message=gsub(message,"(%d+)([/#])", function(a,b) return colorT[tonumber(a)]..b end)
+    message=gsub(message,"(%d+)([/#])", function(a,b) return (colorT[tonumber(a)] or a)..b end)
     
     --완,미완 변환
     message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
