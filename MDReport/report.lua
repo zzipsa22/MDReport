@@ -55,6 +55,23 @@ local statusIcons={
     
 } 
 
+local colorT={}
+for i=1,40 do
+    local c="1eff00"
+    if i>=14 then
+        c="e6cc80"        
+    elseif i>=12 then
+        c="ff8000"        
+    elseif i>=10 then
+        c="a335ee"           
+    elseif i>=8 then
+        c="0070dd"
+    elseif i>=6 then
+        c="1eff00"
+    end 
+    colorT[i]="|cff"..c..i.."|r"        
+end
+
 MDR.statusIcons=statusIcons
 MDR.skull=skull
 MDR.classColor=classColor
@@ -212,7 +229,8 @@ function MDRcolorizeForPrint(message)
             message=gsub(message,k,v)
         end        
         message=gsub(message,"{c0}","")
-    end    
+    end  
+    
     
     --온라인
     local on_green="|TInterface\\AddOns\\MDReport\\icon\\on_g.tga:0:0.5:-1:-5|t" 
@@ -227,10 +245,8 @@ function MDRcolorizeForPrint(message)
         message=strsub(message,2,-1)
     end
     
-    --징표
-    for j=1,8 do
-        message=gsub(message,"{rt"..j.."}",skullP["rt"..j])
-    end
+    --징표    
+    message=gsub(message,"{(rt%d)}",function(a) return skullP[a] end)    
     
     --혹시 모를 두칸 띄어어쓰기 줄이기
     message=gsub(message,"   ","  ")
@@ -247,44 +263,9 @@ function MDRcolorizeForPrint(message)
     
     --주차단수 색입히기   
     message=gsub(message,"Χ",MDRcolor("빨강",0,"Χ")) 
-    local colorT={}
-    for i=1,40 do
-        local c="1eff00"
-        if i>=14 then
-            c="e6cc80"        
-        elseif i>=12 then
-            c="ff8000"        
-        elseif i>=10 then
-            c="a335ee"           
-        elseif i>=8 then
-            c="0070dd"
-        elseif i>=6 then
-            c="1eff00"
-        end 
-        colorT[i]="|cff"..c..i.."|r"        
-    end
     
-    local patternA="(%d+/*%d+/*%d+#)"
-    local patternB="(%d+/*%d+#)"
-    local patternC="(%d+#)"
+    message=gsub(message,"(%d+)([/#])", function(a,b) return colorT[tonumber(a)]..b end)
     
-    for i=1,6 do
-        local pA=strmatch(message,patternA)
-        local pB=strmatch(message,patternB)
-        local pC=strmatch(message,patternC)    
-        if not pA and not pB and not pC  then        
-            break 
-        end
-        local p=pA or pB or pC
-        local t=MDRsplit(p,"/")    
-        local repl=""
-        for i=1,#t do
-            t[i]=gsub(t[i],"#","")
-            repl=repl..(repl=="" and "" or "/")..colorT[tonumber(t[i])]      
-        end    
-        message=gsub(message,p,repl.."#")
-    end
-    message=gsub(message,"#","|cff00ccff#|r")
     --완,미완 변환
     message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
     message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
