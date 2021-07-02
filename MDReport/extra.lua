@@ -20,7 +20,7 @@ C_Timer.After(10, function()
                 
                 --print(MDRcolor("수도",0,"▶")..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 모드'|r]|r")
                 
-                print(MDRcolor("수도",0,"▶")..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 위업'|r]|r")
+                --print(MDRcolor("수도",0,"▶")..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 위업'|r]|r")
                 
                 MDRtoggleMode()
                 

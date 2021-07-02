@@ -14,7 +14,7 @@ MDR["krClass"],MDR["className"]=UnitClass("player")
 MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
-MDR["maxParking"]=14 --어둠땅 1시즌
+MDR["maxParking"]=15 --어둠땅 2시즌
 MDR["SCL"]=60--어둠땅 만렙
 MDR.DefaultDelay=15 --지연시간 기본값
 
@@ -26,9 +26,9 @@ local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
-DIL.min=184 --깡신
-DIL.max=210 --15단
-DIL.base=135 --기준템렙
+DIL.min=210 --깡신
+DIL.max=236 --15단
+DIL.base=160 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i --단수별 허용레벨 / 드랍템 레벨
@@ -362,7 +362,9 @@ function filterVALUES(VALUES)
                 keyword["covenantall"]=coveName
                 type="일치하는 성약단"
             else
-                onlyOnline=1
+				if not onlyYou then				
+					onlyOnline=1
+				end                
             end  
         end
     end 
