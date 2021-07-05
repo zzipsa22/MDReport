@@ -115,7 +115,7 @@ local classInfo={
         "냉법",    
     },  
     ["회색"]={"9d9d9d","무기"},
-    ["하늘"]={"80e7EB", "속성"},
+    ["하늘"]={"80e7EB","속성"},
     ["핑크"]={"F5aCdA","분홍" },
     ["빨강"]={"ff0000" },
     ["노랑"]={"ffff00","노란"},  
@@ -255,7 +255,7 @@ function MDRko(keyword,type)
         "돌","단","원","상","전","장","택","굴","산", --격아던전
         "연","당","탑","편","흔", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
-        "중","안", "업",
+        "중","안","업","점",		
     }
     local Batchim=0
     for i=1,#LCtable do
@@ -815,6 +815,19 @@ function MDRrefreshRunHistory()
     end
     
     MDRconfig.Char[meAddon].runHistory=runHistory  
+	
+	MDRconfig.Char[meAddon].Score={}
+    MDRconfig.Char[meAddon].Score["종합점수"]=C_ChallengeMode.GetOverallDungeonScore()  --총점
+	if MDRconfig.Char[meAddon].Score["종합점수"]>0 then
+    for d,n in pairs(MDR.dungeonNameToID)do  -- 던전별 점수
+        local desc,total=C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(n)
+        MDRconfig.Char[meAddon].Score[d]={}
+        MDRconfig.Char[meAddon].Score[d]["점수"]=total
+        MDRconfig.Char[meAddon].Score[d]["폭군"]=desc[1]
+        MDRconfig.Char[meAddon].Score[d]["경화"]=desc[2]
+        
+    end
+	end
     
     if MDR.runHistory then
         MDR.runHistory.onLoad=runHistory
@@ -903,8 +916,8 @@ function MDRgetHistory(type)
     end
     
     k.class=nil
-    k.level=nil
-    
+    k.level=nil    
+   
     k.Class=krClass
     k.Level=UnitLevel("player")  
     k.name=meAddon

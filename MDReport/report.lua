@@ -269,6 +269,21 @@ function MDRcolorizeForPrint(message)
     --완,미완 변환
     message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
     message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
+	
+	--폭군,경화	
+	message=gsub(message,"{폭군}","|T236401:0:::-4|t")
+	message=gsub(message,"{경화}","|T463829:0:::-4|t")	
+	
+	--색깔 코드
+	message=gsub(message,"{CW}","|cff00ccff")	
+	message=gsub(message,"{CA}","|cffe6cc80")	
+	message=gsub(message,"{CL}","|cfffe7f00")
+	message=gsub(message,"{CE}","|cFFa234ed")
+	message=gsub(message,"{CR}","|cFF006fdc")
+	message=gsub(message,"{CC}","|cFF1dfe00")
+	message=gsub(message,"{CN}","|cFFfefefe")
+	message=gsub(message,"{CG}","|cFF9d9d9d")
+	message=gsub(message,"{CX}","|r")
     
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
