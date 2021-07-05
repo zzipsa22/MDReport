@@ -1110,7 +1110,7 @@ function MDRreportScore(VALUES)
     
     local scoreT=MDRconfig.Char[meAddon].Score
 	local charLevel=MDRconfig.Char[meAddon].Level
-	if Level ~= MDR["SCL"] then return end
+	if charLevel~= MDR["SCL"] then return end
 	
 	local messageLines={}
     if callType["dungeon"] then   -- !점수!역병
