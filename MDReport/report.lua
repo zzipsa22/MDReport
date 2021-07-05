@@ -612,14 +612,14 @@ function doFullReport(chars,channel,who,callType)
                 end                
             end
 			
-			if scoreT and scoreT~="" then
+			if charLevel==MDR["SCL"] then
 				local affix
 				if isThisWeekHasSpecificAffix(9) then
 					affix="폭군"
 				else
 					affix="경화"
 				end
-				local total=scoreT["종합점수"]				
+				local total=scoreT["종합점수"] or 0				
 				total=tonumber(total)
 		
 				local color
@@ -638,6 +638,7 @@ function doFullReport(chars,channel,who,callType)
 				local dungeonScore=keyLink and scoreT[getShortDungeonName(keyName)]["점수"] or 0
 				dungeonScore=tonumber(dungeonScore)
 				
+				local dungeonColor
 				if dungeonScore>=275 then
 					dungeonColor="{CL}"
 				elseif dungeonScore>=225 then
@@ -649,8 +650,8 @@ function doFullReport(chars,channel,who,callType)
 				else
 					dungeonColor="{CN}"
 				end
-				
-				score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점 [")..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
+
+				score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
 			end
             
             if best and best~=0 then

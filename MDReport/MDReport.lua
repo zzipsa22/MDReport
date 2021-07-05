@@ -1109,7 +1109,8 @@ function MDRreportScore(VALUES)
     end
     
     local scoreT=MDRconfig.Char[meAddon].Score
-	if scoreT["종합점수"] == 0 then return end
+	local charLevel=MDRconfig.Char[meAddon].Level
+	if Level ~= MDR["SCL"] then return end
 	
 	local messageLines={}
     if callType["dungeon"] then   -- !점수!역병
@@ -1122,6 +1123,14 @@ function MDRreportScore(VALUES)
 		local for_level=scoreT[dungeon]["경화"]["level"] or 0
 		local for_clear=scoreT[dungeon]["경화"]["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
 		local for_score=scoreT[dungeon]["경화"]["score"] or 0
+		
+		if tyr_level==0 then 
+			tyr_clear=""
+		end
+		
+		if for_level==0 then 
+			for_clear=""
+		end
 		
 		score=tonumber(score)
 		local color,tyr_color,for_color
@@ -1207,6 +1216,7 @@ end
 
 function MDRgetDungeonScore(name,affix)
 	local scoreT=MDRconfig.Char[name].Score
+	local dungeonHistory
 	local dungeonTable={
         [1]={"핏","핏심"},
         [2]={"속","속죄"},
