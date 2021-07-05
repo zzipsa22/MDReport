@@ -581,8 +581,16 @@ function filterVALUES(VALUES)
         elseif callType["emote"] then 
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
-        elseif callType["score"] then  
-			message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..msg
+        elseif callType["score"] then
+			local affixIcon,affix
+			if isThisWeekHasSpecificAffix(9) then
+				affixIcon="|T236401:0:::-4|t"
+				affix="폭군"
+			else
+				affixIcon="|T463829:0:::-4|t"
+				affix="경화"
+			end	
+			message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다. 이번주는 ["..affixIcon..affix.."] 입니다."..msg
 		elseif callType["parking"] then 
             if (not level) and (#callTypeB==1) and (not onlyOnline) then   
                 message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."] "..eul.." 요청합니다."..msg
@@ -591,8 +599,12 @@ function filterVALUES(VALUES)
             end
         elseif CharName then   
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
-        else  
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..msg
+        else
+			local affix_desc=""
+			if callType["all"] then
+				affix_desc=" 이번주 속성은 "..GetAnyWeeksAffix(0,channel).." 입니다."
+			end
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..affix_desc..msg
         end 
         if not callType["forceversion"] then
             print(statusIcon..mdrcolor[channel]..message)
@@ -1021,6 +1033,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["lastSeen"]=t[k].LastSeen or time() 
                 chars[num]["charLevel"]=t[k].Level or MDR.SCL    
                 chars[num]["covenant"]=t[k].Covenant or ""
+				chars[num]["score"]=t[k].Score or ""
                 num=num+1 
             end  
         end   
@@ -1097,7 +1110,8 @@ function MDRreportScore(VALUES)
     
     local scoreT=MDRconfig.Char[meAddon].Score
 	if scoreT["종합점수"] == 0 then return end
-    local messageLines={}
+	
+	local messageLines={}
     if callType["dungeon"] then   -- !점수!역병
         --275,225,188,125		
         local dungeon=keyword["dungeon"][1]    
@@ -1162,13 +1176,11 @@ function MDRreportScore(VALUES)
 		
         messageLines[1]=dungeon..": "..color..score.."{CX}점 [{폭군}"..tyr_color..tyr_level.."{CX}"..tyr_clear.." {경화}"..for_color..for_level.."{CX}"..for_clear.."]"
         
-    elseif callType["affix"] then   -- !점수!폭군
-        
     else -- !점수
         local total=scoreT["종합점수"]  
 		--2200,1800,1500,1000		
 		total=tonumber(total)
-		
+		local shortClass=MDRcolor(krClass,6)
 		local color
 		if total>=2200 then
 			color="{CL}"
@@ -1180,9 +1192,22 @@ function MDRreportScore(VALUES)
 			color="{CC}"
 		else
 			color="{CN}"
-		end
+		end		
 		
-		local dungeonTable={
+		local name=meAddon
+		local tyr_desc=MDRgetDungeonScore(name,"폭군")
+		local for_desc=MDRgetDungeonScore(name,"경화")
+		
+        messageLines[1]="{"..shortClass.."} "..color..total.."{CX}점 ["..tyr_desc.." / "..for_desc.."]"
+    end
+    
+    reportMessageLines(messageLines,channel,who,callType)
+    return    
+end
+
+function MDRgetDungeonScore(name,affix)
+	local scoreT=MDRconfig.Char[name].Score
+	local dungeonTable={
         [1]={"핏","핏심"},
         [2]={"속","속죄"},
         [3]={"승","승천"},
@@ -1191,20 +1216,9 @@ function MDRreportScore(VALUES)
         [6]={"역","역병"},
         [7]={"티","티르너"},
         [8]={"저","저편"}, 
-		}
-		
-		local dungeonHistory={}
-		
-		for j=1,2 do
-		local affix
-		if j==1 then
-			affix="폭군" 
-		else
-			affix="경화"
-		end
-
-		for i=1,#dungeonTable do
-			if i==1 then dungeonHistory[affix]="{"..affix.."}: " end
+	}
+	for i=1,#dungeonTable do
+			if i==1 then dungeonHistory="{"..affix.."} " end
 			local d=dungeonTable[i][1]
 			local dungeon=dungeonTable[i][2]
 			--local icon=","
@@ -1227,27 +1241,12 @@ function MDRreportScore(VALUES)
 			else
 				color="{CN}"
 			end
-			--[[
-			if d=="핏" then
-				icon="{c2}"
-			elseif d=="승" then
-				icon="{c1}"
-			elseif d=="고" then
-				icon="{c4}"
-			elseif d=="티" then
-				icon="{c3}"
-			end        			
-			]]
-			dungeonHistory[affix]=dungeonHistory[affix]..color..d.."{CX}"
-		end
-		end
-		
-        messageLines[1]="종합평점: "..color..total.."{CX}점 ["..dungeonHistory["폭군"].." / "..dungeonHistory["경화"].."]"
-    end
-    
-    reportMessageLines(messageLines,channel,who,callType)
-    return    
+
+			dungeonHistory=dungeonHistory..color..d.."{CX}"
+	end
+	return dungeonHistory
 end
+
 
 --보유한 모든 돌 보고하기
 function findCharAllKey(VALUES) 

@@ -561,14 +561,13 @@ function doFullReport(chars,channel,who,callType)
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]            
             local runs=chars[i]["runs"]            
+			local scoreT=chars[i]["score"]
             local covenant=chars[i]["covenant"] 
             local covenantID=MDRgetCovenantID(covenant)            
             local itemLevel=chars[i]["itemLevel"]
             local equipLevel=chars[i]["equipLevel"]
             local charLevel=chars[i]["charLevel"]
-            local online=""            
-            local classStatus=""
-            local headStar=""
+            local online,classStatus,headStar,score_desc="","","",""            
             
             if charName==meAddon then
                 online=" {OG}접속중"
@@ -612,6 +611,47 @@ function doFullReport(chars,channel,who,callType)
                     havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
                 end                
             end
+			
+			if scoreT and scoreT~="" then
+				local affix
+				if isThisWeekHasSpecificAffix(9) then
+					affix="폭군"
+				else
+					affix="경화"
+				end
+				local total=scoreT["종합점수"]				
+				total=tonumber(total)
+		
+				local color
+				if total>=2200 then
+					color="{CL}"
+				elseif total>=1800 then
+					color="{CE}"
+				elseif total>=1500 then
+					color="{CR}"
+				elseif total>=1000 then
+					color="{CC}"
+				else
+					color="{CN}"
+				end	
+				
+				local dungeonScore=keyLink and scoreT[getShortDungeonName(keyName)]["점수"] or 0
+				dungeonScore=tonumber(dungeonScore)
+				
+				if dungeonScore>=275 then
+					dungeonColor="{CL}"
+				elseif dungeonScore>=225 then
+					dungeonColor="{CE}"
+				elseif dungeonScore>=188 then
+					dungeonColor="{CR}"
+				elseif dungeonScore>=125 then
+					dungeonColor="{CC}"
+				else
+					dungeonColor="{CN}"
+				end
+				
+				score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점 [")..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
+			end
             
             if best and best~=0 then
                 if isAddonMessage==1 then
@@ -693,7 +733,7 @@ function doFullReport(chars,channel,who,callType)
             elseif callType["covenantall"] then
                 message=headStar..classStatus.." ▶{c"..covenantID.."}"..MDRcolor(covenant)
             else                
-                message=covenantIcon..headStar..classStatus.." ▶ "..dungeonIcon..havekey..online
+                message=covenantIcon..headStar..classStatus.."▶"..(keyLink and getShortDungeonName(keyName)..level or dungeonIcon..havekey)..score_desc
             end           
             
             if sameCheck then                 
