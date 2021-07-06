@@ -865,9 +865,11 @@ function MDRrefreshRunHistory()
 			local affix
 			local affixTable=desc[i]
 			if affixTable then 
-				affix=affixTable["name"]
+				affix=affixTable["name"]				
 			end
+			if affix then			
 			MDRconfig.Char[meAddon].Score[d][affix]=affixTable or {}			
+			end
 		end        
     end
     
@@ -1644,4 +1646,3 @@ function MDRcheckAchievement(level,channel,who)
     messageLines[1]=message
     reportAddonMessage(messageLines,channel,who,"achievement")
 end
-
