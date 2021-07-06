@@ -556,6 +556,10 @@ function MDRCommandsParty(msg, editbox)
     if strfind(strsub(msg,1,1),"!") then
         msg=strsub(msg,2,-1)
     end 
+	if msg=="금고" then
+		MDRVault ()
+		return
+	end
     if IsInGroup() then
         MDRsendAddonMessage("!"..msg,"PARTY",meGame)    
     else
@@ -569,6 +573,10 @@ function MDRCommandsOfficer(msg, editbox)
     if strfind(strsub(msg,1,1),"!") then
         msg=strsub(msg,2,-1)
     end 
+	if msg=="금고" then
+		MDRVault ()
+		return
+	end
     MDRsendAddonMessage("!"..msg,"OFFICER",meGame)      
     return    
 end
@@ -723,6 +731,10 @@ function MDRCommands(msg, editbox)
         if strfind(strsub(msg,1,1),"!") then
             msg=strsub(msg,2,-1)
         end
+		if msg=="금고" then
+			MDRVault ()
+			return
+		end
         local m=MDRconfig.MannerMode or 0
         local at=""
         if m==1 then--매너모드
