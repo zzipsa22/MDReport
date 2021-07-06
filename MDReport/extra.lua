@@ -861,9 +861,14 @@ function MDRrefreshRunHistory()
         local desc,total=C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(n)
         MDRconfig.Char[meAddon].Score[d]={}
         MDRconfig.Char[meAddon].Score[d]["점수"]=total
-        MDRconfig.Char[meAddon].Score[d]["폭군"]=desc[1] or {}
-        MDRconfig.Char[meAddon].Score[d]["경화"]=desc[2] or {}
-        
+		for i=1,2 do
+			local affix
+			local affixTable=desc[i]
+			if affixTable then 
+				affix=affixTable["name"]
+			end
+			MDRconfig.Char[meAddon].Score[d][affix]=affixTable or {}			
+		end        
     end
     
     
