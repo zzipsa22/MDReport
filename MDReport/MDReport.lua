@@ -1151,36 +1151,32 @@ function MDRreportScore(VALUES)
 			tyr_color="{CW}"
 		elseif tyr_score>=125 then
 			tyr_color="{CA}"
-		elseif tyr_score>=120 then
+		elseif tyr_score>=115 then
 			tyr_color="{CL}"
-		elseif tyr_score>=110 then
-			tyr_color="{CE}"
 		elseif tyr_score>=100 then
-			tyr_color="{CR}"
+			tyr_color="{CE}"
 		elseif tyr_score>=80 then
-			tyr_color="{CC}"
+			tyr_color="{CR}"
 		elseif tyr_score==0 then
 			tyr_color="{CG}"
 		else
-			tyr_color="{CN}"
+			tyr_color="{CC}"
 		end
 		
 		if for_score>137 then
 			for_color="{CW}"
 		elseif for_score>=125 then
 			for_color="{CA}"
-		elseif for_score>=120 then
+		elseif for_score>=115 then
 			for_color="{CL}"
-		elseif for_score>=110 then
-			for_color="{CE}"
 		elseif for_score>=100 then
-			for_color="{CR}"
+			for_color="{CE}"
 		elseif for_score>=80 then
-			for_color="{CC}"
+			for_color="{CR}"
 		elseif for_score==0 then
 			for_color="{CG}"
 		else
-			for_color="{CN}"
+			for_color="{CC}"
 		end
 		
         messageLines[1]=dungeon..": "..color..score.."{CX}점 [{폭군}"..tyr_color..tyr_level.."{CX}"..tyr_clear.." {경화}"..for_color..for_level.."{CX}"..for_clear.."]"
@@ -1238,18 +1234,16 @@ function MDRgetDungeonScore(name,affix)
 				color="{CW}"			
 			elseif score>=125 then
 				color="{CA}"			
-			elseif score>=120 then
+			elseif score>=115 then
 				color="{CL}"
-			elseif score>=110 then
-				color="{CE}"
 			elseif score>=100 then
-				color="{CR}"
+				color="{CE}"
 			elseif score>=80 then
-				color="{CC}"
+				color="{CR}"
 			elseif score==0 then
 				color="{CG}"
 			else
-				color="{CN}"
+				color="{CC}"
 			end
 
 			dungeonHistory=dungeonHistory..color..d.."{CX}"

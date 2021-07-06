@@ -10,18 +10,16 @@ MDR["diceWait"]=0
 
 C_Timer.After(10, function()    
         local x = GetLocale()
-        if x ~= "koKR" then -- XXX temp, Options/Locales needs updated
+        if x ~= "koKR" then 
             print("▶|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
         else
             if MDR["guide"]<50 then
                 print("|cFF33FF99▶쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r")        
                 
+                print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 출력 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
+				
                 print(MDRcolor("수도",0,"▶").."도움이 필요하신가요? |cff9d9d9d [도움말 호출: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
-                
-                --print(MDRcolor("수도",0,"▶")..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 모드'|r]|r")
-                
-                --print(MDRcolor("수도",0,"▶")..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 위업'|r]|r")
-                
+				
                 MDRtoggleMode()
                 
                 MDR["guide"]=MDR["guide"]+1
@@ -255,7 +253,7 @@ function MDRko(keyword,type)
         "돌","단","원","상","전","장","택","굴","산", --격아던전
         "연","당","탑","편","흔", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
-        "중","안","업","점",		
+        "중","안","업","점",        
     }
     local Batchim=0
     for i=1,#LCtable do
@@ -516,14 +514,14 @@ function MDRMykey()
 end
 
 function MDRalts()
-	local VALUES={}
-	VALUES.runHistory=nil
-	VALUES.main=nil
-	VALUES.alt=1
-	VALUES.includeMain=nil
-	VALUES.type="alts"
-	VALUES.onlyMain=nil
-	VALUES.detail=1
+    local VALUES={}
+    VALUES.runHistory=nil
+    VALUES.main=nil
+    VALUES.alt=1
+    VALUES.includeMain=nil
+    VALUES.type="alts"
+    VALUES.onlyMain=nil
+    VALUES.detail=1
     MDRdoReportHistory(VALUES)  
 end
 
@@ -540,15 +538,15 @@ function MDRhistory(msg, editbox)
             print("|cFF33FF99▶|r 기록 지연 시간이 "..MDRcolor("하늘",0,"'기본값 ("..MDR.DefaultDelay.."초)'").." 으로 설정 되었습니다.")
         end
     else
-		local VALUES={}
-		VALUES.runHistory=nil
-		VALUES.main=1		
-		VALUES.alt=nil
-		VALUES.includeMain=nil
-		VALUES.type="history"
-		VALUES.onlyMain=1
-		VALUES.detail=nil
-		VALUES.charName=msg
+        local VALUES={}
+        VALUES.runHistory=nil
+        VALUES.main=1        
+        VALUES.alt=nil
+        VALUES.includeMain=nil
+        VALUES.type="history"
+        VALUES.onlyMain=1
+        VALUES.detail=nil
+        VALUES.charName=msg
         MDRdoReportHistory(VALUES)  
     end
 end
@@ -591,9 +589,12 @@ function MDRCommands(msg, editbox)
         n2=playerName
         m1=MDRcolor(krClass,0,"!"..playerName).." 입력."
     end
-    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("돌",0,"위업")
+    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("계승",0,"점수")
     if not cmd or cmd=="도움말" or cmd=="!도움말" or cmd=="도움" or cmd=="!도움" or cmd=="help" or cmd=="" or cmd=="?" or cmd=="@"then
-        
+	
+        local length=MDR["textLength"]
+        local kLength=math.floor((length-1)/3+1)
+		
         if args=="" or not args or args=="도움말" then      
             messageLines[#messageLines+1]="|cFF33FF99▶ 쐐기돌 보고서 (MDReport)|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r : 전체 도움말 "
             
@@ -604,7 +605,9 @@ function MDRCommands(msg, editbox)
             
             messageLines[#messageLines+1]="▷|cFF33FF99[2.7.0]|r+ "..MDRgetModeName(1).." 와 "..MDRgetModeName(2).." 를 추가하였습니다."
             
-            messageLines[#messageLines+1]="▷|cFF33FF99[2.8.0]|r+ "..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 확인 기능을 추가하였습니다."                      
+            --messageLines[#messageLines+1]="▷|cFF33FF99[2.8.0]|r+ "..MDRcolor("돌",0,"위업").." ("..MDRcolor("영웅",0,"10단").."/"..MDRcolor("전설",0,"15단")..") 확인 기능을 추가하였습니다."                      
+            
+            messageLines[#messageLines+1]="▷|cFF33FF99[2.9.0]|r+ "..MDRcolor("계승",0,"쐐기돌 평점").." 확인 기능을 추가하였습니다."    
             
             messageLines[#messageLines+1]="|cffffffff▷도움말 목록: |r"..cmdList
             messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/! @|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/! @|r |cffC79C6E돌|r"
@@ -632,8 +635,7 @@ function MDRCommands(msg, editbox)
         elseif args=="닉네임" or args=="이름" then
             
             messageLines[#messageLines+1]=helpHead..MDRcolor("사냥꾼",0,"'닉네임'")      
-            local length=MDR["textLength"]
-            local kLength=math.floor((length-1)/3+1)
+
             messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r : |cffA9D271닉네임|r을 단독으로 입력하는 경우 |c"..classColor.."'캐릭터'|r 검색을 시도합니다. 일치하는 캐릭터가 있을 경우 모두 출력합니다. 한글은 최소 |cFFFFF569"..kLength.."|r글자 이상, 영문은 |cFFFFF569"..length.."|r자 이상 입력해야합니다. |cFF33FF99ex)|r 캐릭명이 '|c"..classColor..playerName.."|r' 일 경우 "..m1
             
             messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r을 |cffC79C6E!돌|r 이나 |cff8787ED!주차|r와 조합하면 명령어에 반응할 "..MDRcolor("초록",0,"'사람'").."을 지정할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cffC79C6E돌|r"..MDRcolor(krClass,0,"!"..n1)..", "..MDRcolor("파티",0,"/!! ")..MDRcolor(krClass,0,n2).."|cff8787ED!주차|r. 부캐 이름으로도 가능합니다." 
@@ -682,6 +684,13 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]=helpHead..MDRcolor("돌",0,"'위업'")
             
             messageLines[#messageLines+1]="▶"..MDRcolor("돌",0,"위업").." : "..MDRcolor("돌",0,"쐐기돌").." 위업 진행 상황을 요청합니다. 단수를 지정하지 않으면 (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor("돌",0,"위업")..") "..MDRcolor("영웅",0,"10단").."과 "..MDRcolor("전설",0,"15단").." 위업을 모두 체크하며, "..MDRcolor("노랑",0,"위업10, 위업15").." 처럼 단수를 지정할 경우 "..MDRcolor("하늘",0,"[해당 단수]").."의 위업만 체크합니다. "
+            
+        elseif args=="점수" then    
+            messageLines[#messageLines+1]=helpHead..MDRcolor("계승",0,"'쐐기돌 평점'")
+            
+            messageLines[#messageLines+1]="▶"..MDRcolor("계승",0,"점수").." : 현재 "..MDRcolor("핑크",0,"접속중").." 인 캐릭터의 "..MDRcolor("계승",0,"쐐기돌 평점").." 을 요청합니다. 각 던전별 최고 기록을 |T236401:0:::-4|t폭군과 |T463829:0:::-4|t경화를 구분하여 색깔로 표시해 줍니다. (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor("계승",0,"점수")..")"
+			messageLines[#messageLines+1]="▷".."|cff40C7EB!{던전명}|r 과 함께 요청할 경우 해당 던전의 세부점수와 기록을 요청합니다. (|cFF33FF99ex|r. "..MDRcolor("파티",0,"/!! ")..MDRcolor("계승",0,"점수").."|cff40C7EB!티르너|r"..")"
+			messageLines[#messageLines+1]="▷".."부캐의 정보를 알고자 할 경우, |cFF33FF99[2.9.0]|r+ 부터 |cffA9D271{닉네임}|r 혹은 |cffFF7D0A{직업명}|r 검색결과에 "..MDRcolor("계승",0,"점수").." 가 포함되도록 변경되었으므로 해당 기능을 이용하시면 됩니다. (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor(krClass,0,n1)..", "..MDRcolor("파티",0,"/!! ").."|cffFFF569도적|r)"
             
         else
             return
@@ -832,10 +841,10 @@ function MDRrefreshRunHistory()
     end
     
     MDRconfig.Char[meAddon].runHistory=runHistory  
-	
-	MDRconfig.Char[meAddon].Score={}
+    
+    MDRconfig.Char[meAddon].Score={}
     MDRconfig.Char[meAddon].Score["종합점수"]=C_ChallengeMode.GetOverallDungeonScore()  --총점
-
+    
     for d,n in pairs(MDR.dungeonNameToID)do  -- 던전별 점수
         local desc,total=C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(n)
         MDRconfig.Char[meAddon].Score[d]={}
@@ -843,8 +852,8 @@ function MDRrefreshRunHistory()
         MDRconfig.Char[meAddon].Score[d]["폭군"]=desc[1] or {}
         MDRconfig.Char[meAddon].Score[d]["경화"]=desc[2] or {}
         
-		end
-
+    end
+    
     
     if MDR.runHistory then
         MDR.runHistory.onLoad=runHistory
@@ -915,44 +924,44 @@ function MDRgetHistory(type)
             MDR.runHistory.onLoad=tempTable        
             k.runHistory=tempTable
             k.runs=#tempTable
-			local VALUES={}
-			VALUES.runHistory=MDR.runHistory.finish
-			VALUES.main=1
-			VALUES.alt=1
-			VALUES.includeMain=1
-			VALUES.type=type
-			VALUES.onlyMain=1
-			VALUES.detail=1
+            local VALUES={}
+            VALUES.runHistory=MDR.runHistory.finish
+            VALUES.main=1
+            VALUES.alt=1
+            VALUES.includeMain=1
+            VALUES.type=type
+            VALUES.onlyMain=1
+            VALUES.detail=1
             MDRdoReportHistory(VALUES)
         end
     elseif type=="vault" or type=="parking" then
-		local VALUES={}	
-        if type=="vault" then		
-			VALUES.main=nil		
-			VALUES.alt=1
-			VALUES.includeMain=1            
+        local VALUES={}    
+        if type=="vault" then        
+            VALUES.main=nil        
+            VALUES.alt=1
+            VALUES.includeMain=1            
         else
-			VALUES.main=nil
-			VALUES.alt=1
-			VALUES.includeMain=1            
-        end   		
+            VALUES.main=nil
+            VALUES.alt=1
+            VALUES.includeMain=1            
+        end           
         --type="onLoad"    
-		VALUES.type=type
-		VALUES.onlyMain=nil
-		VALUES.detail=nil
-		
+        VALUES.type=type
+        VALUES.onlyMain=nil
+        VALUES.detail=nil
+        
         if MDR.runHistory and MDR.runHistory.finish then
-			VALUES.runHistory=MDR.runHistory.finish        
+            VALUES.runHistory=MDR.runHistory.finish        
         else      
-			VALUES.runHistory=MrunHistory            
+            VALUES.runHistory=MrunHistory            
         end      
-		
-		MDRdoReportHistory(VALUES)    
+        
+        MDRdoReportHistory(VALUES)    
     end
     
     k.class=nil
     k.level=nil    
-   
+    
     k.Class=krClass
     k.Level=UnitLevel("player")  
     k.name=meAddon
@@ -1032,16 +1041,16 @@ function MDRremoveCharInfo(args)
 end
 
 function MDRdoReportHistory(VALUES) 
-	
-	local runHistory=VALUES.runHistory
-	local main=VALUES.main
-	local alt=VALUES.alt
-	local includeMain=VALUES.includeMain
-	local type=VALUES.type
-	local onlyMain=VALUES.onlyMain
-	local detail=VALUES.detail
-	local charName=VALUES.charName
-
+    
+    local runHistory=VALUES.runHistory
+    local main=VALUES.main
+    local alt=VALUES.alt
+    local includeMain=VALUES.includeMain
+    local type=VALUES.type
+    local onlyMain=VALUES.onlyMain
+    local detail=VALUES.detail
+    local charName=VALUES.charName
+    
     local messageLines={}
     local comm=""
     if type=="finish" then
@@ -1119,8 +1128,8 @@ function MDRdoReportHistory(VALUES)
         [14]=226,
         [15]=226,
     }
-	
-	local rewardLevel_season_two={ 
+    
+    local rewardLevel_season_two={ 
         [2]=223,    
         [3]=226,
         [4]=229,
@@ -1136,14 +1145,14 @@ function MDRdoReportHistory(VALUES)
         [14]=249,
         [15]=252,
     }
-	local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)
-	local rewardLevel
-	
-	if maxreward==252 then
-		rewardLevel=rewardLevel_season_two
-	else
-		rewardLevel=rewardLevel_season_one
-	end	
+    local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)
+    local rewardLevel
+    
+    if maxreward==252 then
+        rewardLevel=rewardLevel_season_two
+    else
+        rewardLevel=rewardLevel_season_one
+    end    
     
     for i=16,40 do
         rewardLevel[i]=rewardLevel[15]
@@ -1175,7 +1184,7 @@ function MDRdoReportHistory(VALUES)
     
     local guideHistory="|cFF33FF99▶|r |cff9d9d9d"..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 "..MDRcolor("하늘",0,"[이번주 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
     local guideAlts="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[다른 캐릭터]").." 의 기록을 보시려면 |cffffff00'/기록 "..MDRcolor("핑크",0,"캐릭명").." 또는 "..MDRcolor(class,0,"직업명").."'|r 입력.|r"
-	local guideFinish="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[세부 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
+    local guideFinish="|cFF33FF99▶|r |cff9d9d9d"..MDRcolor("계승",0,"[세부 기록]").." 을 보시려면 |cffffff00'/기록'|r 입력." 
     local guideDelete=MDRcolor("빨강",0,"▶ ").."|cff9d9d9d"..MDRcolor("유물",0,"[저장된 기록]").." 을 "..MDRcolor("빨강",0,"삭제").."하시려면 "..MDRcolor("노랑",0,"'/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("노랑",0,"'").." 입력."
     local guideB,tipB="",""
     if main then
@@ -1191,45 +1200,45 @@ function MDRdoReportHistory(VALUES)
             
             messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm.."이번주 "..mainIcon..MDRcolor(class,0,"["..name.."]").." 님의 쐐기 기록은 총 |cffF5aCdA["..#runHistory.."회]|r 입니다."
             
-			if not alt or (alt and not onlyMain) then
-            for i = 1, #runHistory do
-                local runInfo = runHistory[i];
-                local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
-                local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name)))
-                local timed=runInfo.completed        
-                if timed==true then
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t"
-                elseif timed=="now" then          
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0:0:-5|t"          
-                else
-                    timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t"
-                end
-                
-                local color1,color2,color3,tip,reward,level
-                if i==1 or i==4 or i==10 then
-                    level=runInfo.level
-                    if level>15 then level=15 end
-                    color1="전설"
-                    color2="초록"
-                    color3="노랑"
-                    reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
-                else
-                    color1="사제"
-                    color2="회색" 
-                    color3="회색" 
-                    reward=""       
-                end     
-                if i<=10 then 
-                    local space=""
-                    if runInfo.level<10 then 
-                        space=" "
+            if not alt or (alt and not onlyMain) then
+                for i = 1, #runHistory do
+                    local runInfo = runHistory[i];
+                    local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
+                    local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name)))
+                    local timed=runInfo.completed        
+                    if timed==true then
+                        timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t"
+                    elseif timed=="now" then          
+                        timed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0:0:-5|t"          
+                    else
+                        timed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t"
                     end
-                    message=" "..timed..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..coveIcon..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
-                    messageLines[#messageLines+1]=message
-                end     
-			end
-			end
-			
+                    
+                    local color1,color2,color3,tip,reward,level
+                    if i==1 or i==4 or i==10 then
+                        level=runInfo.level
+                        if level>15 then level=15 end
+                        color1="전설"
+                        color2="초록"
+                        color3="노랑"
+                        reward=" ▶ [|TInterface\\GroupFrame\\UI-Group-MasterLooter:0:0:0:-4|t"..i.."회 보상: "..rewardLevel[level].." 레벨".."]"
+                    else
+                        color1="사제"
+                        color2="회색" 
+                        color3="회색" 
+                        reward=""       
+                    end     
+                    if i<=10 then 
+                        local space=""
+                        if runInfo.level<10 then 
+                            space=" "
+                        end
+                        message=" "..timed..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..coveIcon..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
+                        messageLines[#messageLines+1]=message
+                    end     
+                end
+            end
+            
             if #runHistory <4 then
                 tip=MDRcolor("빨강",0,"▶ ").."다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."..(howManyToons>1 and guide or "")
             elseif #runHistory <10 then
@@ -1238,11 +1247,11 @@ function MDRdoReportHistory(VALUES)
                 tip=nil
             end
             if tip then
-				if not onlyMain then
-                messageLines[#messageLines+1]=tip                
-				else
-				tipB=tip
-				end
+                if not onlyMain then
+                    messageLines[#messageLines+1]=tip                
+                else
+                    tipB=tip
+                end
             end
         else
             if UnitLevel("player") == MDR.SCL then
@@ -1256,19 +1265,19 @@ function MDRdoReportHistory(VALUES)
         --부캐정보    
         if howManyToons>=0 then
             local allOrAlt=""
-			if not onlyMain then
-				if includeMain then
-					allOrAlt=MDRcolor("유물",0,"모든 만렙 캐릭터")    
-				else
-					allOrAlt=MDRcolor("계승",0,"다른 만렙 캐릭터")    
-				end
-				messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..mainIcon..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..allOrAlt..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
-			end
-
+            if not onlyMain then
+                if includeMain then
+                    allOrAlt=MDRcolor("유물",0,"모든 만렙 캐릭터")    
+                else
+                    allOrAlt=MDRcolor("계승",0,"다른 만렙 캐릭터")    
+                end
+                messageLines[#messageLines+1]="|cFF33FF99MDR▶|r "..comm..mainIcon..MDRcolor(class,0,"["..UnitName("player").."]").." 님의 "..allOrAlt..": "..MDRcolor("핑크",0,"[총 "..howManyToons.."개]") 
+            end
+            
             for _,v in pairs(newtoons) do
                 if ((not onlyMain and (v["name"]~=meAddon or (includeMain and v["name"]==meAddon))) or (onlyMain and v["name"]==meAddon))
-				and v.runHistory and (v.level==MDR.SCL or v.Level==MDR.SCL) then
-					
+                and v.runHistory and (v.level==MDR.SCL or v.Level==MDR.SCL) then
+                    
                     local altName=MDRsplit(v["name"]," - ")[1]
                     local class=v.Class or v.class 
                     local levels,rewards="",""
@@ -1307,14 +1316,14 @@ function MDRdoReportHistory(VALUES)
                 end        
             end 
         end 
-		if onlyMain then
-			messageLines[#messageLines+1]=tipB
-		end
+        if onlyMain then
+            messageLines[#messageLines+1]=tipB
+        end
         if UnitLevel("player") == MDR.SCL and not main then
             messageLines[#messageLines+1]=guideHistory
         end
-		if type=="finish" then
-			messageLines[#messageLines+1]=guideFinish
+        if type=="finish" then
+            messageLines[#messageLines+1]=guideFinish
         elseif howManyToons>1 then
             messageLines[#messageLines+1]=guideAlts    
         end
@@ -1618,3 +1627,4 @@ function MDRcheckAchievement(level,channel,who)
     messageLines[1]=message
     reportAddonMessage(messageLines,channel,who,"achievement")
 end
+

@@ -269,21 +269,21 @@ function MDRcolorizeForPrint(message)
     --완,미완 변환
     message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
     message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
-	
-	--폭군,경화	
-	message=gsub(message,"{폭군}","|T236401:0:::-4|t")
-	message=gsub(message,"{경화}","|T463829:0:::-4|t")	
-	
-	--색깔 코드
-	message=gsub(message,"{CW}","|cff00ccff")	
-	message=gsub(message,"{CA}","|cffe6cc80")	
-	message=gsub(message,"{CL}","|cfffe7f00")
-	message=gsub(message,"{CE}","|cFFa234ed")
-	message=gsub(message,"{CR}","|cFF006fdc")
-	message=gsub(message,"{CC}","|cFF1dfe00")
-	message=gsub(message,"{CN}","|cFFfefefe")
-	message=gsub(message,"{CG}","|cFF9d9d9d")
-	message=gsub(message,"{CX}","|r")
+    
+    --폭군,경화    
+    message=gsub(message,"{폭군}","|T236401:0:::-4|t")
+    message=gsub(message,"{경화}","|T463829:0:::-4|t")    
+    
+    --색깔 코드
+    message=gsub(message,"{CW}","|cffdb24b2")    
+    message=gsub(message,"{CA}","|cffe6cc80")    
+    message=gsub(message,"{CL}","|cfffe7f00")
+    message=gsub(message,"{CE}","|cFFa234ed")
+    message=gsub(message,"{CR}","|cFF006fdc")
+    message=gsub(message,"{CC}","|cFF1dfe00")
+    message=gsub(message,"{CN}","|cFFe7e7e7")
+    message=gsub(message,"{CG}","|cFF9d9d9d")
+    message=gsub(message,"{CX}","|r")
     
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
@@ -561,7 +561,7 @@ function doFullReport(chars,channel,who,callType)
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]            
             local runs=chars[i]["runs"]            
-			local scoreT=chars[i]["score"]
+            local scoreT=chars[i]["score"]
             local covenant=chars[i]["covenant"] 
             local covenantID=MDRgetCovenantID(covenant)            
             local itemLevel=chars[i]["itemLevel"]
@@ -611,48 +611,48 @@ function doFullReport(chars,channel,who,callType)
                     havekey="[{rt8}만렙 아님: "..charLevel.."레벨]"
                 end                
             end
-			
-			if charLevel==MDR["SCL"] then
-				local affix
-				if isThisWeekHasSpecificAffix(9) then
-					affix="폭군"
-				else
-					affix="경화"
-				end
-				local total=scoreT["종합점수"] or 0				
-				total=tonumber(total)
-		
-				local color
-				if total>=2200 then
-					color="{CL}"
-				elseif total>=1800 then
-					color="{CE}"
-				elseif total>=1500 then
-					color="{CR}"
-				elseif total>=1000 then
-					color="{CC}"
-				else
-					color="{CN}"
-				end	
-				
-				local dungeonScore=keyLink and scoreT[getShortDungeonName(keyName)]["점수"] or 0
-				dungeonScore=tonumber(dungeonScore)
-				
-				local dungeonColor
-				if dungeonScore>=275 then
-					dungeonColor="{CL}"
-				elseif dungeonScore>=225 then
-					dungeonColor="{CE}"
-				elseif dungeonScore>=188 then
-					dungeonColor="{CR}"
-				elseif dungeonScore>=125 then
-					dungeonColor="{CC}"
-				else
-					dungeonColor="{CN}"
-				end
-
-				score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
-			end
+            
+            if charLevel==MDR["SCL"] then
+                local affix
+                if isThisWeekHasSpecificAffix(9) then
+                    affix="폭군"
+                else
+                    affix="경화"
+                end
+                local total=scoreT["종합점수"] or 0                
+                total=tonumber(total)
+                
+                local color
+                if total>=2200 then
+                    color="{CL}"
+                elseif total>=1800 then
+                    color="{CE}"
+                elseif total>=1500 then
+                    color="{CR}"
+                elseif total>=1000 then
+                    color="{CC}"
+                else
+                    color="{CN}"
+                end    
+                
+                local dungeonScore=keyLink and scoreT[getShortDungeonName(keyName)]["점수"] or 0
+                dungeonScore=tonumber(dungeonScore)
+                
+                local dungeonColor
+                if dungeonScore>=275 then
+                    dungeonColor="{CL}"
+                elseif dungeonScore>=225 then
+                    dungeonColor="{CE}"
+                elseif dungeonScore>=188 then
+                    dungeonColor="{CR}"
+                elseif dungeonScore>=125 then
+                    dungeonColor="{CC}"
+                else
+                    dungeonColor="{CN}"
+                end
+                
+                score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
+            end
             
             if best and best~=0 then
                 if isAddonMessage==1 then
