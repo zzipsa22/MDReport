@@ -1063,6 +1063,8 @@ function MDRreportScore(VALUES)
     local who,channel,level,level2,callTypeT
     local onlyMe,onlyYou,onlyOnline,except,onlyForMe
     local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
+	
+	MDRrefreshRunHistory() -- 점수 갱신
     
     channel="print"
     if VALUES~=nil then
@@ -1229,7 +1231,8 @@ function MDRgetDungeonScore(name,affix)
 			local dungeon=dungeonTable[i][2]
 			--local icon=","
 			local color
-			local score=scoreT[dungeon][affix]["score"] or 0	
+			local affixScore=scoreT[dungeon][affix] or {}
+			local score=affixScore["score"] or 0	
 			if score>137 then
 				color="{CW}"			
 			elseif score>=125 then
