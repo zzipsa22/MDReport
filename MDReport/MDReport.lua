@@ -549,6 +549,9 @@ function filterVALUES(VALUES)
                 end
                 
                 cmdLines=now..cmdLines
+			elseif callType["score"] then
+				now=MDRcolor("핑크",0,"이번주의 ") 
+                cmdLines=now..cmdLines
             else
                 now=", "..MDRcolor("핑크",0,"현재 접속중") 
                 cmdLines=cmdLines..now
@@ -1104,11 +1107,10 @@ function MDRreportScore(VALUES)
     end
     
     local type
-    if channel=="ADDON_GUILD" or channel=="ADDON_OFFICER" or channel=="GUILD" then
-        type="scoreOnly"
-    else
-        type="full"
-    end
+	if onlyOnline==1 then				
+		findCharAllKey(VALUES)
+		return
+	end
     
     local scoreT=MDRconfig.Char[meAddon].Score
 	local charLevel=MDRconfig.Char[meAddon].Level
@@ -1183,7 +1185,7 @@ function MDRreportScore(VALUES)
 		
         messageLines[1]=dungeon..": "..color..score.."{CX}점 [{폭군}"..tyr_color..tyr_level.."{CX}"..tyr_clear.." {경화}"..for_color..for_level.."{CX}"..for_clear.."]"
         
-    else -- !점수
+    else -- !점수	
         local total=scoreT["종합점수"]  
 		--2200,1800,1500,1000		
 		total=tonumber(total)
@@ -1480,8 +1482,14 @@ function findCharNeedParking(VALUES)
     elseif level<2 then level=2 end
     
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
-    if onlyOnline==1 then 
-        chars=filterCharsByFilter(chars,"name",nil,nil)
+    if onlyOnline==1 then
+		if channel=="ADDON_PARTY" then		
+			VALUES["onlyOnline"]=1
+			findCharAllKey(VALUES)
+			return
+		else
+			chars=filterCharsByFilter(chars,"name",nil,nil)
+		end
     else
         local newChars={}
         local newChars2={}

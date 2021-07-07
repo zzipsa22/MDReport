@@ -116,10 +116,24 @@ function doOnlyAffixReport(keyword,channel,who,callType)
         end         
         messageLines[1]="▶"..weekTitle.." 속성: "..affixText         
     elseif keyword=="all"then
+		local affixs={}
+		for i=1,4 do
+			local header=""
+			affixs[i]=GetAnyWeeksAffix(i,channel)
+			if not affixs[i] then break end
+			if i==1 then 
+				header="▶다음주"
+			else
+				header="▷"..i.."주뒤"
+			end
+			messageLines[i]=header.." 속성: "..affixs[i]
+		end
+		--[[
         messageLines[1]="▶다음주 속성: "..GetAnyWeeksAffix(1,channel) 
         messageLines[2]="▷2주뒤 속성: "..GetAnyWeeksAffix(2,channel)
         messageLines[3]="▷3주뒤 속성: "..GetAnyWeeksAffix(3,channel)
         messageLines[4]="▷4주뒤 속성: "..GetAnyWeeksAffix(4,channel)        
+		]]
     else        
         messageLines=GetAffixFullDescription(keyword,channel)
     end
