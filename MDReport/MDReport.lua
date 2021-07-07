@@ -1121,12 +1121,14 @@ function MDRreportScore(VALUES)
         --275,225,188,125		
         local dungeon=keyword["dungeon"][1]    
         local score=scoreT[dungeon]["점수"]
-        local tyr_level=scoreT[dungeon]["폭군"]["level"] or 0	
-		local tyr_clear=scoreT[dungeon]["폭군"]["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
-		local tyr_score=scoreT[dungeon]["폭군"]["score"] or 0
-		local for_level=scoreT[dungeon]["경화"]["level"] or 0
-		local for_clear=scoreT[dungeon]["경화"]["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
-		local for_score=scoreT[dungeon]["경화"]["score"] or 0
+		local tyr_talbe=scoreT[dungeon]["폭군"] or {}
+		local for_talbe=scoreT[dungeon]["경화"] or {}
+        local tyr_level=tyr_talbe["level"] or 0	
+		local tyr_clear=tyr_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
+		local tyr_score=tyr_talbe["score"] or 0
+		local for_level=for_talbe["level"] or 0
+		local for_clear=for_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
+		local for_score=for_talbe["score"] or 0
 		
 		if tyr_level==0 then 
 			tyr_clear=""
@@ -1312,7 +1314,7 @@ function findCharAllKey(VALUES)
         type="레벨제한없음"
     elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
         type="50렙이상만"
-    elseif callType["class"] then
+    elseif callType["class"] or callType["score"] then
         type="만렙만"
     elseif callType["covenant"] or callType["covenantall"] or callType["covenantnow"] then
         type="성약단" 

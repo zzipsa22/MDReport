@@ -1129,25 +1129,8 @@ function MDRdoReportHistory(VALUES)
         runHistory=MDRconfig.Char[charName].runHistory
         class=MDRconfig.Char[charName].Class or MDRconfig.Char[charName].class
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
-    end        
-    
-    local rewardLevel_season_one={ 
-        [2]=200,    
-        [3]=203,
-        [4]=207,
-        [5]=210,
-        [6]=210,
-        [7]=213,
-        [8]=216,
-        [9]=216,
-        [10]=220,
-        [11]=220,
-        [12]=223,
-        [13]=223,
-        [14]=226,
-        [15]=226,
-    }
-    
+    end    
+	
     local rewardLevel_season_two={ 
         [2]=223,    
         [3]=226,
@@ -1164,14 +1147,11 @@ function MDRdoReportHistory(VALUES)
         [14]=249,
         [15]=252,
     }
+	--[[
     local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)
-    local rewardLevel
-    
-    if maxreward==252 then
-        rewardLevel=rewardLevel_season_two
-    else
-        rewardLevel=rewardLevel_season_one
-    end    
+	]]
+    local rewardLevel  
+    rewardLevel=rewardLevel_season_two
     
     for i=16,40 do
         rewardLevel[i]=rewardLevel[15]
