@@ -1,10 +1,10 @@
 function GetAffixWeeksTable()
     local affixWeeks = {    
         [1] =  {[1]=11,[2]=124,[3]=10,[4]=128}, -->>파열,폭풍,경화
-        [2] =  {[1]=6,[2]=3,[3]=9,[4]=128},
-        [3] =  {[1]=0,[2]=0,[3]=10,[4]=128},
-        [4] =  {[1]=0,[2]=0,[3]=9,[4]=128},
-        [5] =  {[1]=0,[2]=0,[3]=10,[4]=128},
+        [2] =  {[1]=6,[2]=3,[3]=9,[4]=128}, --> 분노,화산,폭군
+        [3] =  {[1]=122,[2]=12,[3]=10,[4]=128}, --> 고취,치명상,경화
+        [4] =  {[1]=123,[2]=4,[3]=9,[4]=128}, --> 원한,괴저,폭군
+        [5] =  {[1]=7,[2]=14,[3]=10,[4]=128}, --> 강화,전율,경화
         [6] =  {[1]=0,[2]=0,[3]=9,[4]=128},
         [7] =  {[1]=0,[2]=0,[3]=10,[4]=128},
         [8] =  {[1]=0,[2]=0,[3]=9,[4]=128},
@@ -319,13 +319,17 @@ function GetThisWeek()
 end
 
 function isThisWeekHasSpecificAffix(affixNum)
-    local thisWeek=GetThisWeek()
-    if thisWeek==nil then return false end
-    local affixWeeks=GetAffixWeeksTable()
-    local affixTable=affixWeeks[thisWeek]
+    local thisWeeksAffix=C_MythicPlus.GetCurrentAffixes()
+	local affixTable={}	
+    if thisWeeksAffix==nil then return false end
+	affixTable[1]=thisWeeksAffix[2]["id"]        
+    affixTable[2]=thisWeeksAffix[3]["id"]        
+    affixTable[3]=thisWeeksAffix[1]["id"]        
+    affixTable[4]=thisWeeksAffix[4]["id"]   
     for i=1,#affixTable do
         if affixTable[i]==affixNum then
             return true
         end        
-    end    
+    end
+	return false
 end
