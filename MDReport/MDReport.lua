@@ -1027,6 +1027,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["best"]=t[k].reward1 or 0   
                 chars[num]["best4"]=t[k].reward4 or 0
                 chars[num]["best10"]=t[k].reward10 or 0
+				chars[num]["bestLevelCompleted"]=t[k].bestLevelCompleted or nil
                 chars[num]["runs"]=t[k].runs or 0
                 chars[num]["keyLink"]=t[k].MythicKey.link  
                 chars[num]["keyLevel"]=t[k].MythicKey.level or 0

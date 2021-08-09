@@ -281,9 +281,10 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"(%d+)([/#])", function(a,b) return (colorT[tonumber(a)] or a)..b end)
     
     --완,미완 변환
-    message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t")
-    message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0:0:-5|t")
-    
+    message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0.6:0:-5|t")
+    message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0.6:0:-5|t")
+    message=gsub(message,"{물}","|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0.6:0:-5|t")
+	
     --폭군,경화    
     message=gsub(message,"{폭군}","|T236401:0:::-4|t")
     message=gsub(message,"{경화}","|T463829:0:::-4|t")    
@@ -404,6 +405,7 @@ function doShortReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]
+			local bestLevelCompleted=chars[i]["bestLevelCompleted"]
             local runs=chars[i]["runs"]            
             local covenant=chars[i]["covenant"]
             local covenantID=MDRgetCovenantID(covenant)
@@ -421,7 +423,16 @@ function doShortReport(chars,channel,who,callType)
                 classStatus="{"..class.."}"..shorterName
             else                
                 classStatus="{"..class.."}"                
-            end            
+            end       
+			local CompletedIcon=""
+			if bestLevelCompleted=="now" then				
+				CompletedIcon="{물}"
+			elseif bestLevelCompleted then
+				CompletedIcon="{완}"
+			elseif not bestLevelCompleted then
+				CompletedIcon="{미완}"					
+			end
+				
             if charName==meAddon then                
                 if channel=="ADDON_PARTY" then
                     onC=" |cff48ff00"
@@ -442,9 +453,9 @@ function doShortReport(chars,channel,who,callType)
             local havekey,parking, parkingstar="","",""  
             if best and best ~=0 then 
                 if callType=="parking" then
-                    parkingstar=":"..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#"..parkC..runs.."회|r" or "")                   
+                    parkingstar=":"..CompletedIcon..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#"..parkC..runs.."회|r" or "")                   
                 else  
-                    parkingstar=","..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
+                    parkingstar=","..CompletedIcon..best..(best4 and ("/"..best4) or "")..(best10 and ("/"..best10) or "")
                 end                   
             else 
                 if callType=="parking" then
@@ -573,7 +584,8 @@ function doFullReport(chars,channel,who,callType)
             local level=chars[i]["keyLevel"]
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
-            local best10=chars[i]["best10"]            
+            local best10=chars[i]["best10"]
+			local bestLevelCompleted=chars[i]["bestLevelCompleted"]            
             local runs=chars[i]["runs"]            
             local scoreT=chars[i]["score"]
             local covenant=chars[i]["covenant"] 
@@ -586,7 +598,16 @@ function doFullReport(chars,channel,who,callType)
             if charName==meAddon then
                 online=" {OG}접속중"
             end
-            
+			
+			local CompletedIcon=""
+			if bestLevelCompleted=="now" then				
+				CompletedIcon="{물}"
+			elseif bestLevelCompleted then
+				CompletedIcon="{완}"
+			elseif not bestLevelCompleted then
+				CompletedIcon="{미완}"					
+			end
+
             local covenantIcon=""
             if covenant and covenant~="" and covenant ~=0 then
                 covenantIcon="{c"..MDRgetCovenantID(covenant).."}"
@@ -670,9 +691,9 @@ function doFullReport(chars,channel,who,callType)
             
             if best and best~=0 then
                 if isAddonMessage==1 then
-                    parking="("..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#|cff00ccff"..runs.."회|r" or "")..")"
+                    parking="("..CompletedIcon..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")..(runs>0 and "#|cff00ccff"..runs.."회|r" or "")..")"
                 else
-                    parking=","..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")
+                    parking=","..CompletedIcon..best..(best4>0 and ("/"..best4) or "")..(best10>0 and ("/"..best10) or "")
                     parkingstar="▶"
                 end
                 

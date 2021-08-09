@@ -886,8 +886,22 @@ function MDRrefreshRunHistory()
         end
     end
     table.sort(runHistory, comparison)
-    
+	
+	local clearedLevels={}
+	if runHistory and #runHistory>0 then
+		for i=1,#runHistory do
+			local level=runHistory[i].level
+			local completed=runHistory[i].completed
+			if not clearedLevels[level] then
+				clearedLevels[level]=completed
+			end
+		end
+    end
     MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
+	local bestLevel=MDRconfig.Char[meAddon].reward1
+	if bestLevel then		
+		MDRconfig.Char[meAddon].bestLevelCompleted=clearedLevels[bestLevel]
+	end	
     MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
     MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
     MDRconfig.Char[meAddon].runs=#runHistory
