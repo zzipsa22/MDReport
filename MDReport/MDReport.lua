@@ -1481,6 +1481,9 @@ function findCharNeedParking(VALUES)
         onlyOnline=VALUES["onlyOnline"]  
     end  
     
+	--돌 불러오기전에 새로고침 한번
+    MDRrefreshRunHistory()
+	
     if level==nil then level=99
     elseif level<2 then level=2 end
     

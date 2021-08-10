@@ -892,7 +892,7 @@ function MDRrefreshRunHistory()
 		for i=1,#runHistory do
 			local level=runHistory[i].level
 			local completed=runHistory[i].completed
-			if not clearedLevels[level] then
+			if (not clearedLevels[level]) or (clearedLevels[level]=="now" and completed) then
 				clearedLevels[level]=completed
 			end
 		end
