@@ -451,9 +451,9 @@ function filterVALUES(VALUES)
             elseif callTypeT[i][1]=="covenant" or callTypeT[i][1]=="covenantnow" then   
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 what=icon..MDRcolor(word,type)
-			elseif callTypeT[i][1]=="score" then
-				icon="\124T463447:0:::-4\124t"
-                what=icon..MDRcolor("계승",0,word)				
+            elseif callTypeT[i][1]=="score" then
+                icon="\124T463447:0:::-4\124t"
+                what=icon..MDRcolor("계승",0,word)                
             elseif callTypeT[i][1]=="dungeon" then   
                 word=getFullDungeonName(callTypeT[i][2])
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
@@ -549,8 +549,8 @@ function filterVALUES(VALUES)
                 end
                 
                 cmdLines=now..cmdLines
-			elseif callType["score"] then
-				now=MDRcolor("핑크",0,"이번주의 ") 
+            elseif callType["score"] then
+                now=MDRcolor("핑크",0,"이번주의 ") 
                 cmdLines=now..cmdLines
             else
                 now=", "..MDRcolor("핑크",0,"현재 접속중") 
@@ -565,20 +565,20 @@ function filterVALUES(VALUES)
         local CL=strsub(cmdLines,-5,-3)
         local eul=MDRko(CL,"을")  
         local eun=MDRko(CL,"은")
-		
-		local affixIcon,affix,affixInfo="","",""		
-		if isThisWeekHasSpecificAffix(9) then
-			affixIcon="|T236401:0:::-4|t"
-			affix="폭군"
-		else
-			affixIcon="|T463829:0:::-4|t"
-			affix="경화"
-		end	
-		
-		if callType["score"] then
-			affixInfo=" 이번주는 ["..affixIcon..affix.."] 입니다."
-		end
-		
+        
+        local affixIcon,affix,affixInfo="","",""        
+        if isThisWeekHasSpecificAffix(9) then
+            affixIcon="|T236401:0:::-4|t"
+            affix="폭군"
+        else
+            affixIcon="|T463829:0:::-4|t"
+            affix="경화"
+        end    
+        
+        if callType["score"] then
+            affixInfo=" 이번주는 ["..affixIcon..affix.."] 입니다."
+        end
+        
         local message
         if channel=="ADDON_WHISPER" and who==meGame and onlyForMe~=1 then
             message="["..cmdLines.."]"..msg
@@ -598,9 +598,9 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
         elseif callType["score"] then
-			message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
-			
-		elseif callType["parking"] then 
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
+            
+        elseif callType["parking"] then 
             if (not level) and (#callTypeB==1) and (not onlyOnline) then   
                 message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."] "..eul.." 요청합니다."..msg
             else
@@ -609,10 +609,10 @@ function filterVALUES(VALUES)
         elseif CharName then   
             message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
         else
-			local affix_desc=""
-			if callType["all"] then
-				affix_desc=" 이번주 속성은 "..GetAnyWeeksAffix(0,channel).." 입니다."
-			end
+            local affix_desc=""
+            if callType["all"] then
+                affix_desc=" 이번주 속성은 "..GetAnyWeeksAffix(0,channel).." 입니다."
+            end
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..affix_desc..msg
         end 
         if not callType["forceversion"] then
@@ -972,17 +972,17 @@ function checkCallMe(onlyYou)
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
     local findYou=false
-    for k,v in pairs(t) do				
+    for k,v in pairs(t) do                
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         local name=gsub(k, "%s%-.+","") 
         onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)
         name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)
         if strfind(name,onlyYou) and v.Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
-			if v.Level==MDR.SCL then				
-				return k
-			else
-				findYou=k
-			end
+            if v.Level==MDR.SCL then                
+                return k
+            else
+                findYou=k
+            end
         end
     end
     return findYou
@@ -1037,7 +1037,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["best"]=t[k].reward1 or 0   
                 chars[num]["best4"]=t[k].reward4 or 0
                 chars[num]["best10"]=t[k].reward10 or 0
-				chars[num]["bestLevelCompleted"]=t[k].bestLevelCompleted or nil
+                chars[num]["bestLevelCompleted"]=t[k].bestLevelCompleted or nil
                 chars[num]["runs"]=t[k].runs or 0
                 chars[num]["keyLink"]=t[k].MythicKey.link  
                 chars[num]["keyLevel"]=t[k].MythicKey.level or 0
@@ -1047,7 +1047,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["lastSeen"]=t[k].LastSeen or time() 
                 chars[num]["charLevel"]=t[k].Level or MDR.SCL    
                 chars[num]["covenant"]=t[k].Covenant or ""
-				chars[num]["score"]=t[k].Score or ""
+                chars[num]["score"]=t[k].Score or ""
                 num=num+1 
             end  
         end   
@@ -1077,8 +1077,8 @@ function MDRreportScore(VALUES)
     local who,channel,level,level2,callTypeT
     local onlyMe,onlyYou,onlyOnline,except,onlyForMe
     local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
-	
-	MDRrefreshRunHistory() -- 점수 갱신
+    
+    MDRrefreshRunHistory() -- 점수 갱신
     
     channel="print"
     if VALUES~=nil then
@@ -1118,159 +1118,181 @@ function MDRreportScore(VALUES)
     end
     
     local type
-	if onlyOnline==1 then				
-		findCharAllKey(VALUES)
-		return
-	end
-	
-	local findChars={}
-	if onlyMe then		
-		local t=MDRconfig.Char
-		for k,v in pairs(t) do
-			if v.Level==MDR.SCL then
-				tinsert(findChars,k)
-			end
-		end
-	elseif onlyYou and checkCallMe(onlyYou) then
-		tinsert(findChars,checkCallMe(onlyYou))
-	else
-		tinsert(findChars,meAddon)
-	end
-	
-	--[[
-	local targetChar=meAddon
-	if onlyYou and checkCallMe(onlyYou)	then
-		targetChar=checkCallMe(onlyYou)
-	end
-	]]
-			
-	local messageLines={}
-	
-	for i=1,#findChars do
-		local targetChar=findChars[i]
-		local charName=gsub(targetChar, "%s%-.+","")
-		local charClass=MDRconfig.Char[targetChar].Class
-		local charShortClass=MDRcolor(charClass,6)
-		local charClassIcon="{"..charShortClass.."}"
-		local charHead
-		if targetChar==meAddon and not onlyMe then
-			charHead=charClassIcon..MDRcolor(charShortClass,0,"▶")
-		else
-			local shortName=strsub(charName,1,6)
-			charHead=charClassIcon..MDRcolor(charShortClass,0,shortName.."▶")
-		end
-	
-		local scoreT=MDRconfig.Char[targetChar].Score
-		local charLevel=MDRconfig.Char[targetChar].Level
-		if charLevel~= MDR["SCL"] then return end	
-
-		if callType["dungeon"] then   -- !점수!역병
-			--275,225,188,125
-			local message=""
-			local dungeon=keyword["dungeon"][1]    
-			local score=scoreT[dungeon]["점수"]
-			local tyr_talbe=scoreT[dungeon]["폭군"] or {}
-			local for_talbe=scoreT[dungeon]["경화"] or {}
-			local tyr_level=tyr_talbe["level"] or 0	
-			local tyr_clear=tyr_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
-			local tyr_score=tyr_talbe["score"] or 0
-			local for_level=for_talbe["level"] or 0
-			local for_clear=for_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
-			local for_score=for_talbe["score"] or 0
-		
-			if tyr_level==0 then 
-				tyr_clear=""
-			end
-		
-			if for_level==0 then 
-				for_clear=""
-			end
-		
-			score=tonumber(score)
-			local color,tyr_color,for_color
-		
-			if score>=275 then
-				color="{CL}"
-			elseif score>=225 then
-				color="{CE}"
-			elseif score>=188 then
-				color="{CR}"
-			elseif score>=125 then
-				color="{CC}"
-			else
-				color="{CN}"
-			end
-		
-			if tyr_score>137 then
-				tyr_color="{CW}"
-			elseif tyr_score>=125 then
-				tyr_color="{CA}"
-			elseif tyr_score>=115 then
-				tyr_color="{CL}"
-			elseif tyr_score>=100 then
-				tyr_color="{CE}"
-			elseif tyr_score>=80 then
-				tyr_color="{CR}"
-			elseif tyr_score==0 then
-				tyr_color="{CG}"
-			else
-				tyr_color="{CC}"
-			end
-		
-			if for_score>137 then
-				for_color="{CW}"
-			elseif for_score>=125 then
-				for_color="{CA}"
-			elseif for_score>=115 then
-				for_color="{CL}"
-			elseif for_score>=100 then
-				for_color="{CE}"
-			elseif for_score>=80 then
-				for_color="{CR}"
-			elseif for_score==0 then
-				for_color="{CG}"
-			else
-				for_color="{CC}"
-			end
-		
-			message=charHead..dungeon..": "..color..score.."{CX}점 [{폭군}"..tyr_color..tyr_level.."{CX}"..tyr_clear.." {경화}"..for_color..for_level.."{CX}"..for_clear.."]"
-			tinsert(messageLines,message)
-        
-		else -- !점수
-			local message=""
-			local total=scoreT["종합점수"]  
-			--2200,1800,1500,1000		
-			total=tonumber(total)		
-			local color
-			if total>=2200 then
-				color="{CL}"
-			elseif total>=1800 then
-				color="{CE}"
-			elseif total>=1500 then
-				color="{CR}"
-			elseif total>=1000 then
-				color="{CC}"
-			else
-				color="{CN}"
-			end	
-				
-			local tyr_desc=MDRgetDungeonScore(targetChar,"폭군")
-			local for_desc=MDRgetDungeonScore(targetChar,"경화")
-		
-			message=charHead..color..total.."{CX}점 ["..tyr_desc.." / "..for_desc.."]"
-			tinsert(messageLines,message)
-		end
+    if onlyOnline==1 then                
+        findCharAllKey(VALUES)
+        return
+    end
     
-	end
-	
+    local findChars={}
+    if onlyMe then        
+        local t=MDRconfig.Char
+        for k,v in pairs(t) do
+            if v.Level==MDR.SCL and v.Score then
+                tinsert(findChars,k)
+            end
+        end
+    elseif onlyYou and checkCallMe(onlyYou) then
+        tinsert(findChars,checkCallMe(onlyYou))
+    else
+        tinsert(findChars,meAddon)
+    end
+    
+    --[[
+    local targetChar=meAddon
+    if onlyYou and checkCallMe(onlyYou)    then
+        targetChar=checkCallMe(onlyYou)
+    end
+    ]]
+    
+    local messageLines={}
+    local tyr_head,tyr_end,tyr_name,for_head,for_end,for_name="","","","","",""
+    if isThisWeekHasSpecificAffix(9) then
+        tyr_head="▶"    
+    else
+        for_head="▶"
+    end
+    
+    for i=1,#findChars do
+        local targetChar=findChars[i]
+        local charName=gsub(targetChar, "%s%-.+","")
+        local charClass=MDRconfig.Char[targetChar].Class
+        local charShortClass=MDRcolor(charClass,6)
+        local charClassIcon="{"..charShortClass.."}"
+        local charHead
+        if targetChar==meAddon and not onlyMe then
+            charHead=charClassIcon..MDRcolor(charShortClass,0,"▶")
+        else
+            local shortName=strsub(charName,1,6)
+            charHead=charClassIcon..MDRcolor(charShortClass,0,shortName.."▶")
+        end
+        
+        local scoreT=MDRconfig.Char[targetChar].Score
+        local charLevel=MDRconfig.Char[targetChar].Level
+        if charLevel~= MDR["SCL"] then return end    
+        
+        if callType["dungeon"] then   -- !점수!역병
+            --275,225,188,125
+            local message=""
+            local dungeon=keyword["dungeon"][1]    
+            local score=scoreT[dungeon]["점수"]
+            local tyr_talbe=scoreT[dungeon]["폭군"] or {}
+            local for_talbe=scoreT[dungeon]["경화"] or {}
+            local tyr_level=tyr_talbe["level"] or 0    
+            local tyr_clear=tyr_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
+            local tyr_score=tyr_talbe["score"] or 0
+            local for_level=for_talbe["level"] or 0
+            local for_clear=for_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
+            local for_score=for_talbe["score"] or 0
+            
+            if tyr_level==0 then 
+                tyr_clear=""
+            end
+            
+            if for_level==0 then 
+                for_clear=""
+            end
+            
+            score=tonumber(score)
+            local color,tyr_color,for_color
+            
+            if score>=275 then
+                color="{CL}"
+            elseif score>=225 then
+                color="{CE}"
+            elseif score>=188 then
+                color="{CR}"
+            elseif score>=125 then
+                color="{CC}"
+            else
+                color="{CN}"
+            end
+            
+            if tyr_score>137 then
+                tyr_color="{CW}"
+            elseif tyr_score>=125 then
+                tyr_color="{CA}"
+            elseif tyr_score>=115 then
+                tyr_color="{CL}"
+            elseif tyr_score>=100 then
+                tyr_color="{CE}"
+            elseif tyr_score>=80 then
+                tyr_color="{CR}"
+            elseif tyr_score==0 then
+                tyr_color="{CG}"
+            else
+                tyr_color="{CC}"
+            end
+            
+            if for_score>137 then
+                for_color="{CW}"
+            elseif for_score>=125 then
+                for_color="{CA}"
+            elseif for_score>=115 then
+                for_color="{CL}"
+            elseif for_score>=100 then
+                for_color="{CE}"
+            elseif for_score>=80 then
+                for_color="{CR}"
+            elseif for_score==0 then
+                for_color="{CG}"
+            else
+                for_color="{CC}"
+            end
+            
+            message=charHead..dungeon..": "..color..score.."{CX}점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."{CX}"..tyr_clear..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_color..for_level.."{CX}"..for_clear..for_end.."]"
+            tinsert(messageLines,message)
+            
+        else -- !점수
+            local message=""
+            local total=scoreT["종합점수"]  
+            --2200,1800,1500,1000        
+            total=tonumber(total)        
+            local color
+            if total>=2200 then
+                color="{CL}"
+            elseif total>=1800 then
+                color="{CE}"
+            elseif total>=1500 then
+                color="{CR}"
+            elseif total>=1000 then
+                color="{CC}"
+            else
+                color="{CN}"
+            end    
+            
+            local tyr_desc=MDRgetDungeonScore(targetChar,"폭군")
+            local for_desc=MDRgetDungeonScore(targetChar,"경화")
+            
+            message=charHead..color..total.."{CX}점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_desc..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_desc..for_end.."]"
+            tinsert(messageLines,message)
+        end
+        
+    end
+    
     reportMessageLines(messageLines,channel,who,callType)
     return    
 end
 
+function MDRgetAffixIcon(affix)
+	local t={}
+	if isThisWeekHasSpecificAffix(9) then
+		t.tyra="{폭}폭군: "
+		t.fort="{경}"
+	else
+		t.tyra="{폭}"
+		t.fort="{경}경화: "
+	end	
+	if affix=="폭군" then
+		return t.tyra
+	else
+		return t.fort
+	end	
+end
+
 function MDRgetDungeonScore(name,affix)
-	local scoreT=MDRconfig.Char[name].Score
-	local dungeonHistory
-	local dungeonTable={
+    local scoreT=MDRconfig.Char[name].Score
+    local dungeonHistory=""
+    local dungeonTable={
         [1]={"핏","핏심"},
         [2]={"속","속죄"},
         [3]={"승","승천"},
@@ -1279,34 +1301,46 @@ function MDRgetDungeonScore(name,affix)
         [6]={"역","역병"},
         [7]={"티","티르너"},
         [8]={"저","저편"}, 
-	}
-	for i=1,#dungeonTable do
-			if i==1 then dungeonHistory="{"..affix.."} " end
-			local d=dungeonTable[i][1]
-			local dungeon=dungeonTable[i][2]
-			--local icon=","
-			local color
-			local affixScore=scoreT[dungeon][affix] or {}
-			local score=affixScore["score"] or 0	
-			if score>137 then
-				color="{CW}"			
-			elseif score>=125 then
-				color="{CA}"			
-			elseif score>=115 then
-				color="{CL}"
-			elseif score>=100 then
-				color="{CE}"
-			elseif score>=80 then
-				color="{CR}"
-			elseif score==0 then
-				color="{CG}"
-			else
-				color="{CC}"
-			end
-
-			dungeonHistory=dungeonHistory..color..d.."{CX}"
-	end
-	return dungeonHistory
+    }
+	local formerColor
+    for i=1,#dungeonTable do
+		local colorClose="{CX}"
+		if i==1 then colorClose="" end
+        --if i==1 then dungeonHistory="{"..affix.."} " end
+        local d=dungeonTable[i][1]
+        local dungeon=dungeonTable[i][2]
+        --local icon=","
+        local color
+        local affixScore=scoreT[dungeon][affix] or {}
+        local score=affixScore["score"] or 0    
+        if score>137 then
+            color="{CW}"            
+        elseif score>=125 then
+            color="{CA}"            
+        elseif score>=115 then
+            color="{CL}"
+        elseif score>=100 then
+            color="{CE}"
+        elseif score>=80 then
+            color="{CR}"
+        elseif score==0 then
+            color="{CG}"
+        else
+            color="{CC}"
+        end
+		local colorCode
+		if formerColor==color then
+			colorCode=""			
+		else
+			formerColor=color
+			colorCode=colorClose..color
+		end		        
+        dungeonHistory=dungeonHistory..colorCode..d
+		if i==#dungeonTable then
+			dungeonHistory=dungeonHistory..colorClose
+		end
+    end
+    return dungeonHistory
 end
 
 
@@ -1531,21 +1565,21 @@ function findCharNeedParking(VALUES)
         onlyOnline=VALUES["onlyOnline"]  
     end  
     
-	--돌 불러오기전에 새로고침 한번
+    --돌 불러오기전에 새로고침 한번
     MDRrefreshRunHistory()
-	
+    
     if level==nil then level=99
     elseif level<2 then level=2 end
     
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
     if onlyOnline==1 then
-		if channel=="ADDON_PARTY" then		
-			VALUES["onlyOnline"]=1
-			findCharAllKey(VALUES)
-			return
-		else
-			chars=filterCharsByFilter(chars,"name",nil,nil)
-		end
+        if channel=="ADDON_PARTY" then        
+            VALUES["onlyOnline"]=1
+            findCharAllKey(VALUES)
+            return
+        else
+            chars=filterCharsByFilter(chars,"name",nil,nil)
+        end
     else
         local newChars={}
         local newChars2={}
@@ -1797,3 +1831,4 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
+

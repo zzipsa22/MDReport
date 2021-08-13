@@ -286,8 +286,8 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{물}","|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0.6:0:-5|t")
 	
     --폭군,경화    
-    message=gsub(message,"{폭군}","|T236401:0:::-4|t")
-    message=gsub(message,"{경화}","|T463829:0:::-4|t")    
+    message=gsub(message,"{폭}","|T236401:0:::-4|t")
+    message=gsub(message,"{경}","|T463829:0:::-4|t")    
     
     --색깔 코드
     message=gsub(message,"{CW}","|cffdb24b2")    
@@ -686,7 +686,7 @@ function doFullReport(chars,channel,who,callType)
                     dungeonColor="{CN}"
                 end
                 
-                score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
+                score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
             end
             
             if best and best~=0 then
