@@ -297,7 +297,7 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{CR}","|cFF006fdc")
     message=gsub(message,"{CC}","|cFF1dfe00")
     message=gsub(message,"{CN}","|cFFe7e7e7")
-    message=gsub(message,"{CG}","|cFF9d9d9d")
+    message=gsub(message,"{CG}","|cFF6d6d6d")
     message=gsub(message,"{CX}","|r")
     
     --던전 색입히기
