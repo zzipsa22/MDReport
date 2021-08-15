@@ -670,7 +670,13 @@ function doFullReport(chars,channel,who,callType)
                     color="{CN}"
                 end    
                 
-                local dungeonScore=keyLink and scoreT[getShortDungeonName(keyName)]["점수"] or 0
+                local dungeonScore
+				if keyLink and scoreT[getShortDungeonName(keyName)] then
+					dungeonScore=scoreT[getShortDungeonName(keyName)]["점수"] or 0
+				else
+					dungeonScore=0
+				end
+		
                 dungeonScore=tonumber(dungeonScore)
                 
                 local dungeonColor
