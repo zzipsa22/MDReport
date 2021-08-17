@@ -453,7 +453,11 @@ function filterVALUES(VALUES)
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="score" then
                 icon="\124T463447:0:::-4\124t"
-                what=icon..MDRcolor("계승",0,word)                
+				if level then
+					what=icon..MDRcolor("계승",0,"예상 점수")                
+				else
+					what=icon..MDRcolor("계승",0,word)                
+				end
             elseif callTypeT[i][1]=="dungeon" then   
                 word=getFullDungeonName(callTypeT[i][2])
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
@@ -598,8 +602,8 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
         elseif callType["score"] then
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
-            
+			message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
+
         elseif callType["parking"] then 
             if (not level) and (#callTypeB==1) and (not onlyOnline) then   
                 message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."] "..eul.." 요청합니다."..msg
@@ -1171,99 +1175,119 @@ function MDRreportScore(VALUES)
         if charLevel~= MDR["SCL"] then return end    
         
         if callType["dungeon"] then   -- !점수!역병
-            --275,225,188,125
             local message=""
-            local dungeon=keyword["dungeon"][1]    
+            local dungeon=keyword["dungeon"][1] 
+            local total=scoreT["종합점수"]
             local score=scoreT[dungeon]["점수"]
-            local tyr_talbe=scoreT[dungeon]["폭군"] or {}
-            local for_talbe=scoreT[dungeon]["경화"] or {}
-            local tyr_level=tyr_talbe["level"] or 0    
-            local tyr_clear=tyr_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
-            local tyr_score=tyr_talbe["score"] or 0
-            local for_level=for_talbe["level"] or 0
-            local for_clear=for_talbe["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
-            local for_score=for_talbe["score"] or 0
+            local tyr_table=scoreT[dungeon]["폭군"] or {}
+            local for_table=scoreT[dungeon]["경화"] or {}
+            local tyr_level=tyr_table["level"] or 0    
+            local tyr_clear=tyr_table["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
+            local tyr_score=tyr_table["score"] or 0
+            local for_level=for_table["level"] or 0
+            local for_clear=for_table["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
+            local for_score=for_table["score"] or 0
             
-            if tyr_level==0 then 
-                tyr_clear=""
+            if level then
+                local levelScore=30
+                levelScore=levelScore+level*5                
+                if level>=10 then
+                    levelScore=levelScore+20
+                elseif level>=7 then
+                    levelScore=levelScore+10
+                elseif level>=4 then
+                    levelScore=levelScore+5                
+                end    
+                local compareScore,affix,eul                
+                if isThisWeekHasSpecificAffix(9) then -- 폭군이면
+                    compareScore=for_score
+                    affix="{폭}폭군"
+					eul="을"
+                else
+                    compareScore=tyr_score
+                    affix="{경}경화"
+					eul="를"
+                end
+                
+                local newScore,newScore20
+                if levelScore>=compareScore then
+                    newScore=math.floor(levelScore*1.5+compareScore*0.5)
+					newScore20=math.floor((levelScore+5)*1.5+compareScore*0.5)
+                else
+                    newScore=math.floor(levelScore*0.5+compareScore*1.5)
+					newScore20=math.floor((levelScore+5)*0.5+compareScore*1.5)
+                end 
+				local dungeonHead="이번 주 [{CA}"..dungeon.." "..level.."단 "..affix.."{CX}]"
+				                    local earnedScore=newScore-score
+					local earnedScore20=newScore20-score
+
+					local newTotal=total+earnedScore
+				if newScore>score+1 then
+					local plus=true
+                    message=charHead..dungeonHead.." 시클시 [{CC}"..earnedScore.."점+@{CX}] 획득 가능 [예상 던전 점수: "..MDRgetScoreColor(newScore,"dungeon",plus).." / 예상 총점: "..MDRgetScoreColor(newTotal,"total",plus).."점]"
+                elseif newScore20>score+1 then
+					message=charHead..dungeonHead.." 시클시 남은 시간에 따라 [약 {CC}0~"..earnedScore20.."점{CX}]의 점수를 획득할 수 있습니다."
+				else
+                    message=charHead..dungeonHead.." "..eul.." 시클해도 점수를 얻기 힘듭니다."
+                end    
+                tinsert(messageLines,message)
+            else   
+                if tyr_level==0 then 
+                    tyr_clear=""
+                end
+                
+                if for_level==0 then 
+                    for_clear=""
+                end
+                
+                score=tonumber(score)
+                local color,tyr_color,for_color
+				
+                if tyr_score>137 then
+                    tyr_color="{CW}"
+                elseif tyr_score>=125 then
+                    tyr_color="{CA}"
+                elseif tyr_score>=115 then
+                    tyr_color="{CL}"
+                elseif tyr_score>=100 then
+                    tyr_color="{CE}"
+                elseif tyr_score>=80 then
+                    tyr_color="{CR}"
+                elseif tyr_score==0 then
+                    tyr_color="{CG}"
+                else
+                    tyr_color="{CC}"
+                end
+                
+                if for_score>137 then
+                    for_color="{CW}"
+                elseif for_score>=125 then
+                    for_color="{CA}"
+                elseif for_score>=115 then
+                    for_color="{CL}"
+                elseif for_score>=100 then
+                    for_color="{CE}"
+                elseif for_score>=80 then
+                    for_color="{CR}"
+                elseif for_score==0 then
+                    for_color="{CG}"
+                else
+                    for_color="{CC}"
+                end
+                
+                message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."{CX}"..tyr_clear..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_color..for_level.."{CX}"..for_clear..for_end.."]"
+                tinsert(messageLines,message)
             end
-            
-            if for_level==0 then 
-                for_clear=""
-            end
-            
-            score=tonumber(score)
-            local color,tyr_color,for_color
-            
-            if score>=275 then
-                color="{CL}"
-            elseif score>=225 then
-                color="{CE}"
-            elseif score>=188 then
-                color="{CR}"
-            elseif score>=125 then
-                color="{CC}"
-            else
-                color="{CN}"
-            end
-            
-            if tyr_score>137 then
-                tyr_color="{CW}"
-            elseif tyr_score>=125 then
-                tyr_color="{CA}"
-            elseif tyr_score>=115 then
-                tyr_color="{CL}"
-            elseif tyr_score>=100 then
-                tyr_color="{CE}"
-            elseif tyr_score>=80 then
-                tyr_color="{CR}"
-            elseif tyr_score==0 then
-                tyr_color="{CG}"
-            else
-                tyr_color="{CC}"
-            end
-            
-            if for_score>137 then
-                for_color="{CW}"
-            elseif for_score>=125 then
-                for_color="{CA}"
-            elseif for_score>=115 then
-                for_color="{CL}"
-            elseif for_score>=100 then
-                for_color="{CE}"
-            elseif for_score>=80 then
-                for_color="{CR}"
-            elseif for_score==0 then
-                for_color="{CG}"
-            else
-                for_color="{CC}"
-            end
-            
-            message=charHead..dungeon..": "..color..score.."{CX}점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."{CX}"..tyr_clear..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_color..for_level.."{CX}"..for_clear..for_end.."]"
-            tinsert(messageLines,message)
-            
         else -- !점수
             local message=""
             local total=scoreT["종합점수"]  
             --2200,1800,1500,1000        
-            total=tonumber(total)        
-            local color
-            if total>=2200 then
-                color="{CL}"
-            elseif total>=1800 then
-                color="{CE}"
-            elseif total>=1500 then
-                color="{CR}"
-            elseif total>=1000 then
-                color="{CC}"
-            else
-                color="{CN}"
-            end    
-            
+            total=tonumber(total)      
+   
             local tyr_desc=MDRgetDungeonScore(targetChar,"폭군")
             local for_desc=MDRgetDungeonScore(targetChar,"경화")
             
-            message=charHead..color..total.."{CX}점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_desc..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_desc..for_end.."]"
+            message=charHead..MDRgetScoreColor(total,"total").."점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_desc..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_desc..for_end.."]"
             tinsert(messageLines,message)
         end
         
@@ -1273,20 +1297,66 @@ function MDRreportScore(VALUES)
     return    
 end
 
+function MDRgetScoreColor(score,scoreType,plus)
+    local color=""
+    if scoreType=="dungeon" then
+        if score>=275 then
+            color="{CL}"
+        elseif score>=225 then
+            color="{CE}"
+        elseif score>=188 then
+            color="{CR}"
+        elseif score>=125 then
+            color="{CC}"
+        else
+            color="{CN}"
+        end
+    elseif scoreType=="affix" then
+        if score>137 then
+            color="{CW}"
+        elseif score>=125 then
+            color="{CA}"
+        elseif score>=115 then
+            color="{CL}"
+        elseif score>=100 then
+            color="{CE}"
+        elseif score>=80 then
+            color="{CR}"
+        elseif score==0 then
+            color="{CG}"
+        else
+            color="{CC}"
+        end
+    elseif scoreType=="total" then
+        if score>=2200 then
+            color="{CL}"
+        elseif score>=1800 then
+            color="{CE}"
+        elseif score>=1500 then
+            color="{CR}"
+        elseif score>=1000 then
+            color="{CC}"
+        else
+            color="{CN}"
+        end  
+    end
+	return color..score..(plus and "+" or "").."{CX}"
+end
+
 function MDRgetAffixIcon(affix)
-	local t={}
-	if isThisWeekHasSpecificAffix(9) then
-		t.tyra="{폭}폭군: "
-		t.fort="{경}"
-	else
-		t.tyra="{폭}"
-		t.fort="{경}경화: "
-	end	
-	if affix=="폭군" then
-		return t.tyra
-	else
-		return t.fort
-	end	
+    local t={}
+    if isThisWeekHasSpecificAffix(9) then
+        t.tyra="{폭}폭군: "
+        t.fort="{경}"
+    else
+        t.tyra="{폭}"
+        t.fort="{경}경화: "
+    end    
+    if affix=="폭군" then
+        return t.tyra
+    else
+        return t.fort
+    end    
 end
 
 function MDRgetDungeonScore(name,affix)
@@ -1302,10 +1372,10 @@ function MDRgetDungeonScore(name,affix)
         [7]={"티","티르너"},
         [8]={"저","저편"}, 
     }
-	local formerColor
+    local formerColor
     for i=1,#dungeonTable do
-		local colorClose="{CX}"
-		if i==1 then colorClose="" end
+        local colorClose="{CX}"
+        if i==1 then colorClose="" end
         --if i==1 then dungeonHistory="{"..affix.."} " end
         local d=dungeonTable[i][1]
         local dungeon=dungeonTable[i][2]
@@ -1328,17 +1398,17 @@ function MDRgetDungeonScore(name,affix)
         else
             color="{CC}"
         end
-		local colorCode
-		if formerColor==color then
-			colorCode=""			
-		else
-			formerColor=color
-			colorCode=colorClose..color
-		end		        
+        local colorCode
+        if formerColor==color then
+            colorCode=""            
+        else
+            formerColor=color
+            colorCode=colorClose..color
+        end                
         dungeonHistory=dungeonHistory..colorCode..d
-		if i==#dungeonTable then
-			dungeonHistory=dungeonHistory..colorClose
-		end
+        if i==#dungeonTable then
+            dungeonHistory=dungeonHistory..colorClose
+        end
     end
     return dungeonHistory
 end
