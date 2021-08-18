@@ -453,11 +453,11 @@ function filterVALUES(VALUES)
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="score" then
                 icon="\124T463447:0:::-4\124t"
-				if level then
-					what=icon..MDRcolor("계승",0,"예상 점수")                
-				else
-					what=icon..MDRcolor("계승",0,word)                
-				end
+                if level then
+                    what=icon..MDRcolor("계승",0,"예상 점수")                
+                else
+                    what=icon..MDRcolor("계승",0,word)                
+                end
             elseif callTypeT[i][1]=="dungeon" then   
                 word=getFullDungeonName(callTypeT[i][2])
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
@@ -602,8 +602,8 @@ function filterVALUES(VALUES)
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
         elseif callType["score"] then
-			message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
-
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
+            
         elseif callType["parking"] then 
             if (not level) and (#callTypeB==1) and (not onlyOnline) then   
                 message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."] "..eul.." 요청합니다."..msg
@@ -1197,37 +1197,46 @@ function MDRreportScore(VALUES)
                     levelScore=levelScore+10
                 elseif level>=4 then
                     levelScore=levelScore+5                
-                end    
+                end
+                local levelScore20=levelScore+5
                 local compareScore,affix,eul                
                 if isThisWeekHasSpecificAffix(9) then -- 폭군이면
                     compareScore=for_score
                     affix="{폭}폭군"
-					eul="을"
+                    eul="을"
                 else
                     compareScore=tyr_score
                     affix="{경}경화"
-					eul="를"
+                    eul="를"
                 end
                 
-                local newScore,newScore20
+                local newScore,newScore20                
                 if levelScore>=compareScore then
-                    newScore=math.floor(levelScore*1.5+compareScore*0.5)
-					newScore20=math.floor((levelScore+5)*1.5+compareScore*0.5)
+                    newScore=math.floor(levelScore*1.5+compareScore*0.5)                    
                 else
-                    newScore=math.floor(levelScore*0.5+compareScore*1.5)
-					newScore20=math.floor((levelScore+5)*0.5+compareScore*1.5)
+                    newScore=math.floor(levelScore*0.5+compareScore*1.5)                    
                 end 
-				local dungeonHead="이번 주 [{CA}"..dungeon.." "..level.."단 "..affix.."{CX}]"
-				                    local earnedScore=newScore-score
-					local earnedScore20=newScore20-score
-
-					local newTotal=total+earnedScore
-				if newScore>score+1 then
-					local plus=true
-                    message=charHead..dungeonHead.." 시클시 [{CC}"..earnedScore.."점+@{CX}] 획득 가능 [예상 던전 점수: "..MDRgetScoreColor(newScore,"dungeon",plus).." / 예상 총점: "..MDRgetScoreColor(newTotal,"total",plus).."점]"
+                if levelScore20>=compareScore then                    
+                    newScore20=math.floor((levelScore+5)*1.5+compareScore*0.5)
+                else                    
+                    newScore20=math.floor((levelScore+5)*0.5+compareScore*1.5)
+                end 
+                
+                local dungeonHead="[{CA}"..dungeon.." "..level.."단 "..affix.."{CX}]"
+                
+                local earnedScore=newScore-score
+                local earnedScore20=newScore20-score
+                
+                local newTotal=total+earnedScore
+                local newTotal20=total+earnedScore20
+                
+                if newScore>score+1 then
+                    local plus=true
+                    message=charHead..dungeonHead.." 시클시 [{CC}"..earnedScore.."~"..earnedScore20.."점{CX}] 획득 가능 [예측 최소: "..MDRgetScoreColor(newScore,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal,"total",plus).."점]"
                 elseif newScore20>score+1 then
-					message=charHead..dungeonHead.." 시클시 남은 시간에 따라 [약 {CC}0~"..earnedScore20.."점{CX}]의 점수를 획득할 수 있습니다."
-				else
+                    local plus=false
+                    message=charHead..dungeonHead.." 시클시 남은 시간에 따라 [{CC}0~"..earnedScore20.."점{CX}] 획득 가능 [예측 최대: "..MDRgetScoreColor(newScore20,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal20,"total",plus).."점]"
+                else
                     message=charHead..dungeonHead.." "..eul.." 시클해도 점수를 얻기 힘듭니다."
                 end    
                 tinsert(messageLines,message)
@@ -1242,7 +1251,7 @@ function MDRreportScore(VALUES)
                 
                 score=tonumber(score)
                 local color,tyr_color,for_color
-				
+                
                 if tyr_score>137 then
                     tyr_color="{CW}"
                 elseif tyr_score>=125 then
@@ -1283,7 +1292,7 @@ function MDRreportScore(VALUES)
             local total=scoreT["종합점수"]  
             --2200,1800,1500,1000        
             total=tonumber(total)      
-   
+            
             local tyr_desc=MDRgetDungeonScore(targetChar,"폭군")
             local for_desc=MDRgetDungeonScore(targetChar,"경화")
             
@@ -1340,7 +1349,7 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CN}"
         end  
     end
-	return color..score..(plus and "+" or "").."{CX}"
+    return color..score..(plus and "+" or "").."{CX}"
 end
 
 function MDRgetAffixIcon(affix)
@@ -1901,4 +1910,3 @@ function filterCharsByFilter(chars,filter,f1,f2)
         return nil
     end
 end
-
