@@ -14,7 +14,7 @@ C_Timer.After(10, function()
             print("▶|cFF33FF99MDReport|r can't support your locale: ", x, ". Sorry for your inconvenience.")
         else
             if MDR["guide"]<50 then
-                print("|cFF33FF99▶쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r")        
+                print("|cFF33FF99▶쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/금고'|r |cffffff00'/기록'|r")
                 
                 print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 기능에 "..MDRcolor("계승",0,"점수 예측").." 기능을 추가하였습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
                 
