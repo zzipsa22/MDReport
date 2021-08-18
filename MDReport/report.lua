@@ -491,9 +491,9 @@ function doShortReport(chars,channel,who,callType)
             elseif chars[i]["extraLink"] and callType=="item"then
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))                
                 if sameCheck then                   
-                    message="["..online..classStatus..":"..havekey.."]"
+                    message=", "..online..classStatus..":"..havekey
                 else                    
-                    message="["..online..classStatus..":"..havekey.."▶["..chars[i]["extraLink"].."]"
+                    message="["..online..classStatus..":"..havekey.."▶"..chars[i]["extraLink"].."]"
                 end                
             elseif callType["covenant"] or callType["covenantnow"] or callType["covenantall"] then
                 local coveName
@@ -728,7 +728,7 @@ function doFullReport(chars,channel,who,callType)
                 classStatus=class.."("..shortName..parking..")"
             end
             
-            headStar=skull[class]            
+            headStar="{"..class.."}"
             
             local message=""
             local sameCheck
@@ -748,9 +748,9 @@ function doFullReport(chars,channel,who,callType)
             elseif callType=="item" and chars[i]["extraLink"] then                
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   
-                    message=","..headStar..havekey
+                    message=", "..headStar..":"..havekey
                 else      
-                    message=headStar..havekey.."▶"..chars[i]["extraLink"] 
+                    message=headStar..":"..havekey.."▶"..chars[i]["extraLink"] 
                 end 
             elseif callType and callType["newkey"] then                
                 local up=""
