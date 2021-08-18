@@ -16,10 +16,10 @@ C_Timer.After(10, function()
             if MDR["guide"]<50 then
                 print("|cFF33FF99▶쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/주차'|r |cffffff00'/금고'|r")        
                 
-                print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 출력 기능을 추가하였습니다. |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
-				
+                print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 기능에 "..MDRcolor("계승",0,"점수 예측").." 기능을 추가하였습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
+                
                 print(MDRcolor("수도",0,"▶").."도움이 필요하신가요? |cff9d9d9d [도움말 호출: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
-				
+                
                 MDRtoggleMode()
                 
                 MDR["guide"]=MDR["guide"]+1
@@ -556,10 +556,10 @@ function MDRCommandsParty(msg, editbox)
     if strfind(strsub(msg,1,1),"!") then
         msg=strsub(msg,2,-1)
     end 
-	if msg=="금고" then
-		MDRVault ()
-		return
-	end
+    if msg=="금고" then
+        MDRVault ()
+        return
+    end
     if IsInGroup() then
         MDRsendAddonMessage("!"..msg,"PARTY",meGame)    
     else
@@ -573,10 +573,10 @@ function MDRCommandsOfficer(msg, editbox)
     if strfind(strsub(msg,1,1),"!") then
         msg=strsub(msg,2,-1)
     end 
-	if msg=="금고" then
-		MDRVault ()
-		return
-	end
+    if msg=="금고" then
+        MDRVault ()
+        return
+    end
     MDRsendAddonMessage("!"..msg,"OFFICER",meGame)      
     return    
 end
@@ -599,10 +599,17 @@ function MDRCommands(msg, editbox)
     end
     local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("계승",0,"점수")
     if not cmd or cmd=="도움말" or cmd=="!도움말" or cmd=="도움" or cmd=="!도움" or cmd=="help" or cmd=="" or cmd=="?" or cmd=="@"then
-	
+        
         local length=MDR["textLength"]
         local kLength=math.floor((length-1)/3+1)
-		
+        local G=MDRcolor("길드",0,"/! ")
+        local GG=MDRcolor("길드",0,"길드")
+        local P=MDRcolor("파티",0,"/!! ")
+        local PP=MDRcolor("파티",0,"파티")
+        local E="|cFF33FF99ex)|r "
+        local ME="|cff0070DE내|r"
+        local WW=MDRcolor("핑크",0,"귓속말")
+        
         if args=="" or not args or args=="도움말" then      
             messageLines[#messageLines+1]="|cFF33FF99▶ 쐐기돌 보고서 (MDReport)|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r : 전체 도움말 "
             
@@ -618,70 +625,70 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]="▷|cFF33FF99[2.9.0]|r+ "..MDRcolor("계승",0,"쐐기돌 평점").." 확인 기능을 추가하였습니다."    
             
             messageLines[#messageLines+1]="|cffffffff▷도움말 목록: |r"..cmdList
-            messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/! @|r |cffC79C6E명령어|r 입력. |cFF33FF99ex)|r |cffffff00/! @|r |cffC79C6E돌|r"
+            messageLines[#messageLines+1]="▷각 |cffC79C6E명령어|r 별 도움말을 보시려면 |cffffff00/! @|r |cffC79C6E명령어|r 입력. "..E.."|cffffff00/! @|r |cffC79C6E돌|r"
             
         elseif args=="돌" then  
             messageLines[#messageLines+1]=helpHead..MDRcolor("돌",0,"'돌'")
-            messageLines[#messageLines+1]="|cffC79C6E▶!돌|r : 소유한 모든 돌 정보를 요청합니다. 이하 대부분의 명령어들은 '|cff0070DE내|r'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cffC79C6E돌|r, "..MDRcolor("길드",0,"/! ").."|cff0070DE내|r|cffC79C6E돌|r, "..MDRcolor("파티",0,"/!! ").."|cffF58CBA지금|r|cffC79C6E돌|r, "..MDRcolor("길드",0,"/! ").."|cffC79C6E돌|r|cffffff0015~18|r, "..MDRcolor("길드",0,"/! ").."|cffC79C6E돌|r|cffffff0025+|r"      
+            messageLines[#messageLines+1]="|cffC79C6E▶돌|r : 소유한 모든 돌 정보를 요청합니다. 이하 대부분의 명령어들은 '"..ME.."'와 함께 조합하면 나만 출력, '|cffF58CBA지금|r'과 함께 조합하면 현재 접속중인 캐릭터만 출력, |cffffff00숫자|r와 함께 검색하면 해당 범위의 돌만 출력합니다. "..E..G.."|cffC79C6E돌|r, "..G..ME.."|cffC79C6E돌|r, "..P.."|cffF58CBA지금|r|cffC79C6E돌|r, "..G.."|cffC79C6E돌|r|cffffff0015~18|r, "..G.."|cffC79C6E돌|r|cffffff0025+|r"      
             
         elseif args=="던전"or args=="던전명" then
             messageLines[#messageLines+1]=helpHead..MDRcolor("마법사",0,"'던전'")
-            messageLines[#messageLines+1]="|cff40C7EB▷{던전명}|r : 던전 이름으로 |cffC79C6E쐐기돌|r 검색을 시도합니다. 던전 여러개를 같이 검색할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cff40C7EB핏심|r, "..MDRcolor("길드",0,"/!! ").."|cff40C7EB티르너|r|cffffff0018|r, "..MDRcolor("파티",0,"/!! ").."|cffF58CBA지금|r|cff40C7EB투기장|r, "..MDRcolor("길드",0,"/! ").."|cff40C7EB티르!속죄|r"
+            messageLines[#messageLines+1]="|cff40C7EB▷{던전명}|r : 던전 이름으로 |cffC79C6E쐐기돌|r 검색을 시도합니다. 던전 여러개를 같이 검색할 수 있습니다. "..E..G.."|cff40C7EB핏심|r, "..G.."|cff40C7EB티르너|r|cffffff0018|r, "..P.."|cffF58CBA지금|r|cff40C7EB투기장|r, "..G.."|cff40C7EB티르!속죄|r"
             
-            messageLines[#messageLines+1]="|cff40C7EB▷|r "..MDRcolor("죽기",0,"'노'").."나 "..MDRcolor("죽기",0,"'제외'").."를 던전명과 함께 입력하면 해당 던전을 "..MDRcolor("죽기",0,"제외").."한 검색결과를 요청할 수도 있습니다. |cFF33FF99ex)|r "..MDRcolor("파티",0,"/!! ")..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")
+            messageLines[#messageLines+1]="|cff40C7EB▷|r "..MDRcolor("죽기",0,"'노'").."나 "..MDRcolor("죽기",0,"'제외'").."를 던전명과 함께 입력하면 해당 던전을 "..MDRcolor("죽기",0,"제외").."한 검색결과를 요청할 수도 있습니다. "..E..P..MDRcolor("죽기",0,"노").."|cff40C7EB핏심!역몰|r"..MDRcolor("죽기",0,"제외")
             
         elseif args=="직업" or args=="직업명" then
             
             messageLines[#messageLines+1]=helpHead..MDRcolor("드루",0,"'직업'")
             
-            messageLines[#messageLines+1]="|cffFF7D0A▷{직업명}|r : 직업 이름으로 |cffC79C6E쐐기돌|r 검색을 시도합니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cffFF7D0A!드루|r, "..MDRcolor("길드",0,"/! ").."|cffFF7D0A드루|r|cffffff0015-|r, "..MDRcolor("파티",0,"/!! ").."|cff0070DE내|r|cffFF7D0A드루|r"
+            messageLines[#messageLines+1]="|cffFF7D0A▷{직업명}|r : 직업 이름으로 |cffC79C6E쐐기돌|r 검색을 시도합니다. "..E..G.."|cffFF7D0A드루|r, "..G.."|cffFF7D0A드루|r|cffffff0015-|r, "..P..ME.."|cffFF7D0A드루|r"
         elseif args=="주차" then
             
             messageLines[#messageLines+1]=helpHead..MDRcolor("주차",0,"'주차'")
-            messageLines[#messageLines+1]="|cff8787ED▷주차|r : 주차정보를 요청합니다. 주차를 못했거나 최대 보상을 받을 수 있는 단수(어둠땅1시즌 기준 14단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cff8787ED주차|r, "..MDRcolor("파티",0,"/!! ").."|cff0070DE내|r|cff8787ED주차|r, "..MDRcolor("길드",0,"/! ").."|cff8787ED주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함"
+            messageLines[#messageLines+1]="|cff8787ED▷주차|r : 주차정보를 요청합니다. 주차를 못했거나 최대 보상을 받을 수 있는 단수(어둠땅1시즌 기준 14단) 미만으로 주차한 경우 해당 캐릭터의 정보를 출력합니다. 소지한 쐐기돌이 있을 경우 쐐기돌 정보를, 돌이 없으나 적절한 템렙을 갖춘 경우 템레벨을 출력합니다. "..E..G.."|cff8787ED주차|r, "..P..ME.."|cff8787ED주차|r, "..G.."|cff8787ED주차|r|cffffff0020|r : 특정 레벨을 지정할 경우(이 경우 20단) 해당 단수 이하 주차한 경우 검색결과에 포함"
             
         elseif args=="닉네임" or args=="이름" then
             
             messageLines[#messageLines+1]=helpHead..MDRcolor("사냥꾼",0,"'닉네임'")      
-
-            messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r : |cffA9D271닉네임|r을 단독으로 입력하는 경우 |c"..classColor.."'캐릭터'|r 검색을 시도합니다. 일치하는 캐릭터가 있을 경우 모두 출력합니다. 한글은 최소 |cFFFFF569"..kLength.."|r글자 이상, 영문은 |cFFFFF569"..length.."|r자 이상 입력해야합니다. |cFF33FF99ex)|r 캐릭명이 '|c"..classColor..playerName.."|r' 일 경우 "..m1
             
-            messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r을 |cffC79C6E!돌|r 이나 |cff8787ED!주차|r와 조합하면 명령어에 반응할 "..MDRcolor("초록",0,"'사람'").."을 지정할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cffC79C6E돌|r"..MDRcolor(krClass,0,"!"..n1)..", "..MDRcolor("파티",0,"/!! ")..MDRcolor(krClass,0,n2).."|cff8787ED!주차|r. 부캐 이름으로도 가능합니다." 
+            messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r : |cffA9D271닉네임|r을 단독으로 입력하는 경우 |c"..classColor.."'캐릭터'|r 검색을 시도합니다. 일치하는 캐릭터가 있을 경우 모두 출력합니다. 한글은 최소 |cFFFFF569"..kLength.."|r글자 이상, 영문은 |cFFFFF569"..length.."|r자 이상 입력해야합니다. "..E.."캐릭명이 '|c"..classColor..playerName.."|r' 일 경우 "..m1
             
-            messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r과 |cffFF7D0A!{직업명}|r 을 조합하면 캐릭터 이름을 몰라도 특정 |cffFF7D0A직업|r을 검색할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ")..MDRcolor(krClass,0,n1).."|cffFFF569!도적|r"..": 닉네임에 '"..MDRcolor(krClass,0,n1).."'을/를 포함하는 캐릭터를 소유한 사람의 |cffFFF569도적|r 캐릭터를 검색."
+            messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r을 |cffC79C6E!돌|r 이나 |cff8787ED!주차|r와 조합하면 명령어에 반응할 "..MDRcolor("초록",0,"'사람'").."을 지정할 수 있습니다. "..E..G.."|cffC79C6E돌|r"..MDRcolor(krClass,0,"!"..n1)..", "..P..MDRcolor(krClass,0,n2).."|cff8787ED!주차|r. 부캐 이름으로도 가능합니다." 
+            
+            messageLines[#messageLines+1]="|cffA9D271▷{닉네임}|r과 |cffFF7D0A!{직업명}|r 을 조합하면 캐릭터 이름을 몰라도 특정 |cffFF7D0A직업|r을 검색할 수 있습니다. "..E..G..MDRcolor(krClass,0,n1).."|cffFFF569!도적|r"..": 닉네임에 '"..MDRcolor(krClass,0,n1).."'을/를 포함하는 캐릭터를 소유한 사람의 |cffFFF569도적|r 캐릭터를 검색."
         elseif args=="속성" then       
             messageLines[#messageLines+1]=helpHead..MDRcolor("죽기",0,"'속성'")      
             
-            messageLines[#messageLines+1]="|cffC41F3B▶!속성|r : 이번주 쐐기 속성을 출력합니다. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. |cFF33FF99ex)|r "..MDRcolor("길드",0,"/! ").."|cffC41F3B속성|r, "..MDRcolor("파티",0,"/!! ").."지난주|cffC41F3B속성|r, "..MDRcolor("길드",0,"/! ").."다다음주|cffC41F3B속성|r"
+            messageLines[#messageLines+1]="|cffC41F3B▶!속성|r : 이번주 쐐기 속성을 출력합니다. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. "..E..G.."|cffC41F3B속성|r, "..P.."지난주|cffC41F3B속성|r, "..G.."다다음주|cffC41F3B속성|r"
             messageLines[#messageLines+1]="|cffC41F3B▶!다음속성|r : 다가올 4주 동안의 쐐기 속성을 출력합니다."
         elseif args=="무기" then      
             messageLines[#messageLines+1]=helpHead..MDRcolor("회색",0,"'무기'")  
             
-            messageLines[#messageLines+1]="▶|cFF80e7EB!전문화|r, |cFFFFF569!능력치|r와 |cFFaaaaaa!무기|r, |cFFF5aCdA!무기범주|r, |cffC79C6E!무기종류|r, |cff8787ED!던전이름|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ").."|cFF80e7EB!회드|r|cFFaaaaaa!무기|r, |cFFFFF569!지능|r|cffC79C6E!단검|r, |cffC79C6E!방패|r, |cFFFFF569!민첩|r|cFFF5aCdA!원거리|r, |cFFFFF569!힘|r|cFFF5aCdA!한손|r, |cFF80e7EB!고술|r|cff8787ED!아탈|r, |cFF80e7EB!양조|r|cffC79C6E!장창|r"
+            messageLines[#messageLines+1]="▶|cFF80e7EB!전문화|r, |cFFFFF569!능력치|r와 |cFFaaaaaa!무기|r, |cFFF5aCdA!무기범주|r, |cffC79C6E!무기종류|r, |cff8787ED!던전이름|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. "..E..G.."|cFF80e7EB!회드|r|cFFaaaaaa!무기|r, |cFFFFF569!지능|r|cffC79C6E!단검|r, |cffC79C6E!방패|r, |cFFFFF569!민첩|r|cFFF5aCdA!원거리|r, |cFFFFF569!힘|r|cFFF5aCdA!한손|r, |cFF80e7EB!고술|r|cff8787ED!아탈|r, |cFF80e7EB!양조|r|cffC79C6E!장창|r"
             
         elseif args=="장신구" then 
             messageLines[#messageLines+1]=helpHead..MDRcolor("초록",0,"'장신구'")      
             
-            messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r와 |cFF80e7EB!역할|r, |cFFFFF569!능력치|r를 조합하면 특정 장신구를 드랍하는 던전의 돌을 검색할 수 있습니다. |cFF33FF99ex|r) |cFF80e7EB!힐러|r|cFF00ff00!장신구|r, |cFFFFF569!민첩|r|cFF00ff00!장신구|r"
+            messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r와 |cFF80e7EB!역할|r, |cFFFFF569!능력치|r를 조합하면 특정 장신구를 드랍하는 던전의 돌을 검색할 수 있습니다. "..E.."|cFF80e7EB!힐러|r|cFF00ff00!장신구|r, |cFFFFF569!민첩|r|cFF00ff00!장신구|r"
             messageLines[#messageLines+1]="▷|cFFaaaaaa!무기|r는 "..MDRcolor(krClass,0,"!".."전문화").."와, |cFF00ff00!장신구|r는 |cFF80e7EB!역할|r과 조합 한다고 생각하시면 기억하기 쉽습니다."
             
         elseif args=="?" or args=="주사위" then  
             messageLines[#messageLines+1]=helpHead..MDRcolor("하늘",0,"'주사위'")   
             
             messageLines[#messageLines+1]="▶"..MDRcolor("하늘",0,"'?'").."뒤에 '!'와 주사위 굴릴 항목들을 2개 이상 입력하면 |cFF33FF99MDReport|r 에서 자동으로 주사위를 굴려주고 결과 또한 채팅으로 알려줍니다. "
-            messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 내용을 입력하면 주사위의 제목으로 인식합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 만 단독으로 "..MDRcolor("길드",0,"/! ")..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."      
+            messageLines[#messageLines+1]="▷"..MDRcolor("하늘",0,"'?'").."는 단독으로 입력해도 되지만, "..MDRcolor("하늘",0,"'?'").." 앞에 내용을 입력하면 주사위의 제목으로 인식합니다. "..E..G..MDRcolor("하늘",0,"어디갈까?!자유!아탈!세스")..", "..P..MDRcolor("하늘",0,"뭘먹을까?!짬뽕!짜장면")..", 혹은 "..MDRcolor("하늘",0,"?").." 만 단독으로 "..G..MDRcolor("하늘",0,"?!기사!악사!전사").." 로 입력해도 됩니다."      
             
         elseif args=="성약" or args=="성약단" then  
             messageLines[#messageLines+1]=helpHead..MDRcolor("성약단",0,"'성약단'")
             
-            messageLines[#messageLines+1]="▶"..MDRcolor("성약단",0,"'성약단'").." 을 요청하면 상황에 맞게 "..MDRcolor("성약단",0,"성약단 정보").."를 출력해줍니다. "..MDRcolor("초록",0,"① ")..MDRcolor("길드",0,"길드채널").."의 경우 "..MDRcolor("전사",0,"모든 만렙 캐릭터 (부캐 포함)").."의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("초록",0,"② ")..MDRcolor("파티",0,"파티채널").."의 경우 현재 "..MDRcolor("핑크",0,"접속중").."인 캐릭터의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("초록",0,"③ ")..MDRcolor("노랑",0,"던전 내").."에서 "..MDRcolor("파티",0,"파티채널").."로 요청하는 경우엔 "..MDRcolor("핑크",0,"현재 캐릭터").."가 "..MDRcolor("노랑",0,"해당던전").."에 필요한 "..MDRcolor("성약단",0,"성약단의 구성원일 경우").."에만 정보를 출력합니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("성약")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("성약단") 
+            messageLines[#messageLines+1]="▶"..MDRcolor("성약단",0,"'성약단'").." 을 요청하면 상황에 맞게 "..MDRcolor("성약단",0,"성약단 정보").."를 출력해줍니다. "..MDRcolor("초록",0,"① ")..MDRcolor("길드",0,"길드채널").."의 경우 "..MDRcolor("전사",0,"모든 만렙 캐릭터 (부캐 포함)").."의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("초록",0,"② ")..MDRcolor("파티",0,"파티채널").."의 경우 현재 "..MDRcolor("핑크",0,"접속중").."인 캐릭터의 "..MDRcolor("성약단").." 정보를, "..MDRcolor("초록",0,"③ ")..MDRcolor("노랑",0,"던전 내").."에서 "..MDRcolor("파티",0,"파티채널").."로 요청하는 경우엔 "..MDRcolor("핑크",0,"현재 캐릭터").."가 "..MDRcolor("노랑",0,"해당던전").."에 필요한 "..MDRcolor("성약단",0,"성약단의 구성원일 경우").."에만 정보를 출력합니다. "..E..G..MDRcolor("성약")..", "..P..MDRcolor("성약단") 
             
-            messageLines[#messageLines+1]="▷"..MDRgetCovenantIcon(3)..MDRcolor("나이트 페이")..", "..MDRgetCovenantIcon(1)..MDRcolor("키리안")..", "..MDRgetCovenantIcon(2)..MDRcolor("벤티르")..", "..MDRgetCovenantIcon(4)..MDRcolor("강령군주").." 등의 개별 성약단 이름으로도 검색할 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("벤티르")..", "..MDRcolor("파티",0,"/!! ")..MDRcolor("나이트 페이",0,"나페")
+            messageLines[#messageLines+1]="▷"..MDRgetCovenantIcon(3)..MDRcolor("나이트 페이")..", "..MDRgetCovenantIcon(1)..MDRcolor("키리안")..", "..MDRgetCovenantIcon(2)..MDRcolor("벤티르")..", "..MDRgetCovenantIcon(4)..MDRcolor("강령군주").." 등의 개별 성약단 이름으로도 검색할 수 있습니다. "..E..G..MDRcolor("벤티르")..", "..P..MDRcolor("나이트 페이",0,"나페")
         elseif args=="모드" or args=="매너" or args=="방해" then    
             messageLines[#messageLines+1]=helpHead..MDRcolor("핑크",0,"'모드'")..MDRcolor("길드",0," (길드채널 전용)")
             
             messageLines[#messageLines+1]=MDRcolor("핑크",0,"▶")..MDRgetModeName(1)..": "..MDRcolor("노랑",0,"'/! 매너'")
-            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("핑크",0,"본인").."이 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("핑크",0,"'귓속말'").."로 받아볼 수 있습니다. 즉, "..MDRcolor("하늘",0,"다른 사람").."에겐 검색 결과가 "..MDRcolor("죽기",0,"보이지 않습니다. ")..MDRgetModeName(1).." 를 켜지 않고 "..MDRcolor("노랑",0,"일회성").."으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. 반대로 "..MDRgetModeName(1).." 가 "..MDRcolor("초록",0,"[활성화]").."되어 있을 때 "..MDRcolor("노랑",0,"'@'").." 을 이용하면 "..MDRgetModeName(1).."를 우회하여 "..MDRcolor("길드",0,"길드채널").."로 메세지를 전송할 수 있습니다. |cFF33FF99ex|r) "..MDRcolor("길드",0,"/! ")..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
+            messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("핑크",0,"본인").."이 "..MDRcolor("길드",0,"길드채널").."로 요청한 검색 결과를 "..MDRcolor("핑크",0,"'귓속말'").."로 받아볼 수 있습니다. 즉, "..MDRcolor("하늘",0,"다른 사람").."에겐 검색 결과가 "..MDRcolor("죽기",0,"보이지 않습니다. ")..MDRgetModeName(1).." 를 켜지 않고 "..MDRcolor("노랑",0,"일회성").."으로 사용하고자 할 경우 "..MDRcolor("길드",0,"길드").."로 요청할 메세지에 "..MDRcolor("노랑",0,"'@'").." 을 함께 입력하면 같은 효과를 볼 수 있습니다. 반대로 "..MDRgetModeName(1).." 가 "..MDRcolor("초록",0,"[활성화]").."되어 있을 때 "..MDRcolor("노랑",0,"'@'").." 을 이용하면 "..MDRgetModeName(1).."를 우회하여 "..MDRcolor("길드",0,"길드채널").."로 메세지를 전송할 수 있습니다. "..E..G..MDRcolor("노랑",0,"@")..MDRcolor("전사",0,"돌").." (띄어쓰기 없이)"
             
             messageLines[#messageLines+1]=MDRcolor("하늘",0,"▶")..MDRgetModeName(2)..": "..MDRcolor("노랑",0,"'/! 방해'")
             messageLines[#messageLines+1]="▷활성화 되어있는 동안 "..MDRcolor("길드",0,"길드채널").."로 전송되는 "..MDRcolor("죽기",0,"모든 메세지").."를 출력하지 않습니다. 단, "..MDRgetModeName(1).."와 함께 사용 중인 경우 "..MDRcolor("핑크",0,"본인").."이 요청한 검색결과는 "..MDRcolor("핑크",0,"귓속말").."로 받게 되므로 "..MDRgetModeName(2).."가 켜져있어도 볼 수 있습니다."
@@ -691,14 +698,25 @@ function MDRCommands(msg, editbox)
         elseif args=="위업" then    
             messageLines[#messageLines+1]=helpHead..MDRcolor("돌",0,"'위업'")
             
-            messageLines[#messageLines+1]="▶"..MDRcolor("돌",0,"위업").." : "..MDRcolor("돌",0,"쐐기돌").." 위업 진행 상황을 요청합니다. 단수를 지정하지 않으면 (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor("돌",0,"위업")..") "..MDRcolor("영웅",0,"10단").."과 "..MDRcolor("전설",0,"15단").." 위업을 모두 체크하며, "..MDRcolor("노랑",0,"위업10, 위업15").." 처럼 단수를 지정할 경우 "..MDRcolor("하늘",0,"[해당 단수]").."의 위업만 체크합니다. "
+            messageLines[#messageLines+1]="▶"..MDRcolor("돌",0,"위업").." : "..MDRcolor("돌",0,"쐐기돌").." 위업 진행 상황을 요청합니다. 단수를 지정하지 않으면 ("..E..G..MDRcolor("돌",0,"위업")..") "..MDRcolor("영웅",0,"10단").."과 "..MDRcolor("전설",0,"15단").." 위업을 모두 체크하며, "..MDRcolor("노랑",0,"위업10, 위업15").." 처럼 단수를 지정할 경우 "..MDRcolor("하늘",0,"[해당 단수]").."의 위업만 체크합니다. "
             
         elseif args=="점수" then    
+            local S=MDRcolor("계승",0,"점수")
+            local S2=MDRcolor("계승",0,"!점수")
             messageLines[#messageLines+1]=helpHead..MDRcolor("계승",0,"'쐐기돌 평점'")
             
-            messageLines[#messageLines+1]="▶"..MDRcolor("계승",0,"점수").." : 현재 "..MDRcolor("핑크",0,"접속중").." 인 캐릭터의 "..MDRcolor("계승",0,"쐐기돌 평점").." 을 요청합니다. 각 던전별 최고 기록을 |T236401:0:::-4|t폭군과 |T463829:0:::-4|t경화를 구분하여 색깔로 표시해 줍니다. (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor("계승",0,"점수")..")"
-			messageLines[#messageLines+1]="▷".."|cff40C7EB!{던전명}|r 과 함께 요청할 경우 해당 던전의 세부점수와 기록을 요청합니다. (|cFF33FF99ex|r. "..MDRcolor("파티",0,"/!! ")..MDRcolor("계승",0,"점수").."|cff40C7EB!티르너|r"..")"
-			messageLines[#messageLines+1]="▷".."부캐의 정보를 알고자 할 경우, |cFF33FF99[2.9.0]|r+ 부터 |cffA9D271{닉네임}|r 혹은 |cffFF7D0A{직업명}|r 검색결과에 "..MDRcolor("계승",0,"점수").." 가 포함되도록 변경되었으므로 해당 기능을 이용하시면 됩니다. (|cFF33FF99ex|r. "..MDRcolor("길드",0,"/! ")..MDRcolor(krClass,0,n1)..", "..MDRcolor("파티",0,"/!! ").."|cffFFF569도적|r)"
+            messageLines[#messageLines+1]="|cffffffff▶"..S..": 현재 "..MDRcolor("핑크",0,"접속중").." 인 캐릭터의 "..MDRcolor("계승",0,"쐐기돌 평점").." 을 요청합니다. 각 |cff8fd1d8던전별|r 최고 기록을 |T236401:0:::-4|t"..MDRcolor("죽기",0,"폭군").."과 |T463829:0:::-4|t"..MDRcolor("죽기",0,"경화").."를 구분하여 색깔로 표시해 줍니다.|r "..E..G..S
+            messageLines[#messageLines+1]="|cffffffff▶"..ME..S.."를 입력하면 본인이 소유한 "..MDRcolor("노랑",0,"'모든' 만렙 캐릭터").."의 점수를 출력합니다.|r "..E..P..ME..S
+            messageLines[#messageLines+1]="|cffffffff▶"..S.."를 |cff8fd1d8!{던전명}|r 과 함께 입력하면 |cff8fd1d8해당 던전|r의 세부점수와 기록을 출력할 수 있습니다.|r"
+            messageLines[#messageLines+1]="  -'"..G..S.."|cff8fd1d8!티르너|r".."' ▶ "..MDRcolor("길드",0,"길드원").." 모두의 |cff8fd1d8티르너|r 점수를 요청."
+            messageLines[#messageLines+1]="|cffffffff▶"..S.."를 |cffA9D271!{닉네임}|r 과 함께 입력하면 |cffA9D271특정 캐릭터|r의 "..MDRcolor("계승",0,"총점")..", 혹은 |cff8fd1d8던전별|r 점수를 요청할 수 있습니다.|r"
+            messageLines[#messageLines+1]="  -'"..P..S..MDRcolor(krClass,0,"!"..n1).."' ▶ "..MDRcolor(krClass,0,n1).."님의 총점을 "..PP.."로 요청."
+            messageLines[#messageLines+1]="  -'"..G..S..MDRcolor(krClass,0,"!"..n1).."|cff8fd1d8!티르너|r".."' ▶ "..MDRcolor(krClass,0,n1).."님의 |cff8fd1d8티르너|r 점수를 "..GG.."로 요청."
+            messageLines[#messageLines+1]="|cffffffff▶"..S.."를 |cff8fd1d8!{던전명}|r 과 함께 입력할 때 특정 "..MDRcolor("노랑",0,"단수").."를 지정하면 |cff8fd1d8해당 던전|r 을 이번주에 "..MDRcolor("노랑",0,"해당 단수").."로 클리어 했을 때 얻을 수 있는 점수를 "..MDRcolor("계승",0,"'예측'").."해볼 수 있습니다.|r"
+            messageLines[#messageLines+1]="  -'"..P..S.."|cff8fd1d8!속죄|r"..MDRcolor("노랑",0,"16").."' ▶ |cff8fd1d8속죄|r"..MDRcolor("노랑",0,"16").."을 시클시 예상 점수를 |cFFaaaaff파티원|r 모두에게 요청."
+            messageLines[#messageLines+1]="  -'"..G..S.."|cff8fd1d8!죽상|r"..MDRcolor("노랑",0,"15")..MDRcolor(krClass,0,"!"..n1).."' ▶ "..MDRcolor(krClass,0,n1).."님에게 |cff8fd1d8죽상|r"..MDRcolor("노랑",0,"15").."를 시클시 예상 점수를 "..GG.."로 요청."
+            messageLines[#messageLines+1]="  -'"..P..ME..S.."|cff8fd1d8!역몰|r"..MDRcolor("노랑",0,"18").."' ▶ "..ME..MDRcolor("노랑",0," 모든 캐릭터").."가 |cff8fd1d8역몰|r"..MDRcolor("노랑",0,"18").."을 시클시 예상 점수를 "..PP.." 혹은 "..WW.."로 출력."
+            --messageLines[#messageLines+1]="▷".."부캐의 정보를 알고자 할 경우, |cFF33FF99[2.9.0]|r+ 부터 |cffA9D271{닉네임}|r 혹은 |cffFF7D0A{직업명}|r 검색결과에 "..S.." 가 포함되도록 변경되었으므로 해당 기능을 이용하시면 됩니다. "..E..G..MDRcolor(krClass,0,n1)..", "..P.."|cffFFF569도적|r"
             
         else
             return
@@ -731,10 +749,10 @@ function MDRCommands(msg, editbox)
         if strfind(strsub(msg,1,1),"!") then
             msg=strsub(msg,2,-1)
         end
-		if msg=="금고" then
-			MDRVault ()
-			return
-		end
+        if msg=="금고" then
+            MDRVault ()
+            return
+        end
         local m=MDRconfig.MannerMode or 0
         local at=""
         if m==1 then--매너모드
@@ -861,16 +879,16 @@ function MDRrefreshRunHistory()
         local desc,total=C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(n)
         MDRconfig.Char[meAddon].Score[d]={}
         MDRconfig.Char[meAddon].Score[d]["점수"]=total
-		for i=1,2 do
-			local affix
-			local affixTable=desc[i]
-			if affixTable then 
-				affix=affixTable["name"]				
-			end
-			if affix then			
-			MDRconfig.Char[meAddon].Score[d][affix]=affixTable or {}			
-			end
-		end        
+        for i=1,2 do
+            local affix
+            local affixTable=desc[i]
+            if affixTable then 
+                affix=affixTable["name"]                
+            end
+            if affix then            
+                MDRconfig.Char[meAddon].Score[d][affix]=affixTable or {}            
+            end
+        end        
     end
     
     
@@ -886,22 +904,22 @@ function MDRrefreshRunHistory()
         end
     end
     table.sort(runHistory, comparison)
-	
-	local clearedLevels={}
-	if runHistory and #runHistory>0 then
-		for i=1,#runHistory do
-			local level=runHistory[i].level
-			local completed=runHistory[i].completed
-			if (not clearedLevels[level]) or (clearedLevels[level]=="now" and completed) then
-				clearedLevels[level]=completed
-			end
-		end
+    
+    local clearedLevels={}
+    if runHistory and #runHistory>0 then
+        for i=1,#runHistory do
+            local level=runHistory[i].level
+            local completed=runHistory[i].completed
+            if (not clearedLevels[level]) or (clearedLevels[level]=="now" and completed) then
+                clearedLevels[level]=completed
+            end
+        end
     end
     MDRconfig.Char[meAddon].reward1=runHistory[1] and runHistory[1].level or nil
-	local bestLevel=MDRconfig.Char[meAddon].reward1
-	if bestLevel then		
-		MDRconfig.Char[meAddon].bestLevelCompleted=clearedLevels[bestLevel]
-	end	
+    local bestLevel=MDRconfig.Char[meAddon].reward1
+    if bestLevel then        
+        MDRconfig.Char[meAddon].bestLevelCompleted=clearedLevels[bestLevel]
+    end    
     MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
     MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
     MDRconfig.Char[meAddon].runs=#runHistory
@@ -1144,7 +1162,7 @@ function MDRdoReportHistory(VALUES)
         class=MDRconfig.Char[charName].Class or MDRconfig.Char[charName].class
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
     end    
-	
+    
     local rewardLevel_season_two={ 
         [2]=223,    
         [3]=226,
@@ -1161,9 +1179,9 @@ function MDRdoReportHistory(VALUES)
         [14]=249,
         [15]=252,
     }
-	--[[
+    --[[
     local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)
-	]]
+    ]]
     local rewardLevel  
     rewardLevel=rewardLevel_season_two
     
