@@ -183,7 +183,7 @@ function MDRcolorizeForPrint(message)
     local color_class={}
     for i=1,#classNames do
         local c=classNames[i]
-        icon_class[skull[c]..c]=classIcon[c].."|cff"..classColor[c]..c
+        icon_class[skull[c]..c]=classIcon[c]
         icon["{"..c.."}"]=classIcon[c]    
         icon_colon[skull[c]..c..":"]=classIcon[c].."|cff"..classColor[c]..":|r"  
         icon_color[skull[c]..c]=classIcon[c].."|cff"..classColor[c]
@@ -220,6 +220,9 @@ function MDRcolorizeForPrint(message)
         end        
     else --주차정보가 없는 경우 : 나머지 shortReport
         for k,v in pairs(icon_class_arrow) do            
+            message=gsub(message,k,v)          
+        end
+		for k,v in pairs(icon_class) do            
             message=gsub(message,k,v)          
         end
         if strfind(message,"쐐기돌") then            
@@ -299,7 +302,14 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{CN}","|cFFe7e7e7")
     message=gsub(message,"{CG}","|cFF6d6d6d")
     message=gsub(message,"{CX}","|r")
-    
+
+	--아이템 보너스
+	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
+	message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
+	message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
+	message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
+	message=gsub(message,"{iE}","]|h|r")	
+	
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull
@@ -493,7 +503,7 @@ function doShortReport(chars,channel,who,callType)
                 if sameCheck then                   
                     message=", "..online..classStatus..":"..havekey
                 else                    
-                    message="["..online..classStatus..":"..havekey.."▶"..chars[i]["extraLink"].."]"
+                    message="["..online..classStatus..":"..havekey.."]▶"..chars[i]["extraLink"]
                 end                
             elseif callType["covenant"] or callType["covenantnow"] or callType["covenantall"] then
                 local coveName
@@ -513,18 +523,30 @@ function doShortReport(chars,channel,who,callType)
             end
             
             if sameCheck and messageLines[sameCheck] then                 
-                messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
+                messageLines[sameCheck]=gsub(messageLines[sameCheck],"]▶",message.."]▶")
             else
                 messageLines[mNum]=message
                 mNum=mNum+1
-            end     
-            
+            end                 
         end       
         
         -- 한줄로 줄이기        
         local oneLineMessage={}
         local num=1
-        local maxNum=6
+        local maxNum=6		
+		if callType=="item" then
+			local length=0
+			for i=1,#chars do
+				local links=chars[i]["extraLink"]
+				length=length+strlen(links)						
+			end
+			local itemCount=math.floor(length/30)
+			if itemCount>=5 then
+				maxNum=2
+			else
+				maxNum=3
+			end
+		end
         local lineNum=math.ceil(#messageLines/maxNum)
         local charPerLine=math.ceil(#messageLines/lineNum)    
         --print("총"..#messageLines.."캐릭/한줄당 "..charPerLine.."개/총 "..lineNum.."줄")
@@ -536,7 +558,7 @@ function doShortReport(chars,channel,who,callType)
             if #messageLines>maxNum then
                 num=math.floor((i-1)/charPerLine)+1                
             end            
-            oneLineMessage[num]=(oneLineMessage[num] or "")..messageLines[i]..space
+            oneLineMessage[num]=(oneLineMessage[num] or "")..messageLines[i]..space			
         end
         --메세지라인 리셋셋
         messageLines=oneLineMessage
@@ -723,12 +745,17 @@ function doFullReport(chars,channel,who,callType)
             end            
             
             if isAddonMessage==1 then
-                classStatus=class..shortName.." "..parking               
+				if callType=="item" then
+					classStatus=class
+				else
+					classStatus=class..shortName.." "..parking
+				end
+                
             else
                 classStatus=class.."("..shortName..parking..")"
             end
             
-            headStar="{"..class.."}"
+            headStar=skull[class]
             
             local message=""
             local sameCheck
@@ -748,9 +775,9 @@ function doFullReport(chars,channel,who,callType)
             elseif callType=="item" and chars[i]["extraLink"] then                
                 sameCheck=tonumber(strsub(chars[i]["extraLink"],0,1))
                 if sameCheck then                   
-                    message=", "..headStar..":"..havekey
+                    message=", "..headStar..classStatus..":"..havekey
                 else      
-                    message=headStar..":"..havekey.."▶"..chars[i]["extraLink"] 
+                    message=headStar..classStatus..":"..havekey.."▶"..chars[i]["extraLink"] 
                 end 
             elseif callType and callType["newkey"] then                
                 local up=""

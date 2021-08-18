@@ -667,13 +667,17 @@ function filterVALUES(VALUES)
     --조절값 입력
     VALUES["channel"]=channel 
     VALUES["onlyOnline"]=onlyOnline
-    
+	
+	local G=MDRcolor("길드",0,"/! ")    
+    local P=MDRcolor("파티",0,"/!! ")
+    local E="|cFF33FF99ex|r."
+	
     if callType["score"] then        
         MDRreportScore(VALUES)
         
     elseif #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] and (callType["item"] or callType["trinket"] or callType["stat"] 
-        --or callType["spec"] 
-        --or callType["class"] 
+        or callType["spec"] 
+        or callType["class"] 
         or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면  
         
         --무기 사용 가능 여부 체크
@@ -724,13 +728,13 @@ function filterVALUES(VALUES)
             VALUES["comb"]="Spec_Item" 
             --장신구와 던전 조합 거절  
         elseif callType["trinket"] and callType["dungeon"] and #callTypeB==2 then
-            if who==meGame then
-                print("|cFFff0000▶장신구|r는 |cff8787ED!던전이름|r과 단독으로 조합할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cff8787ED!"..keyword["dungeon"].."|r or "..MDRcolor("!힐러",-1).."|cff8787ED!"..keyword["dungeon"].."|r)")   
+            if who==meGame then				
+                print("|cFFff0000▶장신구|r는 |cff8787ED!던전이름|r과 단독으로 조합할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cff8787ED!"..keyword["dungeon"][1].."|r or "..MDRcolor("!힐러",-1).."|cff8787ED!"..keyword["dungeon"][1].."|r)")   
             end 
             
             --장신구 검색
         elseif (
-            (callType["trinket"] and (callType["role"] or callType["stat"])) or
+            (callType["trinket"] and (callType["role"] or callType["stat"] or callType["spec"])) or
             (callType["stat"] and callType["dungeon"] and not callType["category"]) or
             (callType["role"] and callType["dungeon"])  
         )then  
@@ -738,7 +742,7 @@ function filterVALUES(VALUES)
             if keyword["role"]=="힐러"then 
                 if not tips[1] or tips[1]<warns then
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
-                        print("|cFF00ff00▶|r"..MDRcolor("힐러",-1).." [수양/신성, "..MDRcolor("운무",0)..", "..MDRcolor("회복",0)..", "..MDRcolor("징벌",0,"신기")..", "..MDRcolor("복원",0).."] 로 획득 가능한 모든 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("!힐러",-1).."|cff8787ED!던전이름|r으로 검색해보세요.")
+                        print("|cFF00ff00▶|r"..MDRcolor("힐러",-1).." [수양/신성, "..MDRcolor("운무",0)..", "..MDRcolor("회복",0)..", "..MDRcolor("징벌",0,"신기")..", "..MDRcolor("복원",0).."] 로 획득 가능한 모든 |cff00ff00장신구|r를 검색합니다.")
                     end
                     tips[1]=(tips[1] or 0)+1
                 end
@@ -761,7 +765,7 @@ function filterVALUES(VALUES)
                             else
                                 role=MDRcolor("수호",0)..", "..MDRcolor("양조",0)..", "..MDRcolor("복수",0)     
                             end    
-                            message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat).."을 사용하는 "..MDRcolor("탱커",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..stat..keyword["role"]).."|cff8787ED!던전이름|r으로 검색해보세요."
+                            message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat).."을 사용하는 "..MDRcolor("탱커",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. "
                             print(message) 
                         end 
                         tips[3]=(tips[3] or 0)+1
@@ -788,7 +792,7 @@ function filterVALUES(VALUES)
                         elseif keyword["stat"]=="민첩" then     
                             role=MDRcolor("도적")..", "..MDRcolor("사냥꾼")..", "..MDRcolor("풍운",0)..", "..MDRcolor("야성",0)..", "..MDRcolor("고양",0)..", "..MDRcolor("파멸",0)
                         end     
-                        message="|cFF00ff00▶|r"..MDRcolor("도적",0,keyword["stat"]).."을 사용하는 "..MDRcolor("딜러",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 "..MDRcolor("도적",0,"!"..keyword["stat"]).."|cff8787ED!던전이름|r으로 검색해보세요."
+                        message="|cFF00ff00▶|r"..MDRcolor("도적",0,keyword["stat"]).."을 사용하는 "..MDRcolor("딜러",-1).." ["..role.."] 로 획득 가능한 |cff00ff00장신구|r를 검색합니다."
                         print(message) 
                     end 
                     tips[5]=(tips[5] or 0)+1
@@ -862,7 +866,14 @@ function filterVALUES(VALUES)
                 print("|cFFff0000▶|r|cFFFFF569능력치|r와 "..MDRcolor("무기",-2).."는 함께 검색할 수 없습니다. "..MDRcolor("무기 유형(단검,지팡이)",-2).."이나 "..MDRcolor("종류(양손,한손)",-1).."를 지정해주세요. (|cFF33FF99ex|r. |cFFFFF569!힘|r"..MDRcolor("!양손",-1).." or |cFFFFF569!지능|r"..MDRcolor("!단검",-2)..")")
                 
             end
-            return   
+            return
+        elseif ((callType["category"] or callType["specificitem"])and callType["item"]) then
+            if who==meGame then
+                print("|cFFff0000▶|r해당 조합으로는 검색을 실행할 수 없습니다."..MDRcolor("전문화",-1).."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. "..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3)..MDRcolor("!무기",-2)..", |cFFFFF569!힘|r"..MDRcolor("!한손",-2)..")")    
+                
+                
+            end
+            return
         end
         if VALUES["comb"] then
             findCharAllItem(VALUES)  
@@ -924,7 +935,7 @@ function filterVALUES(VALUES)
                 print("|cFFffff00▶|r"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 전문화 대신 "..MDRcolor(class,0,"직업").." 정보를 요청합니다. ("..MDRcolor(class,0,"!"..class)..")")
                 
                 print("|cFFffff00▷|r"..MDRcolor(spec,10)..ro.." 사용 가능한 |cffaaaaaa무기|r를 검색하고 싶은 경우 "..MDRcolor(spec,0,"!"..spec).."|cffaaaaaa!무기|r 로 검색해보세요.")
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r, |cffffff00/쐐|r |cFFaaaaaa무기|r")
+                print("▷도움말이 필요한 경우: |cffffff00/! @|r, |cffffff00/! @|r |cFFaaaaaa무기|r")
                 
             end
             VALUES["callTypeT"][1]=getCallTypeTable(keyword3["spec"])
@@ -937,7 +948,7 @@ function filterVALUES(VALUES)
             if who==meGame then
                 
                 print("|cFFff0000▶|r|cFFaaaaaa무기|r는 단독으로 검색할 수 없습니다. 특성을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3).."|cFFaaaaaa!"..(keyword["trinket"] or keyword["item"] ).."|r)")
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")
+                print("▷도움말이 필요한 경우: |cffffff00/! @|r |cFFaaaaaa무기|r")
                 
             end 
             --!장신구만 단독검색시
@@ -945,7 +956,7 @@ function filterVALUES(VALUES)
             if who==meGame then
                 
                 print("|cFFff0000▶|r|cFF00ff00장신구|r는 단독으로 검색할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요 (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cFF00ff00!장신구|r or "..MDRcolor("!힐러",-1).."|cFF00ff00!장신구|r)") 
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFF00ff00장신구|r")
+                print("▷도움말이 필요한 경우: |cffffff00/! @|r |cFF00ff00장신구|r")
                 
             end   
             
@@ -954,7 +965,7 @@ function filterVALUES(VALUES)
             if who==meGame then
                 
                 print("|cFFff0000▶|r|cFFFFF569능력치|r는 단독으로 검색할 수 없습니다. 무기종류를 지정해주세요. (|cFF33FF99ex|r. !|cFFFFF569"..keyword["stat"].."|r!지팡이)")
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")   
+                print("▷도움말이 필요한 경우: |cffffff00/! @|r |cFFaaaaaa무기|r")   
             end 
             
             --스탯지정없이 무기범주만 단독검색시
@@ -962,7 +973,7 @@ function filterVALUES(VALUES)
             if who==meGame then
                 
                 print("|cFFff0000▶|r"..MDRcolor("무기범주",-1).."(한손,양손,근접,원거리)는 단독으로 검색할 수 없습니다. "..MDRcolor(krClass,0,"전문화").."나 |cFFFFF569능력치|r를 함께 입력해주세요. (|cFF33FF99ex|r. |cFFFFF569!힘|r"..MDRcolor("!"..keyword["category"],-1)..", "..MDRcolor(krClass,0,"!")..MDRcolor(krClass,3)..MDRcolor("!석궁",-2)..")")
-                print("▷도움말이 필요한 경우: |cffffff00/쐐|r |cFFaaaaaa무기|r")   
+                print("▷도움말이 필요한 경우: |cffffff00/! @|r |cFFaaaaaa무기|r")   
                 
             end  
         else return end  

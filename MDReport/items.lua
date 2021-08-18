@@ -5,7 +5,7 @@ local tips={}
 local warns=100
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
 local bonus1="::::::::60:268::23:1:3524:1:28:749:::::" ;--1/12강
-local bonus9="::::::::60:70::16:6:7617:7359:6652:7575:1550:6646:1:28:1279:::::" --9/12강
+local bonus9="{b9}"--"::::::::60:70::16:6:7617:7359:6652:7575:1550:6646:1:28:1279:::::" --9/12강
 local bonus2=":6204:::::::60:70::54:5:7732:7359:6652:1550:6646:1:28:2042:::::4897" ;--시장하드
 local dungeonTable={
     ["투기장"]={
@@ -18,20 +18,20 @@ local dungeonTable={
             {"힘","한손도끼", 178863},
             {"힘/지능","방패", 178867 },
             {"지능","보조장비", 178868},
-            {"지능","장신구",178809,"딜러" },            
-            {"힘/민첩","장신구",178811,"딜러" },            
-            {"힘","장신구",178808,"딜러/탱커" },            
-            {"지능","장신구",178810,"힐러" },            
+            {"지능","장신구",178809,"힐러/딜러","루비"},            
+            {"힘/민첩","장신구",178811,"딜러","전서"},            
+            {"힘","장신구",178808,"딜러/탱커","내장"},            
+            {"지능","장신구",178810,"힐러","혼령"},            
         }
     }, 
     ["속죄"]={
         "속죄의 전당",
         {
-            {"지능","지팡이",178829},
+            {"지능","지팡이",178829,"","십자가"},
             {"민첩","한손둔기", 178834},
             {"지능","보조장비", 178828},
-            {"힘/민첩","장신구", 178825,"탱커"},
-            {"지능","장신구",178826, "힐러/딜러"},
+            {"힘/민첩","장신구", 178825,"탱커","돌심장"},
+            {"지능","장신구",178826, "힐러/딜러","자수정"},
         }
     },
     ["승천"]={
@@ -40,11 +40,11 @@ local dungeonTable={
             {"민첩","장창",180096},
             {"민첩","지팡이",180097},
             {"민첩","한손도끼",180095},
-            {"민첩","활",180112},            
-            {"민첩","장신구",180116,"딜러/탱커"},
-            {"힘","장신구", 180118,"딜러/탱커"},
-            {"지능","장신구", 180119,"힐러"},
-            {"지능","장신구",180117,"딜러"},
+            {"민첩","활",180112,"","철학자"},            
+            {"민첩","장신구",180116,"딜러/탱커","령 전지"},
+            {"힘","장신구", 180118,"딜러/탱커","령의 장"},
+            {"지능","장신구", 180119,"힐러","집정관"},
+            {"지능","장신구",180117,"딜러","최고천"},
         }
         
     }, 
@@ -53,12 +53,12 @@ local dungeonTable={
         {
             {"민첩","장창",178929},
             {"민첩","단검",178928},
-            {"민첩","한손도검",178754},
+            {"민첩","한손도검",178754,"","수포폭풍"},
             {"힘","한손둔기",178752},
             {"지능","단검",178753},
-            {"힘/민첩","장신구", 178770,"탱커"},
-            {"지능/민첩","장신구", 178769,"딜러"},
-            {"힘/민첩","장신구", 178771,"딜러"},
+            {"힘/민첩","장신구", 178770,"탱커","끈적 장기"},
+            {"지능/민첩","장신구", 178769,"딜러","수액"},
+            {"힘/민첩","장신구", 178771,"딜러","약병"},
         }
     }, 
     ["저편"]={
@@ -70,10 +70,10 @@ local dungeonTable={
             {"민첩","한손도검",179328},
             {"힘","한손둔기",179340},
             {"민첩","석궁",179348},
-            {"힘/민첩/지능","장신구",179350 ,"힐러/딜러/탱커"},
-            {"힘","장신구", 179342,"딜러/탱커"},
-            {"힘/민첩","장신구", 179331,"탱커"},
-            {"민첩","장신구", 179356,"딜러/탱커"},
+            {"힘/민첩/지능","장신구",179350 ,"힐러/딜러/탱커",""},
+            {"힘","장신구", 179342,"딜러/탱커",""},
+            {"힘/민첩","장신구", 179331,"탱커",""},
+            {"민첩","장신구", 179356,"딜러/탱커",""},
         }
     }, 
     ["죽상"]={
@@ -83,12 +83,12 @@ local dungeonTable={
             {"민첩","단검",178743},
             {"지능","한손도검",178737},
             {"힘","한손둔기",178730},
-            {"민첩","총",178735},
+            {"민첩","총",178735,"","산탄총"},
             {"힘/지능","방패",178750},
-            {"지능","장신구",178772 ,"딜러"},
-            {"민첩","장신구",178742 ,"딜러/탱커"},
-            {"힘","장신구",178751 ,"딜러/탱커"},
-            {"지능","장신구", 178783,"힐러"},
+            {"지능","장신구",178772 ,"딜러","주머니"},
+            {"민첩","장신구",178742 ,"딜러/탱커","독소"},
+            {"힘","장신구",178751 ,"딜러/탱커","갈고리"},
+            {"지능","장신구", 178783,"힐러","성물함"},
         }
     }, 
     ["티르너"]={
@@ -100,8 +100,8 @@ local dungeonTable={
             {"지능","한손둔기", 178709},
             {"힘","한손도끼",178711},
             {"힘/지능","방패",178712},
-            {"민첩","장신구", 178715,"딜러/탱커"},
-            {"지능","장신구", 178708,"힐러/딜러"},            
+            {"민첩","장신구", 178715,"딜러/탱커","오카리나"},
+            {"지능","장신구", 178708,"힐러/딜러","변신수"},            
         }
     }, 
     ["핏심"]={
@@ -113,10 +113,10 @@ local dungeonTable={
             {"힘","한손둔기",178855},
             {"민첩","전투검",178854},
             {"힘/민첩","보조장비",178852},
-            {"지능","장신구", 178849,"힐러/딜러"},
-            {"힘/민첩","장신구", 178861,"딜러/탱커"},
-            {"지능","장신구", 178850,"힐러"},
-            {"힘/민첩","장신구", 178862,"탱커"},
+            {"지능","장신구", 178849,"힐러/딜러","령 우리"},
+            {"힘/민첩","장신구", 178861,"딜러/탱커","유리병"},
+            {"지능","장신구", 178850,"힐러","태양티끌"},
+            {"힘/민첩","장신구", 178862,"탱커","칼춤꾼"},
         }
     }, 
     
@@ -316,7 +316,7 @@ function checkDungeonHasItem(VALUES)
         role=VALUES["role"]  
         sameDungeon=VALUES["sameDungeon"]
         filter=VALUES["filter"]
-		level=VALUES["level"]
+        level=VALUES["level"]
     end  
     
     local bonus=getBonusIDs(dungeon,level)    
@@ -359,12 +359,14 @@ function checkDungeonHasItem(VALUES)
                     end           
                     if sameDungeon then
                         thisDungeonHas[itemNum]=sameDungeon
-                    else                
-                        if link==1 then
-                            _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else
+                        local name=""
+                        if dropTable[j][5] then
+                            name=dropTable[j][5]
                         else
-                            thisDungeonHas[itemNum]=header..dropTable[j][2]
+                            name=dropTable[j][1].." "..dropTable[j][2]
                         end
+                        thisDungeonHas[itemNum]="{iH}"..dropTable[j][3].."{iB}"..name.."{iE}"
                     end                           
                     thisDungeonHasItem=1
                     itemNum=itemNum+1
@@ -385,11 +387,13 @@ function checkDungeonHasItem(VALUES)
                     thisDungeonHas[itemNum]=sameDungeon
                     --print(sameDungeon)
                 else                
-                    if link==1 then
-                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    local name=""
+                    if dropTable[j][5] then
+                        name=dropTable[j][5]
                     else
-                        thisDungeonHas[itemNum]=header..dropTable[j][2]
+                        name=dropTable[j][1].." "..dropTable[j][2]
                     end
+                    thisDungeonHas[itemNum]="{iH}"..dropTable[j][3].."{iB}"..name.."{iE}"    
                 end            
                 thisDungeonHasItem=1
                 itemNum=itemNum+1            
@@ -436,12 +440,14 @@ function checkDungeonHasItem(VALUES)
                     end           
                     if sameDungeon then
                         thisDungeonHas[itemNum]=sameDungeon
-                    else                
-                        if link==1 then
-                            _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                    else 
+                        local name=""
+                        if dropTable[j][5] then
+                            name=dropTable[j][5]
                         else
-                            thisDungeonHas[itemNum]=header..dropTable[j][2]
+                            name=dropTable[j][1].." "..dropTable[j][2]
                         end
+                        thisDungeonHas[itemNum]="{iH}"..dropTable[j][3].."{iB}"..name.."{iE}"                     
                     end                            
                     thisDungeonHasItem=1
                     itemNum=itemNum+1
@@ -472,12 +478,22 @@ function checkDungeonHasItem(VALUES)
                 
                 if sameDungeon then
                     thisDungeonHas[itemNum]=sameDungeon
-                else                
-                    if link==1 then
-                        _,thisDungeonHas[itemNum]=GetItemInfo("item:"..dropTable[j][3]..bonus)
+                else  
+                    local name=""
+                    if dropTable[j][5] then
+                        name=dropTable[j][5]
                     else
-                        thisDungeonHas[itemNum]=(header or "?").." "..dropTable[j][2]
+                        name=dropTable[j][1].." "..dropTable[j][2]
                     end
+                    local bonus
+                    if dropTable[j][3]==178715 then --오카리나
+                        bonus="{iBO}"
+                    elseif dropTable[j][3]==178708 then --변신수
+                        bonus="{iBB}"
+                    else
+                        bonus="{iB}"
+                    end
+                    thisDungeonHas[itemNum]="{iH}"..dropTable[j][3]..bonus..name.."{iE}"                                  
                 end                           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
@@ -492,7 +508,7 @@ function checkDungeonHasItem(VALUES)
         end                    
     end    
     if thisDungeonHasItem==1 then
-        return itemList
+        return itemList,itemNum
     else
         return nil        
     end    
@@ -686,9 +702,9 @@ function findCharAllItem(VALUES)
             --if keyword2["spec"]
             
             if keyword["spec"] then
-                message="|cFF00ff00▶|r"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다.  |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
+                message="|cFF00ff00▶|r"..spec..Class..ro.." 사용 가능한 "..Weapon..eul.." 검색합니다."
             else
-                message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat)..space..Weapon..eul.." 모두 검색합니다. |cffa335ee[아이템 링크]|r를 보시려면 |cff8787ED!던전이름|r과 함께 입력해보세요."
+                message="|cFF00ff00▶|r"..MDRcolor("도적",0,stat)..space..Weapon..eul.." 모두 검색합니다."
             end
             
             print(message)
@@ -696,47 +712,38 @@ function findCharAllItem(VALUES)
         end                  
     end   
     
+    local dun={}    
+	
     if chars~=nil then 
-        for i=1,#chars do  
+        for i=1,#chars do    
             local p=chars[i]["fullName"]
             local c=MDRconfig.Char[p]
             local mapName=c.MythicKey.name
-            VALUES["dungeon"]=getShortDungeonName(mapName)
-            local itemList=checkDungeonHasItem(VALUES)                     
-        end    
-    end      
-    local dun={}
-    
-    C_Timer.After(0.1, function()            
-            if chars~=nil then 
-                for i=1,#chars do    
-                    local p=chars[i]["fullName"]
-                    local c=MDRconfig.Char[p]
-                    local mapName=c.MythicKey.name
-                    if dun[mapName] then
-                        VALUES["sameDungeon"]=dun[mapName]
-                    else                 
-                        VALUES["sameDungeon"]=nil
-                    end
-                    
-                    VALUES["dungeon"]=getShortDungeonName(mapName)
-                    local itemList=checkDungeonHasItem(VALUES)                   
-                    
-                    if itemList then
-                        chars[i]["extraLink"]=itemList
-                        findChars[num]=chars[i]
-                        if not dun[mapName] then
-                            dun[mapName]=num
-                        end                        
-                        num=num+1
-                    end
-                end    
-            end         
+            if dun[mapName] then
+                VALUES["sameDungeon"]=dun[mapName]
+            else                 
+                VALUES["sameDungeon"]=nil
+            end
             
-            if VALUES["link"] ==1 then
-                doFullReport(findChars,channel,who,"item")
-            else                
-                doShortReport(findChars,channel,who,"item") 
-            end    
-    end)
+            VALUES["dungeon"]=getShortDungeonName(mapName)
+            local itemList,itemCount=checkDungeonHasItem(VALUES)                   
+            
+            if itemList then
+                chars[i]["extraLink"]=itemList
+				chars[i]["itemCount"]=itemCount				
+                findChars[num]=chars[i]				
+                if not dun[mapName] then
+                    dun[mapName]=num
+                end                        
+                num=num+1
+            end									
+        end    
+    end         
+    
+    if VALUES["link"] ==1 then
+        doFullReport(findChars,channel,who,"item")
+    else                
+        doShortReport(findChars,channel,who,"item") 
+    end        
 end
+
