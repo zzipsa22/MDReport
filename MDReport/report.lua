@@ -116,24 +116,24 @@ function doOnlyAffixReport(keyword,channel,who,callType)
         end         
         messageLines[1]="▶"..weekTitle.." 속성: "..affixText         
     elseif keyword=="all"then
-		local affixs={}
-		for i=1,4 do
-			local header=""
-			affixs[i]=GetAnyWeeksAffix(i,channel)
-			if not affixs[i] then break end
-			if i==1 then 
-				header="▶다음주"
-			else
-				header="▷"..i.."주뒤"
-			end
-			messageLines[i]=header.." 속성: "..affixs[i]
-		end
-		--[[
+        local affixs={}
+        for i=1,4 do
+            local header=""
+            affixs[i]=GetAnyWeeksAffix(i,channel)
+            if not affixs[i] then break end
+            if i==1 then 
+                header="▶다음주"
+            else
+                header="▷"..i.."주뒤"
+            end
+            messageLines[i]=header.." 속성: "..affixs[i]
+        end
+        --[[
         messageLines[1]="▶다음주 속성: "..GetAnyWeeksAffix(1,channel) 
         messageLines[2]="▷2주뒤 속성: "..GetAnyWeeksAffix(2,channel)
         messageLines[3]="▷3주뒤 속성: "..GetAnyWeeksAffix(3,channel)
         messageLines[4]="▷4주뒤 속성: "..GetAnyWeeksAffix(4,channel)        
-		]]
+        ]]
     else        
         messageLines=GetAffixFullDescription(keyword,channel)
     end
@@ -222,7 +222,7 @@ function MDRcolorizeForPrint(message)
         for k,v in pairs(icon_class_arrow) do            
             message=gsub(message,k,v)          
         end
-		for k,v in pairs(icon_class) do            
+        for k,v in pairs(icon_class) do            
             message=gsub(message,k,v)          
         end
         if strfind(message,"쐐기돌") then            
@@ -287,7 +287,7 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{완}","|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0.6:0:-5|t")
     message=gsub(message,"{미완}","|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0.6:0:-5|t")
     message=gsub(message,"{물}","|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0.6:0:-5|t")
-	
+    
     --폭군,경화    
     message=gsub(message,"{폭}","|T236401:0:::-4|t")
     message=gsub(message,"{경}","|T463829:0:::-4|t")    
@@ -302,14 +302,14 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{CN}","|cFFe7e7e7")
     message=gsub(message,"{CG}","|cFF6d6d6d")
     message=gsub(message,"{CX}","|r")
-
-	--아이템 보너스
-	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
-	message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
-	message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
-	message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
-	message=gsub(message,"{iE}","]|h|r")	
-	
+    
+    --아이템 보너스
+    message=gsub(message,"{iH}","|cffa335ee|Hitem:")
+    message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
+    message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
+    message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
+    message=gsub(message,"{iE}","]|h|r")    
+    
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull
@@ -415,7 +415,7 @@ function doShortReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]
-			local bestLevelCompleted=chars[i]["bestLevelCompleted"]
+            local bestLevelCompleted=chars[i]["bestLevelCompleted"]
             local runs=chars[i]["runs"]            
             local covenant=chars[i]["covenant"]
             local covenantID=MDRgetCovenantID(covenant)
@@ -434,15 +434,15 @@ function doShortReport(chars,channel,who,callType)
             else                
                 classStatus="{"..class.."}"                
             end       
-			local CompletedIcon=""
-			if bestLevelCompleted=="now" then				
-				CompletedIcon="{물}"
-			elseif bestLevelCompleted then
-				CompletedIcon="{완}"
-			elseif not bestLevelCompleted then
-				CompletedIcon="{미완}"					
-			end
-				
+            local CompletedIcon=""
+            if bestLevelCompleted=="now" then                
+                CompletedIcon="{물}"
+            elseif bestLevelCompleted then
+                CompletedIcon="{완}"
+            elseif not bestLevelCompleted then
+                CompletedIcon="{미완}"                    
+            end
+            
             if charName==meAddon then                
                 if channel=="ADDON_PARTY" then
                     onC=" |cff48ff00"
@@ -533,20 +533,18 @@ function doShortReport(chars,channel,who,callType)
         -- 한줄로 줄이기        
         local oneLineMessage={}
         local num=1
-        local maxNum=6		
-		if callType=="item" then
-			local length=0
-			for i=1,#chars do
-				local links=chars[i]["extraLink"]
-				length=length+strlen(links)						
-			end
-			local itemCount=math.floor(length/30)
-			if itemCount>=5 then
-				maxNum=2
-			else
-				maxNum=3
-			end
-		end
+        local maxNum=6       
+        
+        local length=0
+        for i=1,#messageLines do
+            local message=messageLines[i]
+            length=length+strlen(message)
+            if length>=240 then
+                maxNum=i-1
+                break
+            end                
+        end          
+        
         local lineNum=math.ceil(#messageLines/maxNum)
         local charPerLine=math.ceil(#messageLines/lineNum)    
         --print("총"..#messageLines.."캐릭/한줄당 "..charPerLine.."개/총 "..lineNum.."줄")
@@ -558,7 +556,7 @@ function doShortReport(chars,channel,who,callType)
             if #messageLines>maxNum then
                 num=math.floor((i-1)/charPerLine)+1                
             end            
-            oneLineMessage[num]=(oneLineMessage[num] or "")..messageLines[i]..space			
+            oneLineMessage[num]=(oneLineMessage[num] or "")..messageLines[i]..space            
         end
         --메세지라인 리셋셋
         messageLines=oneLineMessage
@@ -607,7 +605,7 @@ function doFullReport(chars,channel,who,callType)
             local best=chars[i]["best"]
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]
-			local bestLevelCompleted=chars[i]["bestLevelCompleted"]            
+            local bestLevelCompleted=chars[i]["bestLevelCompleted"]            
             local runs=chars[i]["runs"]            
             local scoreT=chars[i]["score"]
             local covenant=chars[i]["covenant"] 
@@ -620,16 +618,16 @@ function doFullReport(chars,channel,who,callType)
             if charName==meAddon then
                 online=" {OG}접속중"
             end
-			
-			local CompletedIcon=""
-			if bestLevelCompleted=="now" then				
-				CompletedIcon="{물}"
-			elseif bestLevelCompleted then
-				CompletedIcon="{완}"
-			elseif not bestLevelCompleted then
-				CompletedIcon="{미완}"					
-			end
-
+            
+            local CompletedIcon=""
+            if bestLevelCompleted=="now" then                
+                CompletedIcon="{물}"
+            elseif bestLevelCompleted then
+                CompletedIcon="{완}"
+            elseif not bestLevelCompleted then
+                CompletedIcon="{미완}"                    
+            end
+            
             local covenantIcon=""
             if covenant and covenant~="" and covenant ~=0 then
                 covenantIcon="{c"..MDRgetCovenantID(covenant).."}"
@@ -693,12 +691,12 @@ function doFullReport(chars,channel,who,callType)
                 end    
                 
                 local dungeonScore
-				if keyLink and scoreT[getShortDungeonName(keyName)] then
-					dungeonScore=scoreT[getShortDungeonName(keyName)]["점수"] or 0
-				else
-					dungeonScore=0
-				end
-		
+                if keyLink and scoreT[getShortDungeonName(keyName)] then
+                    dungeonScore=scoreT[getShortDungeonName(keyName)]["점수"] or 0
+                else
+                    dungeonScore=0
+                end
+                
                 dungeonScore=tonumber(dungeonScore)
                 
                 local dungeonColor
@@ -745,11 +743,11 @@ function doFullReport(chars,channel,who,callType)
             end            
             
             if isAddonMessage==1 then
-				if callType=="item" then
-					classStatus=class
-				else
-					classStatus=class..shortName.." "..parking
-				end
+                if callType=="item" then
+                    classStatus=class
+                else
+                    classStatus=class..shortName.." "..parking
+                end
                 
             else
                 classStatus=class.."("..shortName..parking..")"
@@ -873,3 +871,4 @@ function reportMessageLines(messageLines,channel,who,callType)
         end 
     end 
 end
+

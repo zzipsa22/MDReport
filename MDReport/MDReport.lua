@@ -770,9 +770,8 @@ function filterVALUES(VALUES)
                         end 
                         tips[3]=(tips[3] or 0)+1
                     end
-                end   
-                
-            elseif not callType["stat"] then 
+                end   			
+            elseif not callType["stat"] and not callType["spec"] then 
                 if not tips[4] or tips[4]<warns then
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
                         print("|cFFff0000▶|r"..MDRcolor("딜러",-1).." |cff00ff00장신구|r를 검색하려면 "..MDRcolor("도적",0,"능력치").."를 지정해야합니다. |cFF33FF99ex)|r "..MDRcolor("도적",0,"!민첩").."|cff00ff00!장신구|r") 
@@ -781,7 +780,7 @@ function filterVALUES(VALUES)
                 end   
                 return
                 
-            elseif not callType["role"] then 
+            elseif not callType["role"] and not callType["spec"] then 
                 if not tips[5] or tips[5]<warns then    
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then
                         local message,role

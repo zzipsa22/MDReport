@@ -557,6 +557,19 @@ function findCharAllItem(VALUES)
         if keyword["stat"] and not keyword["role"] then
             role="딜러"            
         end
+		if keyword["spec"] and not keyword["role"] then
+			local S=keyword["spec"]
+			if S=="회복" or S=="수양" or S=="복원" or S=="신성" or S=="운무" or S=="신기" then
+				role="힐러"
+			elseif S=="수호" or S=="양조" or S=="보호" or S=="방어" or S=="혈기" or S=="복수" then
+				role="탱커"
+			else
+				role="딜러"
+			end
+		end
+		if keyword["spec"] and not keyword["stat"] then
+			stat=keyword2["spec"]			
+		end
         if keyword["role"]=="힐러" then
             stat="지능"
         elseif keyword["role"]=="탱커" and not keyword["stat"] then
