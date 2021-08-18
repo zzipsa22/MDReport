@@ -4,8 +4,9 @@ local meGame,meAddon,krClass,className=MDR["meGame"],MDR["meAddon"],MDR["krClass
 local tips={}
 local warns=100
 local bonus="::::::::14:70::23:1:3524:1:28:1261:::"
-local bonus1="::::::::60:268::23:1:3524:1:28:749:::::" ;--일반
-local bonus2="::::::::50:65::16:5:6536:6516:6513:1514:4786::::" ;--메카
+local bonus1="::::::::60:268::23:1:3524:1:28:749:::::" ;--1/12강
+local bonus9="::::::::60:70::16:6:7617:7359:6652:7575:1550:6646:1:28:1279:::::" --9/12강
+local bonus2=":6204:::::::60:70::54:5:7732:7359:6652:1550:6646:1:28:2042:::::4897" ;--시장하드
 local dungeonTable={
     ["투기장"]={
         "고통의 투기장",
@@ -291,13 +292,13 @@ function checkSpecCanUseStat(class,stat)
     return can
 end
 
-function getBonusIDs(dungeon)
+function getBonusIDs(dungeon,level)
     local bonus
     if dungeon then
         if dungeon=="작업" or dungeon=="고철"  then
             bonus=bonus2
         else 
-            bonus=bonus1             
+            bonus=bonus9             
         end         
     end
     return bonus
@@ -315,9 +316,10 @@ function checkDungeonHasItem(VALUES)
         role=VALUES["role"]  
         sameDungeon=VALUES["sameDungeon"]
         filter=VALUES["filter"]
+		level=VALUES["level"]
     end  
     
-    local bonus=getBonusIDs(dungeon)    
+    local bonus=getBonusIDs(dungeon,level)    
     local dropTable=getDungeonDropTable(dungeon)
     
     local thisDungeonHasItem=0
@@ -632,7 +634,7 @@ function findCharAllItem(VALUES)
         filter="trinket"              
     end      
     --print(filter)
-    VALUES={}
+    --VALUES={}
     VALUES["spec"]=spec
     VALUES["stat"]=stat
     VALUES["category"]=category
