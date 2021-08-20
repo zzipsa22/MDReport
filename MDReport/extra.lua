@@ -615,7 +615,7 @@ function MDRCommands(msg, editbox)
         n2=playerName
         m1=MDRcolor(krClass,0,"!"..playerName).." 입력."
     end
-    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("계승",0,"점수")
+    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("계승",0,"점수")..", "..MDRcolor("회색",0,"무기")..", "..MDRcolor("초록",0,"장신구")
     if not cmd or cmd=="도움말" or cmd=="!도움말" or cmd=="도움" or cmd=="!도움" or cmd=="help" or cmd=="" or cmd=="?" or cmd=="@"then
         
         local length=MDR["textLength"]
@@ -679,16 +679,28 @@ function MDRCommands(msg, editbox)
             
             messageLines[#messageLines+1]="|cffC41F3B▶!속성|r : 이번주 쐐기 속성을 출력합니다. '다음주' '다다음주' 등과 조합해서 사용할 수 있습니다. "..E..G.."|cffC41F3B속성|r, "..P.."지난주|cffC41F3B속성|r, "..G.."다다음주|cffC41F3B속성|r"
             messageLines[#messageLines+1]="|cffC41F3B▶!다음속성|r : 다가올 4주 동안의 쐐기 속성을 출력합니다."
-        elseif args=="무기" then      
-            messageLines[#messageLines+1]=helpHead..MDRcolor("회색",0,"'무기'")  
+        elseif args=="무기" then   
+			
+            messageLines[#messageLines+1]=helpHead..MDRcolor("회색",0,"'무기'")
             
-            messageLines[#messageLines+1]="▶|cFF80e7EB!전문화|r, |cFFFFF569!능력치|r와 |cFFaaaaaa!무기|r, |cFFF5aCdA!무기범주|r, |cffC79C6E!무기종류|r, |cff8787ED!던전이름|r 등을 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. "..E..G.."|cFF80e7EB!회드|r|cFFaaaaaa!무기|r, |cFFFFF569!지능|r|cffC79C6E!단검|r, |cffC79C6E!방패|r, |cFFFFF569!민첩|r|cFFF5aCdA!원거리|r, |cFFFFF569!힘|r|cFFF5aCdA!한손|r, |cFF80e7EB!고술|r|cff8787ED!아탈|r, |cFF80e7EB!양조|r|cffC79C6E!장창|r"
-            
+            messageLines[#messageLines+1]="▶|cFF80e7EB!{전문화}|r, 혹은 |cFFFFF569!{능력치}|r를, |cFFaaaaaa!무기|r, |cFFF5aCdA!{무기범주}|r, |cffC79C6E!{무기종류}|r, |cff8787ED!{던전이름}|r 등과 조합하여 원하는 무기를 드랍하는 던전의 돌을 검색할 수 있습니다. 대부분의 클래스는 |cFF80e7EB!{전문화}|r를 지정해야 하지만 "..MDRcolor("사제")..","..MDRcolor("마법사")..","..MDRcolor("흑마법사")..","..MDRcolor("악마사냥꾼").."은 클래스 이름으로도 검색할 수 있습니다."
+			messageLines[#messageLines+1]="  -'"..G.."|cFFFF7D0A회드|r|cFFaaaaaa!무기|r' ▶ |cFFFF7D0A회드|r로 사용 가능한 모든 |cFFaaaaaa무기/보조장비|r를 검색."
+			messageLines[#messageLines+1]="  -'"..G.."|cFF00FF96풍운|r|cFFF5aCdA!한손|r' ▶ |cFF00FF96풍운|r으로 사용 가능한 모든 |cFFF5aCdA한손|r 무기를 검색."
+			messageLines[#messageLines+1]="  -'"..G.."|cFFFFF569지능|r|cFFF5aCdA!양손|r' ▶ |cFFFFF569지능|r 붙은 모든 모든 |cFFF5aCdA양손|r 무기를 검색."
+            messageLines[#messageLines+1]="  -'"..P.."|cFF00FF96양조|r|cffC79C6E!장창|r' ▶ |cFF00FF96양조|r로 사용 가능한 모든 |cffC79C6E장창|r 을 검색."
+			messageLines[#messageLines+1]="  -'"..P.."|cFF0070DE복술|r|cff8787ED!티르|r' ▶ |cff8787ED티르너|r에서 드랍되는 |cFF0070DE복술|r로 사용 가능 |cFFaaaaaa무기/보조장비|r를 검색."
+			messageLines[#messageLines+1]="  -'"..P.."|cffC79C6E방패|r' ▶ |cffC79C6E방패|r가 드랍되는 모든 던전을 요청."
+			messageLines[#messageLines+1]="|cffff0000▶|r아이템 검색의 기준은 |cffffffff'보유중인 쐐기돌 중에서'|r이기 때문에 |cffff0000검색 결과가 없을 수도 있습니다.|r "
+			
         elseif args=="장신구" then 
             messageLines[#messageLines+1]=helpHead..MDRcolor("초록",0,"'장신구'")      
             
-            messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r와 |cFF80e7EB!역할|r, |cFFFFF569!능력치|r를 조합하면 특정 장신구를 드랍하는 던전의 돌을 검색할 수 있습니다. "..E.."|cFF80e7EB!힐러|r|cFF00ff00!장신구|r, |cFFFFF569!민첩|r|cFF00ff00!장신구|r"
-            messageLines[#messageLines+1]="▷|cFFaaaaaa!무기|r는 "..MDRcolor(krClass,0,"!".."전문화").."와, |cFF00ff00!장신구|r는 |cFF80e7EB!역할|r과 조합 한다고 생각하시면 기억하기 쉽습니다."
+            messageLines[#messageLines+1]="▶|cFF00ff00!장신구|r를 "..MDRcolor(krClass,0,"!".."{전문화}").."혹은 |cFF80e7EB!{역할}|r, |cFFFFF569!{능력치}|r와 함께 검색하면 해당 |cFF00ff00장신구|r를 드랍하는 던전의 돌을 검색할 수 있습니다. 장신구는 "..MDRcolor(krClass,0,"클래스").."가 아닌 |cFF80e7EB역할|r에 따라 달라지기 때문에 "..MDRcolor(krClass,0,"전문화").." 혹은 |cFF80e7EB역할|r을 지정해야합니다."
+            
+			messageLines[#messageLines+1]="  -'"..G.."|cFFFF7D0A수드|r|cFF00ff00!장신구|r' ▶ |cFFFF7D0A수드|r로 사용 가능한 모든 |cFF00ff00장신구|r를 검색."
+			messageLines[#messageLines+1]="  -'"..P.."|cFF80e7EB힐러|r|cFF00ff00!장신구|r' ▶ |cFF80e7EB힐러|r로 사용 가능한 모든 |cFF00ff00장신구|r를 검색."
+			messageLines[#messageLines+1]="  -'"..P.."|cFFFFF569지능|r|cFF00ff00!장신구|r' ▶ |cFFFFF569지능|r |cFF80e7EB딜러|r로 사용 가능한 모든 |cFF00ff00!장신구|r를 검색."
+			messageLines[#messageLines+1]="|cffff0000▶|r아이템 검색의 기준은 |cffffffff'보유중인 쐐기돌 중에서'|r이기 때문에 |cffff0000검색 결과가 없을 수도 있습니다.|r "
             
         elseif args=="?" or args=="주사위" then  
             messageLines[#messageLines+1]=helpHead..MDRcolor("하늘",0,"'주사위'")   

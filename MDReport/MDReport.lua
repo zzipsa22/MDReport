@@ -737,7 +737,7 @@ function filterVALUES(VALUES)
             
             --장신구 검색
         elseif (
-            (callType["trinket"] and (callType["role"] or callType["stat"] or callType["spec"])) or
+            (callType["trinket"] and (callType["role"] or callType["stat"] or callType["class"] or callType["spec"])) or
             (callType["stat"] and callType["dungeon"] and not callType["category"]) or
             (callType["role"] and callType["dungeon"])  
         )then  
@@ -773,7 +773,12 @@ function filterVALUES(VALUES)
                         end 
                         tips[3]=(tips[3] or 0)+1
                     end
-                end   			
+                end
+			elseif callType["class"] then
+				if who==meGame then
+                    print("|cFFff0000▶|r 클래스로는 |cff00ff00장신구|r를 검색할 수 없습니다. "..MDRcolor("도적",0,"!{능력치}").."나 "..MDRcolor("하늘",0,"!{역할}")..", 또는 "..MDRcolor(krClass,0,"!".."{전문화}").."를 지정해주세요. |cFF33FF99ex)|r "..P..MDRcolor("드루",0,"조드").."|cff00ff00!장신구|r, "..G..MDRcolor("하늘",0,"힐러").."|cff00ff00!장신구|r")
+					return
+                end 			
             elseif not callType["stat"] and not callType["spec"] then 
                 if not tips[4] or tips[4]<warns then
                     if who==meGame and callType["trinket"] and not callType["dungeon"] then

@@ -70,7 +70,7 @@ local dungeonTable={
             {"민첩","한손도검",179328,"치유"},
             {"힘","한손둔기",179340,"치특"},
             {"민첩","석궁",179348,"특치"},
-            {"힘/민첩/지능","장신구",179350 ,"힐러/딜러/탱커","양자장치",true},
+            {"힘/지능/민첩","장신구",179350 ,"힐러/딜러/탱커","양자장치",true},
             {"힘","장신구", 179342,"딜러/탱커","마력수정",true},
             {"힘/민첩","장신구", 179331,"탱커","피칠갑",true},
             {"민첩","장신구", 179356,"딜러/탱커","어둠토템"},
@@ -463,11 +463,12 @@ function checkDungeonHasItem(VALUES)
         
         --장신구를 찾는 경우
     elseif filter=="trinket" then 
+		
         for j=1,#dropTable do
             if dropTable[j][2]=="장신구" and (
                 (strfind(dropTable[j][1],stat) and strfind(dropTable[j][4],role)) 
                 --or --스탯과 역할이 일치
-                --(strfind(dropTable[j][1],stat) and role=="탱커")  --스탯이 일치하는 탱커          
+                --(strfind(dropTable[j][1],stat) and role=="탱커" and dropTable[j][4]=="탱커")  --스탯이 일치하는 탱커          
             ) then            
                 local header
                 if dropTable[j][4]=="탱커"and role=="탱커" then
