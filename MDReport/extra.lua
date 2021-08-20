@@ -285,13 +285,31 @@ end
 function MDRcolor(keyword,type,keyword2)
     local text,color
     if not keyword then return end
-    for k,v in pairs(classInfo) do    
+	local found={}
+	local founded=false
+	for k,v in pairs(classInfo) do
+		for i=1,#v do
+			if k==keyword or keyword==v[i] then
+				found[k]=v
+				founded=true
+			end
+		end
+	end
+	if not founded then
+		for k,v in pairs(classInfo) do
+			for i=1,#v do
+				if strfind(keyword,v[i]) or strfind(keyword,k) then
+					found[k]=v
+				end
+			end
+		end
+	end		
+	
+    for k,v in pairs(found) do
         for i=1,#v do
-            if type==6 then
-                if k==keyword or keyword==v[i] then          
-                    return k
-                end 
-            end      
+            if type==6 and (k==keyword or keyword==v[i]) then        
+                return k 
+            end
             if not strfind(keyword,"%[") and (strfind(keyword,v[i]) or strfind(keyword,k) or type==-1 or type==-2) then
                 color=v[1]         
                 if not type or type==1 then

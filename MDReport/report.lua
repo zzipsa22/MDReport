@@ -304,12 +304,26 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{CX}","|r")
     
     --아이템 보너스
-    message=gsub(message,"{iH}","|cffa335ee|Hitem:")
-    message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
-    message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
-    message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
-    message=gsub(message,"{iE}","]|h|r")    
-    
+	if strfind(message,"{iH") then	
+		local CM="|cffff8800치|r|cffbb88ff특|r"
+		local CH="|cffff8800치|r|cffffff00가|r"
+		local CV="|cffff8800치|r|cff88bbff유|r"
+		local HV="|cffffff00가|r|cff88bbff유|r"
+		local HM="|cffffff00가|r|cffbb88ff특|r"
+		local VM="|cff88bbff유|r|cffbb88ff특|r"
+		message=gsub(message,"치특",CM)
+		message=gsub(message,"치가",CH)
+		message=gsub(message,"치유",CV)
+		message=gsub(message,"가유",HV)
+		message=gsub(message,"가특",HM)
+		message=gsub(message,"유특",VM)
+		message=gsub(message,"{iH}","|cffa335ee|Hitem:")
+		message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
+		message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
+		message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
+		message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
+		message=gsub(message,"{iE}","]|h|r")    		
+    end
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull

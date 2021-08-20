@@ -675,7 +675,10 @@ function filterVALUES(VALUES)
     if callType["score"] then        
         MDRreportScore(VALUES)
         
-    elseif #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] and (callType["item"] or callType["trinket"] or callType["stat"] 
+    elseif #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] 
+		and (callType["item"] 
+		or callType["trinket"] 
+		or callType["stat"] 
         or callType["spec"] 
         or callType["class"] 
         or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면  
