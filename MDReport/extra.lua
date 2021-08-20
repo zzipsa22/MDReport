@@ -623,7 +623,7 @@ function MDRCommands(msg, editbox)
         n2=playerName
         m1=MDRcolor(krClass,0,"!"..playerName).." 입력."
     end
-    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("계승",0,"점수")..", "..MDRcolor("회색",0,"무기")..", "..MDRcolor("초록",0,"장신구")
+    local cmdList="|cffC79C6E돌|r, |cff8787ED주차|r, |cff40C7EB던전|r, |cffFF7D0A직업|r, |cffA9D271닉네임|r, |cffC41F3B속성|r, "..MDRcolor("하늘",0,"주사위")..", "..MDRcolor("성약")..", "..MDRcolor("핑크",0,"모드")..", "..MDRcolor("계승",0,"점수")..", "..MDRcolor("회색",0,"무기")..", "..MDRcolor("초록",0,"장신구")..", "..MDRcolor("도적",0,"기타")
     if not cmd or cmd=="도움말" or cmd=="!도움말" or cmd=="도움" or cmd=="!도움" or cmd=="help" or cmd=="" or cmd=="?" or cmd=="@"then
         
         local length=MDR["textLength"]
@@ -755,7 +755,14 @@ function MDRCommands(msg, editbox)
             messageLines[#messageLines+1]="  -'"..G..S.."|cff8fd1d8!죽상|r"..MDRcolor("노랑",0,"15")..MDRcolor(krClass,0,"!"..n1).."' ▶ "..MDRcolor(krClass,0,n1).."님에게 |cff8fd1d8죽상|r"..MDRcolor("노랑",0,"15").."를 시클시 예상 점수를 "..GG.."로 요청."
             messageLines[#messageLines+1]="  -'"..P..ME..S.."|cff8fd1d8!역몰|r"..MDRcolor("노랑",0,"18").."' ▶ "..ME..MDRcolor("노랑",0," 모든 캐릭터").."가 |cff8fd1d8역몰|r"..MDRcolor("노랑",0,"18").."을 시클시 예상 점수를 "..PP.." 혹은 "..WW.."로 출력."
             --messageLines[#messageLines+1]="▷".."부캐의 정보를 알고자 할 경우, |cFF33FF99[2.9.0]|r+ 부터 |cffA9D271{닉네임}|r 혹은 |cffFF7D0A{직업명}|r 검색결과에 "..S.." 가 포함되도록 변경되었으므로 해당 기능을 이용하시면 됩니다. "..E..G..MDRcolor(krClass,0,n1)..", "..P.."|cffFFF569도적|r"
-            
+        elseif args=="기타" then  
+			messageLines[#messageLines+1]=helpHead..MDRcolor("노랑",0,"'기타 명령어'")
+			messageLines[#messageLines+1]="  -'|cffffff00/돌|r".."' ▶ 보유한 |cffffffff모든 돌|r을 개인용 채팅창에 출력합니다."
+			messageLines[#messageLines+1]="  -'|cffffff00/기록|r".."' ▶ |cffffffff현재|r 캐릭터의 이번주 |cffffffff쐐기 기록|r을 개인용 채팅창에 출력합니다."
+			messageLines[#messageLines+1]="  -'|cffffff00/주차|r".."' ▶ |cffffffff모든|r 캐릭터의 이번주 |cffffffff주차 내용|r을 개인용 채팅창에 출력합니다."
+			messageLines[#messageLines+1]="  -'|cffffff00/금고|r".."' ▶ 캐릭별 주차 현황을 채팅창에 개인용 채팅창에 출력(='|cffffff00/주차|r')하고 |cffffffff금고 UI|r를 엽니다."
+			messageLines[#messageLines+1]="  -'|cffffff00"..P.."석주|r' ▶ 던전에 입장한 경우, 혹은 던전을 진행중인 경우 해당 던전의 |cffffffff쐐기돌을 소유한 사람|r을 찾아냅니다."
+			messageLines[#messageLines+1]="  -'|cffffff00"..P.."새돌|r' ▶ 던전을 클리어한 경우 시클여부와 |cffffffff새로 받은 돌|r이 무엇인지 출력합니다."
         else
             return
         end    
