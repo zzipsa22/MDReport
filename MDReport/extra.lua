@@ -16,8 +16,10 @@ C_Timer.After(10, function()
             if MDR["guide"]<50 then
                 print("|cFF33FF99▶쐐기돌 보고서|r ["..MDRcolor("노랑",0,MDR["version"]).."]|r "..MDRcolor("하늘",0,"간편 확인").." 명령어: |cffffff00'/돌'|r |cffffff00'/금고'|r |cffffff00'/기록'|r")
                 
-                print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 기능에 "..MDRcolor("계승",0,"점수 예측").." 기능을 추가하였습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
-                
+                --print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 기능에 "..MDRcolor("계승",0,"점수 예측").." 기능을 추가하였습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
+				
+                print(MDRcolor("수도",0,"▶")..MDRcolor("회색",0,"무기").." 와 "..MDRcolor("초록",0,"장신구").." 검색 기능을 강화했습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 무기'|r, |cffffff00'/! @ 장신구'|r]|r")
+				
                 print(MDRcolor("수도",0,"▶").."도움이 필요하신가요? |cff9d9d9d [도움말 호출: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
                 
                 MDRtoggleMode()
@@ -577,6 +579,9 @@ function MDRCommandsParty(msg, editbox)
     if msg=="금고" then
         MDRVault ()
         return
+	elseif msg=="기록" or msg=="횟수" then
+		MDRhistory("")
+		return
     end
     if IsInGroup() then
         MDRsendAddonMessage("!"..msg,"PARTY",meGame)    
@@ -594,6 +599,9 @@ function MDRCommandsOfficer(msg, editbox)
     if msg=="금고" then
         MDRVault ()
         return
+	elseif msg=="기록" or msg=="횟수" then
+		MDRhistory("")
+		return
     end
     MDRsendAddonMessage("!"..msg,"OFFICER",meGame)      
     return    
@@ -779,10 +787,13 @@ function MDRCommands(msg, editbox)
         if strfind(strsub(msg,1,1),"!") then
             msg=strsub(msg,2,-1)
         end
-        if msg=="금고" then
-            MDRVault ()
-            return
-        end
+		if msg=="금고" then
+			MDRVault ()
+			return
+		elseif msg=="기록" or msg=="횟수" then
+			MDRhistory("")
+			return
+		end
         local m=MDRconfig.MannerMode or 0
         local at=""
         if m==1 then--매너모드
