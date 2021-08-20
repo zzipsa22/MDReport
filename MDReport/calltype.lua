@@ -258,12 +258,14 @@ local callTypeTable={
     ["몰락지"]={"dungeon", "역병"},
     ["몰락"]={"dungeon", "역병"},
     ["역병"]={"dungeon", "역병"},
+	["약병"]={"dungeon", "역병"},
     
     ["고통의투기장"]={"dungeon", "투기장"},
     ["고통"]={"dungeon", "투기장"},
     ["고투"]={"dungeon", "투기장"},
     ["투기장"]={"dungeon", "투기장"},
     ["투기"]={"dungeon", "투기장"},
+	["루비"]={"dungeon", "투기장"},
     
     ["전당"]={"dungeon", "속죄"},
     ["속죄의전당"]={"dungeon", "속죄"},
@@ -271,6 +273,9 @@ local callTypeTable={
     ["속전"]={"dungeon", "속죄"},
     
     ["저편"]={"dungeon", "저편"},
+	["양자"]={"dungeon", "저편"},
+	["양자장치"]={"dungeon", "저편"},
+	["피칠갑"]={"dungeon", "저편"},
     
     ["죽음의상흔"]={"dungeon", "죽상"},
     ["죽상"]={"dungeon", "죽상"},
@@ -278,6 +283,7 @@ local callTypeTable={
     ["상흔"]={"dungeon", "죽상"},
     
     ["티르너사이드의안개"]={"dungeon", "티르너"},
+	["변신수"]={"dungeon", "티르너"},
     ["안개"]={"dungeon", "티르너"},
     ["티르"]={"dungeon", "티르너"},
     ["티르너"]={"dungeon", "티르너"},
