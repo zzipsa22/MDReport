@@ -591,7 +591,7 @@ function filterVALUES(VALUES)
         local CL=strsub(cmdLines,-5,-3)
 
 		if not eul then eul=MDRko(CL,"을") end
-		if not eun then eul=MDRko(CL,"은") end        
+		if not eun then eun=MDRko(CL,"은") end        
         
         local affixIcon,affix,affixInfo="","",""        
         if isThisWeekHasSpecificAffix(9) then
