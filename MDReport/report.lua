@@ -305,31 +305,9 @@ function MDRcolorizeForPrint(message)
     
     --아이템 보너스
 	if strfind(message,"{iH") then	
-		local CM="|cffff8800치|r|cffbb88ff특|r"
-		local CH="|cffff8800치|r|cffffff00가|r"
-		local CV="|cffff8800치|r|cff88bbff유|r"
-		local HV="|cffffff00가|r|cff88bbff유|r"
-		local HM="|cffffff00가|r|cffbb88ff특|r"
-		local HC="|cffffff00가|r|cffff8800치|r"
-		local VM="|cff88bbff유|r|cffbb88ff특|r"
-		local VH="|cff88bbff유|r|cffffff00가|r"
-		local VC="|cff88bbff유|r|cffff8800치|r"
-		message=gsub(message,"치특",CM)
-		message=gsub(message,"치가",CH)
-		message=gsub(message,"치유",CV)
-		message=gsub(message,"가유",HV)
-		message=gsub(message,"가특",HM)
-		message=gsub(message,"가치",HC)
-		message=gsub(message,"유특",VM)
-		message=gsub(message,"유치",VC)
-		message=gsub(message,"유가",VH)
-		message=gsub(message,"{iH}","|cffa335ee|Hitem:")
-		message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
-		message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
-		message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
-		message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
-		message=gsub(message,"{iE}","]|h|r")    		
+ 		message=MDRcolorizeForItem(message)
     end
+	
     --던전 색입히기
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull
@@ -344,6 +322,62 @@ function MDRcolorizeForPrint(message)
     return message
 end
 
+function MDRcolorizeForItem(message)
+	local CM="|cffff8800치|r|cffbb88ff특|r"
+	local CH="|cffff8800치|r|cffffff00가|r"
+	local CV="|cffff8800치|r|cff88bbff유|r"
+	local HV="|cffffff00가|r|cff88bbff유|r"
+	local HM="|cffffff00가|r|cffbb88ff특|r"
+	local HC="|cffffff00가|r|cffff8800치|r"
+	local VM="|cff88bbff유|r|cffbb88ff특|r"
+	local VH="|cff88bbff유|r|cffffff00가|r"
+	local VC="|cff88bbff유|r|cffff8800치|r"
+	local MC="|cffbb88ff특|r|cffff8800치|r"
+	local MH="|cffbb88ff특|r|cffffff00가|r"
+	local MV="|cffbb88ff특|r|cff88bbff유|r"
+	message=gsub(message,"치특",CM)
+	message=gsub(message,"치가",CH)
+	message=gsub(message,"치유",CV)
+	message=gsub(message,"가유",HV)
+	message=gsub(message,"가특",HM)
+	message=gsub(message,"가치",HC)
+	message=gsub(message,"유특",VM)
+	message=gsub(message,"유치",VC)
+	message=gsub(message,"유가",VH)
+	message=gsub(message,"특치",MC)
+	message=gsub(message,"특가",MH)
+	message=gsub(message,"특유",MV)
+	
+	message=gsub(message,"양손도검","|T135349:0:::-4|t")
+	message=gsub(message,"양손둔기","|T133053:0:::-4|t")
+	message=gsub(message,"양손도끼","|T132400:0:::-4|t")	
+	
+	message=gsub(message,"단검","|T135650:0:::-4|t")
+	message=gsub(message,"도검","|T135351:0:::-4|t")
+	message=gsub(message,"둔기","|T133054:0:::-4|t")
+	message=gsub(message,"도끼","|T132408:0:::-4|t")	
+	message=gsub(message,"전투검","|T3084656:0:::-4|t")
+	message=gsub(message,"장착무기","|T132938:0:::-4|t")	
+	
+	message=gsub(message,"지팡이","|T3461503:0:::-4|t")
+	message=gsub(message,"장창","|T3054897:0:::-4|t")
+	
+	message=gsub(message,"방패","|T3482400:0:::-4|t")
+	message=gsub(message,"보조장비","|T3488376:0:::-4|t")
+	message=gsub(message,"마법봉","|T135477:0:::-4|t")
+	
+	message=gsub(message,"활","|T135496:0:::-4|t")
+	message=gsub(message,"석궁","|T135537:0:::-4|t")
+	message=gsub(message,"총","|T135615:0:::-4|t")
+		
+	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
+	message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
+	message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
+	message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
+	message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
+	message=gsub(message,"{iE}","]|h|r")   
+	return message
+end
 
 function MDRprintAddonMessage(...) 
     local yourStatus=MDRgetCurrentStatus()

@@ -423,7 +423,8 @@ function filterVALUES(VALUES)
         
         local cmdLines,space="",", "
         local callTypes={}
-        
+        local eun,eul
+		
         for i=1,#callTypeT do 
             local type=0
             local word=keyword[callTypeB[i]]
@@ -471,7 +472,28 @@ function filterVALUES(VALUES)
                 what=MDRcolor(word,type)
             elseif CharName then
                 word=CharName
-                what=MDRcolor(word,type)   
+                what=MDRcolor(word,type)  
+			elseif callTypeT[i][1]=="itemID" then				
+				local dungeon=callTypeT[i][4]
+				local itemID=callTypeT[i][3]
+				local itemIcon="\124T"..callTypeT[i][5]..":0:::-4\124t "
+				local bonus
+				local CL=strsub(word,-3,-1)
+				eul=MDRko(CL,"을")	
+				eun=MDRko(CL,"은")
+				
+                if itemID==178715 then --오카리나
+                    bonus="{iBO}"
+                elseif itemID==178708 then --변신수
+                    bonus="{iBB}"
+                else
+                    bonus="{iB}"
+                end							
+				local item="{iH}"..itemID..bonus..itemIcon..MDRcolor("영웅",0,word).."{iE}"
+				item=MDRcolorizeForItem(item)
+				
+				icon=MDRgetCovenantIcon(dungeon)				
+				what=icon.."|cffffff00"..dungeon.."|r : "..item
             else
                 if callTypeT[i][1]=="affix" then
                     icon="|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0:0:-5|t"
@@ -567,8 +589,9 @@ function filterVALUES(VALUES)
         
         
         local CL=strsub(cmdLines,-5,-3)
-        local eul=MDRko(CL,"을")  
-        local eun=MDRko(CL,"은")
+
+		if not eul then eul=MDRko(CL,"을") end
+		if not eun then eul=MDRko(CL,"은") end        
         
         local affixIcon,affix,affixInfo="","",""        
         if isThisWeekHasSpecificAffix(9) then
@@ -675,13 +698,15 @@ function filterVALUES(VALUES)
     if callType["score"] then        
         MDRreportScore(VALUES)
         
-    elseif #callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] 
+    elseif (#callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] 
 		and (callType["item"] 
 		or callType["trinket"] 
 		or callType["stat"] 
         or callType["spec"] 
+		or callType["itemID"]
         or callType["class"] 
-        or callType["role"]) then --명령어가 2개이상이고 아이템검색을 요구하면  
+        or callType["role"]))
+		or callType["itemID"] then --아이템검색을 요구하면  
         
         --무기 사용 가능 여부 체크
         if ((callType["spec"] or callType["class"]) and callType["specificitem"]) then 
@@ -734,7 +759,8 @@ function filterVALUES(VALUES)
             if who==meGame then				
                 print("|cFFff0000▶장신구|r는 |cff8787ED!던전이름|r과 단독으로 조합할 수 없습니다. "..MDRcolor("도적",0,"능력치").."나 "..MDRcolor("역할",-1).."을 지정해주세요. (|cFF33FF99ex|r."..MDRcolor("도적",0,"!힘").."|cff8787ED!"..keyword["dungeon"][1].."|r or "..MDRcolor("!힐러",-1).."|cff8787ED!"..keyword["dungeon"][1].."|r)")   
             end 
-            
+        elseif callType["itemID"] then
+			VALUES["comb"]="itemID" 
             --장신구 검색
         elseif (
             (callType["trinket"] and (callType["role"] or callType["stat"] or callType["class"] or callType["spec"])) or

@@ -18,7 +18,7 @@ local dungeonTable={
             {"힘","한손도끼", 178863,"특치"},
             {"힘/지능","방패", 178867,"가치"},
             {"지능","보조장비", 178868,"가유"},
-            {"지능","장신구",178809,"힐러/딜러","영혼루비",true},            
+            {"지능","장신구",178809,"힐러/딜러","영혼루비",133250},            
             {"힘/민첩","장신구",178811,"딜러","전서"},            
             {"힘","장신구",178808,"딜러/탱커","내장"},            
             {"지능","장신구",178810,"힐러","혼령약병"},            
@@ -40,7 +40,7 @@ local dungeonTable={
             {"민첩","장창",180096,"특유"},
             {"민첩","지팡이",180097,"치특"},
             {"민첩","한손도끼",180095,"치특"},
-            {"민첩","활",180112,"치가","철학자"},            
+            {"민첩","활",180112,"치가","철학자",3490572},            
             {"민첩","장신구",180116,"딜러/탱커","령 전지"},
             {"힘","장신구", 180118,"딜러/탱커","령의 장"},
             {"지능","장신구", 180119,"힐러","집정관"},
@@ -53,12 +53,12 @@ local dungeonTable={
         {
             {"민첩","장창",178929,"가치"},
             {"민첩","단검",178928,"치특"},
-            {"민첩","한손도검",178754,"가특","수포폭풍"},
+            {"민첩","한손도검",178754,"가특","수포폭풍",3502009},
             {"힘","한손둔기",178752,"유가"},
             {"지능","단검",178753,"치특"},
             {"힘/민첩","장신구", 178770,"탱커","끈적장기"},
             {"지능/민첩","장신구", 178769,"딜러","분열수액"},
-            {"힘/민첩","장신구", 178771,"딜러","부패약병",true},
+            {"힘/민첩","장신구", 178771,"딜러","부패약병",3536192},
         }
     }, 
     ["저편"]={
@@ -70,9 +70,9 @@ local dungeonTable={
             {"민첩","한손도검",179328,"치유"},
             {"힘","한손둔기",179340,"치특"},
             {"민첩","석궁",179348,"특치"},
-            {"힘/지능/민첩","장신구",179350 ,"힐러/딜러/탱커","양자장치",true},
-            {"힘","장신구", 179342,"딜러/탱커","마력수정",true},
-            {"힘/민첩","장신구", 179331,"탱커","피칠갑",true},
+            {"힘/지능/민첩","장신구",179350 ,"힐러/딜러/탱커","양자장치",2000857},
+            {"힘","장신구", 179342,"딜러/탱커","마력수정",1033908},
+            {"힘/민첩","장신구", 179331,"탱커","피칠갑",1526632},
             {"민첩","장신구", 179356,"딜러/탱커","어둠토템"},
         }
     }, 
@@ -101,7 +101,7 @@ local dungeonTable={
             {"힘","한손도끼",178711,"유가"},
             {"힘/지능","방패",178712,"특가"},
             {"민첩","장신구", 178715,"딜러/탱커","오카리나"},
-            {"지능","장신구", 178708,"힐러/딜러","변신수",true},            
+            {"지능","장신구", 178708,"힐러/딜러","변신수",838551},            
         }
     }, 
     ["핏심"]={
@@ -305,7 +305,7 @@ function getBonusIDs(dungeon,level)
 end
 
 function checkDungeonHasItem(VALUES)
-    local dungeon,spec,stat,category,link,item,sameDungeon,role,filter
+    local dungeon,spec,stat,category,link,item,sameDungeon,role,filter,itemID
     if VALUES~=nil then
         dungeon=VALUES["dungeon"]
         spec=VALUES["spec"]
@@ -317,8 +317,9 @@ function checkDungeonHasItem(VALUES)
         sameDungeon=VALUES["sameDungeon"]
         filter=VALUES["filter"]
         level=VALUES["level"]
+		itemID=VALUES["itemID"]
     end  
-    
+
     local bonus=getBonusIDs(dungeon,level)    
     local dropTable=getDungeonDropTable(dungeon)
     
@@ -338,7 +339,7 @@ function checkDungeonHasItem(VALUES)
     end
     
     if  dropTable==nil then return end            
-    
+	
     --스탯+무기범주를 찾는 경우
     if filter=="category" and category and stat then
         weaponTable=getCategoryTable(category)
@@ -363,10 +364,10 @@ function checkDungeonHasItem(VALUES)
                         local name,itemHeader="","{iH}"
 						local weaponType=gsub(dropTable[j][2],"한손","")
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
-                            name=dropTable[j][5]
+                            name="\124T"..dropTable[j][6]..":0:::-4\124t"..dropTable[j][5]
 							itemHeader="{iHL}"
 						else
-							name=dropTable[j][4].." "..weaponType
+							name=weaponType.." "..dropTable[j][4]
 						end
                         thisDungeonHas[itemNum]=itemHeader..dropTable[j][3].."{iB}"..name.."{iE}"  
                     end                           
@@ -392,10 +393,10 @@ function checkDungeonHasItem(VALUES)
                         local name,itemHeader="","{iH}"
 						local weaponType=gsub(dropTable[j][2],"한손","")
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
-                            name=dropTable[j][5]
+                            name="\124T"..dropTable[j][6]..":0:::-4\124t"..dropTable[j][5]
 							itemHeader="{iHL}"
 						else
-							name=dropTable[j][4].." "..weaponType
+							name=weaponType.." "..dropTable[j][4]
 						end
                         thisDungeonHas[itemNum]=itemHeader..dropTable[j][3].."{iB}"..name.."{iE}"    
                 end            
@@ -403,7 +404,38 @@ function checkDungeonHasItem(VALUES)
                 itemNum=itemNum+1            
             end        
         end 
-        
+		
+		--특정 아이템을 지정한 경우
+    elseif filter=="itemID" then
+		
+        for j=1,#dropTable do
+            if dropTable[j][3]==itemID then     
+                if sameDungeon then
+                    thisDungeonHas[itemNum]=sameDungeon
+                else  
+                    local name,itemHeader					
+					if dropTable[j][6] then
+						itemHeader="{iHL}"
+						name="\124T"..dropTable[j][6]..":0:::-4\124t "..dropTable[j][5]
+					else
+						itemHeader="{iH}"
+						name=dropTable[j][5]
+					end
+                    local bonus
+                    if dropTable[j][3]==178715 then --오카리나
+                        bonus="{iBO}"
+                    elseif dropTable[j][3]==178708 then --변신수
+                        bonus="{iBB}"
+                    else
+                        bonus="{iB}"
+                    end					
+                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..bonus..name.."{iE}"                                    
+                end                           
+                thisDungeonHasItem=1
+                itemNum=itemNum+1
+            end
+		end  	
+	
         --전문화를 지정한 경우
     elseif filter=="spec" and spec then                
         
@@ -448,10 +480,10 @@ function checkDungeonHasItem(VALUES)
                         local name,itemHeader="","{iH}"
 						local weaponType=gsub(dropTable[j][2],"한손","")
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
-                            name=dropTable[j][5]
+							name="\124T"..dropTable[j][6]..":0:::-4\124t "..dropTable[j][5]
 							itemHeader="{iHL}"
 						else
-							name=dropTable[j][4].." "..weaponType
+							name=weaponType.." "..dropTable[j][4]
 						end
                         thisDungeonHas[itemNum]=itemHeader..dropTable[j][3].."{iB}"..name.."{iE}"                     
                     end                            
@@ -470,25 +502,17 @@ function checkDungeonHasItem(VALUES)
                 --or --스탯과 역할이 일치
                 --(strfind(dropTable[j][1],stat) and role=="탱커" and dropTable[j][4]=="탱커")  --스탯이 일치하는 탱커          
             ) then            
-                local header
-                if dropTable[j][4]=="탱커"and role=="탱커" then
-                    header="탱"
-                elseif strfind(dropTable[j][4],"탱") and role=="탱커" then
-                    header=stat
-                elseif dropTable[j][4]=="힐러" and role=="힐러" then
-                    header="힐"
-                elseif strfind(dropTable[j][4],"힐") and role=="힐러" then
-                    header="지능"
-                elseif strfind(dropTable[j][4],"딜러") and role=="딜러" then
-                    header=stat
-                end            
-                
+  
                 if sameDungeon then
                     thisDungeonHas[itemNum]=sameDungeon
                 else  
-                    local name,itemHeader="","{iH}"
+                    local name,itemHeader					
 					if dropTable[j][6] then
 						itemHeader="{iHL}"
+						name="\124T"..dropTable[j][6]..":0:::-4\124t "..dropTable[j][5]
+					else
+						itemHeader="{iH}"
+						name=dropTable[j][5]
 					end
                     local bonus
                     if dropTable[j][3]==178715 then --오카리나
@@ -497,8 +521,8 @@ function checkDungeonHasItem(VALUES)
                         bonus="{iBB}"
                     else
                         bonus="{iB}"
-                    end
-                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..bonus..dropTable[j][5].."{iE}"                                  
+                    end					
+                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..bonus..name.."{iE}"                                  
                 end                           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
@@ -555,7 +579,9 @@ function findCharAllItem(VALUES)
     --print(comb)
     
     local stat=keyword["stat"] or keyword2["class"]
-    
+	
+    local itemID
+	
     local role=keyword["role"]     
     
     if comb=="Trinket"then
@@ -582,7 +608,11 @@ function findCharAllItem(VALUES)
         end        
         --print("role:"..role)
         --print("stat:"..stat)         
-    end    
+    end  
+
+	if comb=="itemID" then
+		itemID=keyword2["itemID"]
+	end
     
     if comb=="Class_Stat" then
         local newSpec
@@ -665,7 +695,9 @@ function findCharAllItem(VALUES)
     elseif comb=="Spec_Category" or comb=="Spec_Item" then 
         filter="spec"        
     elseif comb=="Trinket" then  
-        filter="trinket"              
+        filter="trinket"
+	elseif comb=="itemID" then  
+		filter="itemID"
     end      
     --print(filter)
     --VALUES={}
@@ -676,6 +708,7 @@ function findCharAllItem(VALUES)
     VALUES["role"]=role    
     VALUES["item"]=item     
     VALUES["filter"]=filter
+	VALUES["itemID"]=itemID
     
     --검색타입에 대한 알림
     if who==meGame and link~=1 then         
@@ -683,7 +716,7 @@ function findCharAllItem(VALUES)
         if not yourClass then yourClass=krClass end
         --local class=getCallTypeTable(keyword["spec"])[4] or getCallTypeTable(keyword["class"])[2] 
         
-        if (not tips[1] or tips[1]<warns) and link~=1 and comb~="Trinket" then
+        if (not tips[1] or tips[1]<warns) and link~=1 and comb~="Trinket" and comb~="itemID" then
             
             local message,weapon,spec,class,Class,eul,ro,LC,space,kwa
             
