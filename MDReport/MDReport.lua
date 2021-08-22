@@ -453,7 +453,7 @@ function filterVALUES(VALUES)
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 what=icon..MDRcolor(word,type)
             elseif callTypeT[i][1]=="score" then
-                icon="\124T463447:0:::-4\124t"
+                icon="\124T463447:0:::-5\124t"
                 if level then
                     what=icon..MDRcolor("계승",0,"예상 점수")                
                 else
@@ -1193,12 +1193,6 @@ function MDRreportScore(VALUES)
     ]]
     
     local messageLines={}
-    local tyr_head,tyr_end,tyr_name,for_head,for_end,for_name="","","","","",""
-    if isThisWeekHasSpecificAffix(9) then
-        tyr_head="▶"    
-    else
-        for_head="▶"
-    end
     
     for i=1,#findChars do
         local targetChar=findChars[i]
@@ -1328,7 +1322,7 @@ function MDRreportScore(VALUES)
                     for_color="{CC}"
                 end
                 
-                message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."{CX}"..tyr_clear..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_color..for_level.."{CX}"..for_clear..for_end.."]"
+                message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."{CX}"..tyr_clear.."｜"..MDRgetAffixIcon("경화")..for_color..for_level.."{CX}"..for_clear.."]"
                 tinsert(messageLines,message)
             end
         else -- !점수
@@ -1340,7 +1334,7 @@ function MDRreportScore(VALUES)
             local tyr_desc=MDRgetDungeonScore(targetChar,"폭군")
             local for_desc=MDRgetDungeonScore(targetChar,"경화")
             
-            message=charHead..MDRgetScoreColor(total,"total").."점 ["..tyr_head..MDRgetAffixIcon("폭군")..tyr_desc..tyr_end.."｜"..for_head..MDRgetAffixIcon("경화")..for_desc..for_end.."]"
+            message=charHead..MDRgetScoreColor(total,"total").."점 ["..MDRgetAffixIcon("폭군")..tyr_desc.." | "..MDRgetAffixIcon("경화")..for_desc.."]"
             tinsert(messageLines,message)
         end
         
@@ -1399,11 +1393,11 @@ end
 function MDRgetAffixIcon(affix)
     local t={}
     if isThisWeekHasSpecificAffix(9) then
-        t.tyra="{폭}폭군: "
-        t.fort="{경}"
+        t.tyra="{CW}▶{폭}폭군{CX}: "
+        t.fort="{경}:"
     else
-        t.tyra="{폭}"
-        t.fort="{경}경화: "
+        t.tyra="{폭}:"
+        t.fort="{CW}▶{경}경화{CX}: "
     end    
     if affix=="폭군" then
         return t.tyra

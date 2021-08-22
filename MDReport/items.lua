@@ -364,7 +364,7 @@ function checkDungeonHasItem(VALUES)
                         local name,itemHeader="","{iH}"
 						local weaponType=gsub(dropTable[j][2],"한손","")
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
-                            name="\124T"..dropTable[j][6]..":0:::-4\124t"..dropTable[j][5]
+                            name="\124T"..dropTable[j][6]..":0:::-5\124t"..dropTable[j][5]
 							itemHeader="{iHL}"
 						else
 							name=weaponType.." "..dropTable[j][4]
@@ -393,7 +393,7 @@ function checkDungeonHasItem(VALUES)
                         local name,itemHeader="","{iH}"
 						local weaponType=gsub(dropTable[j][2],"한손","")
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
-                            name="\124T"..dropTable[j][6]..":0:::-4\124t"..dropTable[j][5]
+                            name="\124T"..dropTable[j][6]..":0:::-5\124t"..dropTable[j][5]
 							itemHeader="{iHL}"
 						else
 							name=weaponType.." "..dropTable[j][4]
@@ -416,7 +416,7 @@ function checkDungeonHasItem(VALUES)
                     local name,itemHeader					
 					if dropTable[j][6] then
 						itemHeader="{iHL}"
-						name="\124T"..dropTable[j][6]..":0:::-4\124t "..dropTable[j][5]
+						name="\124T"..dropTable[j][6]..":0:::-5\124t "..dropTable[j][5]
 					else
 						itemHeader="{iH}"
 						name=dropTable[j][5]
@@ -480,7 +480,7 @@ function checkDungeonHasItem(VALUES)
                         local name,itemHeader="","{iH}"
 						local weaponType=gsub(dropTable[j][2],"한손","")
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
-							name="\124T"..dropTable[j][6]..":0:::-4\124t "..dropTable[j][5]
+							name="\124T"..dropTable[j][6]..":0:::-5\124t "..dropTable[j][5]
 							itemHeader="{iHL}"
 						else
 							name=weaponType.." "..dropTable[j][4]
@@ -509,7 +509,7 @@ function checkDungeonHasItem(VALUES)
                     local name,itemHeader					
 					if dropTable[j][6] then
 						itemHeader="{iHL}"
-						name="\124T"..dropTable[j][6]..":0:::-4\124t "..dropTable[j][5]
+						name="\124T"..dropTable[j][6]..":0:::-5\124t "..dropTable[j][5]
 					else
 						itemHeader="{iH}"
 						name=dropTable[j][5]

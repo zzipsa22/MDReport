@@ -289,8 +289,8 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{물}","|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0.6:0:-5|t")
     
     --폭군,경화    
-    message=gsub(message,"{폭}","|T236401:0:::-4|t")
-    message=gsub(message,"{경}","|T463829:0:::-4|t")    
+    message=gsub(message,"{폭}","|T236401:0:::-5|t")
+    message=gsub(message,"{경}","|T463829:0:::-5|t")    
     
     --색깔 코드
     message=gsub(message,"{CW}","|cffdb24b2")    
@@ -348,27 +348,27 @@ function MDRcolorizeForItem(message)
 	message=gsub(message,"특가",MH)
 	message=gsub(message,"특유",MV)
 	
-	message=gsub(message,"양손도검","|T135349:0:::-4|t")
-	message=gsub(message,"양손둔기","|T133053:0:::-4|t")
-	message=gsub(message,"양손도끼","|T132400:0:::-4|t")	
+	message=gsub(message,"양손도검","|T135349:0:::-5|t")
+	message=gsub(message,"양손둔기","|T133053:0:::-5|t")
+	message=gsub(message,"양손도끼","|T132400:0:::-5|t")	
 	
-	message=gsub(message,"단검","|T135650:0:::-4|t")
-	message=gsub(message,"도검","|T135351:0:::-4|t")
-	message=gsub(message,"둔기","|T133054:0:::-4|t")
-	message=gsub(message,"도끼","|T132408:0:::-4|t")	
-	message=gsub(message,"전투검","|T3084656:0:::-4|t")
-	message=gsub(message,"장착무기","|T132938:0:::-4|t")	
+	message=gsub(message,"단검","|T135650:0:::-5|t")
+	message=gsub(message,"도검","|T135351:0:::-5|t")
+	message=gsub(message,"둔기","|T133054:0:::-5|t")
+	message=gsub(message,"도끼","|T132408:0:::-5|t")	
+	message=gsub(message,"전투검","|T3084656:0:::-5|t")
+	message=gsub(message,"장착무기","|T132938:0:::-5|t")	
 	
-	message=gsub(message,"지팡이","|T3461503:0:::-4|t")
-	message=gsub(message,"장창","|T3054897:0:::-4|t")
+	message=gsub(message,"지팡이","|T3461503:0:::-5|t")
+	message=gsub(message,"장창","|T3054897:0:::-5|t")
 	
-	message=gsub(message,"방패","|T3482400:0:::-4|t")
-	message=gsub(message,"보조장비","|T3488376:0:::-4|t")
-	message=gsub(message,"마법봉","|T135477:0:::-4|t")
+	message=gsub(message,"방패","|T3482400:0:::-5|t")
+	message=gsub(message,"보조장비","|T3488376:0:::-5|t")
+	message=gsub(message,"마법봉","|T135477:0:::-5|t")
 	
-	message=gsub(message,"활","|T135496:0:::-4|t")
-	message=gsub(message,"석궁","|T135537:0:::-4|t")
-	message=gsub(message,"총","|T135615:0:::-4|t")
+	message=gsub(message,"활","|T135496:0:::-5|t")
+	message=gsub(message,"석궁","|T135537:0:::-5|t")
+	message=gsub(message,"총","|T135615:0:::-5|t")
 		
 	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
 	message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
@@ -743,7 +743,7 @@ function doFullReport(chars,channel,who,callType)
                 else
                     color="{CN}"
                 end    
-                
+                --[[
                 local dungeonScore
                 if keyLink and scoreT[getShortDungeonName(keyName)] then
                     dungeonScore=scoreT[getShortDungeonName(keyName)]["점수"] or 0
@@ -765,8 +765,9 @@ function doFullReport(chars,channel,who,callType)
                 else
                     dungeonColor="{CN}"
                 end
-                
-                score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
+                ]]
+                --score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
+				score_desc=" ["..color..total.."{CX}점"..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix).."]"
             end
             
             if best and best~=0 then
