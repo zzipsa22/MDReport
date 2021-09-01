@@ -553,7 +553,8 @@ function findCharAllItem(VALUES)
         callTypeT=VALUES["callTypeT"]
         level=VALUES["level"]
         level2=VALUES["level2"]                 
-        
+        onlyOnline=VALUES["onlyOnline"] 
+		
         comb=VALUES["comb"] 
         for i=1,#callTypeT do
             callTypeB[i]=callTypeT[i][1]
@@ -656,8 +657,12 @@ function findCharAllItem(VALUES)
     
     local link=0
     local filter
+	
+	if onlyOnline==1 then --현재접속중인 캐릭터만 필터링
+        chars=filterCharsByFilter(chars,"name",nil,nil)
+	end
     
-    if keyword["dungeon"] then
+    if keyword["dungeon"] then --던전으로 필터링
         chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
         link=1
     end        
