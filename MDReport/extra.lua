@@ -1370,7 +1370,19 @@ function MDRdoReportHistory(VALUES)
                         end
                     end
                     table.sort(v.runHistory, comparison);
-                    for j=1,#v.runHistory do
+                    for j=1,#v.runHistory do					
+						if j==1 then 
+							local bestLevelCompleted=v.bestLevelCompleted
+							local completed=""
+							if bestLevelCompleted=="now" then    
+								completed="|TInterface\\RaidFrame\\ReadyCheck-Waiting:0:0.6:0:-5|t"
+							elseif bestLevelCompleted then
+								completed="|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0.6:0:-5|t"
+							else
+								completed="|TInterface\\RaidFrame\\ReadyCheck-NotReady:0:0.6:0:-5|t"
+							end
+							levels=completed
+						end
                         if j==1 or j==4 or j==10 then
                             levels=levels.."|cff00ff00"..v.runHistory[j].level.."|r, "
                             rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, " 
