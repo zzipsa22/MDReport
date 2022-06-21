@@ -1215,20 +1215,20 @@ function MDRdoReportHistory(VALUES)
     end    
     
     local rewardLevel_season_two={ 
-        [2]=223,    
-        [3]=226,
-        [4]=229,
-        [5]=233,
-        [6]=236,
-        [7]=236,
-        [8]=239,
-        [9]=239,
-        [10]=242,
-        [11]=242,
-        [12]=246,
-        [13]=246,
-        [14]=249,
-        [15]=252,
+        [2]=252,    
+        [3]=252,
+        [4]=252,
+        [5]=255,
+        [6]=255,
+        [7]=259,
+        [8]=262,
+        [9]=262,
+        [10]=265,
+        [11]=268,
+        [12]=272,
+        [13]=272,
+        [14]=275,
+        [15]=278,
     }
     --[[
     local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)
@@ -1286,7 +1286,7 @@ function MDRdoReportHistory(VALUES)
                 for i = 1, #runHistory do
                     local runInfo = runHistory[i];
                     local name = C_ChallengeMode.GetMapUIInfo(runInfo.mapChallengeModeID);
-                    local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name)))
+                    local coveIcon=MDRgetCovenantIcon(MDRgetCovenantID(getShortDungeonName(name))) or ""
                     local timed=runInfo.completed        
                     if timed==true then
                         timed="|TInterface\\RaidFrame\\ReadyCheck-Ready:0:0:0:-5|t"
@@ -1443,7 +1443,10 @@ local dungeonCovenant={
     
     ["역병"]=4,
     ["투기장"]=4,
-    ["강령군주"]=4,        
+    ["강령군주"]=4,     
+
+	["경이"]=0,
+	["소레아"]=0,
 }
 
 function MDRgetCovenantIcon(covenantID)
@@ -1458,14 +1461,18 @@ function MDRgetCovenantIcon(covenantID)
     
     local covenant  
     
-    if not covenantID then
+    if not covenantID or covenantID==0 then
         return ""    
     elseif tonumber(covenantID) and covenantID > 0 and covenantID < 5 then 
         covenant=covenantMap[covenantID] 
     elseif dungeonCovenant[covenantID] then      
         covenant=covenantMap[dungeonCovenant[covenantID]] 
-    end   
-    return "|T".."Interface\\AddOns\\MDReport\\icon\\"..covenant..".tga:"..iconSize..":"..iconSize..":0:-5|t"    
+    end
+	if covenant then
+		return "|T".."Interface\\AddOns\\MDReport\\icon\\"..covenant..".tga:"..iconSize..":"..iconSize..":0:-5|t"    
+	else
+		return ""
+	end
 end
 
 function MDRgetCovenantName(covenantID)

@@ -26,9 +26,9 @@ local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
-DIL.min=210 --깡신
-DIL.max=236 --15단
-DIL.base=160 --기준템렙
+DIL.min=236 --깡신
+DIL.max=262 --15단
+DIL.base=220 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i --단수별 허용레벨 / 드랍템 레벨
@@ -135,6 +135,8 @@ MDR.dungeonNameToID = {
     ["핏심"] = 380,
     ["승천"] = 381,
     ["투기장"] = 382,  
+	["경이"] = 391,  
+	["소레아"] = 392,
 }
 
 local clothClass={"법사","사제","흑마"}
@@ -1175,7 +1177,7 @@ function MDRreportScore(VALUES)
     if onlyMe then        
         local t=MDRconfig.Char
         for k,v in pairs(t) do
-            if v.Level==MDR.SCL and v.Score then
+            if v.Level==MDR.SCL and (v.Score["종합점수"]>0 or v.IL>DIL.base) then
                 tinsert(findChars,k)
             end
         end
@@ -1418,6 +1420,8 @@ function MDRgetDungeonScore(name,affix)
         [6]={"역","역병"},
         [7]={"티","티르너"},
         [8]={"저","저편"}, 
+		[9]={"경","경이"},
+		[10]={"소","소레아"},
     }
     local formerColor
     for i=1,#dungeonTable do
@@ -1428,7 +1432,7 @@ function MDRgetDungeonScore(name,affix)
         local dungeon=dungeonTable[i][2]
         --local icon=","
         local color
-        local affixScore=scoreT[dungeon][affix] or {}
+        local affixScore=scoreT[dungeon] and scoreT[dungeon][affix] or {}
         local score=affixScore["score"] or 0    
         if score>137 then
             color="{CW}"            
