@@ -28,7 +28,7 @@ local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 DIL.min=236 --깡신
 DIL.max=262 --15단
-DIL.base=220 --기준템렙
+DIL.base=200 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i --단수별 허용레벨 / 드랍템 레벨
@@ -1137,7 +1137,8 @@ function MDRreportScore(VALUES)
         callTypeT=VALUES["callTypeT"]
         
         level=VALUES["level"]
-        level2=VALUES["level2"]  
+        level2=VALUES["level2"]
+		
         
         onlyOnline=VALUES["onlyOnline"] 
         onlyYou=VALUES["onlyYou"]
@@ -1177,7 +1178,7 @@ function MDRreportScore(VALUES)
     if onlyMe then        
         local t=MDRconfig.Char
         for k,v in pairs(t) do
-            if v.Level==MDR.SCL and (v.Score["종합점수"]>0 or v.IL>DIL.base) then
+            if v.Level==MDR.SCL and (v.Score["종합점수"]>0 or v.IL>DIL.base+26) then
                 tinsert(findChars,k)
             end
         end
