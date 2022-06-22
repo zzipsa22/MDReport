@@ -972,7 +972,7 @@ function MDRrefreshRunHistory()
         MDRconfig.Char[meAddon].bestLevelCompleted=clearedLevels[bestLevel]
     end    
     MDRconfig.Char[meAddon].reward4=runHistory[4] and runHistory[4].level or nil
-    MDRconfig.Char[meAddon].reward10=runHistory[10] and runHistory[10].level or nil
+    MDRconfig.Char[meAddon].reward10=runHistory[8] and runHistory[8].level or nil
     MDRconfig.Char[meAddon].runs=#runHistory
     
     --print("MDRrefreshRunHistory",#MDRconfig.Char[meAddon].runHistory)
@@ -1118,7 +1118,7 @@ function MDRgetHistory(type)
     
     k.reward1=newRunHistory[1] and newRunHistory[1].level or nil
     k.reward4=newRunHistory[4] and newRunHistory[4].level or nil
-    k.reward10=newRunHistory[10] and newRunHistory[10].level or nil
+    k.reward10=newRunHistory[8] and newRunHistory[8].level or nil
     
     MDRconfig.Char[meAddon]=k
 end  
@@ -1323,8 +1323,8 @@ function MDRdoReportHistory(VALUES)
             
             if #runHistory <4 then
                 tip=MDRcolor("빨강",0,"▶ ").."다음주 "..MDRcolor("하늘",0,"[4회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(4-#runHistory).."회'|r 더 가야 합니다."..(howManyToons>1 and guide or "")
-            elseif #runHistory <10 then
-                tip=MDRcolor("빨강",0,"▶ ").."다음주 "..MDRcolor("하늘",0,"[10회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(10-#runHistory).."회'|r 더 가야 합니다."..(howManyToons>1 and guide or "")
+            elseif #runHistory <8 then
+                tip=MDRcolor("빨강",0,"▶ ").."다음주 "..MDRcolor("하늘",0,"[8회 보상]").."을 개방하려면 쐐기를 |cffffff00'"..(8-#runHistory).."회'|r 더 가야 합니다."..(howManyToons>1 and guide or "")
             else
                 tip=nil
             end
