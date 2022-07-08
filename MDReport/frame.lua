@@ -12,6 +12,7 @@ MDR.frame:RegisterEvent("CHAT_MSG_SYSTEM")
 MDR.frame:RegisterEvent("CHAT_MSG_ADDON")
 MDR.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 MDR.frame:RegisterEvent("BAG_UPDATE_DELAYED")
+MDR.frame:RegisterEvent("COVENANT_CHOSEN")
 
 MDR.frame:SetScript("OnEvent", function(self, event, ...)
 	
@@ -68,8 +69,13 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             -- 쐐기 시작시            
         elseif (event=="CHALLENGE_MODE_START")  then            
             MDRbackupMythicKey("start") 
+            return
+			
+			-- 성약 변경시
+        elseif (event=="COVENANT_CHOSEN")  then            
+            MDRgetHistory("covenant") 
             return           
-        end        
+        end 			         
         
         local msg,who   
         

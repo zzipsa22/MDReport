@@ -253,7 +253,7 @@ function MDRko(keyword,type)
         "검","궁","활","총","봉","창", --무기
         "꾼","적", --직업
         "돌","단","원","상","전","장","택","굴","산", --격아던전
-        "연","당","탑","편","흔", --어둠땅 던전
+        "연","당","탑","편","흔","층", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
         "중","안","업","점",  
 		"갑","병","풍", --아이템이름
@@ -1297,7 +1297,7 @@ function MDRdoReportHistory(VALUES)
                     end
                     
                     local color1,color2,color3,tip,reward,level
-                    if i==1 or i==4 or i==10 then
+                    if i==1 or i==4 or i==8 then
                         level=runInfo.level
                         if level>15 then level=15 end
                         color1="전설"
@@ -1310,7 +1310,7 @@ function MDRdoReportHistory(VALUES)
                         color3="회색" 
                         reward=""       
                     end     
-                    if i<=10 then 
+                    if i<=8 then 
                         local space=""
                         if runInfo.level<10 then 
                             space=" "
@@ -1385,7 +1385,7 @@ function MDRdoReportHistory(VALUES)
 							end
 							levels=completed
 						end
-                        if j==1 or j==4 or j==10 then
+                        if j==1 or j==4 or j==8 then
                             levels=levels.."|cff00ff00"..v.runHistory[j].level.."|r, "
                             rewards=rewards.."|cffffff00"..rewardLevel[v.runHistory[j].level].."레벨|r, " 
                             MDRconfig.Char[v["name"]]["reward"..j]=v.runHistory[j].level
@@ -1443,10 +1443,8 @@ local dungeonCovenant={
     
     ["역병"]=4,
     ["투기장"]=4,
-    ["강령군주"]=4,     
+    ["강령군주"]=4, 
 
-	["경이"]=0,
-	["소레아"]=0,
 }
 
 function MDRgetCovenantIcon(covenantID)
@@ -1491,6 +1489,7 @@ function MDRgetDungeonCovenant(dungeon)
             return k
         end
     end
+	return 0
 end
 
 function MDRgetCovenantID(keyword)

@@ -137,6 +137,12 @@ MDR.dungeonNameToID = {
     ["투기장"] = 382,  
 	["경이"] = 391,  
 	["소레아"] = 392,
+	--["고철"] = 369,
+	--["작업"] = 370,
+	--["하층"] = 227,
+	--["상층"] = 234,
+	--["강철"] = 169,
+	--["파멸"] = 166,	
 }
 
 local clothClass={"법사","사제","흑마"}
@@ -174,12 +180,12 @@ function filterVALUES(VALUES)
             if callTypeT[i][1]=="dungeon" then 
                 if not keyword["dungeon"] then
                     keyword["dungeon"]={}
-                end
-                if not tContains(keyword["dungeon"],callTypeT[i][2]) then
+                end								
+				if not tContains(keyword["dungeon"],callTypeT[i][2]) then
                     tinsert(keyword["dungeon"],callTypeT[i][2])    
-                end   
-            else
-                
+                end  
+				
+            else                
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
             end
             
@@ -1178,7 +1184,8 @@ function MDRreportScore(VALUES)
     if onlyMe then        
         local t=MDRconfig.Char
         for k,v in pairs(t) do
-            if v.Level==MDR.SCL and (v.Score["종합점수"]>0 or v.IL>DIL.base+26) then
+            if v.Level==MDR.SCL and (--v.Score["종합점수"]>0 or 
+			v.IL>DIL.base+26) then
                 tinsert(findChars,k)
             end
         end
@@ -1218,10 +1225,10 @@ function MDRreportScore(VALUES)
         if callType["dungeon"] then   -- !점수!역병
             local message=""
             local dungeon=keyword["dungeon"][1] 
-            local total=scoreT["종합점수"]
-            local score=scoreT[dungeon]["점수"]
-            local tyr_table=scoreT[dungeon]["폭군"] or {}
-            local for_table=scoreT[dungeon]["경화"] or {}
+            local total=scoreT["종합점수"] or 0			
+            local score=scoreT[dungeon] and scoreT[dungeon]["점수"] or 0
+            local tyr_table=scoreT[dungeon] and scoreT[dungeon]["폭군"] or {}
+            local for_table=scoreT[dungeon] and scoreT[dungeon]["경화"] or {}
             local tyr_level=tyr_table["level"] or 0    
             local tyr_clear=tyr_table["overTime"] and "|cffff0000-|r" or "|cff00ff00+|r"
             local tyr_score=tyr_table["score"] or 0
@@ -1263,7 +1270,7 @@ function MDRreportScore(VALUES)
                     newScore20=math.floor((levelScore+5)*0.5+compareScore*1.5)
                 end 
                 
-                local dungeonHead="[{CA}"..dungeon.." "..level.."단 "..affix.."{CX}]"
+                local dungeonHead="[{CA}"..dungeon.." "..level.."단 "..affix.."|r]"
                 
                 local earnedScore=newScore-score
                 local earnedScore20=newScore20-score
@@ -1273,10 +1280,10 @@ function MDRreportScore(VALUES)
                 
                 if newScore>score+1 then
                     local plus=true
-                    message=charHead..dungeonHead.." 시클시 [{CC}"..earnedScore.."~"..earnedScore20.."점{CX}] 획득 가능 [예측 최소: "..MDRgetScoreColor(newScore,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal,"total",plus).."점]"
+                    message=charHead..dungeonHead.." 시클시 [{CC}"..earnedScore.."~"..earnedScore20.."점|r] 획득 가능 [예측 최소: "..MDRgetScoreColor(newScore,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal,"total",plus).."점]"
                 elseif newScore20>score+1 then
                     local plus=false
-                    message=charHead..dungeonHead.." 시클시 남은 시간에 따라 [{CC}0~"..earnedScore20.."점{CX}] 획득 가능 [예측 최대: "..MDRgetScoreColor(newScore20,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal20,"total",plus).."점]"
+                    message=charHead..dungeonHead.." 시클시 남은 시간에 따라 [{CC}0~"..earnedScore20.."점|r] 획득 가능 [예측 최대: "..MDRgetScoreColor(newScore20,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal20,"total",plus).."점]"
                 else
                     message=charHead..dungeonHead.." "..eul.." 시클해도 점수를 얻기 힘듭니다."
                 end    
@@ -1325,7 +1332,7 @@ function MDRreportScore(VALUES)
                     for_color="{CC}"
                 end
                 
-                message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."{CX}"..tyr_clear.."｜"..MDRgetAffixIcon("경화")..for_color..for_level.."{CX}"..for_clear.."]"
+                message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."|r"..tyr_clear.."｜"..MDRgetAffixIcon("경화")..for_color..for_level.."|r"..for_clear.."]"
                 tinsert(messageLines,message)
             end
         else -- !점수
@@ -1349,6 +1356,7 @@ end
 
 function MDRgetScoreColor(score,scoreType,plus)
     local color=""
+	if not score then score=0 end
     if scoreType=="dungeon" then
         if score>=275 then
             color="{CL}"
@@ -1378,29 +1386,29 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CC}"
         end
     elseif scoreType=="total" then
-        if score>=2200 then
+        if score>=2750 then
             color="{CL}"
-        elseif score>=1800 then
+        elseif score>=2250 then
             color="{CE}"
-        elseif score>=1500 then
+        elseif score>=1875 then
             color="{CR}"
-        elseif score>=1000 then
+        elseif score>=1250 then
             color="{CC}"
         else
             color="{CN}"
         end  
     end
-    return color..score..(plus and "+" or "").."{CX}"
+    return color..score..(plus and "+" or "").."|r"
 end
 
 function MDRgetAffixIcon(affix)
     local t={}
     if isThisWeekHasSpecificAffix(9) then
-        t.tyra="{CW}▶{폭}폭군{CX}: "
+        t.tyra="{CW}▶{폭}폭군|r: "
         t.fort="{경}:"
     else
         t.tyra="{폭}:"
-        t.fort="{CW}▶{경}경화{CX}: "
+        t.fort="{CW}▶{경}경화|r: "
     end    
     if affix=="폭군" then
         return t.tyra
@@ -1423,10 +1431,18 @@ function MDRgetDungeonScore(name,affix)
         [8]={"저","저편"}, 
 		[9]={"경","경이"},
 		[10]={"소","소레아"},
+		--[1]={"파","파멸"},
+		--[2]={"강","강철"},
+		--[3]={"하","하층"},
+		--[4]={"상","상층"},
+		--[5]={"작","작업"},
+		--[6]={"고","고철"},
+		--[7]={"경","경이"},
+		--[8]={"소","소레아"},
     }
     local formerColor
     for i=1,#dungeonTable do
-        local colorClose="{CX}"
+        local colorClose="|r"
         if i==1 then colorClose="" end
         --if i==1 then dungeonHistory="{"..affix.."} " end
         local d=dungeonTable[i][1]
@@ -1500,14 +1516,29 @@ function findCharAllKey(VALUES)
                 if not keyword["dungeon"] then
                     keyword["dungeon"]={}
                 end
+				--[[
+				local megaDungeon=0
+				if callTypeT[i][2]=="타자베쉬" then
+					tinsert(keyword["dungeon"],"경이") 
+					tinsert(keyword["dungeon"],"소레아")
+					megaDungeon=1
+				elseif callTypeT[i][2]=="카라잔" then
+					tinsert(keyword["dungeon"],"하층") 
+					tinsert(keyword["dungeon"],"상층")
+					megaDungeon=1
+				elseif callTypeT[i][2]=="메카곤" then
+					tinsert(keyword["dungeon"],"고철장") 
+					tinsert(keyword["dungeon"],"작업장")
+					megaDungeon=1
+				end
+				]]
                 if not tContains(keyword["dungeon"],callTypeT[i][2]) then
                     tinsert(keyword["dungeon"],callTypeT[i][2])    
                 end   
-            else
-                
+            else                
                 keyword[callTypeT[i][1]]=callTypeT[i][2]
             end
-            
+			
             --keyword[callTypeT[i][1]]=callTypeT[i][2]
             keyword2[callTypeT[i][1]]=callTypeT[i][3]
             keyword3[callTypeT[i][1]]=callTypeT[i][4]   
@@ -1551,7 +1582,7 @@ function findCharAllKey(VALUES)
         local start=MDR.myMythicKey.start
         local headStar=MDR.skull[MDRcolor(krClass,6)]
         local messageLines={}  
-        
+		
         if mapID~=nil and mapID>0 then --쐐기중이면
             if start==nil or onLoad==nil then return end  
             name, _= C_ChallengeMode.GetMapUIInfo(mapID) 
@@ -1564,10 +1595,19 @@ function findCharAllKey(VALUES)
                 end    
             end  
             return  
-        end   
+        end 
+		
         callType["dungeon"]=1
         keyword["dungeon"]={}
-        keyword["dungeon"][1]=getShortDungeonName(here)
+		        
+		if here=="미지의 시장 타자베쉬" then 
+			keyword["dungeon"][1]=getShortDungeonName("타자베쉬: 경이의 거리")
+			keyword["dungeon"][2]=getShortDungeonName("타자베쉬: 소레아의 승부수")			
+		else
+			keyword["dungeon"][1]=getShortDungeonName(here)
+		end				
+		--print(here)
+		
         onlyOnline=1
     end 
     
@@ -1624,10 +1664,11 @@ function findCharAllKey(VALUES)
     
     --던전이나 직업으로 필터링
     if callType["dungeon"] then
+		
         if except==1 then
             chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil) 
         else  
-            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil) 
+            chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil) 			
         end  
     end 
     
@@ -1911,7 +1952,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
             elseif filter=="covenant" then   
                 target=chars[i]["covenant"]
             elseif filter=="dungeon" or filter=="except" then
-                target=getShortDungeonName(chars[i]["keyName"])   
+                target=chars[i]["keyName"]   
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
             elseif filter=="CharName" then
@@ -1923,15 +1964,18 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 findChars[num]=chars[i]
                 num=num+1
             elseif (filter=="dungeon" or filter=="except") then   
-                
+                local findCharsTable={}
                 for j=1,#f1 do
                     if filter~="except" then
-                        if f1[j]==target then
-                            findChars[num]=chars[i]
-                            num=num+1     
+                        if strfind(target,getFullDungeonName(f1[j])) then
+							if findCharsTable[chars[i]["fullName"]]~=1 then
+								findChars[num]=chars[i]
+								num=num+1
+							end
+							findCharsTable[chars[i]["fullName"]]=1
                         end 
                     else
-                        if f1[j]==target then
+                        if strfind(target,getFullDungeonName(f1[j])) then
                             chars[i]=nil     
                         end 
                     end  

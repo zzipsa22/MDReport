@@ -561,9 +561,10 @@ function doShortReport(chars,channel,who,callType)
                 end                
             elseif callType["covenant"] or callType["covenantnow"] or callType["covenantall"] then
                 local coveName
-                if channel=="ADDON_PARTY" then
+                if channel=="ADDON_PARTY" and #chars<2 then -- 성약단 풀네임
                     coveName=MDRcolor(covenant)                    
-                else
+					--coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
+                else -- 그 외
                     coveName=MDRcolor(covenant,0,getShortDungeonName(covenant))
                 end    
                 
@@ -766,8 +767,8 @@ function doFullReport(chars,channel,who,callType)
                     dungeonColor="{CN}"
                 end
                 ]]
-                --score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."{CX}점" or "").." ["..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix)..", "..color..total.."{CX}점]"
-				score_desc=" ["..color..total.."{CX}점"..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix).."]"
+                --score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."|r점" or "").." ["..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix)..", "..color..total.."|r점]"
+				score_desc=" ["..color..total.."|r점"..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix).."]"
             end
             
             if best and best~=0 then
