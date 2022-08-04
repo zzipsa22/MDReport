@@ -1974,15 +1974,16 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 local findCharsTable={}
                 for j=1,#f1 do					
                     if filter~="except" then					
-                        if strfind(target or "",getFullDungeonName(f1[j])) then
+                        if strfind(target or "",f1[j]) then
 							if findCharsTable[chars[i]["fullName"]]~=1 then
 								findChars[num]=chars[i]
 								num=num+1
 							end
 							findCharsTable[chars[i]["fullName"]]=1
+
                         end 
                     else
-                        if strfind(target,getFullDungeonName(f1[j])) then
+                        if strfind(target,f1[j]) then
                             chars[i]=nil     
                         end 
                     end  
