@@ -18,7 +18,7 @@ C_Timer.After(10, function()
                 
                 --print(MDRcolor("수도",0,"▶")..MDRcolor("계승",0,"쐐기돌 평점").." 기능에 "..MDRcolor("계승",0,"점수 예측").." 기능을 추가하였습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 점수'|r]|r")
 				
-                print(MDRcolor("수도",0,"▶")..MDRcolor("회색",0,"무기").." 와 "..MDRcolor("초록",0,"장신구").." 검색 기능을 강화했습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 무기'|r, |cffffff00'/! @ 장신구'|r]|r")
+                --print(MDRcolor("수도",0,"▶")..MDRcolor("회색",0,"무기").." 와 "..MDRcolor("초록",0,"장신구").." 검색 기능을 강화했습니다. 자세한 사용법을 알아보세요! |cff9d9d9d [도움말: |cffffff00'/! @ 무기'|r, |cffffff00'/! @ 장신구'|r]|r")
 				
                 print(MDRcolor("수도",0,"▶").."도움이 필요하신가요? |cff9d9d9d [도움말 호출: |cffffff00'/! @'|r 또는 |cffffff00'/! 도움말'|r]|r")
                 
@@ -252,11 +252,11 @@ function MDRko(keyword,type)
     local LCtable={
         "검","궁","활","총","봉","창", --무기
         "꾼","적", --직업
-        "돌","단","원","상","전","장","택","굴","산", --격아던전
+        "돌","단","원","상","전","장","택","굴","산","잔","곤", --격아던전
         "연","당","탑","편","흔","층", --어둠땅 던전
-        "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌",--전문화
+        "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌","원",--전문화
         "중","안","업","점",  
-		"갑","병","풍", --아이템이름
+		"갑","병","풍","눈", --아이템이름
     }
     local Batchim=0
     for i=1,#LCtable do
@@ -1070,6 +1070,9 @@ function MDRgetHistory(type)
     k.Faction=UnitFactionGroup("player")
     k.LastSeen = time()
     k.Covenant=MDRgetCovenantName(C_Covenants.GetActiveCovenantID())
+	
+	local dungeonScore = C_ChallengeMode.GetOverallDungeonScore(); 
+    k.ScoreLink=GetDungeonScoreLink(dungeonScore, UnitName("player"));	
     
     local IL,ILe = GetAverageItemLevel()
     if IL and tonumber(IL) and tonumber(IL) > 0 then
@@ -1215,20 +1218,20 @@ function MDRdoReportHistory(VALUES)
     end    
     
     local rewardLevel_season_two={ 
-        [2]=252,    
-        [3]=252,
-        [4]=252,
-        [5]=255,
-        [6]=255,
-        [7]=259,
-        [8]=262,
-        [9]=262,
-        [10]=265,
-        [11]=268,
-        [12]=272,
-        [13]=272,
-        [14]=275,
-        [15]=278,
+        [2]=278,    
+        [3]=278,
+        [4]=278,
+        [5]=281,
+        [6]=281,
+        [7]=285,
+        [8]=288,
+        [9]=288,
+        [10]=291,
+        [11]=294,
+        [12]=298,
+        [13]=298,
+        [14]=301,
+        [15]=304,
     }
     --[[
     local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)

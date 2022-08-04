@@ -14,7 +14,7 @@ MDR["krClass"],MDR["className"]=UnitClass("player")
 MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
-MDR["maxParking"]=15 --어둠땅 2시즌
+MDR["maxParking"]=15 --어둠땅 4시즌
 MDR["SCL"]=60--어둠땅 만렙
 MDR.DefaultDelay=15 --지연시간 기본값
 
@@ -26,9 +26,9 @@ local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
-DIL.min=236 --깡신
-DIL.max=262 --15단
-DIL.base=200 --기준템렙
+DIL.min=262 --깡신
+DIL.max=288 --15단
+DIL.base=226 --기준템렙
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i --단수별 허용레벨 / 드랍템 레벨
@@ -127,23 +127,25 @@ local RealmMap= {
 }
 
 MDR.dungeonNameToID = {
-    ["티르너"] = 375,
-    ["죽상"] = 376,
-    ["저편"] = 377,
-    ["속죄"] = 378,
-    ["역병"] = 379,
-    ["핏심"] = 380,
-    ["승천"] = 381,
-    ["투기장"] = 382,  
+    --["티르너"] = 375,
+    --["죽상"] = 376,
+    --["저편"] = 377,
+    --["속죄"] = 378,
+    --["역병"] = 379,
+    --["핏심"] = 380,
+    --["승천"] = 381,
+    --["투기장"] = 382,  
 	["경이"] = 391,  
 	["소레아"] = 392,
-	--["고철"] = 369,
-	--["작업"] = 370,
-	--["하층"] = 227,
-	--["상층"] = 234,
-	--["강철"] = 169,
-	--["파멸"] = 166,	
+	["고철"] = 369,
+	["작업"] = 370,
+	["하층"] = 227,
+	["상층"] = 234,
+	["강철"] = 169,
+	["파멸"] = 166,	
 }
+
+MDR.DNum=#MDR.dungeonNameToID or 8
 
 local clothClass={"법사","사제","흑마"}
 local leatherClass={"드루","수도","도적","악사"}
@@ -490,13 +492,15 @@ function filterVALUES(VALUES)
 				eul=MDRko(CL,"을")	
 				eun=MDRko(CL,"은")
 				
-                if itemID==178715 then --오카리나
-                    bonus="{iBO}"
-                elseif itemID==178708 then --변신수
+                if itemID<120000 then --드레노어
+                    bonus="{iBD}"
+                elseif itemID<160000 then --군단
+                    bonus="{iBL}"
+				elseif itemID<175000 then --격아
                     bonus="{iBB}"
-                else
+                else --어둠땅
                     bonus="{iB}"
-                end							
+                end								
 				local item="{iH}"..itemID..bonus..itemIcon..MDRcolor("영웅",0,word).."{iE}"
 				item=MDRcolorizeForItem(item)
 				
@@ -815,7 +819,8 @@ function filterVALUES(VALUES)
                 end 			
             elseif not callType["stat"] and not callType["spec"] then 
                 if not tips[4] or tips[4]<warns then
-                    if who==meGame and callType["trinket"] and not callType["dungeon"] then
+                    if who==meGame and callType["trinket"] --and not callType["dungeon"] 
+					then
                         print("|cFFff0000▶|r"..MDRcolor("딜러",-1).." |cff00ff00장신구|r를 검색하려면 "..MDRcolor("도적",0,"능력치").."를 지정해야합니다. |cFF33FF99ex)|r "..MDRcolor("도적",0,"!민첩").."|cff00ff00!장신구|r") 
                     end 
                     tips[4]=(tips[4] or 0)+1
@@ -931,6 +936,7 @@ function filterVALUES(VALUES)
             callType["currentall"] or 
             callType["currentdungeon"] or 
             callType["charname"] or
+			callType["scorelink"] or
             callType["covenantall"] or
             callType["covenantnow"] or
             callType["covenant"] ) then  
@@ -1104,6 +1110,7 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["charLevel"]=t[k].Level or MDR.SCL    
                 chars[num]["covenant"]=t[k].Covenant or ""
                 chars[num]["score"]=t[k].Score or ""
+				chars[num]["scoreLink"]=t[k].ScoreLink
                 num=num+1 
             end  
         end   
@@ -1362,7 +1369,7 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CL}"
         elseif score>=225 then
             color="{CE}"
-        elseif score>=188 then
+        elseif score>=187.5 then
             color="{CR}"
         elseif score>=125 then
             color="{CC}"
@@ -1370,7 +1377,7 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CN}"
         end
     elseif scoreType=="affix" then
-        if score>137 then
+        if score>137.5 then
             color="{CW}"
         elseif score>=125 then
             color="{CA}"
@@ -1386,13 +1393,13 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CC}"
         end
     elseif scoreType=="total" then
-        if score>=2750 then
+        if score>=275*MDR.DNum then
             color="{CL}"
-        elseif score>=2250 then
+        elseif score>=225*MDR.DNum then
             color="{CE}"
-        elseif score>=1875 then
+        elseif score>=187.5*MDR.DNum then
             color="{CR}"
-        elseif score>=1250 then
+        elseif score>=125*MDR.DNum then
             color="{CC}"
         else
             color="{CN}"
@@ -1421,24 +1428,24 @@ function MDRgetDungeonScore(name,affix)
     local scoreT=MDRconfig.Char[name].Score
     local dungeonHistory=""
     local dungeonTable={
-        [1]={"핏","핏심"},
-        [2]={"속","속죄"},
-        [3]={"승","승천"},
-        [4]={"죽","죽상"},
-        [5]={"고","투기장"},
-        [6]={"역","역병"},
-        [7]={"티","티르너"},
-        [8]={"저","저편"}, 
-		[9]={"경","경이"},
-		[10]={"소","소레아"},
-		--[1]={"파","파멸"},
-		--[2]={"강","강철"},
-		--[3]={"하","하층"},
-		--[4]={"상","상층"},
-		--[5]={"작","작업"},
-		--[6]={"고","고철"},
-		--[7]={"경","경이"},
-		--[8]={"소","소레아"},
+        --[1]={"핏","핏심"},
+        --[2]={"속","속죄"},
+        --[3]={"승","승천"},
+        --[4]={"죽","죽상"},
+        --[5]={"고","투기장"},
+        --[6]={"역","역병"},
+        --[7]={"티","티르너"},
+        --[8]={"저","저편"}, 
+		--[9]={"경","경이"},
+		--[10]={"소","소레아"},
+		[1]={"파","파멸"},
+		[2]={"강","강철"},
+		[3]={"하","하층"},
+		[4]={"상","상층"},		
+		[5]={"고","고철"},
+		[6]={"작","작업"},
+		[7]={"경","경이"},
+		[8]={"소","소레아"},
     }
     local formerColor
     for i=1,#dungeonTable do
@@ -1965,9 +1972,9 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 num=num+1
             elseif (filter=="dungeon" or filter=="except") then   
                 local findCharsTable={}
-                for j=1,#f1 do
-                    if filter~="except" then
-                        if strfind(target,getFullDungeonName(f1[j])) then
+                for j=1,#f1 do					
+                    if filter~="except" then					
+                        if strfind(target or "",getFullDungeonName(f1[j])) then
 							if findCharsTable[chars[i]["fullName"]]~=1 then
 								findChars[num]=chars[i]
 								num=num+1

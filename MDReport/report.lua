@@ -348,6 +348,13 @@ function MDRcolorizeForItem(message)
 	message=gsub(message,"특가",MH)
 	message=gsub(message,"특유",MV)
 	
+	message=gsub(message,"특화","|cffbb88ff특화|r")
+	message=gsub(message,"유연","|cff88bbff유연|r")
+	message=gsub(message,"가속","|cffffff00가속|r")
+	message=gsub(message,"치명","|cffff8800치명|r")
+	message=gsub(message,"사효","|cffdb24b2사효|r")
+	message=gsub(message,"착효","|cffe6cc80착효|r")	
+	
 	message=gsub(message,"양손도검","|T135349:0:::-5|t")
 	message=gsub(message,"양손둔기","|T133053:0:::-5|t")
 	message=gsub(message,"양손도끼","|T132400:0:::-5|t")	
@@ -372,9 +379,12 @@ function MDRcolorizeForItem(message)
 		
 	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
 	message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
-	message=gsub(message,"{iB}","::::::::60::::3:6646:7645:1550:|h[")
-	message=gsub(message,"{iBB}","::::::::60::::4:6917:6646:7645:1550:|h[") --변신수
-	message=gsub(message,"{iBO}","::::::::60::::4:6923:6646:7645:1550:|h[") --오카리나
+	
+	message=gsub(message,"{iB}","::::::::60::::3:1605:6807:6646:|h[") --어둠땅	
+	message=gsub(message,"{iBB}","::::::::60::::2:3139:1472:|h[") --격아
+	message=gsub(message,"{iBL}","::::::::60::::3:3138:1501:6646:|h[") --군단
+	message=gsub(message,"{iBD}","::::::::60::::2:3173:6646:|h[") --드레노어
+	
 	message=gsub(message,"{iE}","]|h|r")   
 	return message
 end
@@ -470,6 +480,7 @@ function doShortReport(chars,channel,who,callType)
             local best4=chars[i]["best4"]
             local best10=chars[i]["best10"]
             local bestLevelCompleted=chars[i]["bestLevelCompleted"]
+			local scoreLink=chars[i]["scoreLink"]
             local runs=chars[i]["runs"]            
             local covenant=chars[i]["covenant"]
             local covenantID=MDRgetCovenantID(covenant)
@@ -569,6 +580,9 @@ function doShortReport(chars,channel,who,callType)
                 end    
                 
                 message=onC.."["..online..classStatus..":{c"..covenantID.."}"..coveName.."]"..onR
+			elseif callType["scorelink"] then
+				print("dd")
+				message=scoreLink
             else
                 if isAddonMessage==1 then
                     message=onC.."["..online..classStatus..":"..havekey.."]"..onR
@@ -663,6 +677,7 @@ function doFullReport(chars,channel,who,callType)
             local bestLevelCompleted=chars[i]["bestLevelCompleted"]            
             local runs=chars[i]["runs"]            
             local scoreT=chars[i]["score"]
+			local scoreLink=chars[i]["scoreLink"]
             local covenant=chars[i]["covenant"] 
             local covenantID=MDRgetCovenantID(covenant)            
             local itemLevel=chars[i]["itemLevel"]
@@ -724,6 +739,7 @@ function doFullReport(chars,channel,who,callType)
             
             if charLevel==MDR["SCL"] then
                 local affix
+				local howManyDungeons=#MDR.dungeonNameToID or 8
                 if isThisWeekHasSpecificAffix(9) then
                     affix="폭군"
                 else
@@ -733,41 +749,18 @@ function doFullReport(chars,channel,who,callType)
                 total=tonumber(total)
                 
                 local color
-                if total>=2200 then
+                if total>=275*MDR.DNum then
                     color="{CL}"
-                elseif total>=1800 then
+                elseif total>=225*MDR.DNum then
                     color="{CE}"
-                elseif total>=1500 then
+                elseif total>=187.5*MDR.DNum then
                     color="{CR}"
-                elseif total>=1000 then
+                elseif total>=125*MDR.DNum then
                     color="{CC}"
                 else
                     color="{CN}"
                 end    
-                --[[
-                local dungeonScore
-                if keyLink and scoreT[getShortDungeonName(keyName)] then
-                    dungeonScore=scoreT[getShortDungeonName(keyName)]["점수"] or 0
-                else
-                    dungeonScore=0
-                end
-                
-                dungeonScore=tonumber(dungeonScore)
-                
-                local dungeonColor
-                if dungeonScore>=275 then
-                    dungeonColor="{CL}"
-                elseif dungeonScore>=225 then
-                    dungeonColor="{CE}"
-                elseif dungeonScore>=188 then
-                    dungeonColor="{CR}"
-                elseif dungeonScore>=125 then
-                    dungeonColor="{CC}"
-                else
-                    dungeonColor="{CN}"
-                end
-                ]]
-                --score_desc=(keyLink and ": "..dungeonColor..dungeonScore.."|r점" or "").." ["..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix)..", "..color..total.."|r점]"
+
 				score_desc=" ["..color..total.."|r점"..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix).."]"
             end
             
@@ -855,6 +848,10 @@ function doFullReport(chars,channel,who,callType)
                 message=coveIcon..getShortDungeonName(keyName)..level..": "..keyLink..now
             elseif callType["covenantall"] then
                 message=headStar..classStatus.." ▶{c"..covenantID.."}"..MDRcolor(covenant)
+			elseif callType["scorelink"] then				
+				message=scoreLink
+				isAddonMessage=0
+				channel="PARTY"
             else                
                 message=covenantIcon..headStar..classStatus.."▶"..(keyLink and getShortDungeonName(keyName)..level or dungeonIcon..havekey)..score_desc
             end           
@@ -921,7 +918,8 @@ function reportMessageLines(messageLines,channel,who,callType)
                     end
             end)  
         else
-            C_Timer.After(delay+0.2*(i-1), function()        
+            C_Timer.After(delay+0.2*(i-1), function()
+					print(messageLines[i])
                     SendChatMessage(messageLines[i], channel,nil,who) 
             end)   
         end 

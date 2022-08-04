@@ -173,8 +173,16 @@ local affixNames = {
         ["icon"]=4038106,
         ["disc"]="던전에 태초의 존재의 유물을 가진 적이 출현합니다. 유물을 파괴하면 태초의 존재의 자동기계가 소환됩니다. 자동기계를 파괴하는 순서에 따라 강력한 추가 효과를 얻습니다." ,
     },
+	
+	[131] ={
+        ["name"]="장막",
+        ["level"]= 10,
+        ["rt"]="{rt3}",
+        ["icon"]=136177,
+        ["disc"]="나스레짐 침입자들이 변장해 던전 곳곳의 적들 사이로 숨어들었습니다. 이 침입자들을 잡는다면 타 중개단이 후한 사례를 할 것입니다." ,
+    },
     
-}--둠땅 3시즌
+}--둠땅 4시즌
 
 local affixIDs={}
 for k,v in pairs(affixNames) do
@@ -184,18 +192,18 @@ end
 function GetAffixWeeksTable()
     local t=affixIDs
     local affixs = { 
-		{"강화","폭탄","폭군","암호"},
-        {"파열","폭풍","경화","암호"},
-        {"분노","화산","폭군","암호"},
-        {"고취","치명상","경화","암호"},
-        {"원한","괴저","폭군","암호"},
-        {"강화","전율","경화","암호"},
-        {"피웅덩이","폭풍","폭군","암호"},
-        {"분노","폭탄","경화","암호"},
-        {"파열","화산","폭군","암호"},
-        {"원한","괴저","경화","암호"},
-        {"고취","전율","폭군","암호"},
-        {"피웅덩이","치명상","경화","암호"},
+		{"강화","폭탄","폭군","장막"},
+        {"파열","폭풍","경화","장막"},
+        {"분노","화산","폭군","장막"},
+        {"고취","치명상","경화","장막"},
+        {"원한","괴저","폭군","장막"},
+        {"강화","전율","경화","장막"},
+        {"피웅덩이","폭풍","폭군","장막"},
+        {"분노","폭탄","경화","장막"},
+        {"파열","화산","폭군","장막"},
+        {"원한","괴저","경화","장막"},
+        {"고취","전율","폭군","장막"},
+        {"피웅덩이","치명상","경화","장막"},
         
     }  --어둠땅 2시즌
     local affixWeeks={}
@@ -307,6 +315,7 @@ function GetAffixFullDescription(keyword,channel)
             break
         end        
     end
+	print(specificWeek)
     if keyword~="폭군" and keyword~="경화" then
         local comparison = function(entry1, entry2)
             local week1=entry1 and entry1-thisWeek or nil
@@ -318,7 +327,7 @@ function GetAffixFullDescription(keyword,channel)
             else
                 return entry1 < entry2
             end        
-        end
+        end		
         table.sort(specificWeek, comparison)
         
         for i=1,#specificWeek do    
