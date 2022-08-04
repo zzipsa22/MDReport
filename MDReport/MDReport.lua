@@ -145,7 +145,7 @@ MDR.dungeonNameToID = {
 	["파멸"] = 166,	
 }
 
-MDR.DNum=#MDR.dungeonNameToID or 8
+MDR.DNum=8
 
 local clothClass={"법사","사제","흑마"}
 local leatherClass={"드루","수도","도적","악사"}
