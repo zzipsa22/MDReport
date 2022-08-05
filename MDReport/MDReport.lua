@@ -1608,8 +1608,11 @@ function findCharAllKey(VALUES)
         keyword["dungeon"]={}
 		        
 		if here=="미지의 시장 타자베쉬" then 
-			keyword["dungeon"][1]=getShortDungeonName("타자베쉬: 경이의 거리")
-			keyword["dungeon"][2]=getShortDungeonName("타자베쉬: 소레아의 승부수")			
+			keyword["dungeon"][1]="타자베쉬"			
+		elseif here=="다시 찾은 카라잔" then 
+			keyword["dungeon"][1]="카라잔"			
+		elseif here=="작전명: 메카곤" then 
+			keyword["dungeon"][1]="메카곤"			
 		else
 			keyword["dungeon"][1]=getShortDungeonName(here)
 		end				
