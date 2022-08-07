@@ -26,6 +26,7 @@ local who,channel,level,level2,callTypeT
 local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
+MDR.DIL=DIL
 DIL.min=262 --깡신
 DIL.max=288 --15단
 DIL.base=226 --기준템렙
@@ -487,21 +488,12 @@ function filterVALUES(VALUES)
 				local dungeon=callTypeT[i][4]
 				local itemID=callTypeT[i][3]
 				local itemIcon="\124T"..callTypeT[i][5]..":0:::-4\124t "
-				local bonus
+
 				local CL=strsub(word,-3,-1)
 				eul=MDRko(CL,"을")	
 				eun=MDRko(CL,"은")
 				
-                if itemID<120000 then --드레노어
-                    bonus="{iBD}"
-                elseif itemID<160000 then --군단
-                    bonus="{iBL}"
-				elseif itemID<175000 then --격아
-                    bonus="{iBB}"
-                else --어둠땅
-                    bonus="{iB}"
-                end								
-				local item="{iH}"..itemID..bonus..itemIcon..MDRcolor("영웅",0,word).."{iE}"
+				local item="{iH}"..itemID..MDRGetItemCode(itemID)..itemIcon..MDRcolor("영웅",0,word).."{iE}"
 				item=MDRcolorizeForItem(item)
 				
 				icon=MDRgetCovenantIcon(dungeon)				

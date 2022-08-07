@@ -130,8 +130,7 @@ local dungeonTable={
 			{"민첩","단검",185777,"가특"},
 			{"지능","단검",185821,"치유"},
 			{"민첩","석궁",185783,"가유"},
-			{"민첩","장착무기",185778,"치가"},	
-			{"힘/민첩","장신구", 185836,"탱커","","절기"},
+			{"민첩","장착무기",185778,"치가"},				
 			{"힘/지능/민첩","장신구", 190958,"힐러/딜러/탱커","","소레아",1028991},
         }
     }, 
@@ -147,6 +146,7 @@ local dungeonTable={
 			{"민첩","전투검",185819,"특가"},
 			{"지능","보조장비",185812,"치유"},
 			{"힘/지능","방패",185811,"특치"},
+			{"힘/민첩","장신구", 185836,"탱커","","절기"},
 			{"힘/민첩","장신구", 190652,"딜러","근접","똑딱이"},
 			{"민첩/지능","장신구", 185846,"딜러","원거리","우편정령"},
 			{"지능","장신구", 185845,"힐러","","분배장치"},
@@ -493,7 +493,7 @@ function checkDungeonHasItem(VALUES)
 						else
 							name=weaponType.." "..dropTable[j][4]
 						end
-                        thisDungeonHas[itemNum]=itemHeader..dropTable[j][3].."{iB}"..name.."{iE}"  
+                        thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..MDRGetItemCode(dropTable[j][3])..name.."{iE}"  
                     end                           
                     thisDungeonHasItem=1
                     itemNum=itemNum+1
@@ -522,7 +522,7 @@ function checkDungeonHasItem(VALUES)
 						else
 							name=weaponType.." "..dropTable[j][4]
 						end
-                        thisDungeonHas[itemNum]=itemHeader..dropTable[j][3].."{iB}"..name.."{iE}"    
+                        thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..MDRGetItemCode(dropTable[j][3])..name.."{iE}"    
                 end            
                 thisDungeonHasItem=1
                 itemNum=itemNum+1            
@@ -544,18 +544,8 @@ function checkDungeonHasItem(VALUES)
 					else
 						itemHeader="{iH}"
 						name=dropTable[j][6]
-					end
-                    local bonus
-                    if dropTable[j][3]<120000 then --드레노어
-                        bonus="{iBD}"
-                    elseif dropTable[j][3]<160000 then --군단
-                        bonus="{iBL}"
-					elseif dropTable[j][3]<175000 then --격아
-                        bonus="{iBB}"
-                    else --어둠땅
-                        bonus="{iB}"
-                    end					
-                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..bonus..name.."{iE}"                                    
+					end			
+                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..MDRGetItemCode(dropTable[j][3])..name.."{iE}"                                    
                 end                           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
@@ -611,7 +601,7 @@ function checkDungeonHasItem(VALUES)
 						else
 							name=weaponType.." "..dropTable[j][4]
 						end
-                        thisDungeonHas[itemNum]=itemHeader..dropTable[j][3].."{iB}"..name.."{iE}"                     
+                        thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..MDRGetItemCode(dropTable[j][3])..name.."{iE}"                     
                     end                            
                     thisDungeonHasItem=1
                     itemNum=itemNum+1
@@ -642,17 +632,8 @@ function checkDungeonHasItem(VALUES)
 						itemHeader="{iH}"
 						name=dropTable[j][6]
 					end
-                    local bonus
-                    if dropTable[j][3]<120000 then --드레노어
-                        bonus="{iBD}"
-                    elseif dropTable[j][3]<160000 then --군단
-                        bonus="{iBL}"
-					elseif dropTable[j][3]<175000 then --격아
-                        bonus="{iBB}"
-                    else --어둠땅
-                        bonus="{iB}"
-                    end						
-                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..bonus..name.."{iE}"                                  
+					MDRGetItemCode(itemID)					
+                    thisDungeonHas[itemNum]=itemHeader..dropTable[j][3]..MDRGetItemCode(dropTable[j][3])..name.."{iE}"                                  
                 end                           
                 thisDungeonHasItem=1
                 itemNum=itemNum+1
@@ -932,3 +913,17 @@ function findCharAllItem(VALUES)
     end        
 end
 
+function MDRGetItemCode(itemID)
+	if not itemID then 
+		bonus="{iB}"
+	elseif itemID<120000 then --드레노어
+		bonus="{iBD}"
+    elseif itemID<160000 then --군단
+		bonus="{iBL}"
+	elseif itemID<175000 then --격아
+		bonus="{iBB}"
+    else --어둠땅
+		bonus="{iB}"
+    end
+	return bonus
+end

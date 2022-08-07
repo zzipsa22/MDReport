@@ -1195,7 +1195,7 @@ function MDRdoReportHistory(VALUES)
             if (strfind(k,charName) or strfind(class,charName) or strfind(shortClass,charName)) then
                 findChar=findChar+1
                 if level==MDR.SCL then
-                    charName=k
+					charName=k					
                     isFullLevel=1
                 else
                     altName=MDRsplit(k," - ")[1]
@@ -1247,7 +1247,7 @@ function MDRdoReportHistory(VALUES)
     local howManyToons=0
     local newtoons={}
     for k,v in pairs( toons) do
-        if (k~=meAddon or (includeMain and k==meAddon)) and v.runHistory and (v.Level==MDR.SCL or v.level==MDR.SCL) then  
+        if (k~=meAddon or (includeMain and k==meAddon)) and v.runHistory and (v.Level==MDR.SCL or v.level==MDR.SCL) and (v.IL>MDR.DIL.base+26 or v.MythicKey.level) then  
             v["runs"]=#v.runHistory
             v["name"]=k
             
