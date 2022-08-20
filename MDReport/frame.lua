@@ -29,10 +29,13 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         elseif event=="BAG_UPDATE_DELAYED" then
 			MDRbackupMythicKey("bagupdate")
             return
-		elseif event=="ITEM_CHANGED" then			
-			C_Timer.After(1, function() 
-				MDRbackupMythicKey("bagupdate")
-			end)
+		elseif event=="ITEM_CHANGED" then
+			local key=select(1, ...)
+			if string.match(key, "180653") then				
+				C_Timer.After(1, function() 
+					MDRbackupMythicKey("newkey")
+				end)
+			end
             return
         elseif event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)

@@ -807,8 +807,8 @@ function doFullReport(chars,channel,who,callType)
             local message=""
             local sameCheck
             
-            local s=MDR.myMythicKey.start
-            local f=MDR.myMythicKey.finish   
+            local s=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
+            local f=MDR.myMythicKey.finish or MDR.myMythicKey.newkey
             
             local on=""
             if channel=="ADDON_PARTY" then
@@ -826,11 +826,25 @@ function doFullReport(chars,channel,who,callType)
                 else      
                     message=headStar..classStatus..":"..havekey.."▶"..chars[i]["extraLink"] 
                 end 
-            elseif callType and callType["newkey"] then                
-                local up=""
-                if f.level=="nil" or s.level=="nil" then return end
-                if f.level > s.level then
-                    up="|cff48ff00▲"..(f.level-(s.level+1)).."상|r"
+            elseif callType and callType["newkey"] then
+				if not f.level or not s.level then return end
+				
+                local up=""				
+				local slevel=s.level
+				local flevel=f.level
+                
+				if MDR.myMythicKey.finish and slevel~=2 then
+					slevel=slevel+1					
+				end
+				
+                if flevel > slevel then
+                    up="|cff48ff00▲"..(flevel-slevel).."상|r"
+				elseif not MDR.myMythicKey.finish or flevel==slevel then 
+					if flevel == slevel then
+						up="|cffffff00돌 바꿈|r"
+					else
+						up="|cffffff00▼단수 낮춤|r"
+					end
                 else
                     up="|cffff00b4▼시간초과|r"
                 end
@@ -839,7 +853,7 @@ function doFullReport(chars,channel,who,callType)
                 local coveIconBefore="{c"..MDRgetCovenantID(before).."}"
                 local coveIconAfter="{c"..MDRgetCovenantID(after).."}"
                 
-                message="새 돌: ["..coveIconBefore..before..(s.level+1).."] ▶ ["..coveIconAfter..after..f.level.."] ("..up..") : "..(f and f.link  or keyLink)
+                message="새 돌: ["..coveIconBefore..before..(slevel).."] ▶ ["..coveIconAfter..after..flevel.."] ("..up..") : "..(f and f.link  or keyLink)
                 
             elseif callType and callType["currentdungeon"] then                
                 local now=" "..on.."준비중"

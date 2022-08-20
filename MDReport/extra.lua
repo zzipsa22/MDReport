@@ -216,8 +216,10 @@ function MDRbackupMythicKey(type)
     t.level=level
     t.name=name
     t.link=link
-    t.mapID=mapID  
-    
+    t.mapID=mapID
+	
+	if type=="bagupdate" then return end    
+	
     if type=="finish" then        
         MDR.myMythicKey.finish=t
         MDR.myMythicKey.onLoad=t    
@@ -230,13 +232,12 @@ function MDRbackupMythicKey(type)
                 VALUES["channel"]="ADDON_PARTY"    
                 filterVALUES(VALUES)
         end)
-    elseif type=="bagupdate" then    
-        return
     else    
         MDR.myMythicKey[type]=t 
         MDR.myMythicKey.finish=nil    
-    end    
+    end
     
+    if type=="newkey" then return end 
     --쐐기 기록 저장
     MDRgetHistory(type)
 end
