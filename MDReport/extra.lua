@@ -183,18 +183,15 @@ function MDRbackupMythicKey(type)
         MDRclearHistory()
     end  
     
-    local name,level,link  
+    local link
+	local level=C_MythicPlus.GetOwnedKeystoneLevel()
+	local mapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID()
+	local name=mapID and C_ChallengeMode.GetMapUIInfo(mapID)	
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
             local itemID = GetContainerItemID(bagID, invID)
             if itemID and itemID == 180653 then
-                local keyLink = GetContainerItemLink(bagID, invID)
-                local KeyInfo = {strsplit(':', keyLink)}
-                local mapID = tonumber(KeyInfo[3])
-                local mapLevel = tonumber(KeyInfo[4])
-                name = C_ChallengeMode.GetMapUIInfo(mapID)
-                level = mapLevel
-                link = keyLink
+                link = GetContainerItemLink(bagID, invID)                
             end
         end
     end
@@ -202,7 +199,7 @@ function MDRbackupMythicKey(type)
     --쐐기돌 정보 초기화 및 새로 입력
     MDRconfig.Char[meAddon].MythicKey={}
     
-    if link then 
+    if link then		
         MDR.thisCharHasKey=1
         MDRconfig.Char[meAddon].MythicKey.level=level
         MDRconfig.Char[meAddon].MythicKey.name=name
@@ -1079,21 +1076,20 @@ function MDRgetHistory(type)
         k.IL, k.ILe = tonumber(IL), tonumber(ILe)
     end
     
-    local kName,kLevel,kLink  
+	local kLevel=C_MythicPlus.GetOwnedKeystoneLevel()
+	local kMapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID()
+	local kName=kMapID and C_ChallengeMode.GetMapUIInfo(kMapID)	
+    local kLink  
+	
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
             local itemID = GetContainerItemID(bagID, invID)
             if itemID and itemID == 180653 then
-                local keyLink = GetContainerItemLink(bagID, invID)
-                local KeyInfo = {strsplit(':', keyLink)}
-                local mapID = tonumber(KeyInfo[3])
-                local mapLevel = tonumber(KeyInfo[4])
-                kName = C_ChallengeMode.GetMapUIInfo(mapID)
-                kLevel = mapLevel
-                kLink = keyLink
+                kLink = GetContainerItemLink(bagID, invID)                
             end
         end
     end
+	
     k.MythicKey={}
     k.MythicKey.level=kLevel
     k.MythicKey.name=kName

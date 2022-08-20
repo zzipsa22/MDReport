@@ -12,11 +12,12 @@ MDR.frame:RegisterEvent("CHAT_MSG_SYSTEM")
 MDR.frame:RegisterEvent("CHAT_MSG_ADDON")
 MDR.frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 MDR.frame:RegisterEvent("BAG_UPDATE_DELAYED")
+MDR.frame:RegisterEvent("ITEM_CHANGED")
 MDR.frame:RegisterEvent("COVENANT_CHOSEN")
 
 MDR.frame:SetScript("OnEvent", function(self, event, ...)
 	
-        if event== "ADDON_LOADED " then
+        if event== "ADDON_LOADED" then
             
             local addonName=select(1, ...)            
             if addonName ~= ADDON_NAME then
@@ -26,7 +27,12 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             MDRconfig = MDRconfig or {};
             return    
         elseif event=="BAG_UPDATE_DELAYED" then
-            MDRbackupMythicKey("bagupdate")
+			MDRbackupMythicKey("bagupdate")
+            return
+		elseif event=="ITEM_CHANGED" then			
+			C_Timer.After(1, function() 
+				MDRbackupMythicKey("bagupdate")
+			end)
             return
         elseif event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
