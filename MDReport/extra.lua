@@ -225,7 +225,7 @@ function MDRbackupMythicKey(type)
         MDR.myMythicKey.onLoad=t    
         local VALUES={}
         local callTypeT={}
-        C_Timer.After(1, function() 
+        C_Timer.After(0.5, function() 
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["who"]=meGame
                 VALUES["callTypeT"]=callTypeT    
@@ -237,7 +237,18 @@ function MDRbackupMythicKey(type)
         MDR.myMythicKey.finish=nil    
     end
     
-    if type=="newkey" then return end 
+    if type=="newkey" then 
+		local VALUES={}
+        local callTypeT={}
+        C_Timer.After(0.5, function() 
+                callTypeT[1]=getCallTypeTable("무슨돌")
+                VALUES["who"]=meGame
+                VALUES["callTypeT"]=callTypeT    
+                VALUES["channel"]="ADDON_PARTY"    
+                filterVALUES(VALUES)
+        end)
+		return
+	end 
     --쐐기 기록 저장
     MDRgetHistory(type)
 end

@@ -839,8 +839,8 @@ function doFullReport(chars,channel,who,callType)
 				
                 if flevel > slevel then
                     up="|cff48ff00▲"..(flevel-slevel).."상|r"
-				elseif not MDR.myMythicKey.finish or flevel==slevel then 
-					if flevel == slevel then
+				elseif not MDR.myMythicKey.finish or f.level==s.level then 
+					if f.level == s.level then
 						up="|cffffff00돌 바꿈|r"
 					else
 						up="|cffffff00▼단수 낮춤|r"
@@ -888,7 +888,10 @@ function doFullReport(chars,channel,who,callType)
 end
 
 --메세지 출력
-function reportMessageLines(messageLines,channel,who,callType)   
+function reportMessageLines(messageLines,channel,who,callType)
+
+	if channel==nil or ((channel=="PARTY" or channel=="ADDON_PARTY") and not IsInGroup()) then channel="print" end 
+	
     -- 애드온 메세지는 애드온 채널로 전송
     if channel=="ADDON_PARTY" then
         reportAddonMessage(messageLines,"PARTY",who,callType)
@@ -906,8 +909,6 @@ function reportMessageLines(messageLines,channel,who,callType)
         reportAddonMessage(messageLines,"WHISPER",who,callType)
         return 
     end
-    
-    if channel==nil or (channel=="PARTY" and not IsInGroup()) then channel="print" end
     
     --최종적으로 귓말채널 반환
     if (channel=="WHISPER_IN") or (channel=="WHISPER_OUT")  then

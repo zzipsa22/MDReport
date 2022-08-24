@@ -32,7 +32,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
 		elseif event=="ITEM_CHANGED" then
 			local key=select(1, ...)
 			if string.match(key, "180653") then				
-				C_Timer.After(1, function() 
+				C_Timer.After(0.5, function() 
 					MDRbackupMythicKey("newkey")
 				end)
 			end
@@ -70,7 +70,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             return
             -- 쐐기 완료시  
         elseif (event=="CHALLENGE_MODE_COMPLETED") then     
-            C_Timer.After(5, function()  
+            C_Timer.After(3, function()  
                     MDRbackupMythicKey("finish")     
             end)            
             return

@@ -1562,10 +1562,10 @@ function findCharAllKey(VALUES)
     
     if callType["newkey"] then
         if not MDR.myMythicKey then return end
-        local start=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
-        local finish=MDR.myMythicKey.finish
-        if start==nil or finish==nil then return end
-        if start.level==finish.level and start.name==finish.name then
+        local key1=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
+        local key2=MDR.myMythicKey.finish or MDR.myMythicKey.newkey
+        if key1==nil or key2==nil then return end
+        if key1.name==key2.name and key1.level==key2.level then
             return
         else
             onlyOnline=1  
