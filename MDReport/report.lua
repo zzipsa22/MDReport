@@ -839,8 +839,8 @@ function doFullReport(chars,channel,who,callType)
 				
                 if flevel > slevel then
                     up="|cff48ff00▲"..(flevel-slevel).."상|r"
-				elseif not MDR.myMythicKey.finish or f.level==s.level then 
-					if f.level == s.level then
+				elseif not MDR.myMythicKey.finish or flevel==slevel then 
+					if flevel == slevel then
 						up="|cffffff00돌 바꿈|r"
 					else
 						up="|cffffff00▼단수 낮춤|r"
