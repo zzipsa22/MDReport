@@ -592,6 +592,9 @@ function MDRCommandsParty(msg, editbox)
 	elseif msg=="기록" or msg=="횟수" then
 		MDRhistory("")
 		return
+	elseif msg=="도움말" then
+		MDRCommands(msg, editbox)
+		return	
     end
     if IsInGroup() then
         MDRsendAddonMessage("!"..msg,"PARTY",meGame)    
@@ -612,6 +615,9 @@ function MDRCommandsOfficer(msg, editbox)
 	elseif msg=="기록" or msg=="횟수" then
 		MDRhistory("")
 		return
+	elseif msg=="도움말" then
+		MDRCommands(msg, editbox)
+		return	
     end
     MDRsendAddonMessage("!"..msg,"OFFICER",meGame)      
     return    
@@ -1321,14 +1327,14 @@ function MDRdoReportHistory(VALUES)
                         color3="회색" 
                         reward=""       
                     end     
-                    if i<=8 then 
+                    --if i<=8 then 
                         local space=""
                         if runInfo.level<10 then 
                             space=" "
                         end
                         message=" "..timed..MDRcolor(color2,0,"["..i.."] ")..MDRcolor(color1,0,space..runInfo.level.."단").." "..coveIcon..MDRcolor(color2,0,name)..MDRcolor(color3,0,reward)
                         messageLines[#messageLines+1]=message
-                    end     
+                    --end     
                 end
             end
             
@@ -1608,15 +1614,16 @@ end
 
 function MDRgetCurrentStatus()  
     local status=""
-    local here,_,_,_,_,_,_,ID=GetInstanceInfo()  
-    local coveHere=MDRgetCovenantID(getShortDungeonName(here))
-    if coveHere >0 then
-        status="{D}"
-    elseif IsInRaid() then    
-        status="{R}"
-    elseif ID==2162 then
-        status="{T}"
-    elseif MDRconfig.DNDMode==1 then
+	local mapID = C_ChallengeMode.GetActiveChallengeMapID()	
+    local here,_,_,_,_,_,_,ID=GetInstanceInfo()
+    --local coveHere=MDRgetCovenantID(getShortDungeonName(here))	
+	if mapID~=nil and mapID>0 then
+		status="{D}"
+	elseif IsInRaid() then    
+		status="{R}"
+	elseif ID==2162 then
+		status="{T}"			
+	elseif MDRconfig.DNDMode==1 then
         status="{DND}"
     end
     return status

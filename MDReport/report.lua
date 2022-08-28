@@ -412,8 +412,9 @@ function MDRprintAddonMessage(...)
     
     local ch
     local statusIcon=status
+	local inLockdown = InCombatLockdown()
     if channel=="GUILD" then
-        if yourStatus~="" then return end
+        if yourStatus~="" and inLockdown then return end
         ch=channelColor[channel].."G"        
     elseif channel=="PARTY" then
         ch=channelColor[channel].."P"
@@ -824,7 +825,7 @@ function doFullReport(chars,channel,who,callType)
                 if sameCheck then                   
                     message=", "..headStar..classStatus..":"..havekey
                 else      
-                    message=headStar..classStatus..":"..havekey.."▶"..chars[i]["extraLink"] 
+                    message=on..headStar..classStatus..":"..havekey.."▶"..chars[i]["extraLink"] 						
                 end 
             elseif callType and callType["newkey"] then
 				if not f.level or not s.level then return end

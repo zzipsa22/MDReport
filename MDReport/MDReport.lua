@@ -7,7 +7,7 @@ C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
 MDR["version"]="@project-version@"
 MDR["lastUpdate"]="@project-date-iso@"
 MDR["guide"]=0
-MDR["cooltime"]=2
+MDR["cooltime"]=1
 MDR["meGame"]=UnitName("player").."-"..GetRealmName() 
 MDR["meAddon"]=UnitName("player").." - "..GetRealmName() 
 MDR["krClass"],MDR["className"]=UnitClass("player")
@@ -493,7 +493,7 @@ function filterVALUES(VALUES)
 				eul=MDRko(CL,"을")	
 				eun=MDRko(CL,"은")
 				
-				local item="{iH}"..itemID..MDRGetItemCode(itemID)..itemIcon..MDRcolor("영웅",0,word).."{iE}"
+				local item="{iH}"..itemID..MDRGetItemCode(itemID)..itemIcon..MDRcolor("전설",0,word).."{iE}"
 				item=MDRcolorizeForItem(item)
 				
 				icon=MDRgetCovenantIcon(dungeon)				
@@ -650,12 +650,15 @@ function filterVALUES(VALUES)
             print(statusIcon..mdrcolor[channel]..message)
             if doDNDalert==1 and MDR.DNDalert~=1 then
                 local message=""
-                if status=="{D}" then
-                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("하늘",0,"["..statusIcon.."던전에 입장]").." 한 상태이므로 검색결과를 표시하지 않습니다."
-                elseif status=="{R}" then
-                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("관리자",0,"["..statusIcon.."공격대에 합류]").." 중이므로 검색결과를 표시하지 않습니다."
-                elseif status=="{T}" then
-                    message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("흑마",0,"["..statusIcon.."토르가스트에 입장]").." 한 상태이므로 검색결과를 표시하지 않습니다."
+				local inLockdown = InCombatLockdown()
+				if inLockdown then
+					if status=="{D}" then
+						message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("하늘",0,"["..statusIcon.."쐐기돌 전투]").." 가 진행중이므로 검색결과를 표시하지 않습니다."
+					elseif status=="{R}" then
+						message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("관리자",0,"["..statusIcon.."공격대 전투]").." 가 진행중이므로 검색결과를 표시하지 않습니다."
+					elseif status=="{T}" then
+						message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRcolor("흑마",0,"["..statusIcon.."토르가스트 전투]").." 가 진행중이므로 검색결과를 표시하지 않습니다."
+					end
                 elseif status=="{DND}" then
                     message=MDRcolor("수도",0,"MDR▶").."현재 "..MDRgetModeName(2).." 가 "..MDRcolor("초록",0,"[활성화]").." 되어 있어 검색결과를 표시하지 않습니다. "..MDRcolor("회색",0,"[비활성화]").." 하려면 "..MDRcolor("노랑",0,"'/! 방해'").." 를 입력하세요."
                 end
@@ -708,27 +711,26 @@ function filterVALUES(VALUES)
 		or callType["stat"] 
         or callType["spec"] 
 		or callType["itemID"]
-        or callType["class"] 
-        or callType["role"]))
+        or callType["class"]
+		or callType["specificitem"]
+        or callType["role"]))		
 		or callType["itemID"] then --아이템검색을 요구하면  
         
         --무기 사용 가능 여부 체크
-        if ((callType["spec"] or callType["class"]) and callType["specificitem"]) then 
+        if ((callType["spec"] or callType["class"] or callType["dungeon"]) and callType["specificitem"]) then 
             
             local spec=keyword["spec"]
             local class=keyword["class"] or keyword3["spec"]
             local specClass
             if spec then
                 specClass=MDRcolor(spec,10)
-            else
+            elseif class then
                 specClass=MDRcolor(class)
-            end  
-            if checkSpecCanUseItem(spec or class,keyword["specificitem"]) then 
-                
+            end			
+            if ((spec or class) and checkSpecCanUseItem(spec or class,keyword["specificitem"])) or callType["dungeon"] then                 
                 VALUES["comb"]="Spec_Specificitem" 
             else 
-                if who==meGame then    
-                    
+                if who==meGame then                        
                     local neun=MDRko(MDRcolor(spec or class,5),"는")
                     local eul=MDRko(keyword["specificitem"],"을")
                     print("|cFFff0000▶|r"..specClass..neun.." "..MDRcolor(keyword["specificitem"],-2)..eul.." 사용할 수 없습니다. 다른 아이템으로 다시 시도해보세요.")    
@@ -1025,21 +1027,30 @@ function checkCallMe(onlyYou)
     local t=MDRconfig.Char
     local faction=UnitFactionGroup("player")
     local realm=gsub(GetRealmName()," ","")
-    local findYou=false
+	local findYou=false
+    local match1,match2,match3=false,false,false	
     for k,v in pairs(t) do                
         local charRealm=MDRsplit(gsub(k," ",""),"-")[2]
         local name=gsub(k, "%s%-.+","") 
         onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)
-        name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)
-        if strfind(name,onlyYou) and v.Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
-            if v.Level==MDR.SCL then                
-                return k
-            else
-                findYou=k
+        name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)		
+        if v.Faction==faction and RealmMap[realm]==RealmMap[charRealm] then
+			if name==onlyYou and v.Level==MDR.SCL then 				
+				match1=k
+				findYou=true
+			elseif strfind(name,onlyYou) then				
+				if not match2 then match2={} end
+				if not match3 then match3={} end
+				if v.Level==MDR.SCL then
+					tinsert(match2,k)					
+				else
+					tinsert(match3,k)
+				end
+				findYou=true
             end
         end
-    end
-    return findYou
+    end		
+    return findYou, match1, match2, match3
 end
 
 
@@ -1180,6 +1191,7 @@ function MDRreportScore(VALUES)
     end
     
     local findChars={}
+	local findYou,match1,match2,match3=checkCallMe(onlyYou)	
     if onlyMe then        
         local t=MDRconfig.Char
         for k,v in pairs(t) do
@@ -1188,29 +1200,37 @@ function MDRreportScore(VALUES)
                 tinsert(findChars,k)
             end
         end
-    elseif onlyYou and checkCallMe(onlyYou) then
-        tinsert(findChars,checkCallMe(onlyYou))
+    elseif onlyYou and findYou then
+		--findChars=checkCallMe(onlyYou)	
+		if match1 then 
+			tinsert(findChars,match1)
+		elseif match2 then			
+			for i=1,#match2 do
+				tinsert(findChars,match2[i])
+			end			
+		elseif match3 then
+			tinsert(findChars,meAddon)
+			--[[
+			for i=1,#match3 do
+				tinsert(findChars,match3[i])
+			end
+			]]
+		end
     else
         tinsert(findChars,meAddon)
-    end
-    
-    --[[
-    local targetChar=meAddon
-    if onlyYou and checkCallMe(onlyYou)    then
-        targetChar=checkCallMe(onlyYou)
-    end
-    ]]
+    end  
     
     local messageLines={}
     
     for i=1,#findChars do
         local targetChar=findChars[i]
+		local IL=MDRconfig.Char[targetChar].IL		
         local charName=gsub(targetChar, "%s%-.+","")
         local charClass=MDRconfig.Char[targetChar].Class
         local charShortClass=MDRcolor(charClass,6)
         local charClassIcon="{"..charShortClass.."}"
         local charHead
-        if targetChar==meAddon and not onlyMe then
+        if targetChar==meAddon and not onlyMe and #findChars==1 then
             charHead=charClassIcon..MDRcolor(charShortClass,0,"▶")
         else
             local shortName=strsub(charName,1,6)
@@ -1332,7 +1352,9 @@ function MDRreportScore(VALUES)
                 end
                 
                 message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."|r"..tyr_clear.."｜"..MDRgetAffixIcon("경화")..for_color..for_level.."|r"..for_clear.."]"
-                tinsert(messageLines,message)
+				if IL>DIL.base+26 then 
+					tinsert(messageLines,message)
+				end
             end
         else -- !점수
             local message=""
@@ -1344,7 +1366,9 @@ function MDRreportScore(VALUES)
             local for_desc=MDRgetDungeonScore(targetChar,"경화")
             
             message=charHead..MDRgetScoreColor(total,"total").."점 ["..MDRgetAffixIcon("폭군")..tyr_desc.." | "..MDRgetAffixIcon("경화")..for_desc.."]"
-            tinsert(messageLines,message)
+			if IL>DIL.base+26 then 
+					tinsert(messageLines,message)
+			end
         end
         
     end
@@ -1572,7 +1596,7 @@ function findCharAllKey(VALUES)
         end  
     end 
     
-    if callType["currentdungeon"] then
+    if callType["currentdungeon"] then	
         local here,_=GetInstanceInfo()
         local mapID = C_ChallengeMode.GetActiveChallengeMapID()
         local level, _ = C_ChallengeMode.GetActiveKeystoneInfo()
@@ -1582,9 +1606,24 @@ function findCharAllKey(VALUES)
         local headStar=MDR.skull[MDRcolor(krClass,6)]
         local messageLines={}  
 		
+		local hasSlottedKeystone = C_ChallengeMode.HasSlottedKeystone()
+		local numDeaths, timeLost = C_ChallengeMode.GetDeathCount()
+		
+		if mapID~=nil and mapID>0 and hasSlottedKeystone then
+			name, _= C_ChallengeMode.GetMapUIInfo(mapID) 
+			messageLines[1]=headStar..getShortDungeonName(name)..level..": "..(onLoad.link or "").." {OP}진행중 ("..(numDeaths or 0).."번 죽음)" 
+            if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
+                reportAddonMessage(messageLines,channel,who,callType)
+            else  
+                reportMessageLines(messageLines,channel,who,callType) 
+            end
+			return
+		end		
+		
+		--[[
         if mapID~=nil and mapID>0 then --쐐기중이면
-            if start==nil or onLoad==nil then return end  
-            name, _= C_ChallengeMode.GetMapUIInfo(mapID) 
+            if start==nil or onLoad==nil then return end
+			name, _= C_ChallengeMode.GetMapUIInfo(mapID)
             if name==start.name and level==onLoad.level and level==start.level+1 then   
                 messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." {OP}진행중" 
                 if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
@@ -1595,6 +1634,7 @@ function findCharAllKey(VALUES)
             end  
             return  
         end 
+		]]
 		
         callType["dungeon"]=1
         keyword["dungeon"]={}
