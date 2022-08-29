@@ -1441,7 +1441,7 @@ function MDRgetAffixIcon(affix)
 end
 
 function MDRgetDungeonScore(name,affix)
-    local scoreT=MDRconfig.Char[name].Score
+    local scoreT=MDRconfig.Char[name].Score or {}
     local dungeonHistory=""
     local dungeonTable={
         --[1]={"핏","핏심"},
@@ -1539,22 +1539,6 @@ function findCharAllKey(VALUES)
                 if not keyword["dungeon"] then
                     keyword["dungeon"]={}
                 end
-				--[[
-				local megaDungeon=0
-				if callTypeT[i][2]=="타자베쉬" then
-					tinsert(keyword["dungeon"],"경이") 
-					tinsert(keyword["dungeon"],"소레아")
-					megaDungeon=1
-				elseif callTypeT[i][2]=="카라잔" then
-					tinsert(keyword["dungeon"],"하층") 
-					tinsert(keyword["dungeon"],"상층")
-					megaDungeon=1
-				elseif callTypeT[i][2]=="메카곤" then
-					tinsert(keyword["dungeon"],"고철장") 
-					tinsert(keyword["dungeon"],"작업장")
-					megaDungeon=1
-				end
-				]]
                 if not tContains(keyword["dungeon"],callTypeT[i][2]) then
                     tinsert(keyword["dungeon"],callTypeT[i][2])    
                 end   
@@ -1583,17 +1567,17 @@ function findCharAllKey(VALUES)
     end 
     local chars=GetHaveKeyCharInfo(type) 
     local forceToShort=0
+	
+	local MythicKeyB=MDRconfig.Char[meAddon].MythicKeyB or {}
+	local MythicKey=MDRconfig.Char[meAddon].MythicKey or {}
     
-    if callType["newkey"] then
-        if not MDR.myMythicKey then return end
-        local key1=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
-        local key2=MDR.myMythicKey.finish or MDR.myMythicKey.newkey
-        if key1==nil or key2==nil then return end
-        if key1.name==key2.name and key1.level==key2.level then
-            return
-        else
-            onlyOnline=1  
-        end  
+    if callType["newkey"] then		
+		if not MythicKeyB.name or not MythicKey.name then return end
+		if not MythicKeyB.YourKeyUsed and (MythicKeyB.name == MythicKey.name and MythicKeyB.level == MythicKey.level) then			
+			return
+		else
+			onlyOnline=1			
+		end			
     end 
     
     if callType["currentdungeon"] then	
@@ -1603,29 +1587,42 @@ function findCharAllKey(VALUES)
         local name
         local onLoad=MDR.myMythicKey.onLoad
         local start=MDR.myMythicKey.start
-        local headStar=MDR.skull[MDRcolor(krClass,6)]
-        local messageLines={}  
+        local headStar="{"..MDRcolor(krClass,6).."}"		
+        local messageLines={} 				
 		
-		local hasSlottedKeystone = C_ChallengeMode.HasSlottedKeystone()
-		local numDeaths, timeLost = C_ChallengeMode.GetDeathCount()
-		
-		if mapID~=nil and mapID>0 and hasSlottedKeystone then
-			name, _= C_ChallengeMode.GetMapUIInfo(mapID) 
-			messageLines[1]=headStar..getShortDungeonName(name)..level..": "..(onLoad.link or "").." {OP}진행중 ("..(numDeaths or 0).."번 죽음)" 
-            if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
-                reportAddonMessage(messageLines,channel,who,callType)
-            else  
-                reportMessageLines(messageLines,channel,who,callType) 
-            end
-			return
-		end		
-		
-		--[[
-        if mapID~=nil and mapID>0 then --쐐기중이면
-            if start==nil or onLoad==nil then return end
-			name, _= C_ChallengeMode.GetMapUIInfo(mapID)
-            if name==start.name and level==onLoad.level and level==start.level+1 then   
-                messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." {OP}진행중" 
+        if mapID~=nil and mapID>0 then --쐐기중이면	
+			if not MythicKeyB.YourKeyUsed then return end
+			if not MythicKeyB.name or not MythicKey.name then return end
+			name, _= C_ChallengeMode.GetMapUIInfo(mapID) 				-- 활성화된 맵 이름
+			local numDeaths, timeLost = C_ChallengeMode.GetDeathCount()			
+			local TimeRemain = 0			
+			if MythicKeyB.TimeLimit then
+				TimeRemain = MythicKeyB.TimeLimit - time() - (timeLost or 0)
+			end			
+			local TimeAlert,TimeMin,TimeSec="",0,0
+			local Overed
+			local OveredText=""
+			
+			if TimeRemain < 0 then
+				Overed=true
+				TimeRemain=TimeRemain*-1
+				OveredText="{CW} 초과|r"
+			else
+				Overed=false
+				OveredText="{CC} 남음|r"
+			end			
+			if TimeRemain>60 then
+				TimeMin = math.floor(TimeRemain/60)
+				TimeSec = TimeRemain-TimeMin*60
+				TimeAlert = "{CA}"..TimeMin.."분 "..TimeSec.."초|r"
+			else
+				TimeAlert = "{CA}"..TimeRemain.."초|r"						
+			end
+			
+            --if name==start.name and level==onLoad.level and level==start.level+1 then   
+			if MythicKeyB.YourKeyUsed==1 then				
+				messageLines[1]=headStar..getShortDungeonName(MythicKeyB.name)..MythicKeyB.level..": ".." {OP}진행중 ("..TimeAlert..OveredText..", "..(numDeaths or 0).."번 {CG}죽음|r)"
+                --messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." {OP}진행중 ("..(numDeaths or 0).."번 죽음)" 
                 if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
                     reportAddonMessage(messageLines,channel,who,callType)
                 else  
@@ -1634,8 +1631,7 @@ function findCharAllKey(VALUES)
             end  
             return  
         end 
-		]]
-		
+				
         callType["dungeon"]=1
         keyword["dungeon"]={}
 		        
@@ -1647,8 +1643,7 @@ function findCharAllKey(VALUES)
 			keyword["dungeon"][1]="메카곤"			
 		else
 			keyword["dungeon"][1]=getShortDungeonName(here)
-		end				
-		--print(here)
+		end			
 		
         onlyOnline=1
     end 

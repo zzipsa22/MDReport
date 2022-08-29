@@ -8,6 +8,17 @@ local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
+local TimeLimit = {
+	[391]=2340,--경이
+	[392]=1800,--소레아
+	[369]=2280,--고철
+	[370]=1920,--작업
+	[227]=2520,--하층
+	[234]=2100,--상층
+	[169]=1800,--강철
+	[166]=1800,--파멸
+}
+
 C_Timer.After(10, function()    
         local x = GetLocale()
         if x ~= "koKR" then 
@@ -173,6 +184,7 @@ function MDRbackupMythicKey(type)
             if v.MythicKey and (v.MythicKey.ResetTime or 0) < time() then
                 v.runHistory = {}
                 v.MythicKey = {}
+				v.MythicKeyB = {}
                 v.reward1=nil
                 v.reward4=nil
                 v.reward10=nil
@@ -180,13 +192,13 @@ function MDRbackupMythicKey(type)
         end
         --쐐기 시작시 피니시 정보 초기화
     elseif type=="start" then
-        MDRclearHistory()
+        MDRclearHistory()		
     end  
     
     local link
-	local level=C_MythicPlus.GetOwnedKeystoneLevel()
-	local mapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID()
-	local name=mapID and C_ChallengeMode.GetMapUIInfo(mapID)	
+	local level=C_MythicPlus.GetOwnedKeystoneLevel()  -- 소유한 돌 레벨
+	local mapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID() -- 소유한 돌 던전 ID
+	local name=mapID and C_ChallengeMode.GetMapUIInfo(mapID)	-- 소유한 돌 이름
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
             local itemID = GetContainerItemID(bagID, invID)
@@ -197,17 +209,46 @@ function MDRbackupMythicKey(type)
     end
     
     --쐐기돌 정보 초기화 및 새로 입력
+	local MythicKeyB=MDRconfig.Char[meAddon].MythicKey or {} -- 기존 쐐기돌 백업
+	local MythicKeyBB=MDRconfig.Char[meAddon].MythicKeyB or {} -- 백업된 쐐기돌 백업
+	local ActiveMapID = C_ChallengeMode.GetActiveChallengeMapID() -- 활성화된 맵ID
+	local ActiveMapLevel = C_ChallengeMode.GetActiveKeystoneInfo() -- 활성화된 맵Level
+ 	local ActiveMapName,_,ActiveMapTimeLimit = ActiveMapID and C_ChallengeMode.GetMapUIInfo(ActiveMapID) -- 활성화된 맵 이름, 시간
+	local ActiveMapTimeLimit=TimeLimit[ActiveMapID]
+	--쐐기중이면서 본인돌이면
+	if ActiveMapID and ActiveMapID > 0 and MythicKeyB.name==ActiveMapName and MythicKeyB.level==ActiveMapLevel -- 백업된 쐐기돌과 현재 활성화된 맵ID, 레벨이 일치하고
+		and ((ActiveMapLevel==2 and ActiveMapLevel==level) or (ActiveMapLevel~=2 and ActiveMapLevel==level+1)) then  -- 소유한 쐐기돌이 한단 낮아졌으면
+		MythicKeyB.YourKeyUsed=1
+		if type=="start" then -- start면 시간 백업
+			MythicKeyB.Started=time()
+			MythicKeyB.TimeLimit=time() + (ActiveMapTimeLimit or 0) + 10
+		end
+	end
+
     MDRconfig.Char[meAddon].MythicKey={}
     
-    if link then		
+    if link then -- 가방에 쐐기돌이 있을 경우
         MDR.thisCharHasKey=1
+		if MythicKeyB.name and (MythicKeyB.name~=name or MythicKeyB.level~=level) then --키에 변화가 있으면 시간과 키정보 백업.
+			if MythicKeyBB.YourKeyUsed then -- 백업해둔 돌이 사용한 돌이면 시간 계승
+				MythicKeyB.Started=MythicKeyBB.Started
+				MythicKeyB.TimeLimit=MythicKeyBB.TimeLimit
+			end
+			MythicKeyB.event=type
+			MDRconfig.Char[meAddon].MythicKeyB=MythicKeyB -- 백업 입력
+		end
         MDRconfig.Char[meAddon].MythicKey.level=level
         MDRconfig.Char[meAddon].MythicKey.name=name
-        MDRconfig.Char[meAddon].MythicKey.link=link
+		MDRconfig.Char[meAddon].MythicKey.mapID=mapID
+        MDRconfig.Char[meAddon].MythicKey.link=link		
         MDRconfig.Char[meAddon].MythicKey.ResetTime=time() + C_DateAndTime.GetSecondsUntilWeeklyReset()    
     else 
         MDR.thisCharHasKey=0 
     end
+	
+	if type=="start" and MythicKeyB.event~="start" then
+		MDRconfig.Char[meAddon].MythicKeyB={}
+	end
     
     local t={}  
     local tempL,_= C_ChallengeMode.GetActiveKeystoneInfo()
@@ -231,6 +272,8 @@ function MDRbackupMythicKey(type)
                 VALUES["callTypeT"]=callTypeT    
                 VALUES["channel"]="ADDON_PARTY"    
                 filterVALUES(VALUES)
+				VALUES["channel"]="ADDON_GUILD"
+				filterVALUES(VALUES)
         end)
     else    
         MDR.myMythicKey[type]=t 
@@ -243,8 +286,12 @@ function MDRbackupMythicKey(type)
         C_Timer.After(0.5, function() 
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["who"]=meGame
-                VALUES["callTypeT"]=callTypeT    
-                VALUES["channel"]="ADDON_PARTY"    
+                VALUES["callTypeT"]=callTypeT
+				if IsInGroup() then
+					VALUES["channel"]="ADDON_PARTY"
+				else
+					VALUES["channel"]="print"
+				end
                 filterVALUES(VALUES)
         end)
 		return
@@ -1017,10 +1064,10 @@ function MDRgetHistory(type)
     --print("MDRgetHistory",type)
     --print("runHistory",#runHistory)
     if type=="onLoad" then
-        MDR.runHistory[type]=runHistory    
+        MDR.runHistory[type]=runHistory 		
     elseif type=="start" then    
         MDR.runHistory[type]=runHistory
-        MDRclearHistory()
+        MDRclearHistory()		
     elseif type=="finish" then
         if (not MDR.runHistory.start) then
             MDR.runHistory.start=MDR.runHistory.onLoad
@@ -1031,7 +1078,8 @@ function MDRgetHistory(type)
         local tempL,_=C_ChallengeMode.GetActiveKeystoneInfo()
         local t={}
         t.completed="now"
-        t.mapChallengeModeID=MDR.myMythicKey.start.currentMapID
+		local mapChallengeModeID=C_ChallengeMode.GetCompletionInfo()
+        t.mapChallengeModeID=mapChallengeModeID or MDR.myMythicKey.start.currentMapID
         t.level=MDR.myMythicKey.start.currentLevel
         t.thisWeek=true
         local tempTable=MDR.runHistory.start
@@ -1093,11 +1141,11 @@ function MDRgetHistory(type)
     if IL and tonumber(IL) and tonumber(IL) > 0 then
         k.IL, k.ILe = tonumber(IL), tonumber(ILe)
     end
-    
-	local kLevel=C_MythicPlus.GetOwnedKeystoneLevel()
-	local kMapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID()
-	local kName=kMapID and C_ChallengeMode.GetMapUIInfo(kMapID)	
-    local kLink  
+	
+	local kLink
+	local kLevel=C_MythicPlus.GetOwnedKeystoneLevel()  -- 소유한 돌 레벨
+	local mapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID() -- 소유한 돌 던전 ID
+	local kName=mapID and C_ChallengeMode.GetMapUIInfo(mapID)	-- 소유한 돌 이름
 	
     for bagID = 0, 4 do
         for invID = 1, GetContainerNumSlots(bagID) do
@@ -1111,6 +1159,7 @@ function MDRgetHistory(type)
     k.MythicKey={}
     k.MythicKey.level=kLevel
     k.MythicKey.name=kName
+	k.MythicKey.mapID=mapID
     k.MythicKey.link=kLink
     if kLink then
         k.MythicKey.ResetTime = time() + C_DateAndTime.GetSecondsUntilWeeklyReset()

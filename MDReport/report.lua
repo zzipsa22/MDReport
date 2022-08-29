@@ -808,8 +808,11 @@ function doFullReport(chars,channel,who,callType)
             local message=""
             local sameCheck
             
-            local s=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
-            local f=MDR.myMythicKey.finish or MDR.myMythicKey.newkey
+            --local s=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
+            --local f=MDR.myMythicKey.finish or MDR.myMythicKey.newkey
+			
+			local MythicKeyB=MDRconfig.Char[meAddon].MythicKeyB or {}
+			local MythicKey=MDRconfig.Char[meAddon].MythicKey or {}
             
             local on=""
             if channel=="ADDON_PARTY" then
@@ -827,34 +830,34 @@ function doFullReport(chars,channel,who,callType)
                 else      
                     message=on..headStar..classStatus..":"..havekey.."▶"..chars[i]["extraLink"] 						
                 end 
-            elseif callType and callType["newkey"] then
-				if not f.level or not s.level then return end
+            elseif callType and callType["newkey"] then								
+				if not MythicKey.level or not MythicKeyB.level then return end				
+                local up=""	
 				
-                local up=""				
-				local slevel=s.level
-				local flevel=f.level
-                
-				if MDR.myMythicKey.finish and slevel~=2 then
-					slevel=slevel+1					
+				local startLevel=MythicKeyB.level				
+				if (MythicKeyB.event=="start" or MythicKeyB.event=="finish") and MythicKeyB.level~=2 then
+					startLevel=startLevel+1					
 				end
 				
-                if flevel > slevel then
-                    up="|cff48ff00▲"..(flevel-slevel).."상|r"
-				elseif not MDR.myMythicKey.finish or flevel==slevel then 
-					if flevel == slevel then
-						up="|cffffff00돌 바꿈|r"
-					else
-						up="|cffffff00▼단수 낮춤|r"
-					end
-                else
-                    up="|cffff00b4▼시간초과|r"
-                end
-                local before=getShortDungeonName(s.name)
-                local after=getShortDungeonName(f.name)
+                if MythicKeyB.event=="finish" and MythicKey.level > startLevel then --새로 받은 돌의 단수가 올라가면
+                    up="|cff48ff00▲"..(MythicKey.level-startLevel).."상|r"
+				elseif MythicKeyB.event=="newkey" and MythicKey.level==MythicKeyB.level and MythicKey.name~=MythicKeyB.name then -- 돌 바꿈
+					up="|cffffff00돌 바꿈|r"
+				elseif MythicKeyB.event=="newkey" and MythicKey.level~=MythicKeyB.level and MythicKey.name==MythicKeyB.name then -- 단수 낮춤
+					up="|cffffff00▼단수 낮춤|r"
+				elseif MythicKeyB.event=="finish" and MythicKey.name~=MythicKeyB.name then -- 시간초과
+					up="|cffff00b4▼시간초과|r"
+				elseif MythicKeyB.event=="start" and MythicKey.level<startLevel then -- 중도포기
+					up="|cffff00b4▼중도포기|r"
+					startLevel=MythicKeyB.level
+				end
+
+                local before=getShortDungeonName(MythicKeyB.name)
+                local after=getShortDungeonName(MythicKey.name)
                 local coveIconBefore="{c"..MDRgetCovenantID(before).."}"
                 local coveIconAfter="{c"..MDRgetCovenantID(after).."}"
                 
-                message="새 돌: ["..coveIconBefore..before..(slevel).."] ▶ ["..coveIconAfter..after..flevel.."] ("..up..") : "..(f and f.link  or keyLink)
+                message="새 돌: ["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..") : "..(MythicKey and MythicKey.link or keyLink)
                 
             elseif callType and callType["currentdungeon"] then                
                 local now=" "..on.."준비중"
