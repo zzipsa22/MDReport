@@ -169,8 +169,12 @@ function reportAddonMessage(messageLines,channel,who,callType)
     end 
 end
 
-function MDRsendAddonMessage(args,channel,who)
-    C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
+function MDRsendAddonMessage(args,channel,who)	
+	if strfind(args,"금고") or strfind(args,"기록") or strfind(args,"도움말") then
+		MDRCommands(args, editbox)
+	else
+		C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
+	end
 end
 
 function MDRcolorizeForPrint(message)
@@ -847,9 +851,11 @@ function doFullReport(chars,channel,who,callType)
 					up="|cffffff00▼단수 낮춤|r"
 				elseif MythicKeyB.event=="finish" and MythicKey.name~=MythicKeyB.name then -- 시간초과
 					up="|cffff00b4▼시간초과|r"
-				elseif MythicKeyB.event=="start" and MythicKey.level<startLevel then -- 중도포기
+				elseif MythicKeyB.event=="start" and MythicKey.level<startLevel and not C_ChallengeMode.GetActiveChallengeMapID()then -- 중도포기
 					up="|cffff00b4▼중도포기|r"
 					startLevel=MythicKeyB.level
+				else
+					return
 				end
 
                 local before=getShortDungeonName(MythicKeyB.name)
