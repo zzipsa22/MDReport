@@ -297,8 +297,8 @@ function MDRcolorizeForPrint(message)
     message=gsub(message,"{경}","|T463829:0:::-5|t")    
     
     --색깔 코드
-    message=gsub(message,"{CT}","|cffdb24b2")
-	message=gsub(message,"{CW}","|cffe17899")
+    message=gsub(message,"{CT}","|cffed004e")
+	message=gsub(message,"{CW}","|cffde57a3")
     message=gsub(message,"{CA}","|cffe6cc80")    
     message=gsub(message,"{CL}","|cfffe7f00")
     message=gsub(message,"{CE}","|cFFa234ed")

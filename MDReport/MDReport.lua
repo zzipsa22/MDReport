@@ -1481,13 +1481,15 @@ function MDRgetDungeonScore(name,affix)
         local color
         local affixScore=scoreT[dungeon] and scoreT[dungeon][affix] or {}
         local score=affixScore["score"] or 0    
-        if score>137 then
-            color="{CW}"            
+		if score>=150 then
+			color="{CT}"
+        elseif score>137.5 then
+            color="{CW}"
         elseif score>=125 then
-            color="{CA}"            
+            color="{CA}"
         elseif score>=115 then
             color="{CL}"
-        elseif score>=100 then
+		elseif score>=100 then
             color="{CE}"
         elseif score>=80 then
             color="{CR}"
