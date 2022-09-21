@@ -1082,7 +1082,7 @@ function GetHaveKeyCharInfo(type,level)
                     thisCharIncluded=1
                 end     
             else   
-                if t[k].MythicKey.link then
+                if t[k].MythicKey.level then
                     thisCharIncluded=1  
                 elseif (type~="쐐기돌보유자만" and (
                         (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
@@ -1195,8 +1195,8 @@ function MDRreportScore(VALUES)
     if onlyMe then        
         local t=MDRconfig.Char
         for k,v in pairs(t) do
-            if v.Level==MDR.SCL and (--v.Score["종합점수"]>0 or 
-			v.IL>DIL.base+26) then
+            if v.Level==MDR.SCL and 
+			(v.Score["종합점수"]>0 or v.MythicKey.level or v.IL>DIL.base+26) then
                 tinsert(findChars,k)
             end
         end
@@ -1239,6 +1239,7 @@ function MDRreportScore(VALUES)
         
         local scoreT=MDRconfig.Char[targetChar].Score
         local charLevel=MDRconfig.Char[targetChar].Level
+		local MythicKey=MDRconfig.Char[targetChar].MythicKey
         if charLevel~= MDR["SCL"] then return end    
         
         if callType["dungeon"] then   -- !점수!역병
@@ -1319,7 +1320,9 @@ function MDRreportScore(VALUES)
                 score=tonumber(score)
                 local color,tyr_color,for_color
                 
-                if tyr_score>137 then
+                if tyr_score>=150 then
+					tyr_color="{CT}"
+				elseif tyr_score>137.5 then
                     tyr_color="{CW}"
                 elseif tyr_score>=125 then
                     tyr_color="{CA}"
@@ -1335,7 +1338,9 @@ function MDRreportScore(VALUES)
                     tyr_color="{CC}"
                 end
                 
-                if for_score>137 then
+                if for_score>=150 then
+				    for_color="{CT}"
+				elseif for_score>137.5 then
                     for_color="{CW}"
                 elseif for_score>=125 then
                     for_color="{CA}"
@@ -1352,7 +1357,7 @@ function MDRreportScore(VALUES)
                 end
                 
                 message=charHead..dungeon..": "..MDRgetScoreColor(score,"dungeon").."점 ["..MDRgetAffixIcon("폭군")..tyr_color..tyr_level.."|r"..tyr_clear.."｜"..MDRgetAffixIcon("경화")..for_color..for_level.."|r"..for_clear.."]"
-				if IL>DIL.base+26 then 
+				if (score>0 or MythicKey.level or IL>DIL.base+26) then 
 					tinsert(messageLines,message)
 				end
             end
@@ -1366,7 +1371,7 @@ function MDRreportScore(VALUES)
             local for_desc=MDRgetDungeonScore(targetChar,"경화")
             
             message=charHead..MDRgetScoreColor(total,"total").."점 ["..MDRgetAffixIcon("폭군")..tyr_desc.." | "..MDRgetAffixIcon("경화")..for_desc.."]"
-			if IL>DIL.base+26 then 
+			if (total>0 or MythicKey.level or IL>DIL.base+26) then 
 					tinsert(messageLines,message)
 			end
         end
@@ -1393,7 +1398,9 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CN}"
         end
     elseif scoreType=="affix" then
-        if score>137.5 then
+        if score>=150 then
+			color="{CT}"
+		elseif score>137.5 then
             color="{CW}"
         elseif score>=125 then
             color="{CA}"
@@ -1427,11 +1434,11 @@ end
 function MDRgetAffixIcon(affix)
     local t={}
     if isThisWeekHasSpecificAffix(9) then
-        t.tyra="{CW}▶{폭}폭군|r: "
+        t.tyra="{CT}▶{폭}폭군|r: "
         t.fort="{경}:"
     else
         t.tyra="{폭}:"
-        t.fort="{CW}▶{경}경화|r: "
+        t.fort="{CT}▶{경}경화|r: "
     end    
     if affix=="폭군" then
         return t.tyra
@@ -1606,7 +1613,7 @@ function findCharAllKey(VALUES)
 			if TimeRemain < 0 then
 				Overed=true
 				TimeRemain=TimeRemain*-1
-				OveredText="{CW} 초과|r"
+				OveredText="{CT} 초과|r"
 			else
 				Overed=false
 				OveredText="{CC} 남음|r"
@@ -1812,7 +1819,7 @@ function findCharNeedParking(VALUES)
         for i=1,#chars do 
             if chars[i]["charLevel"]<=MDR["SCL"] then --확팩만렙보다 고레벨은 무시
                 local best=chars[i]["best"]   
-                if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and minLevel<chars[i]["itemLevel"] then
+                if ((best==nil) or (best<parkingLevel)) and chars[i]["charLevel"]==MDR["SCL"] and (minLevel<chars[i]["itemLevel"] or chars[i]["keyLevel"]>0)then
                     findChars[parknum]=chars[i]   
                     parknum=parknum+1
                 elseif best and best>=parkingLevel then   

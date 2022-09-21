@@ -266,7 +266,7 @@ function MDRbackupMythicKey(type)
         MDR.myMythicKey.onLoad=t    
         local VALUES={}
         local callTypeT={}
-        C_Timer.After(0.5, function() 
+        C_Timer.After(0.1, function() 
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["who"]=meGame
                 VALUES["callTypeT"]=callTypeT    
@@ -283,7 +283,7 @@ function MDRbackupMythicKey(type)
     if type=="newkey" then 
 		local VALUES={}
         local callTypeT={}
-        C_Timer.After(0.5, function() 
+        C_Timer.After(0.1, function() 
                 callTypeT[1]=getCallTypeTable("무슨돌")
                 VALUES["who"]=meGame
                 VALUES["callTypeT"]=callTypeT

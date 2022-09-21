@@ -32,7 +32,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
 		elseif event=="ITEM_CHANGED" then
 			local key=select(1, ...)
 			if string.match(key, "180653") then				
-				C_Timer.After(0.5, function() 
+				C_Timer.After(0.9, function() 
 					MDRbackupMythicKey("newkey")
 				end)
 			end
