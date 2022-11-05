@@ -7,6 +7,7 @@ local skull={
     ["법사"]="{rt6}",--네모(파랑)
     ["수도"]="{rt4}",--역삼(역삼)
     ["냥꾼"]="{rt4}",--역삼(역삼)
+	["기원"]="{rt4}",--역삼(역삼)
     ["도적"]="{rt1}",--별(노랑)
     ["드루"]="{rt2}",--동그(주황)
     ["전사"]="{rt2}",--동그(주황)
@@ -20,6 +21,7 @@ local skull={
 local classIcon={--    Classes
     ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:0:64|t",
     ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:64:128:0:64|t",
+	["기원"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:192:256|t",
     ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:128:192:0:64|t",
     ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:0:64|t",
     ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:64:128|t",
@@ -35,6 +37,7 @@ local classIcon={--    Classes
 local classColor={
     ["술사"]="0070DE",
     ["법사"]="40C7EB",
+	["기원"]="33937f",
     ["수도"]="00FF96",
     ["냥꾼"]="A9D271",
     ["도적"]="FFF569",
@@ -83,7 +86,7 @@ for i=1,8 do
 end
 
 local classNames={
-    "술사","법사","수도","냥꾼","도적","드루","전사","악사","흑마","기사","사제","죽기",
+    "술사","법사","수도","냥꾼","기원","도적","드루","전사","악사","흑마","기사","사제","죽기",
 }
 
 function doCheckVersion(channel,who,callType)

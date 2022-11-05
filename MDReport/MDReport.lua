@@ -39,7 +39,12 @@ MDRconfig=MDRconfig or {}
 C_Timer.After(3, function()
         C_MythicPlus.RequestMapInfo()
         C_MythicPlus.RequestRewards()
-        LoadAddOn("Blizzard_WeeklyRewards") 
+		if not IsAddOnLoaded("Blizzard_WeeklyRewards") then
+			LoadAddOn("Blizzard_WeeklyRewards") 
+		end
+		if not IsAddOnLoaded("Blizzard_ChallengesUI") then
+			LoadAddOn("Blizzard_ChallengesUI")
+		end  
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end

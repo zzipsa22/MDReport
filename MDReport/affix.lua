@@ -349,7 +349,7 @@ function GetAffixFullDescription(keyword,channel)
     return message
 end
 
-function GetAnyWeeksAffix(week,channel)    
+function GetAnyWeeksAffix(week,channel)  
     local thisWeek=GetThisWeek()
     local calledWeek=thisWeek
     local affixWeeks=GetAffixWeeksTable()
@@ -382,9 +382,6 @@ function GetAnyWeeksAffix(week,channel)
 end
 
 function GetThisWeek()
-    if not IsAddOnLoaded("Blizzard_ChallengesUI") then
-        LoadAddOn("Blizzard_ChallengesUI")
-    end
     C_MythicPlus.RequestCurrentAffixes()
     C_MythicPlus.RequestMapInfo()
     C_MythicPlus.RequestRewards()
