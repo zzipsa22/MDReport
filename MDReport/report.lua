@@ -877,7 +877,7 @@ function doFullReport(chars,channel,who,callType)
                 end 
             elseif callType and callType["newkey"] then								
 				if not MythicKey.level or not MythicKeyB.level then return end				
-                local up=""	
+                local up,upg="",""
 				
 				local startLevel=MythicKeyB.level				
 				if (MythicKeyB.event=="start" or MythicKeyB.event=="finish") and MythicKeyB.level~=2 then
@@ -886,14 +886,19 @@ function doFullReport(chars,channel,who,callType)
 				
                 if MythicKeyB.event=="finish" and MythicKey.level > startLevel then --새로 받은 돌의 단수가 올라가면
                     up="|cff48ff00▲"..(MythicKey.level-startLevel).."상|r"
+					upg="▲"..(MythicKey.level-startLevel).."상"
 				elseif MythicKeyB.event=="newkey" and MythicKey.level==MythicKeyB.level and MythicKey.name~=MythicKeyB.name then -- 돌 바꿈
-					up="|cffffff00돌 바꿈|r"
+					up="|cffffff00돌 바꿈|r"					
+					upg="돌 바꿈"
 				elseif MythicKeyB.event=="newkey" and MythicKey.level~=MythicKeyB.level and MythicKey.name==MythicKeyB.name then -- 단수 낮춤
 					up="|cffffff00▼단수 낮춤|r"
+					upg="▼단수 낮춤"
 				elseif MythicKeyB.event=="finish" and MythicKey.name~=MythicKeyB.name then -- 시간초과
 					up="|cffff00b4▼시간초과|r"
+					upg="▼시간초과"
 				elseif MythicKeyB.event=="start" and MythicKey.level<startLevel and not C_ChallengeMode.GetActiveChallengeMapID()then -- 중도포기
 					up="|cffff00b4▼중도포기|r"
+					upg="▼중도포기"
 					startLevel=MythicKeyB.level
 				else
 					return
@@ -904,8 +909,14 @@ function doFullReport(chars,channel,who,callType)
                 local coveIconBefore="{c"..MDRgetCovenantID(before).."}"
                 local coveIconAfter="{c"..MDRgetCovenantID(after).."}"
                 
-                message="새 돌: ["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..") : "..(MythicKey and MythicKey.link or keyLink)
-                
+				local InGuildParty=InGuildParty()
+				if MythicKeyB.event=="finish" and channel=="ADDON_GUILD" and InGuildParty then
+					isAddonMessage=0
+					channel="GUILD"
+					message="MDR ▶ ["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..") : "..(MythicKey and MythicKey.link or keyLink)
+				else
+					message="새 돌: ["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..") : "..(MythicKey and MythicKey.link or keyLink)
+				end
             elseif callType and callType["currentdungeon"] then                
                 local now=" "..on.."준비중"
                 local covenant=MDRgetCovenantID(getShortDungeonName(keyName))
@@ -985,7 +996,7 @@ function reportMessageLines(messageLines,channel,who,callType)
             end)  
         else
             C_Timer.After(delay+0.2*(i-1), function()
-					print(messageLines[i])
+					--print(messageLines[i])
                     SendChatMessage(messageLines[i], channel,nil,who) 
             end)   
         end 
