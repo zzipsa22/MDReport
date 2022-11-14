@@ -128,8 +128,8 @@ local classInfo={
 	["기원"]={    
         "33937F",
         "기원사",
-        "용딜","용힐",
-        "보존","황폐",
+        "황폐","용딜",
+        "보존","용힐",
         "원사",    
     }, 
     ["회색"]={"9d9d9d","무기"},
@@ -1287,7 +1287,7 @@ function MDRdoReportHistory(VALUES)
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
     end    
     
-    local rewardLevel_season_two={ 
+    local rewardLevel_SL_s4={ 
         [2]=278,    
         [3]=278,
         [4]=278,
@@ -1303,11 +1303,38 @@ function MDRdoReportHistory(VALUES)
         [14]=301,
         [15]=304,
     }
+	
+	local rewardLevel_DF_s1={ 
+        [2]=382,    
+        [3]=385,
+        [4]=385,
+        [5]=389,
+        [6]=389,
+        [7]=392,
+        [8]=395,
+        [9]=395,
+        [10]=398,
+        [11]=402,
+        [12]=405,
+        [13]=408,
+        [14]=408,
+        [15]=411,
+		[16]=415,
+		[17]=415,
+		[18]=418,
+		[19]=418,
+		[20]=421,
+    }
     --[[
-    local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15)
+    local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15) -- 오류 많음
     ]]
-    local rewardLevel  
-    rewardLevel=rewardLevel_season_two
+    local rewardLevel
+	if MDR["SCL"]==70 then
+		rewardLevel=rewardLevel_DF_s1
+	else
+		rewardLevel=rewardLevel_SL_s4
+	end
+    
     
     for i=16,40 do
         rewardLevel[i]=rewardLevel[15]

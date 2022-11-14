@@ -14,8 +14,6 @@ MDR["krClass"],MDR["className"]=UnitClass("player")
 MDR["lastSeen"]=4838400 --8주
 MDR["maxChar"]=3
 MDR["textLength"]=3
-MDR["maxParking"]=15 --어둠땅 4시즌
-MDR["SCL"]=60--어둠땅 만렙
 MDR.DefaultDelay=15 --지연시간 기본값
 
 local guildWarn=0
@@ -27,18 +25,32 @@ local comb,onlyOnline,onlyMe,onlyYou,CharName,except
 local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 MDR.DIL=DIL
-DIL.min=262 --깡신
-DIL.max=288 --15단
-DIL.base=226 --기준템렙
+
+if GetAccountExpansionLevel()==9 then --용군단
+	MDR["SCL"]=70
+	MDR["maxParking"]=20 --용군단 1시즌
+	DIL.min=382 --깡신
+	DIL.max=405 --20단
+	DIL.base=346 --기준템렙
+else --어둠땅
+	MDR["SCL"]=60
+	MDR["maxParking"]=15 --어둠땅 4시즌
+	DIL.min=262 --깡신
+	DIL.max=288 --15단
+	DIL.base=226 --기준템렙
+end
+
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
 for i=1,MDR["maxParking"] do
     DIL[i]=DIL.base + DIL.gap*i --단수별 허용레벨 / 드랍템 레벨
 end
+
 MDRconfig=MDRconfig or {}
 
 C_Timer.After(3, function()
         C_MythicPlus.RequestMapInfo()
         C_MythicPlus.RequestRewards()
+		C_MythicPlus.RequestCurrentAffixes()
 		if not IsAddOnLoaded("Blizzard_WeeklyRewards") then
 			LoadAddOn("Blizzard_WeeklyRewards") 
 		end
@@ -155,7 +167,7 @@ MDR.DNum=8
 
 local clothClass={"법사","사제","흑마"}
 local leatherClass={"드루","수도","도적","악사"}
-local mailClass={"냥꾼","술사"}
+local mailClass={"냥꾼","술사","기원"}
 local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
@@ -747,7 +759,7 @@ function filterVALUES(VALUES)
         --직업과 조합해서 검색시
         if callType["class"] and (callType["item"] or callType["category"] or callType["specificitem"] or callType["dungeon"]) then   
             
-            if keyword["class"]=="사제" or keyword["class"]=="흑마" or keyword["class"]=="법사" or keyword["class"]=="악사" then
+            if keyword["class"]=="사제" or keyword["class"]=="흑마" or keyword["class"]=="법사" or keyword["class"]=="기원" or keyword["class"]=="악사" then
                 
                 VALUES["comb"]="Class_Something" 
                 
@@ -973,10 +985,11 @@ function filterVALUES(VALUES)
         elseif callType["spec"] then
             if who==meGame then
                 local spec=keyword["spec"]   
-                local class=getCallTypeTable(spec)[4] or getCallTypeTable(spec)[2] 
-                local neun=MDRko(MDRcolor(class,5),"는")
-                local ga=MDRko(MDRcolor(class,5),"가")
-                local ro=MDRko(class,"로")      
+                local class=getCallTypeTable(spec)[4] or getCallTypeTable(spec)[2]
+				local className=MDRcolor(class,5)
+                local neun=MDRko(className,"는")
+                local ga=MDRko(className,"가")
+                local ro=MDRko(className,"로")      
                 
                 print("|cFFffff00▶|r"..MDRcolor(class,0,"전문화").."를 단독으로 입력한 경우 전문화 대신 "..MDRcolor(class,0,"직업").." 정보를 요청합니다. ("..MDRcolor(class,0,"!"..class)..")")
                 

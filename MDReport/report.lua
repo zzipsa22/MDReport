@@ -19,9 +19,23 @@ local skull={
 }
 
 local classIcon={--    Classes
+	["기원"]="|T4574311:0:::-5|t",
+	["드루"]="|T625999:0:::-5|t",
+	["죽기"]="|T135771:0:::-5|t",
+	["악사"]="|T1260827:0:::-5|t",
+	["냥꾼"]="|T626000:0:::-5|t",
+	["법사"]="|T626001:0:::-5|t",
+	["수도"]="|T626002:0:::-5|t",
+	["기사"]="|T626003:0:::-5|t",
+	["사제"]="|T626004:0:::-5|t",
+	["도적"]="|T626005:0:::-5|t",
+	["술사"]="|T626006:0:::-5|t",
+	["흑마"]="|T626007:0:::-5|t",
+	["전사"]="|T626008:0:::-5|t",
+	--[[
     ["전사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:0:64|t",
     ["법사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:64:128:0:64|t",
-	["기원"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:192:256|t",
+	["기원"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:192:256|t",	
     ["도적"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:128:192:0:64|t",
     ["드루"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:0:64|t",
     ["냥꾼"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:64:128|t",
@@ -31,7 +45,8 @@ local classIcon={--    Classes
     ["기사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:0:64:128:192|t",
     ["죽기"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:64:128:128:192|t",
     ["수도"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:128:192:128:192|t",
-    ["악사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:128:192|t",        
+    ["악사"]="|TInterface\\Glues\\CharacterCreate\\UI-CharacterCreate-Classes:0:0:0:-5:256:256:192:256:128:192|t",  
+	]]	
 }   
 
 local classColor={
@@ -59,19 +74,39 @@ local statusIcons={
 } 
 
 local colorT={}
+local maxP=MDR["maxParking"]
+
 for i=1,40 do
-    local c="1eff00"
-    if i>=15 then
-        c="e6cc80"        
-    elseif i>=14 then
-        c="ff8000"        
-    elseif i>=12 then
-        c="a335ee"           
-    elseif i>=10 then
-        c="0070dd"
-    elseif i>=8 then
-        c="1eff00"
-    end 
+    local c="1eff00"	
+	if maxP==20 then
+		if i>=20 then
+			c="de57a3"        
+		elseif i>=18 then
+			c="e6cc80"        
+		elseif i>=15 then			
+			c="fe7f00"
+		elseif i>=13 then
+			c="a234ed"
+		elseif i>=10 then
+			c="006fdc"
+		else
+			c="1eff00"
+		end 
+	else
+		if i>=15 then
+			c="e6cc80"        
+		elseif i>=14 then
+			c="ff8000"        
+		elseif i>=12 then
+			c="a335ee"           
+		elseif i>=10 then
+			c="0070dd"
+		elseif i>=8 then
+			c="1eff00"
+		else
+			c="1eff00"
+		end 
+	end
     colorT[i]="|cff"..c..i.."|r"        
 end
 
@@ -388,7 +423,9 @@ function MDRcolorizeForItem(message)
 	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
 	message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
 	
-	message=gsub(message,"{iB}","::::::::60::::3:1605:6807:6646:|h[") --어둠땅	
+	message=gsub(message,"{iB}","::::::::60::::3:1605:6807:6646:|h[") --기본값
+	message=gsub(message,"{iBDF}","::::::::60:102::23:1:3524:1:28:2157:::::|h[") --용군단
+	message=gsub(message,"{iBS}","::::::::60::::3:1605:6807:6646:|h[") --어둠땅	
 	message=gsub(message,"{iBB}","::::::::60::::2:3139:1472:4779:|h[") --격아
 	message=gsub(message,"{iBL}","::::::::60::::3:3138:1501:6646:|h[") --군단
 	message=gsub(message,"{iBD}","::::::::60::::2:3173:6646:|h[") --드레노어
