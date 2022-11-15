@@ -956,7 +956,7 @@ function findCharAllItem(VALUES)
     
     if keyword["dungeon"] then --던전으로 필터링
         chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil)
-        link=1
+        --link=1
     end        
     
     local spec=keyword["spec"]
@@ -1087,7 +1087,7 @@ function findCharAllItem(VALUES)
         end    
     end         
     
-    if VALUES["link"] ==1 then
+    if VALUES["link"] ==1 then		
         doFullReport(findChars,channel,who,"item")
     else                
         doShortReport(findChars,channel,who,"item") 

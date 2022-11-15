@@ -78,7 +78,7 @@ local maxP=MDR["maxParking"]
 
 for i=1,40 do
     local c="1eff00"	
-	if maxP==20 then
+	--if maxP==20 then
 		if i>=20 then
 			c="de57a3"        
 		elseif i>=18 then
@@ -92,6 +92,7 @@ for i=1,40 do
 		else
 			c="1eff00"
 		end 
+		--[[
 	else
 		if i>=15 then
 			c="e6cc80"        
@@ -107,6 +108,7 @@ for i=1,40 do
 			c="1eff00"
 		end 
 	end
+	]]
     colorT[i]="|cff"..c..i.."|r"        
 end
 
@@ -294,6 +296,7 @@ function MDRcolorizeForPrint(message)
     --온라인
     local on_green="|TInterface\\AddOns\\MDReport\\icon\\on_g.tga:0:0.5:-1:-5|t" 
     local on_pink="|TInterface\\AddOns\\MDReport\\icon\\on_p.tga:0:0.5:-1:-5|t" 
+	
     message=gsub(message,"{OG}",on_green)
     message=gsub(message,"{OP}",on_pink)
     message=gsub(message,"접속중","|cff48ff00접속중|r")
@@ -351,10 +354,10 @@ function MDRcolorizeForPrint(message)
  		message=MDRcolorizeForItem(message)
     end
 	
-    --던전 색입히기
+    --던전 색입히기	
     local dungeonNames=MDR.dungeonNames
     local dungeonNamesFull=MDR.dungeonNamesFull
-    if not strfind(message,"쐐기돌") and not strfind(message,"단 ") then
+    if not strfind(message,"쐐기돌") and not strfind(message,"단 ") and not strfind(message,"(%d+)(%])") then
         for i=1,#dungeonNamesFull do            
             message=gsub(message,dungeonNamesFull[i],MDRcolor("노랑",0,dungeonNamesFull[i]))
         end  
@@ -362,6 +365,10 @@ function MDRcolorizeForPrint(message)
             message=gsub(message,dungeonNames[i],MDRgetCovenantIcon(dungeonNames[i])..MDRcolor("노랑",0,dungeonNames[i]))
         end 
     end 
+	
+	--쐐기돌 단수 색입히기
+	message=gsub(message,"(%d+)([%],])", function(a,b) return (colorT[tonumber(a)] or a)..b end)
+	
     return message
 end
 
@@ -626,8 +633,7 @@ function doShortReport(chars,channel,who,callType)
                 end    
                 
                 message=onC.."["..online..classStatus..":{c"..covenantID.."}"..coveName.."]"..onR
-			elseif callType["scorelink"] then
-				print("dd")
+			elseif callType["scorelink"] then				
 				message=scoreLink
             else
                 if isAddonMessage==1 then
@@ -841,7 +847,7 @@ function doFullReport(chars,channel,who,callType)
             end            
             
             if isAddonMessage==1 then
-                if callType["item"] then
+                if callType=="item" then -- 고치지마세요
                     classStatus=class
 				elseif callType["newkey"] then
                     classStatus=class..shortName.."|r"

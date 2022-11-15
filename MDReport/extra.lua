@@ -438,10 +438,11 @@ function MDRmakeDice(channel,who,k)
             question=subject
         end    
         if subject~="주사위" and subject~= question then
-            subject=getFullDungeonName(subject) or subject      
+            subject=getFullDungeonName(subject) or subject      			
             MDR["dices"][num]=diceNums[num].." "..subject
             MDR["diceResult"][num]={}
             MDR["diceResult"][num]["subject"]=diceNums[num].." "..subject
+			MDR["diceResult"][num]["num"]=diceNums[num]
             MDR["dicesB"][num]=k[i]      
             num=num+1      
         end
@@ -510,9 +511,10 @@ function MDRmakeDice(channel,who,k)
                 local newResult={}
                 local newResult2={}
                 local resultNum=1
+
                 for i=1,#result do          
                     newResult[result[i]]=result[i]["vote"]
-                end  
+                end 								
                 for k,v in MDRspairs(newResult, function(t,a,b) return t[b] < t[a] end) do
                     newResult2[resultNum]=k
                     resultNum=resultNum+1
@@ -549,8 +551,8 @@ end
 
 function MDRcollectDices(msg)
     
-    for i=1,#MDR["diceResult"] do
-        if not strfind(msg,"MDR") and strfind(msg,MDR["diceResult"][i]["subject"]) then
+    for i=1,#MDR["diceResult"] do		
+        if not strfind(msg,"MDR") and strfind(msg,MDR["diceResult"][i]["num"]) then			
             MDR["diceResult"][i]["vote"]=(MDR["diceResult"][i]["vote"] or 0)+1
             --print(msg.."+1")
         end 
