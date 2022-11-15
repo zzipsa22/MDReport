@@ -920,7 +920,13 @@ function MDRsplit (inputstr, sep)
     end
     local t={}
     for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
-        table.insert(t, str)
+		if sep=="!" then
+			for str_space in string.gmatch(str, "([^".."%s".."]+)") do
+				table.insert(t, str_space)
+			end
+		else
+			table.insert(t, str)
+		end
     end
     return t
 end

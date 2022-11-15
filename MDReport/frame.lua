@@ -197,7 +197,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 return
 			end			
             
-            k[i]=gsub(k[i]," ","")             
+            --k[i]=gsub(k[i]," ","")             
 			
             local keyIsNumber=tonumber(k[i])
             local ELC=strsub(k[i],1,-2)        
