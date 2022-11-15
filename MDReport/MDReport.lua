@@ -1132,6 +1132,8 @@ function GetHaveKeyCharInfo(type,level)
                 chars[num]["covenant"]=t[k].Covenant or ""
                 chars[num]["score"]=t[k].Score or ""
 				chars[num]["scoreLink"]=t[k].ScoreLink
+				chars[num]["MythicKeyB"]=t[k].MythicKeyB
+				chars[num]["MythicKey"]=t[k].MythicKey
                 num=num+1 
             end  
         end   
@@ -1594,17 +1596,13 @@ function findCharAllKey(VALUES)
     end 
     local chars=GetHaveKeyCharInfo(type) 
     local forceToShort=0
-	
-	local MythicKeyB=MDRconfig.Char[meAddon].MythicKeyB or {}
-	local MythicKey=MDRconfig.Char[meAddon].MythicKey or {}
     
     if callType["newkey"] then		
-		if not MythicKeyB.name or not MythicKey.name then return end
-		if not MythicKeyB.YourKeyUsed and (MythicKeyB.name == MythicKey.name and MythicKeyB.level == MythicKey.level) then			
-			return
+		chars=filterCharsByFilter(chars,"newkey",nil,nil)
+		if checkCallMe(onlyYou) or onlyMe==1 then
 		else
 			onlyOnline=1			
-		end			
+		end		
     end 
     
     if callType["currentdungeon"] then	
@@ -1612,10 +1610,11 @@ function findCharAllKey(VALUES)
         local mapID = C_ChallengeMode.GetActiveChallengeMapID()
         local level, _ = C_ChallengeMode.GetActiveKeystoneInfo()
         local name
-        local onLoad=MDR.myMythicKey.onLoad
-        local start=MDR.myMythicKey.start
         local headStar="{"..MDRcolor(krClass,6).."}"		
-        local messageLines={} 				
+        local messageLines={} 	
+		
+		local MythicKeyB=MDRconfig.Char[meAddon].MythicKeyB or {}
+		local MythicKey=MDRconfig.Char[meAddon].MythicKey or {}		
 		
         if mapID~=nil and mapID>0 then --쐐기중이면	
 			if not MythicKeyB.YourKeyUsed then return end
@@ -1645,11 +1644,9 @@ function findCharAllKey(VALUES)
 			else
 				TimeAlert = "{CA}"..TimeRemain.."초|r"						
 			end
-			
-            --if name==start.name and level==onLoad.level and level==start.level+1 then   
+			            
 			if MythicKeyB.YourKeyUsed==1 then				
-				messageLines[1]=headStar..getShortDungeonName(MythicKeyB.name)..MythicKeyB.level..": ".." {OP}진행중 ("..TimeAlert..OveredText..", "..(numDeaths or 0).."번 {CG}죽음|r)"
-                --messageLines[1]=headStar..getShortDungeonName(onLoad.name)..onLoad.level..": "..onLoad.link.." {OP}진행중 ("..(numDeaths or 0).."번 죽음)" 
+				messageLines[1]=headStar..getShortDungeonName(MythicKeyB.name)..MythicKeyB.level..": ".." {OP}진행중 ("..TimeAlert..OveredText..", "..(numDeaths or 0).."번 {CG}죽음|r)"            
                 if channel=="ADDON_GUILD" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or channel=="GUILD" then
                     reportAddonMessage(messageLines,channel,who,callType)
                 else  
@@ -1727,8 +1724,7 @@ function findCharAllKey(VALUES)
     end
     
     --던전이나 직업으로 필터링
-    if callType["dungeon"] then
-		
+    if callType["dungeon"] then		
         if except==1 then
             chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil) 
         else  
@@ -2019,12 +2015,16 @@ function filterCharsByFilter(chars,filter,f1,f2)
                 target=chars[i]["keyName"]   
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
+			elseif filter=="newkey" then
+				target=chars[i]["MythicKeyB"]["event"]				
             elseif filter=="CharName" then
                 target=string.gsub(chars[i]["fullName"], "(%a)([%w_']*)", MDRtitleLower)
                 f1=string.gsub(f1, "(%a)([%w_']*)", MDRtitleLower)
             end
             if (filter=="CharName" and strfind(target,f1) and lastSeen<MDR["lastSeen"]) or 
-            ((filter~="except" and filter~="dungeon") and f1==target) then
+            ((filter~="except" and filter~="dungeon" and filter~="newkey") and f1==target) or
+			(filter=="newkey" and target)
+			then
                 findChars[num]=chars[i]
                 num=num+1
             elseif (filter=="dungeon" or filter=="except") then   

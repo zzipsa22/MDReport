@@ -710,6 +710,7 @@ function doFullReport(chars,channel,who,callType)
         
         local sameClass={}
         local mNum=1
+				
         for i=1,#chars do             
             charName=chars[i]["fullName"]      
             class=chars[i]["shortClass"]            
@@ -729,6 +730,8 @@ function doFullReport(chars,channel,who,callType)
             local itemLevel=chars[i]["itemLevel"]
             local equipLevel=chars[i]["equipLevel"]
             local charLevel=chars[i]["charLevel"]
+			local MythicKeyB=chars[i]["MythicKeyB"] or {}
+			local MythicKey=chars[i]["MythicKey"] or {}
             local online,classStatus,headStar,score_desc="","","",""            
             
             if charName==meAddon then
@@ -838,8 +841,10 @@ function doFullReport(chars,channel,who,callType)
             end            
             
             if isAddonMessage==1 then
-                if callType=="item" then
+                if callType["item"] then
                     classStatus=class
+				elseif callType["newkey"] then
+                    classStatus=class..shortName.."|r"
                 else
                     classStatus=class..shortName.." "..parking
                 end
@@ -856,8 +861,8 @@ function doFullReport(chars,channel,who,callType)
             --local s=MDR.myMythicKey.start or MDR.myMythicKey.onLoad
             --local f=MDR.myMythicKey.finish or MDR.myMythicKey.newkey
 			
-			local MythicKeyB=MDRconfig.Char[meAddon].MythicKeyB or {}
-			local MythicKey=MDRconfig.Char[meAddon].MythicKey or {}
+			--local MythicKeyB=MDRconfig.Char[charName].MythicKeyB or {}
+			--local MythicKey=MDRconfig.Char[charName].MythicKey or {}
             
             local on=""
             if channel=="ADDON_PARTY" then
@@ -875,10 +880,9 @@ function doFullReport(chars,channel,who,callType)
                 else      
                     message=on..headStar..classStatus..":"..havekey.."▶"..chars[i]["extraLink"] 						
                 end 
-            elseif callType and callType["newkey"] then								
-				if not MythicKey.level or not MythicKeyB.level then return end				
-                local up,upg="",""
-				
+            elseif callType and callType["newkey"] then				
+				--if not MythicKey.level or not MythicKeyB.level then return end				
+                local up,upg="",""				
 				local startLevel=MythicKeyB.level				
 				if (MythicKeyB.event=="start" or MythicKeyB.event=="finish") and MythicKeyB.level~=2 then
 					startLevel=startLevel+1					
@@ -902,8 +906,7 @@ function doFullReport(chars,channel,who,callType)
 					startLevel=MythicKeyB.level
 				else
 					return
-				end
-
+				end				
 				local TimeAlert=""
 				if MythicKeyB.event=="finish" and MythicKeyB.Started and MythicKeyB.Finished then
 					local spentTime=MythicKeyB.Finished - MythicKeyB.Started
@@ -926,7 +929,11 @@ function doFullReport(chars,channel,who,callType)
 					channel="GUILD"
 					message="던전 완료! ["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..TimeAlert..howMany.."): "..(MythicKey and MythicKey.link or keyLink)
 				else
-					message="새 돌: ["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..TimeAlert.."): "..(MythicKey and MythicKey.link or keyLink)
+					local newkeyHead="새 돌: "
+					if charName~=meAddon then
+						newkeyHead=headStar..classStatus..": "
+					end
+					message=newkeyHead.."["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..TimeAlert.."): "..(MythicKey and MythicKey.link or keyLink)					
 				end
             elseif callType and callType["currentdungeon"] then                
                 local now=" "..on.."준비중"
@@ -947,7 +954,7 @@ function doFullReport(chars,channel,who,callType)
                 messageLines[sameCheck]=gsub(messageLines[sameCheck],"▶",message.."▶")
             else
                 messageLines[mNum]=message
-                mNum=mNum+1
+                mNum=mNum+1				
             end            
         end
     end      
