@@ -904,18 +904,29 @@ function doFullReport(chars,channel,who,callType)
 					return
 				end
 
+				local TimeAlert=""
+				if MythicKeyB.event=="finish" and MythicKeyB.Started and MythicKeyB.Finished then
+					local spentTime=MythicKeyB.Finished - MythicKeyB.Started
+					local TimeMin = math.floor((spentTime/60)+0.5)					
+					TimeAlert = "/"..TimeMin.."분 소요"
+				end
+
                 local before=getShortDungeonName(MythicKeyB.name)
                 local after=getShortDungeonName(MythicKey.name)
                 local coveIconBefore="{c"..MDRgetCovenantID(before).."}"
                 local coveIconAfter="{c"..MDRgetCovenantID(after).."}"
                 
-				local InGuildParty=InGuildParty()
+				local InGuildParty,numGuild=InGuildParty()
+				local howMany=""
+				if numGuild and numGuild~=0 then
+					howMany="/길드 "..numGuild.."인"
+				end
 				if MythicKeyB.event=="finish" and channel=="ADDON_GUILD" and InGuildParty then
 					isAddonMessage=0
 					channel="GUILD"
-					message="MDR ▶ ["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..") : "..(MythicKey and MythicKey.link or keyLink)
+					message="던전 완료! ["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..TimeAlert..howMany.."): "..(MythicKey and MythicKey.link or keyLink)
 				else
-					message="새 돌: ["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..") : "..(MythicKey and MythicKey.link or keyLink)
+					message="새 돌: ["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..TimeAlert.."): "..(MythicKey and MythicKey.link or keyLink)
 				end
             elseif callType and callType["currentdungeon"] then                
                 local now=" "..on.."준비중"

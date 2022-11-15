@@ -1317,13 +1317,13 @@ function MDRreportScore(VALUES)
                 local newTotal20=total+earnedScore20
                 
                 if newScore>score+1 then
-                    local plus=true
-                    message=charHead..dungeonHead.." 시클시 [{CC}"..earnedScore.."~"..earnedScore20.."점|r] 획득 가능 [예측 최소: "..MDRgetScoreColor(newScore,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal,"total",plus).."점]"
+                    local plus="▲"
+                    message=charHead..dungeonHead..": [{CC}"..earnedScore.."~"..earnedScore20.."점|r] 획득 가능 ▶ [D: "..MDRgetScoreColor(newScore,"dungeon",plus).." / T: "..MDRgetScoreColor(newTotal,"total",plus).."]"
                 elseif newScore20>score+1 then
-                    local plus=false
-                    message=charHead..dungeonHead.." 시클시 남은 시간에 따라 [{CC}0~"..earnedScore20.."점|r] 획득 가능 [예측 최대: "..MDRgetScoreColor(newScore20,"dungeon",plus).." / 총점: "..MDRgetScoreColor(newTotal20,"total",plus).."점]"
+                    local plus="▼"
+                    message=charHead..dungeonHead..": [{CC}0~"..earnedScore20.."점|r] 획득 가능 ▶ [D: "..MDRgetScoreColor(newScore20,"dungeon",plus).." / T: "..MDRgetScoreColor(newTotal20,"total",plus).."]"
                 else
-                    message=charHead..dungeonHead.." "..eul.." 시클해도 점수를 얻기 힘듭니다."
+                    message=charHead..dungeonHead..": 점수 획득 {CG}불가|r ▶ [D: "..MDRgetScoreColor(score,"dungeon",plus).." / T: "..MDRgetScoreColor(total,"total",plus).."]"
                 end    
                 tinsert(messageLines,message)
             else   
@@ -1446,7 +1446,7 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CN}"
         end  
     end
-    return color..score..(plus and "+" or "").."|r"
+    return color..score..(plus and plus or "").."|r"
 end
 
 function MDRgetAffixIcon(affix)

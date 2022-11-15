@@ -231,7 +231,11 @@ function MDRbackupMythicKey(type)
 			MythicKeyB.TimeLimit=time() + (ActiveMapTimeLimit or 0) + 10
 		end
 	end
-
+	
+	if type=="finish" then -- 끝난 시간 백업
+		MythicKeyB.Finished=time()
+	end
+	
     MDRconfig.Char[meAddon].MythicKey={}
     
     if link then -- 가방에 쐐기돌이 있을 경우
@@ -270,7 +274,7 @@ function MDRbackupMythicKey(type)
 	
     if type=="finish" then        
         MDR.myMythicKey.finish=t
-        MDR.myMythicKey.onLoad=t    
+        MDR.myMythicKey.onLoad=t 		
         local VALUES={}
         local callTypeT={}
         C_Timer.After(0.1, function() 
