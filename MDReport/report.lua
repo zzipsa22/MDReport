@@ -928,12 +928,12 @@ function doFullReport(chars,channel,who,callType)
 				local InGuildParty,numGuild=InGuildParty()
 				local howMany=""
 				if numGuild and numGuild~=0 then
-					howMany="/길드 "..numGuild.."인"
+					howMany=numGuild.."인 길팟: "
 				end
 				if MythicKeyB.event=="finish" and channel=="ADDON_GUILD" and InGuildParty then
 					isAddonMessage=0
 					channel="GUILD"
-					message="던전 완료! ["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..TimeAlert..howMany.."): "..(MythicKey and MythicKey.link or keyLink)
+					message=howMany.."["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..TimeAlert.."): "..(MythicKey and MythicKey.link or keyLink)
 				else
 					local newkeyHead="새 돌: "
 					if charName~=meAddon then
