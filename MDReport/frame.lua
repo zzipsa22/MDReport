@@ -99,7 +99,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         end       
         
         --느낌표 스팸이면 무시
-        if strfind(msg,"!!") then return end
+        if strfind(msg,"!!!") then return end
         
         if (event=="CHAT_MSG_SYSTEM") then 
             MDRdice(msg)
