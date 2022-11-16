@@ -235,18 +235,27 @@ function MDRcolorizeForPrint(message)
         color_class[c]="|cff"..classColor[c]..c.."|r"     
     end 
     --주차정보를 포함하는 경우
-    if strfind(message,"#") or strfind(message,"/") or strfind(message,"Χ") then
-        if strfind(message,"▶") then -- 이름, 던전등 개별 캐릭터의 fullReport
+    if strfind(message,"#") or strfind(message,"/") or strfind(message,"Χ") or strfind(message," ▶ ") then
+		if strfind(message," ▶ ") then -- 돌 변화 (새돌)
+            for k,v in pairs(icon_color) do
+                if strfind(message,k) then
+                    message=gsub(message,k,v)                    				
+                end            
+            end    		
+            local m1=strsub(message,1,strfind(message,": %[")-1)
+            local m2=strsub(message,strfind(message,": %["),strlen(message))          
+            message=m1.."|r"..m2	
+        elseif strfind(message,"▶") then -- 이름, 던전등 개별 캐릭터의 fullReport
             for k,v in pairs(icon_color) do
                 if strfind(message,k) then
                     message=gsub(message,k,v)
-                    message=gsub(message,"▶","|cff"..classColor[strsub(k,6,-1)].."▶|r")
+                    message=gsub(message,"▶","|cff"..classColor[strsub(k,6,-1)].."▶|r")					
                 end            
             end            
             local m1=strsub(message,1,strfind(message,"▶")-1)
             local m2=strsub(message,strfind(message,"▶"),strlen(message))          
             m1=gsub(m1,"%(","|r%(")
-            message=m1..m2
+            message=m1..m2			
         else -- 주차 shortReport
             for k,v in pairs(icon_colon) do
                 if strfind(message,k) then
@@ -262,7 +271,7 @@ function MDRcolorizeForPrint(message)
                 message=gsub(message,"▶","▶|r")  
             end            
         end        
-    else --주차정보가 없는 경우 : 나머지 shortReport
+    else --주차정보가 없는 경우 : 나머지 shortReport		
         for k,v in pairs(icon_class_arrow) do            
             message=gsub(message,k,v)          
         end
@@ -633,8 +642,6 @@ function doShortReport(chars,channel,who,callType)
                 end    
                 
                 message=onC.."["..online..classStatus..":{c"..covenantID.."}"..coveName.."]"..onR
-			elseif callType["scorelink"] then				
-				message=scoreLink
             else
                 if isAddonMessage==1 then
                     message=onC.."["..online..classStatus..":"..havekey.."]"..onR
@@ -738,7 +745,7 @@ function doFullReport(chars,channel,who,callType)
             local charLevel=chars[i]["charLevel"]
 			local MythicKeyB=chars[i]["MythicKeyB"] or {}
 			local MythicKey=chars[i]["MythicKey"] or {}
-            local online,classStatus,headStar,score_desc="","","",""            
+            local online,classStatus,headStar,score_desc,onlyScore="","","","",""
             
             if charName==meAddon then
                 online=" {OG}접속중"
@@ -814,9 +821,9 @@ function doFullReport(chars,channel,who,callType)
                     color="{CC}"
                 else
                     color="{CN}"
-                end    
-
+                end
 				score_desc=" ["..color..total.."|r점"..MDRgetAffixIcon(affix)..MDRgetDungeonScore(charName,affix).."]"
+				onlyScore=color..total.."|r "
             end
             
             if best and best~=0 then
@@ -850,7 +857,7 @@ function doFullReport(chars,channel,who,callType)
                 if callType=="item" then -- 고치지마세요
                     classStatus=class
 				elseif callType["newkey"] then
-                    classStatus=class..shortName.."|r"
+                    classStatus=class..shortName
                 else
                     classStatus=class..shortName.." "..parking
                 end
@@ -948,12 +955,10 @@ function doFullReport(chars,channel,who,callType)
                 message=coveIcon..getShortDungeonName(keyName)..level..": "..keyLink..now
             elseif callType["covenantall"] then
                 message=headStar..classStatus.." ▶{c"..covenantID.."}"..MDRcolor(covenant)
-			elseif callType["scorelink"] then				
-				message=scoreLink
-				isAddonMessage=0
-				channel="PARTY"
-            else                
-                message=covenantIcon..headStar..classStatus.."▶"..(keyLink and getShortDungeonName(keyName)..level or dungeonIcon..havekey)..score_desc
+			elseif callType["score_link"] then
+				message=headStar..classStatus.."▶"..onlyScore..(scoreLink or "")
+            else
+                message=headStar..classStatus.."▶"..(keyLink and getShortDungeonName(keyName)..level or dungeonIcon..havekey)..score_desc
             end           
             
             if sameCheck then                 

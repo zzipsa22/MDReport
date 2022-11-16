@@ -4,8 +4,8 @@ end
 
 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
 
-MDR["version"]="@project-version@"
-MDR["lastUpdate"]="@project-date-iso@"
+MDR["version"]="2.14.8"
+MDR["lastUpdate"]="2022-11-15T15:51:31Z"
 MDR["guide"]=0
 MDR["cooltime"]=1
 MDR["meGame"]=UnitName("player").."-"..GetRealmName() 
@@ -480,7 +480,7 @@ function filterVALUES(VALUES)
             elseif callTypeT[i][1]=="covenant" or callTypeT[i][1]=="covenantnow" then   
                 icon=MDRgetCovenantIcon(callTypeT[i][2])
                 what=icon..MDRcolor(word,type)
-            elseif callTypeT[i][1]=="score" then
+            elseif callTypeT[i][1]=="score" or callTypeT[i][1]=="score_all" or callTypeT[i][1]=="score_link" then
                 icon="\124T463447:0:::-5\124t"
                 if level then
                     what=icon..MDRcolor("계승",0,"예상 점수")                
@@ -596,7 +596,7 @@ function filterVALUES(VALUES)
                 end
                 
                 cmdLines=now..cmdLines
-            elseif callType["score"] then
+            elseif callType["score"] or callType["score_all"] then
                 now=MDRcolor("핑크",0,"이번주의 ") 
                 cmdLines=now..cmdLines
             else
@@ -623,7 +623,7 @@ function filterVALUES(VALUES)
             affix="경화"
         end    
         
-        if callType["score"] then
+        if callType["score"] or callType["score_all"] then
             affixInfo=" 이번주는 ["..affixIcon..affix.."] 입니다."
         end
         
@@ -634,7 +634,7 @@ function filterVALUES(VALUES)
                 MDRVault ()      
             end  
         elseif onlyMe==1 and not CharName then            
-            message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] "..eun.." 다음과 같습니다."..msg
+            message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] "..eun.." 다음과 같습니다."..affixInfo..msg
             
         elseif onlyYou then   
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..affixInfo..msg
@@ -645,7 +645,7 @@ function filterVALUES(VALUES)
         elseif callType["emote"] then 
             message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
             
-        elseif callType["score"] then
+        elseif callType["score"] or callType["score_all"]  or callType["score_link"] then
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
             
         elseif callType["parking"] then 
@@ -719,7 +719,7 @@ function filterVALUES(VALUES)
     local P=MDRcolor("파티",0,"/!! ")
     local E="|cFF33FF99ex|r."
 	
-    if callType["score"] then        
+    if callType["score"] or callType["score_all"] or callType["score_link"] then
         MDRreportScore(VALUES)
         
     elseif (#callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] 
@@ -1205,8 +1205,12 @@ function MDRreportScore(VALUES)
     end
     
     local type
-    if onlyOnline==1 then                
-        findCharAllKey(VALUES)
+	
+    if callType["score_all"] or callType["score_link"] then
+		if onlyMe~=1 then			
+			VALUES["onlyOnline"]=1
+		end
+		findCharAllKey(VALUES)
         return
     end
     
@@ -1396,8 +1400,7 @@ function MDRreportScore(VALUES)
 			end
         end
         
-    end
-    
+    end    
     reportMessageLines(messageLines,channel,who,callType)
     return    
 end
@@ -1588,7 +1591,7 @@ function findCharAllKey(VALUES)
         type="레벨제한없음"
     elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
         type="50렙이상만"
-    elseif callType["class"] or callType["score"] then
+    elseif callType["class"] then
         type="만렙만"
     elseif callType["covenant"] or callType["covenantall"] or callType["covenantnow"] then
         type="성약단" 
@@ -1795,14 +1798,9 @@ function findCharNeedParking(VALUES)
     elseif level<2 then level=2 end
     
     local chars=GetHaveKeyCharInfo("레벨제한없음",level)
+	
     if onlyOnline==1 then
-        if channel=="ADDON_PARTY" then        
-            VALUES["onlyOnline"]=1
-            findCharAllKey(VALUES)
-            return
-        else
-            chars=filterCharsByFilter(chars,"name",nil,nil)
-        end
+		chars=filterCharsByFilter(chars,"name",nil,nil)
     else
         local newChars={}
         local newChars2={}
