@@ -719,10 +719,11 @@ function filterVALUES(VALUES)
     local P=MDRcolor("파티",0,"/!! ")
     local E="|cFF33FF99ex|r."
 	
-    if callType["score"] or callType["score_all"] or callType["score_link"] then
+    if callType["score"] --or callType["score_all"] or callType["score_link"] 
+	then
         MDRreportScore(VALUES)
         
-    elseif (#callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] 
+    elseif (#callTypeB>1 and not callType["all"] and not callType["parking"] and not callType["covenant"] and not callType["covenantall"] and not callType["covenantnow"] and not callType["score_link"] and not callType["score_all"]
 		and (callType["item"] 
 		or callType["trinket"] 
 		or callType["stat"] 
@@ -938,20 +939,21 @@ function filterVALUES(VALUES)
         return
         
     else --!명령어가 단일일 경우
-        if (callType["all"] or 
-            callType["mykey"] or 
-            callType["levelrange"] or 
-            callType["dungeon"] or 
-            callType["class"] or 
-            callType["newkey"] or 
-            callType["currentall"] or 
-            callType["currentdungeon"] or 
-            callType["charname"] or
-			callType["scorelink"] or
+        if (callType["all"] or
+            callType["mykey"] or
+            callType["levelrange"] or
+            callType["dungeon"] or
+            callType["class"] or
+            callType["newkey"] or
+            callType["currentall"] or
+            callType["currentdungeon"] or
+            callType["charname"] or			
             callType["covenantall"] or
             callType["covenantnow"] or
-            callType["covenant"] ) then  
-            
+            callType["covenant"] or
+			callType["score_all"] or
+			callType["score_link"]
+			) then 			
             findCharAllKey(VALUES)  
             
         elseif callType["achievement"] then
@@ -1173,8 +1175,7 @@ function MDRreportScore(VALUES)
         callTypeT=VALUES["callTypeT"]
         
         level=VALUES["level"]
-        level2=VALUES["level2"]
-		
+        level2=VALUES["level2"]		
         
         onlyOnline=VALUES["onlyOnline"] 
         onlyYou=VALUES["onlyYou"]
@@ -1204,68 +1205,69 @@ function MDRreportScore(VALUES)
         end   
     end
     
-    local type
+    local type	
 	
-    if callType["score_all"] or callType["score_link"] then
-		if onlyMe~=1 then			
-			VALUES["onlyOnline"]=1
-		end
-		findCharAllKey(VALUES)
-        return
-    end
+	if (CharName and CharName~="" ) then callType="charname" end 
     
-    local findChars={}
-	local findYou,match1,match2,match3=checkCallMe(onlyYou)	
-    if onlyMe then        
-        local t=MDRconfig.Char
-        for k,v in pairs(t) do
-            if v.Level==MDR.SCL and 
-			(v.Score["종합점수"]>0 or v.MythicKey.level or v.IL>DIL.base+26) then
-                tinsert(findChars,k)
-            end
-        end
-    elseif onlyYou and findYou then
-		--findChars=checkCallMe(onlyYou)	
-		if match1 then 
-			tinsert(findChars,match1)
-		elseif match2 then			
-			for i=1,#match2 do
-				tinsert(findChars,match2[i])
-			end			
-		elseif match3 then
-			tinsert(findChars,meAddon)
-			--[[
-			for i=1,#match3 do
-				tinsert(findChars,match3[i])
-			end
-			]]
-		end
-    else
-        tinsert(findChars,meAddon)
-    end  
+    if CharName then --캐릭명만 입력한 경우
+		type="레벨제한없음"
+    elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
+        type="50렙이상만"
+    elseif callType["class"] then
+        type="만렙만"
+    else type="쐐기돌보유자만"
+    end 
+	
+    local chars=GetHaveKeyCharInfo(type) 
+	
+	if #callTypeB==1 and keyword2["score"]=="all" and not onlyYou and who~=meGame then
+		onlyOnline=1
+	end
+		
+	if callType["dungeon"] and onlyMe~=1 and not callType["class"] and not onlyYou then
+		onlyOnline=1
+	end
+	
+	if onlyOnline~=1 and (#callTypeB>1 or callType["class"] or keyword2["score"]=="all" or onlyMe==1 or onlyYou) then
+		onlyOnline=0
+	else
+		onlyOnline=1
+	end	
+	
+    if onlyOnline==1 then
+        chars=filterCharsByFilter(chars,"name",nil,nil)
+    end
+	
+	if (#callTypeB==1 or callType["dungeon"]) and checkCallMe(onlyYou) and onlyOnline~=1 and keyword2["score"]~="all" then
+		chars=filterCharsByFilter(chars,"CharName",onlyYou,nil)
+	end
+	
+    if callType["class"] then
+        chars=filterCharsByFilter(chars,"class",keyword["class"],nil)  
+    end 
+	
+	if not chars or (chars and #chars==0) then return end
     
     local messageLines={}
-    
-    for i=1,#findChars do
-        local targetChar=findChars[i]
-		local IL=MDRconfig.Char[targetChar].IL		
-        local charName=gsub(targetChar, "%s%-.+","")
-        local charClass=MDRconfig.Char[targetChar].Class
-        local charShortClass=MDRcolor(charClass,6)
-        local charClassIcon="{"..charShortClass.."}"
-        local charHead
-        if targetChar==meAddon and not onlyMe and #findChars==1 then
-            charHead=charClassIcon..MDRcolor(charShortClass,0,"▶")
-        else
+	
+	for i=1,#chars do
+		local targetChar=chars[i]["fullName"]
+		local IL=chars[i]["itemLevel"]		
+		local charName=chars[i]["cutName"]
+		local charShortClass=chars[i]["shortClass"]
+		local charClassIcon="{"..charShortClass.."}"
+		local charHead
+        --if targetChar==meAddon and not onlyMe and #findChars==1 then
+        --    charHead=charClassIcon..MDRcolor(charShortClass,0,"▶")
+        --else
             local shortName=strsub(charName,1,6)
             charHead=charClassIcon..MDRcolor(charShortClass,0,shortName.."▶")
-        end
-        
-        local scoreT=MDRconfig.Char[targetChar].Score
-        local charLevel=MDRconfig.Char[targetChar].Level
-		local MythicKey=MDRconfig.Char[targetChar].MythicKey
-        if charLevel~= MDR["SCL"] then return end    
-        
+        --end		
+		
+		local scoreT=chars[i]["score"]
+		local charLevel=chars[i]["charLevel"]   
+		local MythicKey=chars[i]["MythicKey"]				
+
         if callType["dungeon"] then   -- !점수!역병
             local message=""
             local dungeon=keyword["dungeon"][1] 
@@ -1397,7 +1399,7 @@ function MDRreportScore(VALUES)
             message=charHead..MDRgetScoreColor(total,"total").."점 ["..MDRgetAffixIcon("폭군")..tyr_desc.." | "..MDRgetAffixIcon("경화")..for_desc.."]"
 			if (total>0 or MythicKey.level or IL>DIL.base+26) then 
 					tinsert(messageLines,message)
-			end
+			end	
         end
         
     end    
@@ -1587,8 +1589,8 @@ function findCharAllKey(VALUES)
     
     if (CharName and CharName~="" ) then callType="charname" end 
     
-    if CharName then
-        type="레벨제한없음"
+    if CharName then --캐릭명만 입력한 경우
+		type="레벨제한없음"
     elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
         type="50렙이상만"
     elseif callType["class"] then
@@ -1713,6 +1715,16 @@ function findCharAllKey(VALUES)
         reportMessageLines(messageLines,channel,who,callType)
         return
     end 
+	
+	-- 점수 관련 보고인 경우	
+	if callType["score_all"] or callType["score_link"] then
+		if #callTypeB==1 and checkCallMe(onlyYou) and onlyOnline~=1 and keyword2["score_link"]~="all" then
+			chars=filterCharsByFilter(chars,"CharName",onlyYou,nil)
+		end
+		if #callTypeB==1 and keyword2["score_link"]~="all" and not onlyYou then		
+			onlyOnline=1			
+		end
+	end
     
     -- "지금"이 붙은 경우 접속중인 캐릭터만 필터링
     if onlyOnline==1 then
@@ -1748,7 +1760,7 @@ function findCharAllKey(VALUES)
     if level then 
         chars=filterCharsByFilter(chars,"level",level,level2)  
     end 
-    
+		
     --캐릭터이름을 지정한 경우 필터링
     if CharName then
         chars=filterCharsByFilter(chars,"CharName",CharName,nil)
@@ -2017,7 +2029,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
 				target=chars[i]["MythicKeyB"]["event"]				
             elseif filter=="CharName" then
                 target=string.gsub(chars[i]["fullName"], "(%a)([%w_']*)", MDRtitleLower)
-                f1=string.gsub(f1, "(%a)([%w_']*)", MDRtitleLower)
+                f1=string.gsub(f1 or "", "(%a)([%w_']*)", MDRtitleLower)
             end
             if (filter=="CharName" and strfind(target,f1) and lastSeen<MDR["lastSeen"]) or 
             ((filter~="except" and filter~="dungeon" and filter~="newkey") and f1==target) or

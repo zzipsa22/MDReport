@@ -235,8 +235,8 @@ function MDRcolorizeForPrint(message)
         color_class[c]="|cff"..classColor[c]..c.."|r"     
     end 
     --주차정보를 포함하는 경우
-    if strfind(message,"#") or strfind(message,"/") or strfind(message,"Χ") or strfind(message," ▶ ") then
-		if strfind(message," ▶ ") then -- 돌 변화 (새돌)
+    if strfind(message,"#") or strfind(message,"/") or strfind(message,"Χ") or strfind(message,"%] ▶ %[") then
+		if strfind(message,"%] ▶ %[") then -- 돌 변화 (새돌)
             for k,v in pairs(icon_color) do
                 if strfind(message,k) then
                     message=gsub(message,k,v)                    				
@@ -745,8 +745,9 @@ function doFullReport(chars,channel,who,callType)
             local charLevel=chars[i]["charLevel"]
 			local MythicKeyB=chars[i]["MythicKeyB"] or {}
 			local MythicKey=chars[i]["MythicKey"] or {}
-            local online,classStatus,headStar,score_desc,onlyScore="","","","",""
-            
+            local online,classStatus,headStar,score_desc="","","",""
+            local onlyScore="만렙 아님" --점수 기본값
+			
             if charName==meAddon then
                 online=" {OG}접속중"
             end
