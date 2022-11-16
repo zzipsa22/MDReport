@@ -9,6 +9,7 @@
 
 MDReport.lua
 
+version.lua
 extra.lua
 affix.lua
 calltype.lua

@@ -4,8 +4,6 @@ end
 
 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
 
-MDR["version"]="2.14.8"
-MDR["lastUpdate"]="2022-11-15T15:51:31Z"
 MDR["guide"]=0
 MDR["cooltime"]=1
 MDR["meGame"]=UnitName("player").."-"..GetRealmName() 

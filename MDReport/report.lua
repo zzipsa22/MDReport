@@ -414,28 +414,39 @@ function MDRcolorizeForItem(message)
 	message=gsub(message,"사효","|cffdb24b2사효|r")
 	message=gsub(message,"착효","|cffe6cc80착효|r")	
 	
-	message=gsub(message,"양손도검","|T135349:0:::-5|t")
-	message=gsub(message,"양손둔기","|T133053:0:::-5|t")
-	message=gsub(message,"양손도끼","|T132400:0:::-5|t")	
-	
-	message=gsub(message,"단검","|T135650:0:::-5|t")
-	message=gsub(message,"도검","|T135351:0:::-5|t")
-	message=gsub(message,"둔기","|T133054:0:::-5|t")
-	message=gsub(message,"도끼","|T132408:0:::-5|t")	
-	message=gsub(message,"전투검","|T3084656:0:::-5|t")
-	message=gsub(message,"장착무기","|T132938:0:::-5|t")	
-	
-	message=gsub(message,"지팡이","|T3461503:0:::-5|t")
-	message=gsub(message,"장창","|T3054897:0:::-5|t")
-	
-	message=gsub(message,"방패","|T3482400:0:::-5|t")
-	message=gsub(message,"보조장비","|T3488376:0:::-5|t")
-	message=gsub(message,"마법봉","|T135477:0:::-5|t")
-	
-	message=gsub(message,"활","|T135496:0:::-5|t")
-	message=gsub(message,"석궁","|T135537:0:::-5|t")
-	message=gsub(message,"총","|T135615:0:::-5|t")
+	local Color_1h="fff000"
+	local Color_2h="46bad3"
+	local Color_0h="ff66c0"
+	local category={
+		["양손도검"]={135349,Color_2h},
+		["양손둔기"]={133053,Color_2h},
+		["양손도끼"]={132400,Color_2h},	
+		["단검"]={135650,Color_1h},
+		["한손도검"]={135351,Color_1h},
+		["한손둔기"]={133054,Color_1h},
+		["한손도끼"]={132408,Color_1h},
+		["전투검"]={3084656,Color_1h},
+		["장착무기"]={132938,Color_1h,"장착"},
 		
+		["지팡이"]={3461503,Color_2h},
+		["장창"]={3054897,Color_2h},
+		
+		["활"]={135496,Color_2h},
+		["석궁"]={135537,Color_2h},
+		["총"]={135615,Color_2h},	
+
+		["방패"]={3482400,Color_0h},
+		["보조장비"]={3488376,Color_0h,"보조"},
+		["마법봉"]={135477,Color_0h},
+	}
+	
+	for k,v in pairs(category) do
+		local bonus=":0:::-5|t"
+		if strfind(message,k) then
+			message=gsub(message,k.." ","|T"..v[1]..bonus.."|cff"..v[2]..(v[3] and v[3] or k).."|r:")			
+		end
+	end
+
 	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
 	message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
 	
@@ -746,8 +757,8 @@ function doFullReport(chars,channel,who,callType)
 			local MythicKeyB=chars[i]["MythicKeyB"] or {}
 			local MythicKey=chars[i]["MythicKey"] or {}
             local online,classStatus,headStar,score_desc="","","",""
-            local onlyScore="만렙 아님" --점수 기본값
-			
+            local onlyScore="만렙 아님 " --점수 기본값
+            
             if charName==meAddon then
                 online=" {OG}접속중"
             end

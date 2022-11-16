@@ -667,7 +667,8 @@ function checkDungeonHasItem(VALUES)
                         thisDungeonHas[itemNum]=sameDungeon
                     else
                         local name,itemHeader="","{iH}"
-						local weaponType=gsub(dropTable[j][2],"한손","")
+						--local weaponType=gsub(dropTable[j][2],"한손","")
+						local weaponType=dropTable[j][2]
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
                             name="\124T"..dropTable[j][6]..":0:::-5\124t"..dropTable[j][5]
 							itemHeader="{iHL}"
@@ -696,7 +697,8 @@ function checkDungeonHasItem(VALUES)
                     --print(sameDungeon)
                 else                
                         local name,itemHeader="","{iH}"
-						local weaponType=gsub(dropTable[j][2],"한손","")
+						--local weaponType=gsub(dropTable[j][2],"한손","")
+						local weaponType=dropTable[j][2]
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
                             name="\124T"..dropTable[j][6]..":0:::-5\124t"..dropTable[j][5]
 							itemHeader="{iHL}"
@@ -775,7 +777,8 @@ function checkDungeonHasItem(VALUES)
                         thisDungeonHas[itemNum]=sameDungeon
                     else 
                         local name,itemHeader="","{iH}"
-						local weaponType=gsub(dropTable[j][2],"한손","")
+						--local weaponType=gsub(dropTable[j][2],"한손","")
+						local weaponType=dropTable[j][2]
 						if dropTable[j][5] then   -- 이름이 지정된 템이면
 							name="\124T"..dropTable[j][6]..":0:::-5\124t "..dropTable[j][5]
 							itemHeader="{iHL}"
