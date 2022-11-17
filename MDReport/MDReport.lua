@@ -24,7 +24,7 @@ local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 MDR.DIL=DIL
 
-if GetAccountExpansionLevel()==9 then --용군단
+if GetAccountExpansionLevel()==10 then --용군단
 	MDR["SCL"]=70
 	MDR["maxParking"]=20 --용군단 1시즌
 	DIL.min=382 --깡신
@@ -1079,6 +1079,7 @@ function GetHaveKeyCharInfo(type,level)
     MDRrefreshRunHistory()
     
     if type=="만렙만" then level=2
+	elseif type=="파밍된만렙만" then level=15
     elseif type=="soft" then level=level-5
     elseif level==nil then level=MDR["maxParking"] end 
     if level<2 then level=2 end 
@@ -1103,7 +1104,8 @@ function GetHaveKeyCharInfo(type,level)
                 if t[k].MythicKey.level then
                     thisCharIncluded=1  
                 elseif (type~="쐐기돌보유자만" and (
-                        (level==MDR["SCL"] and (IL>=minLevel or type=="만렙만")) or 
+                        (level==MDR["SCL"] and IL>=minLevel and type=="파밍된만렙만") or 
+						(level==MDR["SCL"] and type=="만렙만") or 
                         (type=="레벨제한없음" and level<=MDR["SCL"]) or 
                         (type=="50렙이상만" and level>=50) or
                         (tonumber(type) and level>=type)
@@ -1205,15 +1207,11 @@ function MDRreportScore(VALUES)
     
     local type	
 	
-	if (CharName and CharName~="" ) then callType="charname" end 
-    
-    if CharName then --캐릭명만 입력한 경우
-		type="레벨제한없음"
-    elseif (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
-        type="50렙이상만"
+	if (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
+        type="레벨제한없음"
     elseif callType["class"] then
         type="만렙만"
-    else type="쐐기돌보유자만"
+    else type="파밍된만렙만"
     end 
 	
     local chars=GetHaveKeyCharInfo(type) 
@@ -1251,7 +1249,7 @@ function MDRreportScore(VALUES)
 	for i=1,#chars do
 		local targetChar=chars[i]["fullName"]
 		local IL=chars[i]["itemLevel"]		
-		local charName=chars[i]["cutName"]
+		local charName=chars[i]["cutName"]		
 		local charShortClass=chars[i]["shortClass"]
 		local charClassIcon="{"..charShortClass.."}"
 		local charHead
@@ -1393,11 +1391,12 @@ function MDRreportScore(VALUES)
             
             local tyr_desc=MDRgetDungeonScore(targetChar,"폭군")
             local for_desc=MDRgetDungeonScore(targetChar,"경화")
-            
-            message=charHead..MDRgetScoreColor(total,"total").."점 ["..MDRgetAffixIcon("폭군")..tyr_desc.." | "..MDRgetAffixIcon("경화")..for_desc.."]"
-			if (total>0 or MythicKey.level or IL>DIL.base+26) then 
-					tinsert(messageLines,message)
-			end	
+            if charLevel==MDR["SCL"] then			
+				message=charHead..MDRgetScoreColor(total,"total").."점 ["..MDRgetAffixIcon("폭군")..tyr_desc.." | "..MDRgetAffixIcon("경화")..for_desc.."]"
+			else
+				message=charHead.."[{rt8}만렙 아님: "..charLevel.."레벨]"
+			end
+			tinsert(messageLines,message)			
         end
         
     end    
@@ -1593,6 +1592,8 @@ function findCharAllKey(VALUES)
         type="50렙이상만"
     elseif callType["class"] then
         type="만렙만"
+	elseif callType["score_link"] then
+        type="파밍된만렙만"
     elseif callType["covenant"] or callType["covenantall"] or callType["covenantnow"] then
         type="성약단" 
     else type="쐐기돌보유자만"
@@ -1719,7 +1720,7 @@ function findCharAllKey(VALUES)
 		if #callTypeB==1 and checkCallMe(onlyYou) and onlyOnline~=1 and keyword2["score_link"]~="all" then
 			chars=filterCharsByFilter(chars,"CharName",onlyYou,nil)
 		end
-		if #callTypeB==1 and keyword2["score_link"]~="all" and not onlyYou then		
+		if #callTypeB==1 and keyword2["score_link"]~="all" and not onlyYou and not onlyMe then		
 			onlyOnline=1			
 		end
 	end

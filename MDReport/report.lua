@@ -757,7 +757,7 @@ function doFullReport(chars,channel,who,callType)
 			local MythicKeyB=chars[i]["MythicKeyB"] or {}
 			local MythicKey=chars[i]["MythicKey"] or {}
             local online,classStatus,headStar,score_desc="","","",""
-            local onlyScore="만렙 아님 " --점수 기본값
+            local onlyScore="[{rt8}만렙 아님: "..charLevel.."레벨]" --점수 기본값
             
             if charName==meAddon then
                 online=" {OG}접속중"

@@ -207,10 +207,10 @@ function MDRbackupMythicKey(type)
 	local mapID=C_MythicPlus.GetOwnedKeystoneChallengeMapID() -- 소유한 돌 던전 ID
 	local name=mapID and C_ChallengeMode.GetMapUIInfo(mapID)	-- 소유한 돌 이름
     for bagID = 0, 4 do
-        for invID = 1, GetContainerNumSlots(bagID) do
-            local itemID = GetContainerItemID(bagID, invID)
+        for invID = 1, C_Container.GetContainerNumSlots(bagID) do
+            local itemID = C_Container.GetContainerItemID(bagID, invID)
             if itemID and itemID == 180653 then
-                link = GetContainerItemLink(bagID, invID)                
+                link = C_Container.GetContainerItemLink(bagID, invID)                
             end
         end
     end
@@ -1167,10 +1167,10 @@ function MDRgetHistory(type)
 	local kName=mapID and C_ChallengeMode.GetMapUIInfo(mapID)	-- 소유한 돌 이름
 	
     for bagID = 0, 4 do
-        for invID = 1, GetContainerNumSlots(bagID) do
-            local itemID = GetContainerItemID(bagID, invID)
+        for invID = 1, C_Container.GetContainerNumSlots(bagID) do
+            local itemID = C_Container.GetContainerItemID(bagID, invID)
             if itemID and itemID == 180653 then
-                kLink = GetContainerItemLink(bagID, invID)                
+                kLink = C_Container.GetContainerItemLink(bagID, invID)                
             end
         end
     end

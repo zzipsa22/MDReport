@@ -15,15 +15,13 @@ MDR.frame:RegisterEvent("BAG_UPDATE_DELAYED")
 MDR.frame:RegisterEvent("ITEM_CHANGED")
 MDR.frame:RegisterEvent("COVENANT_CHOSEN")
 
-MDR.frame:SetScript("OnEvent", function(self, event, ...)
-	
-        if event== "ADDON_LOADED" then
-            
+MDR.frame:SetScript("OnEvent", function(self, event, ...)		
+        if event== "ADDON_LOADED" then            
             local addonName=select(1, ...)            
             if addonName ~= ADDON_NAME then
                 return;
             end
-            MDR.frame:UnregisterEvent("ADDON_LOADED");    
+            MDR.frame:UnregisterEvent("ADDON_LOADED");  
             MDRconfig = MDRconfig or {};
             return    
         elseif event=="BAG_UPDATE_DELAYED" then
@@ -40,13 +38,13 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         elseif event == "CHAT_MSG_ADDON" then
             local prefix=select(1, ...)
             local message=select(2,...)
-            if prefix~="MDReport" then return end
+            if prefix~="MDReport" then return end			
             if prefix=="MDReport" and not strfind(strsub(message,0,1),"!") then
                 MDRprintAddonMessage(...)
                 --return                
             end         
             
-        elseif event == "PLAYER_ENTERING_WORLD" then
+        elseif event == "PLAYER_ENTERING_WORLD" then			
             local isInitialLogin, isReloadingUi = ...
             if isInitialLogin or isReloadingUi then                
                 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
@@ -140,7 +138,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             else
                 channel="ADDON_GUILD"            
             end           
-        elseif (event== "CHAT_MSG_GUILD") then
+        elseif (event== "CHAT_MSG_GUILD") then			
             channel="GUILD"
         elseif (event=="CHAT_MSG_OFFICER") then
             channel="OFFICER" 
