@@ -236,7 +236,7 @@ function MDRcolorizeForPrint(message)
     end 
     --주차정보를 포함하는 경우
     if strfind(message,"#") or strfind(message,"/") or strfind(message,"Χ") or strfind(message,"%] ▶ %[") then
-		if strfind(message,"%] ▶ %[") then -- 돌 변화 (새돌)
+		if strfind(message,"%] ▶ %[") and not strfind(message,"새 돌") then -- 돌 변화 (새돌)
             for k,v in pairs(icon_color) do
                 if strfind(message,k) then
                     message=gsub(message,k,v)                    				
@@ -422,9 +422,9 @@ function MDRcolorizeForItem(message)
 		["양손둔기"]={133053,Color_2h},
 		["양손도끼"]={132400,Color_2h},	
 		["단검"]={135650,Color_1h},
-		["한손도검"]={135351,Color_1h},
-		["한손둔기"]={133054,Color_1h},
-		["한손도끼"]={132408,Color_1h},
+		["한손도검"]={135351,Color_1h,"도검"},
+		["한손둔기"]={133054,Color_1h,"둔기"},
+		["한손도끼"]={132408,Color_1h,"도끼"},
 		["전투검"]={3084656,Color_1h},
 		["장착무기"]={132938,Color_1h,"장착"},
 		
