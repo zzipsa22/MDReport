@@ -209,9 +209,11 @@ function reportAddonMessage(messageLines,channel,who,callType)
     end 
 end
 
-function MDRsendAddonMessage(args,channel,who)	
+function MDRsendAddonMessage(args,channel,who)		
 	if strfind(args,"금고") or strfind(args,"기록") or strfind(args,"도움말") then
-		MDRCommands(args, editbox)
+		MDRCommands(args, editbox)		
+	elseif args=="!파장" and (UnitIsGroupLeader("player") or channel~="PARTY") then
+         return    
 	else
 		C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
 	end
@@ -935,7 +937,7 @@ function doFullReport(chars,channel,who,callType)
 				local TimeAlert=""
 				if MythicKeyB.event=="finish" and MythicKeyB.Started and MythicKeyB.Finished then
 					local spentTime=MythicKeyB.Finished - MythicKeyB.Started
-					local TimeMin = math.floor((spentTime/60)+0.5)					
+					local TimeMin = math.floor((spentTime/60)*10+0.5)/10
 					TimeAlert = "/"..TimeMin.."분 소요"
 				end
 
@@ -947,7 +949,7 @@ function doFullReport(chars,channel,who,callType)
 				local InGuildParty,numGuild=InGuildParty()
 				local howMany=""
 				if numGuild and numGuild~=0 then
-					howMany=numGuild.."인 길팟: "
+					howMany="길팟("..numGuild.."인): "
 				end
 				if MythicKeyB.event=="finish" and channel=="ADDON_GUILD" and InGuildParty then
 					isAddonMessage=0

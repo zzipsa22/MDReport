@@ -162,11 +162,14 @@ local classInfo={
 function MDRrequesPromote(channel,who,onlyYou)
 	if not UnitIsGroupLeader("player")then return end	
     local name=MDRsplit(who,"-")[1]
+    name=string.gsub(name, "(%a)([%w_']*)", MDRtitleLower)	
 	local target	
-	if onlyYou then			
+	if onlyYou then
+	    onlyYou=string.gsub(onlyYou, "(%a)([%w_']*)", MDRtitleLower)			
 		for i=1,GetNumGroupMembers()-1 do
-			local partyName=UnitName("party"..i)			
-			if strfind(partyName,onlyYou) then
+			local partyName=UnitName("party"..i)
+			local partyNameB=string.gsub(partyName, "(%a)([%w_']*)", MDRtitleLower)			
+			if strfind(partyNameB,onlyYou) then
 				target=partyName				
 			end
 		end

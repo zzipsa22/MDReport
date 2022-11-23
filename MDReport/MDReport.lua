@@ -355,12 +355,8 @@ function filterVALUES(VALUES)
     --버전요청을 한 사람이 나일 경우 리턴
     if callType["forceversion"]and who==meGame then
         return
-    end  
-	
-	--파장요청을 한 사람이 나이거나 파티채널이 아닌 경우 리턴
-	if  callType["promote"] and (channel~="ADDON_PARTY") then		
-         return
-    end  
+    end  	
+
     --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
     if callType["mykey"] and who~=meGame and channel~="WHISPER_OUT" then 
         return 
