@@ -212,7 +212,7 @@ end
 function MDRsendAddonMessage(args,channel,who)		
 	if strfind(args,"금고") or strfind(args,"기록") or strfind(args,"도움말") then
 		MDRCommands(args, editbox)		
-	elseif args=="!파장" and (UnitIsGroupLeader("player") or channel~="PARTY") then
+	elseif (strfind(args,"파장") and channel~="PARTY") or (args=="!파장" and UnitIsGroupLeader("player")) then
          return    
 	else
 		C_ChatInfo.SendAddonMessage("MDReport", args, channel, who)
