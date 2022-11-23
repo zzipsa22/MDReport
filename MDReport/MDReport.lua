@@ -287,7 +287,7 @@ function filterVALUES(VALUES)
                 
                 message=" 님에게 "..cmdLines..eul.." 요청합니다."
                 --end    
-                print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
+                --print("|cff00ff00▶|r"..MDRcolor("["..onlyYou.."]",-1)..message)
             end  
         end  
         
@@ -343,7 +343,7 @@ function filterVALUES(VALUES)
     end
     
     --파티고 무슨돌이 아니면
-    if channel=="PARTY" and not callType["newkey"] then
+    if channel=="PARTY" then
         if who==meGame then
             MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)
             return
@@ -353,10 +353,14 @@ function filterVALUES(VALUES)
     end 
     
     --버전요청을 한 사람이 나일 경우 리턴
-    if callType["forceversion"] and who==meGame then
+    if callType["forceversion"]and who==meGame then
         return
     end  
-    
+	
+	--파장요청을 한 사람이 나이거나 파티채널이 아닌 경우 리턴
+	if  callType["promote"] and (channel~="ADDON_PARTY") then		
+         return
+    end  
     --명령어가 !내돌or !지금내돌 인데 내가 보낸게 아니면 리턴
     if callType["mykey"] and who~=meGame and channel~="WHISPER_OUT" then 
         return 
@@ -630,19 +634,20 @@ function filterVALUES(VALUES)
             end  
         elseif onlyMe==1 and not CharName then            
             message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] "..eun.." 다음과 같습니다."..affixInfo..msg
-            
+        elseif callType["promote"] then
+			if onlyYou then
+				message=MDRcolor("["..name.."]",-1).." 님의 요청으로 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 ["..cmdLines.."] "..eul.." 넘깁니다."..msg   
+			else
+				message=MDRcolor("["..name.."]",-1).." 님의 요청으로 ["..cmdLines.."] "..eul.." 넘깁니다."..msg   
+			end
         elseif onlyYou then   
-            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..affixInfo..msg
-            
+            message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..affixInfo..msg            
         elseif callType["affix"] then  
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg
-            
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."]"..eul.." 알고 싶어합니다."..msg            
         elseif callType["emote"] then 
-            message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines
-            
-        elseif callType["score"] or callType["score_all"]  or callType["score_link"] then
-            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg
-            
+            message=MDRcolor("["..name.."]",-1).." 님이 "..cmdLines            
+        elseif callType["score"] or callType["score_all"] or callType["score_link"] then
+            message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 요청합니다."..affixInfo..msg            
         elseif callType["parking"] then 
             if (not level) and (#callTypeB==1) and (not onlyOnline) then   
                 message=MDRcolor("["..name.."]",-1).." 님이 ["..MDRcolor("돌",0,"모든 캐릭터").."의 "..cmdLines.."] "..eul.." 요청합니다."..msg
@@ -692,7 +697,7 @@ function filterVALUES(VALUES)
     end 
     
     --지정한 사람이 내가 아니면 리턴
-    if onlyYou and not checkCallMe(onlyYou) then 
+    if not callType["promote"] and onlyYou and not checkCallMe(onlyYou) then 
         return 
     end 
     
@@ -963,8 +968,8 @@ function filterVALUES(VALUES)
             doCheckVersion(channel,who,callType) 
         elseif callType["affix"] and #callTypeB==1 then  
             doOnlyAffixReport(keyword["affix"],channel,who,"affix")   
-        elseif callType["invite"] and (checkCallMe(onlyYou) or chennel=="WHISPER_IN")then  
-            MDRrequestInvite(channel,who)
+        elseif callType["promote"] then  
+            MDRrequesPromote(channel,who,onlyYou)
         elseif callType["specificitem"] then 
             --!주스탯이 고정인 무기종류는 검색통과
             if keyword["specificitem"]=="보조장비" or keyword["specificitem"]=="마법봉" or keyword["specificitem"]=="석궁" or keyword["specificitem"]=="활" or keyword["specificitem"]=="총" or keyword["specificitem"]=="전투검" or keyword["specificitem"]=="방패" then

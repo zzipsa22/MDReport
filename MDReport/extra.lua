@@ -159,8 +159,23 @@ local classInfo={
 }
 
 
-function MDRrequestInvite(channel,who)
-    print("테스트 중인 기능입니다.")
+function MDRrequesPromote(channel,who,onlyYou)
+	if not UnitIsGroupLeader("player")then return end	
+    local name=MDRsplit(who,"-")[1]
+	local target	
+	if onlyYou then			
+		for i=1,GetNumGroupMembers()-1 do
+			local partyName=UnitName("party"..i)			
+			if strfind(partyName,onlyYou) then
+				target=partyName				
+			end
+		end
+	else
+		target=name
+	end
+	if target then 
+		PromoteToLeader(target)
+	end
 end
 
 function MDRgetClassInfo(keyword)  

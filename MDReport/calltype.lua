@@ -14,6 +14,8 @@ local callTypeTable={
     ["누구돌"]={"currentdungeon", "석주"},
     ["석주"]={"currentdungeon", "석주"}, 
     
+	["파장"]={"promote", "파장"},    
+	
     ["단주"]={"covenantall", "모든 성약단"}, 
     ["성약"]={"covenantall", "모든 성약단"}, 
     ["성약단"]={"covenantall", "모든 성약단"},   
