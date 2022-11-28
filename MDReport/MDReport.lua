@@ -24,18 +24,38 @@ local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 MDR.DIL=DIL
 
-if GetAccountExpansionLevel()==10 then --용군단
+if C_MythicPlus.GetCurrentSeason()==9 then --용군단
 	MDR["SCL"]=70
 	MDR["maxParking"]=20 --용군단 1시즌
-	DIL.min=382 --깡신
+	DIL.min=372 --깡신
 	DIL.max=405 --20단
 	DIL.base=346 --기준템렙
+	MDR.dungeonNameToID = {
+	["옥룡사"] = 2,  
+	["어둠달"] = 165,
+	["용맹"] = 200,
+	["별궁"] = 210,
+	["알게"] = 402,
+	["루비"] = 399,
+	["하늘"] = 401,
+	["노쿠드"] = 400,	
+	}
 else --어둠땅
 	MDR["SCL"]=60
 	MDR["maxParking"]=15 --어둠땅 4시즌
 	DIL.min=262 --깡신
 	DIL.max=288 --15단
-	DIL.base=226 --기준템렙
+	DIL.base=236 --기준템렙
+	MDR.dungeonNameToID = {
+	["경이"] = 391,  
+	["소레아"] = 392,
+	["고철"] = 369,
+	["작업"] = 370,
+	["하층"] = 227,
+	["상층"] = 234,
+	["강철"] = 169,
+	["파멸"] = 166,	
+	}
 end
 
 DIL.gap=(DIL.max-DIL.min)/MDR["maxParking"]
@@ -137,25 +157,6 @@ local RealmMap= {
     
     ["아즈샤라"] = 4,
     
-}
-
-MDR.dungeonNameToID = {
-    --["티르너"] = 375,
-    --["죽상"] = 376,
-    --["저편"] = 377,
-    --["속죄"] = 378,
-    --["역병"] = 379,
-    --["핏심"] = 380,
-    --["승천"] = 381,
-    --["투기장"] = 382,  
-	["경이"] = 391,  
-	["소레아"] = 392,
-	["고철"] = 369,
-	["작업"] = 370,
-	["하층"] = 227,
-	["상층"] = 234,
-	["강철"] = 169,
-	["파멸"] = 166,	
 }
 
 MDR.DNum=8
@@ -1142,7 +1143,10 @@ function GetHaveKeyCharInfo(type,level)
     local newChars2={}
     local charsNum=1
     for i=1,#chars do
-        if chars[i]["keyLevel"] >0 then
+		if chars[i]["fullName"]==meAddon then
+			newChars2[1]=chars[i]
+			charsNum=charsNum+1
+		elseif chars[i]["keyLevel"] >0 then        
             newChars[chars[i]]=chars[i]["keyLevel"]*10000
         elseif chars[i]["itemLevel"] then
             newChars[chars[i]]=chars[i]["itemLevel"]*10
@@ -1470,26 +1474,30 @@ end
 function MDRgetDungeonScore(name,affix)
     local scoreT=MDRconfig.Char[name].Score or {}
     local dungeonHistory=""
-    local dungeonTable={
-        --[1]={"핏","핏심"},
-        --[2]={"속","속죄"},
-        --[3]={"승","승천"},
-        --[4]={"죽","죽상"},
-        --[5]={"고","투기장"},
-        --[6]={"역","역병"},
-        --[7]={"티","티르너"},
-        --[8]={"저","저편"}, 
-		--[9]={"경","경이"},
-		--[10]={"소","소레아"},
-		[1]={"파","파멸"},
-		[2]={"강","강철"},
-		[3]={"하","하층"},
-		[4]={"상","상층"},		
-		[5]={"고","고철"},
-		[6]={"작","작업"},
-		[7]={"경","경이"},
-		[8]={"소","소레아"},
-    }
+	local dungeonTable
+	if C_MythicPlus.GetCurrentSeason()==8 then --어둠땅 4시즌
+		dungeonTable={
+			[1]={"파","파멸"},
+			[2]={"강","강철"},
+			[3]={"하","하층"},
+			[4]={"상","상층"},		
+			[5]={"고","고철"},
+			[6]={"작","작업"},
+			[7]={"경","경이"},
+			[8]={"소","소레아"},
+		}
+	else --용군단 1시즌
+		dungeonTable={
+			[1]={"옥","옥룡사"},
+			[2]={"어","어둠달"},
+			[3]={"용","용맹"},
+			[4]={"별","별궁"},		
+			[5]={"알","알게"},
+			[6]={"루","루비"},
+			[7]={"하","하늘"},
+			[8]={"노","노쿠드"},
+		}
+	end
     local formerColor
     for i=1,#dungeonTable do
         local colorClose="|r"
@@ -1813,9 +1821,14 @@ function findCharNeedParking(VALUES)
     else
         local newChars={}
         local newChars2={}
-        local charsNum=1
+        local charsNum=1		
         for i=1,#chars do
-            newChars[chars[i]]=(chars[i]["best"] or 0)*100+(chars[i]["runs"] or 0) 
+			if chars[i]["fullName"]==meAddon then
+				newChars2[1]=chars[i]
+				charsNum=charsNum+1
+			else
+				newChars[chars[i]]=(chars[i]["best"] or 0)*100+(chars[i]["runs"] or 0) 
+			end
         end 
         for k,v in MDRspairs(newChars, function(t,a,b) return t[b] < t[a] end) do
             newChars2[charsNum]=k

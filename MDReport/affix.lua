@@ -181,8 +181,47 @@ local affixNames = {
         ["icon"]=136177,
         ["disc"]="나스레짐 침입자들이 변장해 던전 곳곳의 적들 사이로 숨어들었습니다. 이 침입자들을 잡는다면 타 중개단이 후한 사례를 할 것입니다." ,
     },
+	
+	[132] ={
+        ["name"]="천둥",
+        ["level"]= 10,
+        ["rt"]="{rt3}",
+        ["icon"]=1385910,
+        ["disc"]="적의 생명력이 5% 더 증가합니다. 전투 중 플레이어가 주기적으로 라자게스의 끝없는 폭풍에 휘말려 원시의 힘으로 충만해집니다. 이 힘에는 큰 위험이 따르며, 신속하게 방출하지 않으면 정신이 아득해지는 결과가 뒤따릅니다." ,
+    },
     
 }--둠땅 4시즌
+
+local affixs
+if C_MythicPlus.GetCurrentSeason()==8 then --어둠땅 4시즌
+	affixs = {
+		{"강화","폭탄","폭군","장막"},
+		{"파열","폭풍","경화","장막"},
+		{"분노","화산","폭군","장막"},
+		{"고취","치명상","경화","장막"},
+		{"원한","괴저","폭군","장막"},
+		{"강화","전율","경화","장막"},
+		{"피웅덩이","폭풍","폭군","장막"},
+		{"분노","폭탄","경화","장막"},
+		{"파열","화산","폭군","장막"},
+		{"원한","괴저","경화","장막"},
+		{"고취","전율","폭군","장막"},
+		{"피웅덩이","치명상","경화","장막"},        
+	}
+else -- 용군단 1시즌
+	affixs = {    
+		{"분노","전율","폭군","천둥"},
+		{"파열","치명상","경화","천둥"},
+		{"피웅덩이","화산","폭군","천둥"},
+		{"분노","폭풍","경화","천둥"},
+		{"원한","치명상","폭군","천둥"},
+		{"피웅덩이","폭탄","경화","천둥"},
+		{"강화","폭풍","폭군","천둥"},
+		{"원한","전율","경화","천둥"},
+		{"파열","폭탄","폭군","천둥"},
+		{"강화","화산","경화","천둥"},   
+	}
+end
 
 local affixIDs={}
 for k,v in pairs(affixNames) do
@@ -191,21 +230,6 @@ end
 
 function GetAffixWeeksTable()
     local t=affixIDs
-    local affixs = { 
-		{"강화","폭탄","폭군","장막"},
-        {"파열","폭풍","경화","장막"},
-        {"분노","화산","폭군","장막"},
-        {"고취","치명상","경화","장막"},
-        {"원한","괴저","폭군","장막"},
-        {"강화","전율","경화","장막"},
-        {"피웅덩이","폭풍","폭군","장막"},
-        {"분노","폭탄","경화","장막"},
-        {"파열","화산","폭군","장막"},
-        {"원한","괴저","경화","장막"},
-        {"고취","전율","폭군","장막"},
-        {"피웅덩이","치명상","경화","장막"},
-        
-    }  --어둠땅 2시즌
     local affixWeeks={}
     for i=1, #affixs do
         affixWeeks[i]={}
@@ -294,24 +318,8 @@ function GetAffixFullDescription(keyword,channel)
                 end
             else
                 icon=v["rt"]
-            end  
-            
-            message[1]="▶"..icon..v["name"].." ["..v["level"].."단 이상]: "..v["disc"]
-            --[[
-            if v[5] then
-                message[2]="▷"                
-                for i=5,7 do                
-                    if v[i] then
-                        local _,_,icon=GetSpellInfo(v[i])
-                        icon="\124T"..icon..":0:::-4\124t"                        
-                        message[2]=(message[2] or "")..icon..GetSpellLink(v[i])..", "
-                    end                
-                end
-                if message[2] and strsub(message[2],-2)==", " then
-                    message[2]=strsub(message[2],1,-3)
-                end   
-            end
-            ]]            
+            end              
+            message[1]="▶"..icon..v["name"].." ["..v["level"].."단 이상]: "..v["disc"]     
             break
         end        
     end
@@ -320,8 +328,8 @@ function GetAffixFullDescription(keyword,channel)
         local comparison = function(entry1, entry2)
             local week1=entry1 and entry1-thisWeek or nil
             local week2=entry2 and entry2-thisWeek or nil
-            if week1 and week1<0 then week1=week1+12 end
-            if week2 and week2<0 then week2=week2+12 end
+            if week1 and week1<0 then week1=week1+#affixs end
+            if week2 and week2<0 then week2=week2+#affixs end
             if week1 and week2 and week1 < week2 then
                 return entry1 > entry2
             else
@@ -334,7 +342,7 @@ function GetAffixFullDescription(keyword,channel)
             local header=""
             local week=specificWeek[i]-thisWeek
             if week<0 then
-                week=week+12
+                week=week+#affixs
             end
             if week==0 then
                 header="▶이번주"

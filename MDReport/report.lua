@@ -538,8 +538,12 @@ function doShortReport(chars,channel,who,callType)
         local yourClass={}
         
         for i=1,#chars do         
-            class=chars[i]["shortClass"] 
-            yourClass[class]=(yourClass[class] or 0)+1  
+            class=chars[i]["shortClass"]
+			yourClass[class]=yourClass[class] or {}
+			yourClass[class]["num"]=(yourClass[class]["num"] or 0)+1
+			yourClass[class]["names"]=yourClass[class]["names"] or {}
+			tinsert(yourClass[class]["names"],chars[i]["cutName"])
+            --yourClass[class]=(yourClass[class] or 0)+1  
         end   
         
         local sameClass={}
@@ -568,9 +572,20 @@ function doShortReport(chars,channel,who,callType)
             local shortName=strsub(cutName,1,9)
             local shorterName=strsub(cutName,1,6)
             
-            if yourClass[class] and yourClass[class]>1 then
-                sameClass[class]=(sameClass[class] or 0)+1                
-                classStatus="{"..class.."}"..shorterName
+            if yourClass[class]["num"] and yourClass[class]["num"]>1 then
+                --sameClass[class]=(sameClass[class] or 0)+1
+				local cutPosition=2
+				local n1=yourClass[class]["names"][1]
+				local n2=yourClass[class]["names"][2]
+				for i=cutPosition,5 do
+					if strsub(n1,1,cutPosition*3) == strsub(n2,1,cutPosition*3) then
+						cutPosition=cutPosition+1
+					else
+						break
+					end
+				end
+				local shorterName2=strsub(cutName,1,cutPosition*3)
+                classStatus="{"..class.."}"..shorterName2
             else                
                 classStatus="{"..class.."}"                
             end       
@@ -864,7 +879,7 @@ function doFullReport(chars,channel,who,callType)
             
             --같은 직업이 있을경우 뒤에 이름 붙이기
             if yourClass[class] and yourClass[class]>1 then
-                sameClass[class]=(sameClass[class] or 0)+1               
+                --sameClass[class]=(sameClass[class] or 0)+1               
             end            
             
             if isAddonMessage==1 then
