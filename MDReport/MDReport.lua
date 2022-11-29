@@ -31,30 +31,30 @@ if C_MythicPlus.GetCurrentSeason()==9 then --용군단
 	DIL.max=405 --20단
 	DIL.base=346 --기준템렙
 	MDR.dungeonNameToID = {
-	["옥룡사"] = 2,  
-	["어둠달"] = 165,
-	["용맹"] = 200,
-	["별궁"] = 210,
-	["알게"] = 402,
-	["루비"] = 399,
-	["하늘"] = 401,
-	["노쿠드"] = 400,	
+		["옥룡사"] = 2,  
+		["어둠달"] = 165,
+		["용맹"] = 200,
+		["별궁"] = 210,
+		["알게"] = 402,
+		["루비"] = 399,
+		["하늘"] = 401,
+		["노쿠드"] = 400,	
 	}
-else --어둠땅
-	MDR["SCL"]=60
-	MDR["maxParking"]=15 --어둠땅 4시즌
-	DIL.min=262 --깡신
-	DIL.max=288 --15단
-	DIL.base=236 --기준템렙
+else 
+	MDR["SCL"]=70
+	MDR["maxParking"]=20 --용군단 1시즌
+	DIL.min=372 --깡신
+	DIL.max=405 --20단
+	DIL.base=346 --기준템렙
 	MDR.dungeonNameToID = {
-	["경이"] = 391,  
-	["소레아"] = 392,
-	["고철"] = 369,
-	["작업"] = 370,
-	["하층"] = 227,
-	["상층"] = 234,
-	["강철"] = 169,
-	["파멸"] = 166,	
+		["옥룡사"] = 2,  
+		["어둠달"] = 165,
+		["용맹"] = 200,
+		["별궁"] = 210,
+		["알게"] = 402,
+		["루비"] = 399,
+		["하늘"] = 401,
+		["노쿠드"] = 400,	
 	}
 end
 
@@ -656,7 +656,10 @@ function filterVALUES(VALUES)
         else
             local affix_desc=""
             if callType["all"] then
-                affix_desc=" 이번주 속성은 "..GetAnyWeeksAffix(0,channel).." 입니다."
+				local affix=GetAnyWeeksAffix(0,channel)
+				if affix then
+					affix_desc=" 이번주 속성은 "..affix.." 입니다."
+				end
             end
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..affix_desc..msg
         end 
@@ -1895,7 +1898,7 @@ function findCharNeedParking(VALUES)
             end
             delay=1
         elseif bestCharLevel<MDR["SCL"] then
-            message="▶저는 현재 만렙 캐릭터가 하나도 없습니다! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
+            message="▶만렙 캐릭터 없음! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
         else  
             message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!" 
         end

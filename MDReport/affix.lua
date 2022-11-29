@@ -68,7 +68,7 @@ local affixNames = {
     },
     [10] ={
         ["name"]="경화",
-        ["level"]= 2,
+        ["level"]=2,
         ["rt"]="{rt7}",            
         ["icon"]= 463829,            
         ["disc"]="우두머리가 아닌 적의 생명력이 20%만큼, 공격력이 30%만큼 증가합니다."
@@ -228,6 +228,14 @@ for k,v in pairs(affixNames) do
     affixIDs[v.name]=k
 end
 
+function GetAffixIDByName(keyword)
+	for k,v in pairs(affixNames) do
+		if v.name==keyword then
+			return k
+		end
+	end
+end
+
 function GetAffixWeeksTable()
     local t=affixIDs
     local affixWeeks={}
@@ -300,9 +308,11 @@ end
 
 function GetAffixFullDescription(keyword,channel)
     local affixNames=GetAffixNamesTable()    
-    local thisWeek=GetThisWeek() --이번주
+    local thisWeek=GetThisWeek() or 0 --이번주
     local specificWeek=GetAffixWeekForSpecificAffix(keyword) --포함하는 주
     local tempTable={}
+	local affixID=GetAffixIDByName(keyword)
+	local affixLevel=affixNames[affixID].level
     
     local message={}
     
@@ -323,8 +333,8 @@ function GetAffixFullDescription(keyword,channel)
             break
         end        
     end
-	print(specificWeek)
-    if keyword~="폭군" and keyword~="경화" then
+	--print(specificWeek)
+    if affixLevel~=2 and affixLevel~=10 then
         local comparison = function(entry1, entry2)
             local week1=entry1 and entry1-thisWeek or nil
             local week2=entry2 and entry2-thisWeek or nil
@@ -351,14 +361,14 @@ function GetAffixFullDescription(keyword,channel)
             else
                 header="▷"..week.."주뒤"
             end
-            message[#message+1]=header.." 속성: "..GetAnyWeeksAffix(week,channel)
+            message[#message+1]=header.." 속성: "..(GetAnyWeeksAffix(week,channel) or "")
         end
     end
     return message
 end
 
 function GetAnyWeeksAffix(week,channel)  
-    local thisWeek=GetThisWeek()
+    local thisWeek=GetThisWeek() or 0
     local calledWeek=thisWeek
     local affixWeeks=GetAffixWeeksTable()
     local howManyWeeks=#affixWeeks
@@ -366,7 +376,7 @@ function GetAnyWeeksAffix(week,channel)
     
     if week~=0 then --이번주가 아니면
         if thisWeek==nil then
-            print("▶MDReport: 적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하세요.")
+            print("▶MDReport: 적절한 쐐기 속성을 찾을 수 없습니다. 애드온을 업데이트하거나 새로운 시즌이 열릴때까지 기다려야 합니다.")
             return
         end        
         
@@ -379,6 +389,7 @@ function GetAnyWeeksAffix(week,channel)
         calledWeekAffix=affixWeeks[calledWeek]       
     else
         local thisWeeksAffix=C_MythicPlus.GetCurrentAffixes()
+		if not thisWeeksAffix or #thisWeeksAffix<4 then return end
         calledWeekAffix[1]=thisWeeksAffix[2]["id"]        
         calledWeekAffix[2]=thisWeeksAffix[3]["id"]        
         calledWeekAffix[3]=thisWeeksAffix[1]["id"]        
@@ -394,7 +405,7 @@ function GetThisWeek()
     C_MythicPlus.RequestMapInfo()
     C_MythicPlus.RequestRewards()
     local affixIds = C_MythicPlus.GetCurrentAffixes()
-    if not affixIds then return end  
+    if not affixIds or #affixIds<4 then return end  
     local affixWeeks=GetAffixWeeksTable()
     local thisWeek    
     for week,affixes in ipairs(affixWeeks) do
@@ -408,7 +419,9 @@ end
 function isThisWeekHasSpecificAffix(affixNum)
     local thisWeeksAffix=C_MythicPlus.GetCurrentAffixes()
     local affixTable={}    
-    if thisWeeksAffix==nil then return false end
+    if thisWeeksAffix==nil or #thisWeeksAffix<4 then 
+		return false 
+	end
     affixTable[1]=thisWeeksAffix[2]["id"]        
     affixTable[2]=thisWeeksAffix[3]["id"]        
     affixTable[3]=thisWeeksAffix[1]["id"]        
