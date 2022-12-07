@@ -289,7 +289,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                     ct=ct+1
                     
                     --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-                elseif (not getCallTypeTable(k[i]) and k[i]~="" and name~=""  and name~="?") then
+                elseif (not getCallTypeTable(k[i]) and k[i]~="" and name~=""  and name~="?") then					
                     if #k==1 then
                         callTypeT[ct]=getCallTypeTable("아무")
                         ct=ct+1                         
@@ -313,7 +313,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             end            
         end    
         --print((level1 or"").."~"..(level2 or""))
-        
+        if CharName or ct>1 then
 			if ct>1 then
 				VALUES["onlyYou"]=onlyYou
 			end		
@@ -335,5 +335,5 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             if (channel=="ADDON_GUILD" and onlyForMe~=1) or channel=="ADDON_PARTY" then
                 MDR["running"]=1
             end           
-            
+        end   
 end)
