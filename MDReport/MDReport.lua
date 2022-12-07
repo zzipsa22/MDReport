@@ -1849,9 +1849,10 @@ function findCharNeedParking(VALUES)
     local highstLevel=0
     local parkingLevel=level
     local bestCharLevel=0
+	local bestCharILevel=0
     local bestCharName,bestCharClass="",""
     
-    local minLevel=DIL[level] or DIL[MDR["maxParking"]]
+    local minLevel=DIL.base or DIL[level] or DIL[MDR["maxParking"]]
     
     if chars~=nil then  
         
@@ -1865,8 +1866,9 @@ function findCharNeedParking(VALUES)
                     bestLevels[bestnum]=best
                     bestnum=bestnum+1
                 end
-                if chars[i]["charLevel"]>bestCharLevel then
+                if chars[i]["charLevel"]>bestCharLevel or chars[i]["itemLevel"]>bestCharILevel then
                     bestCharLevel=chars[i]["charLevel"]
+					bestCharILevel=chars[i]["itemLevel"]
                     bestCharName=chars[i]["cutName"]
                     bestCharClass=MDRgetClassName(chars[i]["shortClass"])
                 end 
@@ -1898,9 +1900,9 @@ function findCharNeedParking(VALUES)
             end
             delay=1
         elseif bestCharLevel<MDR["SCL"] then
-            message="▶만렙 캐릭터 없음! [최고 레벨: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
-        else  
-            message="▶저는 현재 "..parkingLevel.."단을 주차할 수 있는 캐릭터가 없습니다!" 
+            message="▶만렙 캐릭터 없음! [Best: "..bestCharName..", Lv."..bestCharLevel.." "..bestCharClass.."]"
+        else
+			message="▶적절한 캐릭터 없음! [Best: "..bestCharName..", Lv."..bestCharILevel.." "..bestCharClass.."]"
         end
         
         messageLines[1]=message

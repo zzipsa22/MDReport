@@ -296,6 +296,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                         CharName=name
                     else
                         onlyYou=name
+						CharName=name
                     end                    
                 end            
             end            
@@ -312,25 +313,27 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             end            
         end    
         --print((level1 or"").."~"..(level2 or""))
-        if ct>1 then
+        
+			if ct>1 then
+				VALUES["onlyYou"]=onlyYou
+			end		
             VALUES["callTypeT"]=callTypeT
             VALUES["level"]=level1
             VALUES["level2"]=level2     
             VALUES["channel"]=channel            
             VALUES["who"]=who   
             VALUES["onlyMe"]=onlyMe
-            VALUES["onlyYou"]=onlyYou
             VALUES["except"]=except  
             VALUES["onlyForMe"]=onlyForMe    
             VALUES["onlyOnline"]=onlyOnline           
-            VALUES["CharName"]=CharName            
+			VALUES["CharName"]=CharName
+                        
             VALUES["msg"]=msg
             
             filterVALUES(VALUES)
             MDR["who"]=who
             if (channel=="ADDON_GUILD" and onlyForMe~=1) or channel=="ADDON_PARTY" then
                 MDR["running"]=1
-            end            
-            --일치하는 명령어가 없으면 리턴
-        else return end
+            end           
+            
 end)
