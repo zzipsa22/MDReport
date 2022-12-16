@@ -35,7 +35,7 @@ if C_MythicPlus.GetCurrentSeason()==9 then --용군단
 		["어둠달"] = 165,
 		["용맹"] = 200,
 		["별궁"] = 210,
-		["알게"] = 402,
+		["대학"] = 402,
 		["루비"] = 399,
 		["하늘"] = 401,
 		["노쿠드"] = 400,	
@@ -51,7 +51,7 @@ else
 		["어둠달"] = 165,
 		["용맹"] = 200,
 		["별궁"] = 210,
-		["알게"] = 402,
+		["대학"] = 402,
 		["루비"] = 399,
 		["하늘"] = 401,
 		["노쿠드"] = 400,	
@@ -633,9 +633,9 @@ function filterVALUES(VALUES)
             message=MDRcolor("핑크",0,"["..name.."]").." 님의 ["..cmdLines.."] "..eun.." 다음과 같습니다."..affixInfo..msg
         elseif callType["promote"] then
 			if onlyYou then
-				message=MDRcolor("["..name.."]",-1).." 님의 요청으로 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 ["..cmdLines.."] "..eul.." 넘깁니다."..msg   
+				message=MDRcolor("["..name.."]",-1).." 님의 요청으로 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 ["..MDRcolor("파티",0,"파티장").."] 을 넘깁니다."..msg   
 			else
-				message=MDRcolor("["..name.."]",-1).." 님의 요청으로 ["..cmdLines.."] "..eul.." 넘깁니다."..msg   
+				message=MDRcolor("["..name.."]",-1).." 님의 요청으로 ["..MDRcolor("파티",0,"파티장").."] 을 넘깁니다."..msg   
 			end
         elseif onlyYou then   
             message=MDRcolor("["..name.."]",-1).." 님이 "..MDRcolor("핑크",0,"["..whoIcon..onlyYou.."]").." 님에게 "..cmdLines..eul.." 요청합니다."..affixInfo..msg            
@@ -1287,7 +1287,7 @@ function MDRreportScore(VALUES)
                 local levelScore=30
                 levelScore=levelScore+level*5                
                 if level>=10 then
-                    levelScore=levelScore+20
+                    levelScore=levelScore+20+2*(level-10)
                 elseif level>=7 then
                     levelScore=levelScore+10
                 elseif level>=4 then
@@ -1347,7 +1347,7 @@ function MDRreportScore(VALUES)
                 score=tonumber(score)
                 local color,tyr_color,for_color
                 
-                if tyr_score>=150 then
+                if tyr_score>=170 then
 					tyr_color="{CT}"
 				elseif tyr_score>137.5 then
                     tyr_color="{CW}"
@@ -1365,7 +1365,7 @@ function MDRreportScore(VALUES)
                     tyr_color="{CC}"
                 end
                 
-                if for_score>=150 then
+                if for_score>=170 then
 				    for_color="{CT}"
 				elseif for_score>137.5 then
                     for_color="{CW}"
@@ -1425,7 +1425,7 @@ function MDRgetScoreColor(score,scoreType,plus)
             color="{CN}"
         end
     elseif scoreType=="affix" then
-        if score>=150 then
+        if score>=170 then
 			color="{CT}"
 		elseif score>137.5 then
             color="{CW}"
@@ -1495,10 +1495,10 @@ function MDRgetDungeonScore(name,affix)
 			[2]={"어","어둠달"},
 			[3]={"용","용맹"},
 			[4]={"별","별궁"},		
-			[5]={"알","알게"},
-			[6]={"루","루비"},
-			[7]={"하","하늘"},
-			[8]={"노","노쿠드"},
+			[5]={"대","대학"},			
+			[6]={"하","하늘"},
+			[7]={"노","노쿠드"},
+			[8]={"루","루비"},
 		}
 	end
     local formerColor
