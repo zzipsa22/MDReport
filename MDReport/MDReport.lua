@@ -1750,7 +1750,7 @@ function findCharAllKey(VALUES)
     if callType["dungeon"] then		
         if except==1 then
             chars=filterCharsByFilter(chars,"except",keyword["dungeon"],nil) 
-        else  
+        else			
             chars=filterCharsByFilter(chars,"dungeon",keyword["dungeon"],nil) 			
         end  
     end 
@@ -2015,8 +2015,9 @@ function filterCharsByFilter(chars,filter,f1,f2)
             local big=f1; f1=f2;f2=big
         end  
     elseif filter=="dungeon" or filter=="except" then  
-        --f1=f1[1]
-        --print(f1)
+		for i=1,#f1 do
+			f1[i]=getFullDungeonName(f1[i])
+		end
     elseif filter=="name" then
         f1=meAddon 
     end 
@@ -2037,7 +2038,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
             elseif filter=="covenant" then   
                 target=chars[i]["covenant"]
             elseif filter=="dungeon" or filter=="except" then
-                target=chars[i]["keyName"]   
+                target=chars[i]["keyName"]				
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
 			elseif filter=="newkey" then
@@ -2062,7 +2063,6 @@ function filterCharsByFilter(chars,filter,f1,f2)
 								num=num+1
 							end
 							findCharsTable[chars[i]["fullName"]]=1
-
                         end 
                     else
                         if strfind(target,f1[j]) then
