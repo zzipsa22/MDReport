@@ -310,8 +310,8 @@ function MDRbackupMythicKey(type)
                 VALUES["callTypeT"]=callTypeT    
                 VALUES["channel"]="ADDON_PARTY"    
                 filterVALUES(VALUES)
-				VALUES["channel"]="ADDON_GUILD"
-				filterVALUES(VALUES)
+				--VALUES["channel"]="ADDON_GUILD"
+				--filterVALUES(VALUES)
         end)
     else    
         MDR.myMythicKey[type]=t 
