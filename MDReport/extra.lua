@@ -1376,8 +1376,8 @@ function MDRdoReportHistory(VALUES)
 	end
     
     
-    for i=16,40 do
-        rewardLevel[i]=rewardLevel[15]
+    for i=21,40 do
+        rewardLevel[i]=rewardLevel[20]
     end
     
     local toons=MDRconfig.Char      
