@@ -578,7 +578,8 @@ function filterVALUES(VALUES)
         if msg and not CharName then   
             msg="|cffaaaaaa ☞"..sur..msg.."|r "..chName
         else
-            msg=MDRcolor(msg,0).." "..chName
+			msg="|cffaaaaaa ☞"..sur..msg.."|r "..chName
+            --msg=MDRcolor(msg,0).." "..chName
         end
         
         local now=""
@@ -1222,9 +1223,10 @@ function MDRreportScore(VALUES)
     local chars=GetHaveKeyCharInfo(type) 
 	
 	if #callTypeB==1 and keyword2["score"]=="all" and not onlyYou and who~=meGame then
-		onlyOnline=1
+		return
+		--onlyOnline=1
 	end
-		
+	
 	if callType["dungeon"] and onlyMe~=1 and not callType["class"] and not onlyYou then
 		onlyOnline=1
 	end
@@ -1349,11 +1351,11 @@ function MDRreportScore(VALUES)
                 
                 if tyr_score>=170 then
 					tyr_color="{CT}"
-				elseif tyr_score>137.5 then
+				elseif tyr_score>137.5+7 then
                     tyr_color="{CW}"
-                elseif tyr_score>=125 then
+                elseif tyr_score>=125+5 then
                     tyr_color="{CA}"
-                elseif tyr_score>=115 then
+                elseif tyr_score>=115+3 then
                     tyr_color="{CL}"
                 elseif tyr_score>=100 then
                     tyr_color="{CE}"
@@ -1367,11 +1369,11 @@ function MDRreportScore(VALUES)
                 
                 if for_score>=170 then
 				    for_color="{CT}"
-				elseif for_score>137.5 then
+				elseif for_score>137.5+7 then
                     for_color="{CW}"
-                elseif for_score>=125 then
+                elseif for_score>=125+5 then
                     for_color="{CA}"
-                elseif for_score>=115 then
+                elseif for_score>=115+3 then
                     for_color="{CL}"
                 elseif for_score>=100 then
                     for_color="{CE}"
@@ -1427,11 +1429,11 @@ function MDRgetScoreColor(score,scoreType,plus)
     elseif scoreType=="affix" then
         if score>=170 then
 			color="{CT}"
-		elseif score>137.5 then
+		elseif score>137.5+7 then
             color="{CW}"
-        elseif score>=125 then
+        elseif score>=125+5 then
             color="{CA}"
-        elseif score>=115 then
+        elseif score>=115+3 then
             color="{CL}"
         elseif score>=100 then
             color="{CE}"
@@ -1456,6 +1458,26 @@ function MDRgetScoreColor(score,scoreType,plus)
         end  
     end
     return color..score..(plus and plus or "").."|r"
+end
+
+function MDRgetScoreColorCode(score)
+	local color
+		if score>=170 then
+			color="{CT}"
+		elseif score>137.5 then
+			color="{CL}"	
+		elseif score>112.5 then
+			color="{CE}"
+		elseif score>93.5 then
+			color="{CR}"
+		elseif score>62.5 then
+			color="{CC}"
+        elseif score==0 then
+            color="{CG}"
+		else
+			color="{CN}"
+		end
+	return color
 end
 
 function MDRgetAffixIcon(affix)
@@ -1511,14 +1533,31 @@ function MDRgetDungeonScore(name,affix)
         --local icon=","
         local color
         local affixScore=scoreT[dungeon] and scoreT[dungeon][affix] or {}
-        local score=affixScore["score"] or 0    
-		if score>=150 then
+        local score=affixScore["score"] or 0  
+		--[[
+		if score>=170 then
 			color="{CT}"
-        elseif score>137.5 then
-            color="{CW}"
-        elseif score>=125 then
+		elseif score>137.5 then
+			color="{CL}"	
+		elseif score>112.5 then
+			color="{CE}"
+		elseif score>93.5 then
+			color="{CR}"
+		elseif score>62.5 then
+			color="{CC}"
+        elseif score==0 then
+            color="{CG}"
+		else
+			color="{CN}"
+		end
+		]]		
+		if score>=170 then
+			color="{CT}"
+        elseif score>137.5+7 then
+			color="{CW}"
+        elseif score>=125+5 then
             color="{CA}"
-        elseif score>=115 then
+        elseif score>=115+3 then
             color="{CL}"
 		elseif score>=100 then
             color="{CE}"
@@ -1529,6 +1568,7 @@ function MDRgetDungeonScore(name,affix)
         else
             color="{CC}"
         end
+
         local colorCode
         if formerColor==color then
             colorCode=""            

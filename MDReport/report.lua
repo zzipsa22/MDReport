@@ -452,12 +452,13 @@ function MDRcolorizeForItem(message)
 	message=gsub(message,"{iH}","|cffa335ee|Hitem:")
 	message=gsub(message,"{iHL}","|cfffe7f00|Hitem:")
 	
-	message=gsub(message,"{iB}","::::::::60::::3:1605:6807:6646:|h[") --기본값
+	message=gsub(message,"{iB}","::::::::70:1467::16:1:3524:1:28:1279:::::|h[") --기본값
 	message=gsub(message,"{iBDF}","::::::::60:102::23:1:3524:1:28:2157:::::|h[") --용군단
 	message=gsub(message,"{iBS}","::::::::60::::3:1605:6807:6646:|h[") --어둠땅	
 	message=gsub(message,"{iBB}","::::::::60::::2:3139:1472:4779:|h[") --격아
 	message=gsub(message,"{iBL}","::::::::60::::3:3138:1501:6646:|h[") --군단
 	message=gsub(message,"{iBD}","::::::::60::::2:3173:6646:|h[") --드레노어
+	message=gsub(message,"{iBM}","::::::::70:1467::16:1:3524:1:28:1279:::::|h[") --판다리아
 	
 	message=gsub(message,"{iE}","]|h|r")   
 	return message
