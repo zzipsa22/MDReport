@@ -1439,7 +1439,7 @@ function MDRdoReportHistory(VALUES)
                     local color1,color2,color3,tip,reward,level
                     if i==1 or i==4 or i==8 then
                         level=runInfo.level
-                        if level>15 then level=15 end
+                        --If level>15 then level=15 end
                         color1="전설"
                         color2="초록"
                         color3="노랑"
