@@ -7,6 +7,7 @@ C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
 MDR["guide"]=0
 MDR["cooltime"]=1
 MDR["meGame"]=UnitName("player").."-"..GetRealmName() 
+MDR["meGameP"]=UnitName("player")
 MDR["meAddon"]=UnitName("player").." - "..GetRealmName() 
 MDR["krClass"],MDR["className"]=UnitClass("player")
 MDR["lastSeen"]=4838400 --8주
@@ -167,8 +168,7 @@ local mailClass={"냥꾼","술사","기원"}
 local plateClass={"전사","죽기","기사"}
 local shieldClass={"전사","기사","술사"}
 
-function filterVALUES(VALUES)  
-    
+function filterVALUES(VALUES)      
     C_Timer.After(MDR["cooltime"], function()
             MDR["running"]=0
             MDR["who"]=nil
@@ -344,9 +344,10 @@ function filterVALUES(VALUES)
     end
     
     --파티고 무슨돌이 아니면
+	
     if channel=="PARTY" then
         if who==meGame then
-            MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)
+            MDRsendAddonMessage(VALUES["msg"],"PARTY",meGame)			
             return
         else 
             return

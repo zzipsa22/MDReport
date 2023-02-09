@@ -88,14 +88,13 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         
         if event == "CHAT_MSG_ADDON" then
             msg=select(2, ...)    
-            who=select(4, ...)   
+            who=select(4, ...)   			
         elseif event == "PLAYER_ENTERING_WORLD" then
             return 
         else
             msg=select(1, ...)    
-            who=select(2, ...)   
-        end       
-        
+            who=select(2, ...)				
+        end		
         --느낌표 스팸이면 무시
         if strfind(msg,"!!!") then return end
         
@@ -148,7 +147,10 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             channel="WHISPER_IN"            
         else return end
         
-        
+        if channel=="PARTY" or channel=="ADDON_PARTY" then
+			who=who.."-"..GetRealmName() 
+		end
+		
         if MDR["running"]==1 then 
             if MDR["meGame"]==who and channel~="WHISPER_OUT" then
                 local message
