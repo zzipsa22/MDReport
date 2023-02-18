@@ -146,11 +146,11 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
         elseif (event=="CHAT_MSG_WHISPER") then
             channel="WHISPER_IN"            
         else return end
-        
+        --[[
         if channel=="PARTY" or channel=="ADDON_PARTY" then
 			who=who.."-"..GetRealmName() 
 		end
-		
+		]]
         if MDR["running"]==1 then 
             if MDR["meGame"]==who and channel~="WHISPER_OUT" then
                 local message
