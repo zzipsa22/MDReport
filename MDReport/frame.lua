@@ -298,7 +298,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                         CharName=name
                     else
                         onlyYou=name
-						CharName=name
+						--CharName=name
                     end                    
                 end            
             end            
