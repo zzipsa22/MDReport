@@ -388,6 +388,7 @@ local callTypeTable={
 	
 	["노쿠"]={"dungeon", "노쿠드"},
 	["노쿠드"]={"dungeon", "노쿠드"},
+	["쿠드"]={"dungeon", "노쿠드"},
 	["노쿠드공격대"]={"dungeon", "노쿠드"},
 	["공격대"]={"dungeon", "노쿠드"},
 	["노공"]={"dungeon", "노쿠드"},

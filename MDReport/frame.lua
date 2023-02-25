@@ -276,16 +276,22 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                     k[i]=gsub(k[i],"지금","")
                     onlyOnline=1                
                 end
-                if strfind(k[i],"노") then
-                    k[i]=gsub(k[i],"노","")
-                    except=1                
+				
+				--내, 지금 부터 잘라내고 명령어가 일치하는지 검증
+				if getCallTypeTable(k[i]) then
+                    callTypeT[ct]=getCallTypeTable(k[i])
+                    ct=ct+1
+				else				
+					if strfind(k[i],"노") then
+						k[i]=gsub(k[i],"노","")
+						except=1                
+					end                
+					if strfind(k[i],"제외") then
+						k[i]=gsub(k[i],"제외","")
+						except=1                
+					end               
                 end
-                
-                if strfind(k[i],"제외") then
-                    k[i]=gsub(k[i],"제외","")
-                    except=1                
-                end               
-                
+				
                 if getCallTypeTable(k[i]) then
                     callTypeT[ct]=getCallTypeTable(k[i])
                     ct=ct+1
