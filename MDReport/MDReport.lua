@@ -653,9 +653,7 @@ function filterVALUES(VALUES)
             else
                 message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..msg 
             end
-        elseif CharName then   
-            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
-        else
+        elseif #callTypeT>0 and not CharName then
             local affix_desc=""
             if callType["all"] then
 				local affix=GetAnyWeeksAffix(0,channel)
@@ -664,6 +662,9 @@ function filterVALUES(VALUES)
 				end
             end
             message=MDRcolor("["..name.."]",-1).." 님이 ["..cmdLines.."] "..eul.." 찾습니다."..affix_desc..msg
+		else
+			--elseif CharName then   
+            message=MDRcolor("["..name.."]",-1).." 님의 "..MDRcolor("핑크",0,"메세지").."입니다: "..msg
         end 
         if not callType["forceversion"] then
             print(statusIcon..mdrcolor[channel]..message)

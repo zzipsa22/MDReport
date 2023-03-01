@@ -321,7 +321,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             end            
         end    
         --print((level1 or"").."~"..(level2 or""))
-        if CharName or ct>1 then
+
 			if ct>1 then
 				VALUES["onlyYou"]=onlyYou
 			end		
@@ -343,5 +343,5 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             if (channel=="ADDON_GUILD" and onlyForMe~=1) or channel=="ADDON_PARTY" then
                 MDR["running"]=1
             end           
-        end   
+
 end)
