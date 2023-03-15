@@ -967,17 +967,19 @@ function doFullReport(chars,channel,who,callType)
 				if numGuild and numGuild~=0 then
 					howMany="길팟("..numGuild.."인): "
 				end
+				--[[
 				if MythicKeyB.event=="finish" and channel=="ADDON_GUILD" and InGuildParty then
 					isAddonMessage=0
 					channel="GUILD"
 					message=howMany.."["..before..(startLevel).."] ▶ ["..after..MythicKey.level.."] ("..upg..TimeAlert.."): "..(MythicKey and MythicKey.link or keyLink)
 				else
+				]]
 					local newkeyHead="새 돌: "
 					if charName~=meAddon then
 						newkeyHead=headStar..classStatus..": "
 					end
 					message=newkeyHead.."["..coveIconBefore..before..(startLevel).."] ▶ ["..coveIconAfter..after..MythicKey.level.."] ("..up..TimeAlert.."): "..(MythicKey and MythicKey.link or keyLink)					
-				end
+				--end
             elseif callType and callType["currentdungeon"] then                
                 local now=" "..on.."준비중"
                 local covenant=MDRgetCovenantID(getShortDungeonName(keyName))

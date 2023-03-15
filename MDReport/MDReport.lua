@@ -213,7 +213,7 @@ function filterVALUES(VALUES)
         CharName=VALUES["CharName"]   
         
     end  
-    
+    	
     local length=MDR["textLength"]
     local kLength=math.floor((length-1)/3+1)
     
@@ -1216,7 +1216,7 @@ function MDRreportScore(VALUES)
     local type	
 	
 	if (callType["class"] and (checkCallMe(onlyYou) or onlyMe==1)) then
-        type="레벨제한없음"
+        type="레벨제한없음"		
     elseif callType["class"] then
         type="만렙만"
     else type="파밍된만렙만"
@@ -1894,7 +1894,7 @@ function findCharNeedParking(VALUES)
 	local bestCharILevel=0
     local bestCharName,bestCharClass="",""
     
-    local minLevel=DIL.base or DIL[level] or DIL[MDR["maxParking"]]
+    local minLevel=DIL[level] or DIL[MDR["maxParking"]] or DIL.min
     
     if chars~=nil then  
         

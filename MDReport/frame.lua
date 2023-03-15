@@ -289,24 +289,23 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
 					if strfind(k[i],"제외") then
 						k[i]=gsub(k[i],"제외","")
 						except=1                
-					end               
-                end
-				
-                if getCallTypeTable(k[i]) then
-                    callTypeT[ct]=getCallTypeTable(k[i])
-                    ct=ct+1
-                    
-                    --내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-                elseif (not getCallTypeTable(k[i]) and k[i]~="" and name~=""  and name~="?") then					
-                    if #k==1 then
-                        callTypeT[ct]=getCallTypeTable("아무")
-                        ct=ct+1                         
-                        CharName=name
-                    else
-                        onlyYou=name
-						--CharName=name
-                    end                    
-                end            
+					end 
+					if getCallTypeTable(k[i]) then
+						callTypeT[ct]=getCallTypeTable(k[i])
+						ct=ct+1
+						
+						--내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
+					elseif (not getCallTypeTable(k[i]) and k[i]~="" and name~=""  and name~="?") then					
+						if #k==1 then
+							callTypeT[ct]=getCallTypeTable("아무")
+							ct=ct+1                         
+							CharName=name
+						else
+							onlyYou=name
+							--CharName=name
+						end                    
+					end    					
+                end				
             end            
         end
         

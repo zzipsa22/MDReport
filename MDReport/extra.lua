@@ -19,7 +19,7 @@ local TimeLimit = {
 	[166]=1800,--파멸
 	[399]=1800,--루비	
 	[400]=2400,--노쿠드
-	[401]=2040,--하늘
+	[401]=2130,--하늘
 	[402]=1920,--알게타르	
 	[2]=2100,--옥룡사
 	[165]=1980,--어둠달
@@ -1242,16 +1242,16 @@ function MDRremoveCharInfo(args)
         print(MDRcolor("빨강",0,"▶ ").."|cFF33FF99ex)|r "..MDRcolor("노랑",0,"/기록")..MDRcolor("빨강",0," 삭제")..MDRcolor("핑크",0," 캐릭터이름 (정확히 일치)"))
         return
     end
+	local target=string.gsub(args, "(%a)([%w_']*)", MDRtitleLower)
     for k,v in pairs (MDRconfig.Char) do
         local name=string.gsub(MDRsplit(k," - ")[1], "(%a)([%w_']*)", MDRtitleLower)
-        local target=string.gsub(args, "(%a)([%w_']*)", MDRtitleLower)
         if name==target then
             MDRconfig.Char[k]=nil
             print(MDRcolor("빨강",0,"▶ ")..MDRcolor(v.Class or v.class or "핑크",0,"["..k.."]").." 의 저장된 정보가 삭제되었습니다.")
             return      
         end
     end
-    print(MDRcolor("빨강",0,"▶ ")..MDRcolor("핑크",0,"["..charName.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")      
+    print(MDRcolor("빨강",0,"▶ ")..MDRcolor("핑크",0,"["..target.."]").." 을/를 포함하는 캐릭터를 찾을 수 없습니다.")      
     return
 end
 
