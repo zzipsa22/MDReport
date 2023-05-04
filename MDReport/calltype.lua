@@ -1,12 +1,8 @@
 local callTypeTable={
     
     ["돌"]={"all", "모든 던전"},
-	["ehf"]={"all", "모든 던전"},
-	["EHF"]={"all", "모든 던전"},
-    ["쐐기돌"]={"all", "모든 던전"},
-    ["쐐기"]={"all", "모든 던전"},
-    ["전체돌"]={"all", "모든 던전"},
-    ["아무"]={"all", "모든 던전"},  
+	["아무"]={"all", "모든 던전"},
+	["ehf"]={"all", "모든 던전"},	
     ["모든돌"]={"all", "모든 던전"},
     
     ["무슨돌"]={"newkey", "새 돌"},
@@ -14,10 +10,12 @@ local callTypeTable={
     
     ["누구돌"]={"currentdungeon", "석주"},
     ["석주"]={"currentdungeon", "석주"}, 
+	["tjrwn"]={"currentdungeon", "석주"},
     
 	["파장"]={"promote", "파장"},    
-	
-    ["단주"]={"covenantall", "모든 성약단"}, 
+	["vkwkd"]={"promote", "파장"},
+	["파티장"]={"promote", "파장"},
+	    
     ["성약"]={"covenantall", "모든 성약단"}, 
     ["성약단"]={"covenantall", "모든 성약단"},   
     
@@ -25,15 +23,7 @@ local callTypeTable={
     ["돌내놔"]={"currentall", "지금 소유한 돌"},    
     
     ["주차"]={"parking", "주차 정보"},
-	["wnck"]={"parking", "주차 정보"},
-	["WNCK"]={"parking", "주차 정보"},
-    ["단주차"]={"parking", "주차 정보"},
-    ["합법"]={"parking", "주차 정보"},
-    ["합법주차"]={"parking", "주차 정보"},
-    ["편법"]={"parking", "soft"},
-    ["편법주차"]={"parking", "soft"},
-    ["불법"]={"parking", "hard"},  
-    ["불법주차"]={"parking", "hard"},
+	["wnck"]={"parking", "주차 정보"},	
     
     ["이상"]={"levelrange", "99"},
     ["이하"]={"levelrange", "2"},
@@ -48,58 +38,58 @@ local callTypeTable={
     ["들후"]={"class", "드루"},
     ["드루"]={"class", "드루"},
     ["드루이드"]={"class", "드루"},
-    ["DRUID"]={"class", "드루"},
+    ["druid"]={"class", "드루"},
     --["수"]={"class", "수도"},
     ["수도"]={"class", "수도"},  
     ["수도사"]={"class", "수도"},
     ["도사"]={"class", "수도"},
-    ["MONK"]={"class", "수도"},
+    ["monk"]={"class", "수도"},
     --["성"]={"class", "기사"},  
     --["기"]={"class", "기사"},  
     ["기사"]={"class", "기사"},
     ["성기사"]={"class", "기사"},
-    ["PALADIN"]={"class", "기사"},
+    ["paladin"]={"class", "기사"},
     --["술"]={"class", "술사"},  
     ["술사"]={"class", "술사"},
     ["주술사"]={"class", "술사"},
-    ["SHAMAN"]={"class", "술사"},
+    ["shaman"]={"class", "술사"},
     --["사"]={"class", "사제", "지능"},
     ["사제"]={"class", "사제", "지능"},
     ["흰거"]={"class", "사제", "지능"},
-    ["PRIEST"]={"class", "사제", "지능"},
+    ["priest"]={"class", "사제", "지능"},
     --["죽"]={"class", "죽기", "힘"},
     ["죽기"]={"class", "죽기", "힘"},
     ["죽음의기사"]={"class", "죽기", "힘"},
-    ["DEATHKNIGHT"]={"class", "죽기", "힘"},
+    ["deathknight"]={"class", "죽기", "힘"},
     --["악"]={"class", "악사", "민첩"},
     ["악사"]={"class", "악사", "민첩"},
     ["악마사냥꾼"]={"class", "악사", "민첩"},
-    ["DEMONHUNTER"]={"class", "악사", "민첩"},
+    ["demonhunter"]={"class", "악사", "민첩"},
     --["도"]={"class", "도적", "민첩"},
     ["도적"]={"class", "도적", "민첩"},
     ["돚거"]={"class", "도적", "민첩"},
-    ["ROGUE"]={"class", "도적", "민첩"},
+    ["rogue"]={"class", "도적", "민첩"},
     --["전"]={"class", "전사", "힘"},
     ["전사"]={"class", "전사", "힘"},
-    ["WARRIOR"]={"class", "전사", "힘"},
+    ["warrior"]={"class", "전사", "힘"},
     --["흑"]={"class", "흑마", "지능"},
     ["흑마"]={"class", "흑마", "지능"},
     ["흑마법사"]={"class", "흑마", "지능"},
-    ["WARLOCK"]={"class", "흑마", "지능"},
+    ["warlock"]={"class", "흑마", "지능"},
     --["법"]={"class", "법사", "지능"},
     ["법사"]={"class", "법사", "지능"},
     ["물빵"]={"class", "법사", "지능"},
     ["마법사"]={"class", "법사", "지능"},
-    ["MAGE"]={"class", "법사", "지능"},
+    ["mage"]={"class", "법사", "지능"},
     --["냥"]={"class", "냥꾼", "민첩"},
     ["냥꾼"]={"class", "냥꾼", "민첩"},
     ["사냥꾼"]={"class", "냥꾼", "민첩"},
-    ["HUNTER"]={"class", "냥꾼", "민첩"},
+    ["hunter"]={"class", "냥꾼", "민첩"},
 	
     ["기원"]={"class", "기원", "지능"},
 	["원사"]={"class", "기원", "지능"},
     ["기원사"]={"class", "기원", "지능"},
-    ["EVOKER"]={"class", "기원", "지능"},
+    ["evoker"]={"class", "기원", "지능"},
 	
     ["회드"]={"spec", "회복", "지능","드루"},
     ["회복"]={"spec", "회복", "지능","드루"},
@@ -266,6 +256,7 @@ local callTypeTable={
 	
 	--점수
 	["점수"]={"score", "쐐기돌 평점"},
+	["wjatn"]={"score", "쐐기돌 평점"},
 	["모든점수"]={"score", "쐐기돌 평점","all"},
 	
 	["평점"]={"score_link", "평점표"},
@@ -321,7 +312,7 @@ local callTypeTable={
     ["핏심"]={"dungeon", "핏심"},
     ["심연"]={"dungeon", "핏심"},
     ["핏빛"]={"dungeon", "핏심"},  
-	]]
+
 	
 	["경이"]={"dungeon", "경이"},
 	["거리"]={"dungeon", "경이"},    
@@ -360,23 +351,13 @@ local callTypeTable={
 	["선착"]={"dungeon", "강철"},	
 	["선착장"]={"dungeon", "강철"},		
 	["강철선착장"]={"dungeon", "강철"},	
+	]]
 	
+	--용군단 1시즌
 	["알게"]={"dungeon", "대학"},
 	["알게타르"]={"dungeon", "대학"},
 	["대학"]={"dungeon", "대학"},
 	["알게타르대학"]={"dungeon", "대학"},
-	
-	["골짜기"]={"dungeon", "담쟁이"},
-	["덩굴"]={"dungeon", "담쟁이"},
-	["담쟁이"]={"dungeon", "담쟁이"},
-	["담쟁이덩굴"]={"dungeon", "담쟁이"},
-	
-	["주입"]={"dungeon", "주입"},
-	["주입의전당"]={"dungeon", "주입"},
-	["전당"]={"dungeon", "주입"},
-	
-	["넬타"]={"dungeon", "넬타"},
-	["넬타루스"]={"dungeon", "넬타"},
 	
 	["루비"]={"dungeon", "루비"},
 	["루비생명"]={"dungeon", "루비"},
@@ -394,12 +375,7 @@ local callTypeTable={
 	["노쿠드공격대"]={"dungeon", "노쿠드"},
 	["공격대"]={"dungeon", "노쿠드"},
 	["노공"]={"dungeon", "노쿠드"},
-	
-	["울다만"]={"dungeon", "울다만"},
-	["티르"]={"dungeon", "울다만"},
-	["울티"]={"dungeon", "울다만"},
-	["유산"]={"dungeon", "울다만"},
-	
+			
 	["별궁"]={"dungeon", "별궁"},
 	["별의궁정"]={"dungeon", "별궁"},
 	["궁정"]={"dungeon", "별궁"},
@@ -417,6 +393,46 @@ local callTypeTable={
 	
 	["옥룡"]={"dungeon", "옥룡사"},
 	["옥룡사"]={"dungeon", "옥룡사"},
+	
+	--용군단 2시즌
+	["골짜기"]={"dungeon", "담쟁이"},
+	["덩굴"]={"dungeon", "담쟁이"},
+	["덩쿨"]={"dungeon", "담쟁이"},
+	["담쟁이"]={"dungeon", "담쟁이"},
+	["담쟁"]={"dungeon", "담쟁이"},
+	["담쟁이덩굴"]={"dungeon", "담쟁이"},
+	
+	["주입"]={"dungeon", "주입"},
+	["주입의전당"]={"dungeon", "주입"},
+	["전당"]={"dungeon", "주입"},
+	
+	["넬타"]={"dungeon", "넬타"},
+	["낼타"]={"dungeon", "넬타"},
+	["넬타루스"]={"dungeon", "넬타"},
+	["낼타루스"]={"dungeon", "넬타"},
+	
+	["울다만"]={"dungeon", "울다만"},
+	["티르"]={"dungeon", "울다만"},
+	["울다"]={"dungeon", "울다만"},
+	["유산"]={"dungeon", "울다만"},
+	
+	["둥지"]={"dungeon", "넬둥"},
+	["넬타리온"]={"dungeon", "넬둥"},
+	["낼타리온"]={"dungeon", "넬둥"},
+	["넬둥"]={"dungeon", "넬둥"},
+	["낼둥"]={"dungeon", "넬둥"},
+	
+	["자유"]={"dungeon", "자유"},
+	["자유지대"]={"dungeon", "자유"},
+	
+	["썩은굴"]={"dungeon", "썩굴"},
+	["썪은굴"]={"dungeon", "썩굴"},
+	["썩굴"]={"dungeon", "썩굴"},
+	["썪굴"]={"dungeon", "썩굴"},
+	
+	["누각"]={"dungeon", "누각"},
+	["소용돌이"]={"dungeon", "누각"},
+	["소용"]={"dungeon", "누각"},
 	
 	--아이템ID
 	--[[
@@ -531,6 +547,7 @@ local callTypeTable={
 }
 
 function getCallTypeTable(keyword)
+	keyword=string.gsub(keyword, "(%a)([%w_']*)", MDRtitleLower)
     for k,v in pairs(callTypeTable) do
         if keyword==k then
             return v

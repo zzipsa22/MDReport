@@ -8,7 +8,7 @@ local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
-local TimeLimit = {
+local TimeLimit = { --던전 클리어 시간
 	[391]=2340,--경이
 	[392]=1800,--소레아
 	[369]=2280,--고철
@@ -25,7 +25,15 @@ local TimeLimit = {
 	[165]=1980,--어둠달
 	[210]=1800,--별궁
 	[200]=2280,--용맹
-	
+
+	[438]=30*60,--누각
+	[206]=33*60,--넬타 둥지
+	[251]=33*60,--썩은굴
+	[245]=33*60,--자유지대
+	[405]=36*60,--담쟁이
+	[406]=38*60,--주입
+	[404]=35*60,--넬타루스
+	[403]=40*60,--울다만
 }
 
 C_Timer.After(10, function()    
@@ -1327,7 +1335,7 @@ function MDRdoReportHistory(VALUES)
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
     end    
     
-    local rewardLevel_SL_s4={ 
+    local rewardLevel_SL_s4={  -- 어둠땅 4시즌
         [2]=278,    
         [3]=278,
         [4]=278,
@@ -1344,7 +1352,7 @@ function MDRdoReportHistory(VALUES)
         [15]=304,
     }
 	
-	local rewardLevel_DF_s1={ 
+	local rewardLevel_DF_s1={ -- 용군단 1시즌	
         [2]=382,    
         [3]=385,
         [4]=385,
@@ -1365,17 +1373,38 @@ function MDRdoReportHistory(VALUES)
 		[19]=418,
 		[20]=421,
     }
+	
+	local rewardLevel_DF_s2={ -- 용군단 2시즌	
+        [2]=415,    
+        [3]=418,
+        [4]=421,
+        [5]=421,
+        [6]=424,
+        [7]=424,
+        [8]=428,
+        [9]=428,
+        [10]=431,
+        [11]=431,
+        [12]=434,
+        [13]=434,
+        [14]=437,
+        [15]=437,
+		[16]=441,
+		[17]=441,
+		[18]=444,
+		[19]=444,
+		[20]=447,
+    }
     --[[
     local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15) -- 오류 많음
     ]]
     local rewardLevel
-	if MDR["SCL"]==70 then
-		rewardLevel=rewardLevel_DF_s1
+	if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
+		rewardLevel=rewardLevel_DF_s2
 	else
-		rewardLevel=rewardLevel_SL_s4
+		rewardLevel=rewardLevel_DF_s1
 	end
-    
-    
+        
     for i=21,40 do
         rewardLevel[i]=rewardLevel[20]
     end

@@ -267,7 +267,8 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
                 callTypeT[ct]=getCallTypeTable(k[i])
                 ct=ct+1
             else
-                local name=gsub(k[i],"@","")
+                --local name=gsub(k[i],"@","")
+				local name=gsub(k[i],"?","")
                 if strfind(k[i],"내") then             
                     k[i]=gsub(k[i],"내","")
                     onlyMe=1
@@ -295,7 +296,7 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
 						ct=ct+1
 						
 						--내,지금을 잘라내고도 명령어를 못찾으면 이름검색시도
-					elseif (not getCallTypeTable(k[i]) and k[i]~="" and name~=""  and name~="?") then					
+					elseif (not getCallTypeTable(k[i]) and name~="") then					
 						if #k==1 then
 							callTypeT[ct]=getCallTypeTable("아무")
 							ct=ct+1                         

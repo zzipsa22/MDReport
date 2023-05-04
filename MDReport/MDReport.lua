@@ -25,23 +25,23 @@ local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 MDR.DIL=DIL
 
-if C_MythicPlus.GetCurrentSeason()==9 then --용군단
+if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
 	MDR["SCL"]=70
-	MDR["maxParking"]=20 --용군단 1시즌
-	DIL.min=372 --깡신
-	DIL.max=405 --20단
-	DIL.base=346 --기준템렙
+	MDR["maxParking"]=20 --용군단 2시즌
+	DIL.min=372+26 --깡신
+	DIL.max=405+26 --20단
+	DIL.base=346+26 --기준템렙
 	MDR.dungeonNameToID = {
-		["옥룡사"] = 2,  
-		["어둠달"] = 165,
-		["용맹"] = 200,
-		["별궁"] = 210,
-		["대학"] = 402,
-		["루비"] = 399,
-		["하늘"] = 401,
-		["노쿠드"] = 400,	
+		["누각"] = 438,  
+		["넬둥"] = 206,
+		["썩굴"] = 251,
+		["자유"] = 245,
+		["담쟁이"] = 405,
+		["주입"] = 406,
+		["넬타"] = 404,
+		["울다만"] = 403,	
 	}
-else 
+else --용군단 1시즌
 	MDR["SCL"]=70
 	MDR["maxParking"]=20 --용군단 1시즌
 	DIL.min=372 --깡신
@@ -315,28 +315,37 @@ function filterVALUES(VALUES)
     if channel=="GUILD" then
         
         if who==meGame then
-            if guildWarn<2 then
-                local msg=VALUES["msg"]
-                if strfind(strsub(msg,1,2),"!") then
-                    msg=strsub(msg,2,-1)
-                end  
-                print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
-                guildWarn=guildWarn+1
-            end
-            local msg=VALUES["msg"]
-            if strfind(strsub(msg,1,1),"!") then
-                msg=strsub(msg,2,-1)
-            end
-            local m=MDRconfig.MannerMode or 0
-            local at=""
-            if m==1 then--매너모드
-                if strfind(msg,"@") then
-                    msg=gsub(msg,"@","")   
-                else
-                    at="@"  
-                end  
-            end 
-            MDRsendAddonMessage("!"..at..msg,"GUILD",meGame)  
+			local msg=VALUES["msg"]
+			if strfind(strsub(msg,1,1),"!") then
+				msg=strsub(msg,2,-1)
+			end
+			local m=MDRconfig.MannerMode or 0
+			local at=""
+			if m==1 then--매너모드
+				if strfind(msg,"@") then
+					msg=gsub(msg,"@","")   
+				else
+					at="@"  
+				end  
+			end
+			
+			local filter=gsub(msg,"!","")
+			filter=gsub(filter," ","")
+			filter=gsub(filter,"?","")
+			filter=gsub(filter,"#","")
+			filter=gsub(filter,"$","")
+			
+			if filter~="" then
+				if guildWarn<2 then
+					local msg2=VALUES["msg"]
+					if strfind(strsub(msg2,1,2),"!") then
+						msg2=strsub(msg2,2,-1)
+					end  
+					print("▶|cFF40ff40길드채팅|r은 모두가 사용하는 공간입니다. 애드온을 사용하지 않는 분들을 위해 다음 명령어를 활용해보세요. |cffffff00/!|r "..MDRcolor(msg2,0).." (애드온 사용자 간에만 메세지를 주고 받을 수 있습니다.)")
+					guildWarn=guildWarn+1
+				end
+				MDRsendAddonMessage("!"..at..msg,"GUILD",meGame)  
+			end			
             return
         else --길드요청을 내가보낸게 아니면 리턴
             return
@@ -1502,16 +1511,16 @@ function MDRgetDungeonScore(name,affix)
     local scoreT=MDRconfig.Char[name].Score or {}
     local dungeonHistory=""
 	local dungeonTable
-	if C_MythicPlus.GetCurrentSeason()==8 then --어둠땅 4시즌
+	if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
 		dungeonTable={
-			[1]={"파","파멸"},
-			[2]={"강","강철"},
-			[3]={"하","하층"},
-			[4]={"상","상층"},		
-			[5]={"고","고철"},
-			[6]={"작","작업"},
-			[7]={"경","경이"},
-			[8]={"소","소레아"},
+			[1]={"누","누각"},
+			[2]={"둥","넬둥"}, 
+			[3]={"썩","썩굴"},
+			[4]={"자","자유"},		
+			[5]={"담","담쟁이"},			
+			[6]={"주","주입"},
+			[7]={"넬","넬타"},
+			[8]={"울","울다만"},
 		}
 	else --용군단 1시즌
 		dungeonTable={
