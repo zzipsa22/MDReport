@@ -66,17 +66,14 @@ end
 
 MDRconfig=MDRconfig or {}
 
+C_MythicPlus.RequestMapInfo()
+C_MythicPlus.RequestRewards()
+C_MythicPlus.RequestCurrentAffixes()
+		
 C_Timer.After(3, function()
-        C_MythicPlus.RequestMapInfo()
-        C_MythicPlus.RequestRewards()
-		C_MythicPlus.RequestCurrentAffixes()
-		if not IsAddOnLoaded("Blizzard_ChallengesUI") then
-			--LoadAddOn("Blizzard_ChallengesUI")
-		end  
         if MDR.myMythicKey==nil then
             MDR.myMythicKey={}
         end
-        MDRconfig=MDRconfig or {}
         if not MDRconfig.delay then
             MDRconfig.delay=MDR.DefaultDelay
         end

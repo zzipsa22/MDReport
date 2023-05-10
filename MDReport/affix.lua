@@ -40,21 +40,21 @@ local affixNames = {
     },
     [6] ={
         ["name"]="분노",
-        ["level"]=4,
+        ["level"]=14,
         ["rt"]="{rt2}", 
-        ["disc"]="우두머리가 아닌 적의 남은 생명력이 30% 이하로 떨어지면 격노 상태가 되어, 죽기 전까지 공격력이 75%만큼 증가합니다.",
+        ["disc"]="우두머리가 아닌 적의 남은 생명력이 30% 이하로 떨어지면 격노 상태가 되어, 일시적으로 군중 제어 효과에 면역이 됩니다.",
         [5]=228318
     },
     [7] ={
         ["name"]="강화",
-        ["level"]= 4,
+        ["level"]=14,
         ["rt"]="{rt1}", 
-        ["disc"]="우두머리가 아닌 적이 죽으면 그 죽음의 메아리가 주위의 아군을 강화하여, 최대 생명력이 15%만큼, 공격력이 20%만큼 증가합니다." ,
+        ["disc"]="우두머리가 아닌 적이 죽으면 그 죽음의 메아리가 주위의 아군을 강화하여, 일시적으로 공격력이 20%만큼 증가합니다." ,
         [5]=209859
     },
     [8] ={
         ["name"]="피웅덩이",
-        ["level"]=4,
+        ["level"]=14,
         ["rt"]="{rt2}",
         ["disc"]="우두머리가 아닌 적이 죽으면 수액 웅덩이가 남아, 적의 아군을 치유하고 플레이어에게 피해를 입힙니다.",
         [5]=226512
@@ -144,7 +144,7 @@ local affixNames = {
     }, 
     [123] ={
         ["name"]="원한",
-        ["level"]=4,
+        ["level"]=14,
         ["rt"]="{rt8}",
         ["icon"]=135945,
         ["disc"]="우두머리가 아닌 적의 시체에서 마귀가 나타나 무작위 플레이어를 추적합니다."
@@ -189,24 +189,52 @@ local affixNames = {
         ["icon"]=1385910,
         ["disc"]="적의 생명력이 5% 더 증가합니다. 전투 중 플레이어가 주기적으로 라자게스의 끝없는 폭풍에 휘말려 원시의 힘으로 충만해집니다. 이 힘에는 큰 위험이 따르며, 신속하게 방출하지 않으면 정신이 아득해지는 결과가 뒤따릅니다." ,
     },
+		
+	[134] ={
+        ["name"]="속박",
+        ["level"]= 7,
+        ["rt"]="{rt8}",
+        ["icon"]=134412,
+        ["disc"]="전투 중 휘감는 덩굴이 주기적으로 나타나 플레이어를 속박합니다." ,
+		[5]=408556
+    },
+		
+	[136] ={
+        ["name"]="무형",
+        ["level"]= 7,
+        ["rt"]="{rt8}",
+        ["icon"]=298642,
+        ["disc"]="전투 중 무형의 존재가 주기적으로 나타나 플레이어를 약화하려 합니다." ,
+		[5]=408805
+    },
+		
+	[135] ={
+        ["name"]="괴로움",
+        ["level"]= 7,
+        ["rt"]="{rt8}",
+        ["icon"]=237555,
+        ["disc"]="전투 중 괴로워하는 영혼이 주기적으로 나타나 플레이어에게 도움을 청합니다." ,
+		[5]=409492
+    },
     
 }--둠땅 4시즌
 
 local affixs
-if C_MythicPlus.GetCurrentSeason()==8 then --어둠땅 4시즌
+
+if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
 	affixs = {
-		{"강화","폭탄","폭군","장막"},
-		{"파열","폭풍","경화","장막"},
-		{"분노","화산","폭군","장막"},
-		{"고취","치명상","경화","장막"},
-		{"원한","괴저","폭군","장막"},
-		{"강화","전율","경화","장막"},
-		{"피웅덩이","폭풍","폭군","장막"},
-		{"분노","폭탄","경화","장막"},
-		{"파열","화산","폭군","장막"},
-		{"원한","괴저","경화","장막"},
-		{"고취","전율","폭군","장막"},
-		{"피웅덩이","치명상","경화","장막"},        
+		{"강화","폭탄","폭군"},
+		{"파열","폭풍","경화"},
+		{"분노","화산","폭군"},
+		{"고취","치명상","경화"},
+		{"원한","괴저","폭군"},
+		{"강화","전율","경화"},
+		{"피웅덩이","폭풍","폭군"},
+		{"분노","폭탄","경화"},
+		{"파열","화산","폭군"},
+		{"원한","괴저","경화"},
+		{"고취","전율","폭군"},
+		{"피웅덩이","치명상","경화"},        
 	}
 else -- 용군단 1시즌
 	affixs = {    
@@ -266,12 +294,16 @@ function GetAffixFullText(AffixTable,channel)
     tempTable[4]=affixNames[AffixTable[4]]
     
     for i=1,#tempTable do
-        local icon,spellLink="",""
+        local icon,spellLink,spellname="","",""
         if channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or  channel=="print" then
             if tempTable[i][5] then
-                _,_,icon=GetSpellInfo(tempTable[i][5])
+                spellname,_,icon=GetSpellInfo(tempTable[i][5])
                 icon="\124T"..icon..":0:::-4\124t"
-                spellLink=GetSpellLink(tempTable[i][5])
+				if spellname~=tempTable[i]["name"] then					
+					spellLink=tempTable[i]["name"]..GetSpellLink(tempTable[i][5])
+				else
+					spellLink=GetSpellLink(tempTable[i][5])					
+				end                
             else
                 icon="\124T"..tempTable[i]["icon"]..":0:::-4\124t"
                 spellLink=tempTable[i]["name"]
@@ -319,17 +351,24 @@ function GetAffixFullDescription(keyword,channel)
     for k,v in pairs(affixNames) do
         if v["name"]==keyword then
             local icon=""
+			local name=v["name"]
+			local spellname
             if channel=="ADDON_GUILD" or channel=="ADDON_WHISPER" or channel=="ADDON_PARTY" or channel=="ADDON_OFFICER" or  channel=="print" then
                 if v[5] then
-                    _,_,icon=GetSpellInfo(v[5])
+                    spellname,_,icon=GetSpellInfo(v[5])					
                     icon="\124T"..icon..":0:::-4\124t"
+					if spellname~=name then
+						name=name..GetSpellLink(v[5])
+					else
+						name=GetSpellLink(v[5])
+					end
                 else
-                    icon="\124T"..v["icon"]..":0:::-4\124t"
+                    icon="\124T"..v["icon"]..":0:::-4\124t"					
                 end
             else
                 icon=v["rt"]
             end              
-            message[1]="▶"..icon..v["name"].." ["..v["level"].."단 이상]: "..v["disc"]     
+            message[1]="▶"..icon..name.." ["..v["level"].."단 이상]: "..v["disc"]     
             break
         end        
     end
