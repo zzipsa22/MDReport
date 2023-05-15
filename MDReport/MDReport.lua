@@ -1661,8 +1661,10 @@ function findCharAllKey(VALUES)
     if callType["newkey"] then		
 		chars=filterCharsByFilter(chars,"newkey",nil,nil)
 		if checkCallMe(onlyYou) or onlyMe==1 then
+			--print("dd")
 		else
-			onlyOnline=1			
+			onlyOnline=1
+			--print("ee")
 		end		
     end 
     
@@ -1837,7 +1839,7 @@ function findCharAllKey(VALUES)
             end 
         end  
     end  
-    
+    --print(#chars)
     if forceToShort==1 then  
         doShortReport(chars,channel,who,callType) 
     else
@@ -2090,7 +2092,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
             elseif filter=="name" then
                 target=chars[i]["fullName"] 
 			elseif filter=="newkey" then
-				target=chars[i]["MythicKeyB"]["event"]				
+				target=chars[i]["MythicKeyB"]["event"]					
             elseif filter=="CharName" then
                 target=string.gsub(chars[i]["fullName"], "(%a)([%w_']*)", MDRtitleLower)
                 f1=string.gsub(f1 or "", "(%a)([%w_']*)", MDRtitleLower)
@@ -2129,7 +2131,7 @@ function filterCharsByFilter(chars,filter,f1,f2)
         end    
     end
     
-    if #findChars>0 then
+    if #findChars>0 then		
         return findChars
     else
         return nil

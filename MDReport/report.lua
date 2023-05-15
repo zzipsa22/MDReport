@@ -929,7 +929,7 @@ function doFullReport(chars,channel,who,callType)
 				local startLevel=MythicKeyB.level				
 				if (MythicKeyB.event=="start" or MythicKeyB.event=="finish") and MythicKeyB.level~=2 then
 					startLevel=startLevel+1					
-				end
+				end				
 				
                 if MythicKeyB.event=="finish" and MythicKey.level > startLevel then --새로 받은 돌의 단수가 올라가면
                     up="|cff48ff00▲"..(MythicKey.level-startLevel).."상|r"

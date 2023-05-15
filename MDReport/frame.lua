@@ -67,14 +67,16 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             end       
             return
             -- 쐐기 완료시  
-        elseif (event=="CHALLENGE_MODE_COMPLETED") then     
-            C_Timer.After(3, function()  
-                    MDRbackupMythicKey("finish")     
-            end)            
+        elseif (event=="CHALLENGE_MODE_COMPLETED") then
+			--print(event)
+            --C_Timer.After(3, function()  
+                    --MDRbackupMythicKey("finish")     
+            --end)            
             return
             
             -- 쐐기 시작시            
-        elseif (event=="CHALLENGE_MODE_START")  then            
+        elseif (event=="CHALLENGE_MODE_START")  then
+			--print(event)
             MDRbackupMythicKey("start") 
             return
 			

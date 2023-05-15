@@ -291,7 +291,7 @@ function GetAffixFullText(AffixTable,channel)
     tempTable[1]=affixNames[AffixTable[3]]
     tempTable[2]=affixNames[AffixTable[1]]
     tempTable[3]=affixNames[AffixTable[2]]
-    tempTable[4]=affixNames[AffixTable[4]]
+    --tempTable[4]=affixNames[AffixTable[4]]
     
     for i=1,#tempTable do
         local icon,spellLink,spellname="","",""
@@ -428,11 +428,11 @@ function GetAnyWeeksAffix(week,channel)
         calledWeekAffix=affixWeeks[calledWeek]       
     else
         local thisWeeksAffix=C_MythicPlus.GetCurrentAffixes()
-		if not thisWeeksAffix or #thisWeeksAffix<4 then return end
+		if not thisWeeksAffix then return end
         calledWeekAffix[1]=thisWeeksAffix[2]["id"]        
         calledWeekAffix[2]=thisWeeksAffix[3]["id"]        
         calledWeekAffix[3]=thisWeeksAffix[1]["id"]        
-        calledWeekAffix[4]=thisWeeksAffix[4]["id"]                
+        --calledWeekAffix[4]=thisWeeksAffix[4]["id"]                
     end 
     calledWeekFullText=GetAffixFullText(calledWeekAffix,channel)
     
@@ -444,7 +444,7 @@ function GetThisWeek()
     C_MythicPlus.RequestMapInfo()
     C_MythicPlus.RequestRewards()
     local affixIds = C_MythicPlus.GetCurrentAffixes()
-    if not affixIds or #affixIds<4 then return end  
+    if not affixIds then return end  
     local affixWeeks=GetAffixWeeksTable()
     local thisWeek    
     for week,affixes in ipairs(affixWeeks) do
@@ -458,13 +458,13 @@ end
 function isThisWeekHasSpecificAffix(affixNum)
     local thisWeeksAffix=C_MythicPlus.GetCurrentAffixes()
     local affixTable={}    
-    if thisWeeksAffix==nil or #thisWeeksAffix<4 then 
+    if thisWeeksAffix==nil then 
 		return false 
 	end
     affixTable[1]=thisWeeksAffix[2]["id"]        
     affixTable[2]=thisWeeksAffix[3]["id"]        
     affixTable[3]=thisWeeksAffix[1]["id"]        
-    affixTable[4]=thisWeeksAffix[4]["id"]   
+    --affixTable[4]=thisWeeksAffix[4]["id"]   
     for i=1,#affixTable do
         if affixTable[i]==affixNum then
             return true

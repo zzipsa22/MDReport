@@ -28,12 +28,12 @@ local TimeLimit = { --던전 클리어 시간
 
 	[438]=30*60,--누각
 	[206]=33*60,--넬타 둥지
-	[251]=33*60,--썩은굴
-	[245]=33*60,--자유지대
-	[405]=36*60,--담쟁이
-	[406]=38*60,--주입
-	[404]=35*60,--넬타루스
-	[403]=40*60,--울다만
+	[251]=30*60,--썩은굴
+	[245]=30*60,--자유지대
+	[405]=35*60,--담쟁이
+	[406]=35*60,--주입
+	[404]=33*60,--넬타루스
+	[403]=35*60,--울다만
 }
 
 C_Timer.After(10, function()    
@@ -219,7 +219,7 @@ function MDRbackupMythicKey(type)
     MDRconfig=MDRconfig or {}
     MDRconfig.Char=MDRconfig.Char or {}
     MDRconfig.Char[meAddon]=MDRconfig.Char[meAddon] or {}
-    
+    	
     --주간 리셋시 지난주 정보 초기화
     if type=="onLoad" then
         for k, v in pairs(MDRconfig.Char) do
@@ -266,6 +266,10 @@ function MDRbackupMythicKey(type)
 			MythicKeyB.TimeLimit=time() + (ActiveMapTimeLimit or 0) + 10
 		end
 	end
+		
+	if MythicKeyB.name and (MythicKeyB.name~=name or MythicKeyB.level~=level) and type=="bagupdate" then
+		type="finish"
+	end
 	
 	if type=="finish" then -- 끝난 시간 백업
 		MythicKeyB.Finished=time()
@@ -274,14 +278,16 @@ function MDRbackupMythicKey(type)
     MDRconfig.Char[meAddon].MythicKey={}
     
     if link then -- 가방에 쐐기돌이 있을 경우
+		--print("현재키("..type.."):"..link.."/"..(MythicKeyBB.link or ""))
         MDR.thisCharHasKey=1
 		if MythicKeyB.name and (MythicKeyB.name~=name or MythicKeyB.level~=level) then --키에 변화가 있으면 시간과 키정보 백업.
 			if MythicKeyBB.YourKeyUsed then -- 백업해둔 돌이 사용한 돌이면 시간 계승
 				MythicKeyB.Started=MythicKeyBB.Started
 				MythicKeyB.TimeLimit=MythicKeyBB.TimeLimit
 			end
-			MythicKeyB.event=type
+			MythicKeyB.event=type			
 			MDRconfig.Char[meAddon].MythicKeyB=MythicKeyB -- 백업 입력
+			--print("▶백업키("..type.."):"..link)
 		end
         MDRconfig.Char[meAddon].MythicKey.level=level
         MDRconfig.Char[meAddon].MythicKey.name=name
