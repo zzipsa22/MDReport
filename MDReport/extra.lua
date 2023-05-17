@@ -267,8 +267,8 @@ function MDRbackupMythicKey(type)
 		end
 	end
 		
-	if MythicKeyB.name and (MythicKeyB.name~=name or MythicKeyB.level~=level) and type=="bagupdate" then
-		type="finish"
+	if MythicKeyB.name and MythicKeyB.name~=name and type=="bagupdate" then
+		type="finish"		
 	end
 	
 	if type=="finish" then -- 끝난 시간 백업
@@ -287,7 +287,7 @@ function MDRbackupMythicKey(type)
 			end
 			MythicKeyB.event=type			
 			MDRconfig.Char[meAddon].MythicKeyB=MythicKeyB -- 백업 입력
-			--print("▶백업키("..type.."):"..link)
+			--print("▶새키("..type.."):"..link.."/"..(MythicKeyBB.link or ""))
 		end
         MDRconfig.Char[meAddon].MythicKey.level=level
         MDRconfig.Char[meAddon].MythicKey.name=name

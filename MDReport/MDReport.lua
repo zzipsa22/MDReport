@@ -33,7 +33,7 @@ if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
 	DIL.base=346+26 --기준템렙
 	MDR.dungeonNameToID = {
 		["누각"] = 438,  
-		["넬둥"] = 206,
+		["둥지"] = 206,
 		["썩굴"] = 251,
 		["자유"] = 245,
 		["담쟁이"] = 405,
@@ -1511,7 +1511,7 @@ function MDRgetDungeonScore(name,affix)
 	if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
 		dungeonTable={
 			[1]={"누","누각"},
-			[2]={"둥","넬둥"}, 
+			[2]={"둥","둥지"}, 
 			[3]={"썩","썩굴"},
 			[4]={"자","자유"},		
 			[5]={"담","담쟁이"},			
