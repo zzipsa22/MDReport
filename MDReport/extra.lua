@@ -1047,7 +1047,7 @@ function MDRrefreshRunHistory()
     MDRconfig.Char[meAddon].Score={}
     MDRconfig.Char[meAddon].Score["종합점수"]=C_ChallengeMode.GetOverallDungeonScore()  --총점
     
-    for d,n in pairs(MDR.dungeonNameToID)do  -- 던전별 점수
+    for d,n in pairs(MDR.dungeonNameToID)do  -- 던전별 점수		
         local desc,total=C_MythicPlus.GetSeasonBestAffixScoreInfoForMap(n)
         MDRconfig.Char[meAddon].Score[d]={}
         MDRconfig.Char[meAddon].Score[d]["점수"]=total

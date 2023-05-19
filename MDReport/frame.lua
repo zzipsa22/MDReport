@@ -26,6 +26,8 @@ MDR.frame:SetScript("OnEvent", function(self, event, ...)
             return    
         elseif event=="BAG_UPDATE_DELAYED" then
 			MDRbackupMythicKey("bagupdate")
+			MDRrefreshRunHistory()
+			MDRgetHistory()
             return
 		elseif event=="ITEM_CHANGED" then
 			local key=select(1, ...)
