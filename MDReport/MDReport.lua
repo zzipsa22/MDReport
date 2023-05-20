@@ -4,6 +4,10 @@ end
 
 C_ChatInfo.RegisterAddonMessagePrefix("MDReport")
 
+C_MythicPlus.RequestMapInfo()
+C_MythicPlus.RequestRewards()
+C_MythicPlus.RequestCurrentAffixes()
+
 MDR["guide"]=0
 MDR["cooltime"]=1
 MDR["meGame"]=UnitName("player").."-"..GetRealmName() 
@@ -65,10 +69,6 @@ for i=1,MDR["maxParking"] do
 end
 
 MDRconfig=MDRconfig or {}
-
-C_MythicPlus.RequestMapInfo()
-C_MythicPlus.RequestRewards()
-C_MythicPlus.RequestCurrentAffixes()
 		
 C_Timer.After(3, function()
         if MDR.myMythicKey==nil then
