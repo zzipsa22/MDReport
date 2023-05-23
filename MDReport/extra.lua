@@ -1408,7 +1408,7 @@ function MDRdoReportHistory(VALUES)
 	if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
 		rewardLevel=rewardLevel_DF_s2
 	else
-		rewardLevel=rewardLevel_DF_s1
+		rewardLevel=rewardLevel_DF_s2
 	end
         
     for i=21,40 do
