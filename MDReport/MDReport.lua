@@ -29,21 +29,21 @@ local callType,callTypeB,keyword,keyword2,keyword3={},{},{},{},{}
 local DIL={}
 MDR.DIL=DIL
 
-if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
+if C_MythicPlus.GetCurrentSeason()==11 then --용군단 3시즌
 	MDR["SCL"]=70
-	MDR["maxParking"]=20 --용군단 2시즌
-	DIL.min=372+26 --깡신
-	DIL.max=405+26 --20단
-	DIL.base=346+26 --기준템렙
+	MDR["maxParking"]=20 --용군단 3시즌
+	DIL.base=346+69 --기준템렙
+	DIL.min=372+69 --깡신
+	DIL.max=405+69 --20단	
 	MDR.dungeonNameToID = {
-		["누각"] = 438,  
-		["둥지"] = 206,
-		["썩굴"] = 251,
-		["자유"] = 245,
-		["담쟁이"] = 405,
-		["주입"] = 406,
-		["넬타"] = 404,
-		["울다만"] = 403,	
+		["파도"] = 456,
+		["상록"] = 168,		
+		["검떼"] = 199,
+		["어숲"] = 198,		
+		["아탈"] = 244,
+		["웨이"] = 248,
+		["잎:몰락"] = 463,  
+		["뒤:현신"] = 464,
 	}
 else --용군단 1시즌
 	MDR["SCL"]=70
@@ -1508,18 +1508,18 @@ function MDRgetDungeonScore(name,affix)
     local scoreT=MDRconfig.Char[name].Score or {}
     local dungeonHistory=""
 	local dungeonTable
-	if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
+	if C_MythicPlus.GetCurrentSeason()==11 then --용군단 3시즌
 		dungeonTable={
-			[1]={"누","누각"},
-			[2]={"둥","둥지"}, 
-			[3]={"썩","썩굴"},
-			[4]={"자","자유"},		
-			[5]={"담","담쟁이"},			
-			[6]={"주","주입"},
-			[7]={"넬","넬타"},
-			[8]={"울","울다만"},
+			[1]={"파","파도"},
+			[2]={"상","상록"}, 
+			[3]={"검","검떼"},
+			[4]={"어","어숲"},		
+			[5]={"아","아탈"},			
+			[6]={"웨","웨이"},
+			[7]={"몰","앞:몰락"},
+			[8]={"현","뒤:현신"},
 		}
-	else --용군단 1시즌
+	else --용군단 2시즌
 		dungeonTable={
 			[1]={"누","누각"},
 			[2]={"둥","둥지"}, 
@@ -1728,6 +1728,8 @@ function findCharAllKey(VALUES)
 			keyword["dungeon"][1]="카라잔"			
 		elseif here=="작전명: 메카곤" then 
 			keyword["dungeon"][1]="메카곤"			
+		elseif here=="무한의 여명" then 
+			keyword["dungeon"][1]="무한의 여명"		
 		else
 			keyword["dungeon"][1]=getShortDungeonName(here)
 		end			

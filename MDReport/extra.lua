@@ -8,7 +8,14 @@ local diceNums={"①","②","③","④","⑤","⑥","⑦","⑧","⑨","⑩"}
 MDR["diceNums"]=diceNums
 MDR["diceWait"]=0
 
+local TimeLimit = {}
+for k,v in pairs(MDR.dungeonNameToID) do
+	local a,b,c=C_ChallengeMode.GetMapUIInfo(v)
+	TimeLimit.b=c	
+end
+--[[
 local TimeLimit = { --던전 클리어 시간
+
 	[391]=2340,--경이
 	[392]=1800,--소레아
 	[369]=2280,--고철
@@ -34,8 +41,18 @@ local TimeLimit = { --던전 클리어 시간
 	[406]=35*60,--주입
 	[404]=33*60,--넬타루스
 	[403]=35*60,--울다만
-}
 
+	[168]=1980,
+	[198]=,
+	[199]=,
+	[244]=,
+	[248]=,
+	[456]=,
+	[463]=,
+	[464]=,
+}
+]]
+	
 C_Timer.After(10, function()    
         local x = GetLocale()
         if x ~= "koKR" then 
@@ -359,11 +376,11 @@ function MDRko(keyword,type)
     local result=""
     local LCtable={
         "검","궁","활","총","봉","창", --무기
-        "꾼","적", --직업
+        "꾼","적", --직업		
         "돌","단","원","상","전","장","택","굴","산","잔","곤", --격아던전
         "연","당","탑","편","흔","층", --어둠땅 던전
         "복","멸","통","양","성","운","살","법","행","정","염","격","존","벌","원",--전문화
-		"학", --용군단 던전
+		"학","락","신","숲", --용군단 던전
         "중","안","업","점",  
 		"갑","병","풍","눈","석","털", --아이템이름
     }
@@ -1339,47 +1356,8 @@ function MDRdoReportHistory(VALUES)
         runHistory=MDRconfig.Char[charName].runHistory
         class=MDRconfig.Char[charName].Class or MDRconfig.Char[charName].class
         name=MDRsplit(MDRconfig.Char[charName].name," - ")[1]   
-    end    
-    
-    local rewardLevel_SL_s4={  -- 어둠땅 4시즌
-        [2]=278,    
-        [3]=278,
-        [4]=278,
-        [5]=281,
-        [6]=281,
-        [7]=285,
-        [8]=288,
-        [9]=288,
-        [10]=291,
-        [11]=294,
-        [12]=298,
-        [13]=298,
-        [14]=301,
-        [15]=304,
-    }
-	
-	local rewardLevel_DF_s1={ -- 용군단 1시즌	
-        [2]=382,    
-        [3]=385,
-        [4]=385,
-        [5]=389,
-        [6]=389,
-        [7]=392,
-        [8]=395,
-        [9]=395,
-        [10]=398,
-        [11]=402,
-        [12]=405,
-        [13]=408,
-        [14]=408,
-        [15]=411,
-		[16]=415,
-		[17]=415,
-		[18]=418,
-		[19]=418,
-		[20]=421,
-    }
-	
+    end  
+     	
 	local rewardLevel_DF_s2={ -- 용군단 2시즌	
         [2]=415,    
         [3]=418,
@@ -1401,12 +1379,34 @@ function MDRdoReportHistory(VALUES)
 		[19]=444,
 		[20]=447,
     }
+	
+	local rewardLevel_DF_s3={ -- 용군단 3시즌	
+        [2]=454,    
+        [3]=457,
+        [4]=460,
+        [5]=460,
+        [6]=463,
+        [7]=463,
+        [8]=467,
+        [9]=467,
+        [10]=470,
+        [11]=470,
+        [12]=473,
+        [13]=473,
+        [14]=473,
+        [15]=476,
+		[16]=476,
+		[17]=476,
+		[18]=480,
+		[19]=480,
+		[20]=483,
+    }
     --[[
     local maxreward=C_MythicPlus.GetRewardLevelFromKeystoneLevel(15) -- 오류 많음
     ]]
     local rewardLevel
-	if C_MythicPlus.GetCurrentSeason()==10 then --용군단 2시즌
-		rewardLevel=rewardLevel_DF_s2
+	if C_MythicPlus.GetCurrentSeason()==11 then --용군단 3시즌
+		rewardLevel=rewardLevel_DF_s3
 	else
 		rewardLevel=rewardLevel_DF_s2
 	end
